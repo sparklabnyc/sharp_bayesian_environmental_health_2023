@@ -21,3 +21,12 @@ For more details, see the main [docs](https://pre-commit.com/) and the `R` [docs
 Run `renv::restore()` and the environment will be downloaded into the repository based on the `renv.lock` file.
 If you want to add a packages to the lockfile, install the package and then run `renv::snapshot()`.
 For more details, see the [docs](https://rstudio.github.io/renv/articles/renv.html).
+
+### Using Quarto for presentations
+
+Quarto is pretty cool.
+I won't bore you, but have a look at the [docs](https://quarto.org/docs/guide/).
+Here, we're using it for [presentations](https://quarto.org/docs/presentations/revealjs/).
+It's designed by the folks at RStudio, so you `R` folk will be happy.
+Make a `.qmd` file and run `quarto render *.qmd` to generate the `html`, which you can open in browser.
+We can get fancy and import our own `css` to have a consistent theme for out presentations.
