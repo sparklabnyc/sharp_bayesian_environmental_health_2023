@@ -1,0 +1,56 @@
+---
+title: "Software Options for Bayesian Modelling"
+subtitle: "Should we still use WinBugs?"
+author: "Theo Rashid"
+format:
+    revealjs:
+        slide-number: true
+        chalkboard:
+            buttons: false
+            preview-links: auto
+        # logo: images/quarto.png
+        # css: styles.css
+        # footer: <https://www.publichealth.columbia.edu/research/programs/precision-prevention/sharp-training-program/bayesian-modeling>
+---
+
+# WinBugs
+
+## No
+
+- Not now
+- Not anymore
+
+# Stan
+
+## Your grandad's dad of PPLs
+
+# R
+
+## NIMBLE
+
+- Really fun
+- Bad if not conjugate
+
+## INLA
+
+- Really quick
+- Only used by 3 people, 2 of whom are here today
+
+# python
+
+## PyMC
+
+Big community
+
+## numpyro
+
+- Really quick
+- Runs on GPU
+
+# Julia
+
+## Maybe in a bit
+
+# And what about the samples
+
+Yeah, `posterior` for `R` and `ArviZ` for `python`.
