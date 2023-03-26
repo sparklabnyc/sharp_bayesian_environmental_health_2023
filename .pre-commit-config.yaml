@@ -1,3 +1,4 @@
+exclude: '^(renv/)'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -20,4 +21,3 @@ repos:
     rev: v0.3.2
     hooks:
       - id: style-files
-        exclude: ^renv/
