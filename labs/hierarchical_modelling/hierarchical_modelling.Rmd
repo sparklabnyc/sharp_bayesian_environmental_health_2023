@@ -1,0 +1,40 @@
+---
+title: "Hierarchical modelling"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Theo Rashid"
+date: "August 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+```{r packages}
+library(tidyverse)
+library(nimble)
+
+set.seed(2)
+```
+
+This task will involve taking the England or Italy data and fitting a really basic hierarchical model.
+It will follow your basic:
+
+- Full pooling
+- No pooling
+- Partial pooling
+
+Aka radon model example. https://www.tensorflow.org/probability/examples/Multilevel_Modeling_Primer
+The difference being our subgroups will be regions of England or Italy.
+
+Load in the data at the level
+Estimate the national prevalence/whatever the outcome is
+
+Estimate no pooling
+Estimate full pooling
+
+Partial pooling model
+Discuss the advantages
+Try out different priors for sigma and see how that changes the fit
+Run some prior predictive checks for good practice
+Get used to diagnosing fit using the posterior and bayesplot package
