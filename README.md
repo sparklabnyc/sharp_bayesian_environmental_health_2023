@@ -1,6 +1,6 @@
 # SHARP: Bayesian Modeling for Environmental Health Workshop
 
-![](images/bmeh-1200x630.jpg)
+![course logo](assets/bmeh-1200x630.jpg)
 
 ## Introduction
 
