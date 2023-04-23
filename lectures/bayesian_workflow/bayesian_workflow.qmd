@@ -1,0 +1,36 @@
+---
+title: "Bayesian workflow"
+subtitle: ""
+author: "Elizaveta Semenova"
+format:
+    revealjs:
+        slide-number: true
+        chalkboard:
+            buttons: false
+            preview-links: auto
+        # logo: images/quarto.png
+        # css: styles.css
+        # footer: <https://www.publichealth.columbia.edu/research/programs/precision-prevention/sharp-training-program/bayesian-modeling>
+---
+
+- show Bayes formula again. “What can possibly go wrong?”
+
+- general principle while using a PPLs: focus on modelling, use diagnostic tools
+
+- diagnosing MCMC outputs: R-hat, trace-plots, ESS
+
+- what is a workflow? Box’s loop, modern Bayesian workflow
+
+- iterative model building: understand the domain, formulate the problem mathematically, implement the model, test, debug
+
+- prior predictive check, fit the model, assess convergence, posterior predictive, iterate
+
+- SBC
+
+- example: SIR
+
+- example: GP
+
+- conclusion
+
+- references
