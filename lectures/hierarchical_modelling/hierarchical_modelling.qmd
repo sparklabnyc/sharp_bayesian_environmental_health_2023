@@ -1,0 +1,28 @@
+---
+title: "Bayesian workflow"
+subtitle: ""
+author: "Elizaveta Semenova"
+format:
+    revealjs:
+        slide-number: true
+        chalkboard:
+            buttons: false
+            preview-links: auto
+        # logo: images/quarto.png
+        # css: styles.css
+        # footer: <https://www.publichealth.columbia.edu/research/programs/precision-prevention/sharp-training-program/bayesian-modeling>
+---
+
+* Data can have several types of structure. Including nestedness, which we call “hierarchical”.
+
+* hierarchical models: nested models, multi-level models
+
+* pooled model: ignore the grouping structure
+- important information is neglected
+
+* unpooled: model each group separately
+— many distinct groups
+— some groups have small sample size
+
+* partial pooling, hierarchical modeli
+— complexity
