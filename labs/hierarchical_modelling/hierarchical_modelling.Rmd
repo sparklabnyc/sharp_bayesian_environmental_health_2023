@@ -28,6 +28,23 @@ Aka radon model example. https://www.tensorflow.org/probability/examples/Multile
 The difference being our subgroups will be regions of England or Italy.
 
 Load in the data at the level
+
+```{r}
+library(here)
+library(tidyverse)
+library(geojsonsf)
+library(sf)
+```
+
+```{r load data}
+shp <- geojson_sf(here("data", "italy", "italy.geojson"))
+data <- read_rds(here("data", "italy", "italy_mortality.rds"))
+```
+
+```{r}
+data <- st_read(here("data", "england", "COVIDecoregression.shp"))
+```
+
 Estimate the national prevalence/whatever the outcome is
 
 Estimate no pooling
