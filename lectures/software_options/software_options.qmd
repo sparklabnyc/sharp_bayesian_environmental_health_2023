@@ -278,6 +278,17 @@ Don't use it.
 
 ## PyMC
 
+```{.python}
+with pm.Model() as model:
+    alpha = pm.Normal("alpha", 0.0, sigma=10.0)
+    sigma = pm.Uniform("sigma", low=0.0, high=100.0)
+    beta = pm.Normal("beta", 0, sigma=1.0, shape=(np,))
+
+    mu = alpha + pt.matmul(x, beta)
+
+    likelihood = pm.Normal("y", mu=mu, sigma=sigma, observed=y)
+```
+
 Big community
 
 ## numpyro
@@ -293,7 +304,7 @@ def model(np, x, y=None):
     mu = alpha + jnp.matmul(x, beta)
 
     with numpyro.plate("data", len(x)):
-        numpyro.sample("s1", dist.Normal(mu, sigma), obs=y)
+        numpyro.sample("y", dist.Normal(mu, sigma), obs=y)
 ```
 
 - Really quick
