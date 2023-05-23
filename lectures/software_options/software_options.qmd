@@ -35,14 +35,23 @@ y_i \sim \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
 \sigma \sim \text{Uniform}(0, 100)
 $$
 
-```{.python code-line-numbers="5-8"}
+## They wrote their posterior probability density
+
+```{.python code-line-numbers="5-15"}
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, uniform
 from scipy.special import logsumexp
 
 def logpdf(params, data):
-    log_prior = np.log(params)
-    log_likelihood = norm(**params).logpdf(data)
+    log_prior = (
+      norm.logpdf(params.alpha, loc=0.0, scale=10.0) +
+      uniform.logpdf(params.sigma, low=0.0, high=100.0) +
+      np.sum(norm.logpdf(params.beta, loc=0.0, scale=1.0))
+    )
+
+    mu = params.alpha + jnp.matmul(x, params.beta)
+    log_likelihood = norm.logpdf(data, mu, params.sigma)
+
     return logsumexp(log_prior + log_likelihood, axis=0)
 ```
 
@@ -106,7 +115,7 @@ model(
 )
 ```
 
-## Look at this <span style="color:pink;">thrilling</span> output.
+## Look at this <span style="color:#f928d2;">thrilling</span> output.
 
 ![](assets/winbugs_screenshot.jpeg)
 
@@ -244,16 +253,22 @@ Extensibility:
 - If it can't do something, how easily can I make it do that?
 - How modular is it? Can other packages work with it?
 
-## Ranking these PPLs^[Entirely subjective]
-Where does each PPL stand on the extensibility-usability scale
+## Ranking these PPLs
+
+![](assets/usability-extensibility.png)
+
+![](assets/stan.png){.fragment .absolute top="75%" left="72%" width="6%"}
+![](assets/winbugs.png){.fragment .absolute top="82%" left="10%" width="6%"}
+![](assets/nimble.jpeg){.fragment .absolute top="63%" left="55%" width="6%"}
 
 # Decoupled
 
 ## Decoupled
 
-Separate the model from the inference.
-Tensor libraries to do the maths
-PyTorch, tensorflow, jax, aesara etc
+Separate the __model__ from the __inference__.
+
+- PPL defines the __log posterior probability density__
+- Makes use of great tensor libraries (`jax`, `tensorflow`, `PyTorch`, `aesara`) to do the maths
 
 ## tensorflow probability
 
@@ -276,9 +291,20 @@ This is trash.
 
 Don't use it.
 
+## Ranking these PPLs
+
+![](assets/usability-extensibility.png)
+
+![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/tensorflow.png){.fragment .absolute top="55%" left="35%" width="6%"}
+
 ## PyMC
 
 ```{.python}
+import pymc as pm
+
 with pm.Model() as model:
     alpha = pm.Normal("alpha", 0.0, sigma=10.0)
     sigma = pm.Uniform("sigma", low=0.0, high=100.0)
@@ -289,11 +315,43 @@ with pm.Model() as model:
     likelihood = pm.Normal("y", mu=mu, sigma=sigma, observed=y)
 ```
 
-Big community
+## PyMC is the dev choice
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {style="color: #58b364"}
+- Great open source community
+- `aesara` backend can compile to `jax`, `C`, `numba` (and more)
+- Runs on GPU easily
+- Best documentation
+:::
+:::
+
+::: {.column width="50%"}
+::: {style="color: #fc6161"}
+- Always in development/flux
+- Multiple backends can be confusing
+:::
+:::
+
+::::
+
+## Ranking these PPLs
+
+![](assets/usability-extensibility.png)
+
+![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
+![](assets/pymc.png){.fragment .absolute top="25%" left="75%" width="8%"}
 
 ## numpyro
 
 ```{.python}
+import jax.numpy as jnp
+
 def model(np, x, y=None):
     alpha = numpyro.sample("alpha", dist.Normal(0.0, 10.0))
     sigma = numpyro.sample("sigma", dist.Uniform(0.0, 100.0))
@@ -307,36 +365,139 @@ def model(np, x, y=None):
         numpyro.sample("y", dist.Normal(mu, sigma), obs=y)
 ```
 
-- Really quick
-- Runs on GPU
-- My favourite
-
 ::: aside
 There is a related package called Pyro with a PyTorch backend, but numpyro's `jax` backend is better for sampling.
 :::
 
+## numpyro is my favourite (for now)
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {style="color: #58b364"}
+- Really quick
+- Runs on GPU easily
+- Works with entire `jax` ecosystem
+:::
+:::
+
+::: {.column width="50%"}
+::: {style="color: #fc6161"}
+- Small learning curve to get used to `plate` notation
+:::
+:::
+
+::::
+
+## Ranking these PPLs
+
+![](assets/usability-extensibility.png)
+
+![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
+![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
+![](assets/numpyro.png){.fragment .absolute top="22%" left="78%" width="10%"}
+
 ## Other packages
 
-Other such as `JAGS`, `greta`, `beanmachine`, `Turing.jl`
+`JAGS`, `greta`, `beanmachine`, `Turing.jl` etc
 
-## blackjax
+## Ranking these PPLs
 
-## Maybe in a bit
+![](assets/usability-extensibility.png)
 
-# And what about the samples
+![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
+![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
+![](assets/numpyro.png){.absolute top="22%" left="78%" width="10%"}
+![](assets/jags.png){.fragment .absolute top="81%" left="30%" width="8%"}
+![](assets/greta.png){.fragment .absolute top="68%" left="34%" width="8%"}
+![](assets/beanmachine.png){.fragment .absolute top="65%" left="25%" width="6%"}
+![](assets/turing.png){.fragment .absolute top="40%" left="62%" width="6%"}
 
-Yeah, `posterior` for `R` and `ArviZ` for `python`.
+## A note on blackjax
+1. Write any log probability function (either manually or in numpyro, PyMC, tfp etc)
+2. Sample using a vast array of samplers/inference algorithms written in `jax`
+
+## A note on blackjax
+```{.python}
+logdensity = lambda x: logdensity_fn(**x)
+
+def inference_loop(rng_key, kernel, initial_state, num_samples):
+    @jax.jit
+    def one_step(state, rng_key):
+        state, _ = kernel(rng_key, state)
+        return state, state
+
+    keys = jax.random.split(rng_key, num_samples)
+    _, states = jax.lax.scan(one_step, initial_state, keys)
+    return states
+
+nuts = blackjax.nuts(logdensity, **nuts_params)
+states = inference_loop(rng_key, jax.jit(nuts.step), nuts.init(initial_position), 10_000)
+```
+
+## And what about the samples
+
+Use `posterior` for `R`.
+
+```{.R}
+eight_schools_df <- as_draws_df(eight_schools_array)
+summarise_draws(eight_schools_df)
+#> # A tibble: 10 × 10
+#>    variable  mean median    sd   mad      q5   q95  rhat ess_bulk ess_tail
+#>    <chr>    <num>  <num> <num> <num>   <num> <num> <num>    <num>    <num>
+#>  1 mu        4.18   4.16  3.40  3.57  -0.854  9.39  1.02     558.     322.
+#>  2 tau       4.16   3.07  3.58  2.89   0.309 11.0   1.01     246.     202.
+#>  3 theta[1]  6.75   5.97  6.30  4.87  -1.23  18.9   1.01     400.     254.
+#>  4 theta[2]  5.25   5.13  4.63  4.25  -1.97  12.5   1.02     564.     372.
+#>  5 theta[3]  3.04   3.99  6.80  4.94 -10.3   11.9   1.01     312.     205.
+```
+
+## And what about the samples
+
+And ArviZ for `python` or `Julia`
+
+```{.python}
+data = az.from_pystan(posterior=fit)
+az.summary(data, var_names=["mu", "tau"])
+
+Out[1]:
+      mean     sd  hdi_3%  hdi_97%  ...  mcse_sd  ess_bulk  ess_tail  r_hat
+mu   4.486  3.487  -1.623   10.693  ...    0.160     241.0     659.0   1.02
+tau  4.124  3.102   0.896    9.668  ...    0.186      67.0      38.0   1.06
+
+[2 rows x 9 columns]
+```
 
 # Is sampling the only way?
 
 ## Variational inference
 
-Turn sampling into an optimisation problem
-Optimise the ELBO
+- Turn the inference problem into an optimisation problem
+- Minimise the difference between true posterior distribution, $p(z|x)$, and variational distribution, $q(z)$
 
-- No guarantees
+![](assets/variational_inference.png)
 
-## INLA
+::: {.notes}
+No guarantees like sampling of true posterior.
+Minimise the ELBO (minimise the sum of the log likelihood and the KL divergence between the variation distribution and the prior).
+Optimise the variational parameters of the variational (surrogate) distribution.
+In this case, variational approximation is a Gaussian (Laplace approximation)
+:::
 
+## I've heard people talk about INLA. What is INLA?
+
+- Approximate Bayesian inference for latent Gaussian models^[has extensions for non-Gaussian]
+- Really good for spatial statistics
 - Really quick
+- Most real world cases are latent Gaussian – it just works
 - Only used by 3 people, 2 of whom are here today
+
+---
+
+![](assets/probabilistic-programming.png)
