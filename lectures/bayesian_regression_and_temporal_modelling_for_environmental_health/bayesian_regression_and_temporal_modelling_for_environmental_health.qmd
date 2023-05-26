@@ -1,6 +1,6 @@
 ---
-title: "Introduction to Bayesian Methods"
-subtitle: "Key ideas and concepts"
+title: "Bayesian Regression and temporal modelling for environmental health"
+subtitle: "Regression etc."
 author:
  - name: "Robbie M. Parks"
    email: "robbie.parks@columbia.edu"
