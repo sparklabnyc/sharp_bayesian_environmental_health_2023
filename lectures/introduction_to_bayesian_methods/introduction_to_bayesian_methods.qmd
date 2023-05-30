@@ -23,96 +23,37 @@ format:
     theme: [default, ../../assets/style.scss]
 ---
 
-#	Brief discussion of R
-#	Brief discussion of RStudio Cloud
-# Regression
-# Generalised linear models
-#	Brief history of Bayesian thinking
-#	Conditional probability
-#	Bayes theorem
-#	Prior and posterior
-#	Choosing priors (conjugate and non-conjugate)
-#	Non-conjugate how to get posterior?
-#	Why sample?
-#	MCMC, Gibbs, others briefly (Laplace approximation?)
-#	Discussion of R-Nimble
-#	Why we’re using it for everything over two days
+# Outline
 
-# What did people do before packages?
+- Overview
+- Introduction to Bayesian methods
+- Getting ready for this workshop
 
-## They wrote their posterior probability density
+# Overview
 
-$$
-y_i \sim \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
-\epsilon_i \sim \text{Normal}(0, \sigma) \\
-\alpha \sim \text{Normal}(0, 10) \\
-\mathbf{\beta} \sim \text{Normal}(0, 1) \\
-\sigma \sim \text{Uniform}(0, 100)
-$$
+## This course is for those who
 
-## They wrote their posterior probability density
+- Are interested or who have heard about Bayesian modeling.
+- Work in Environmental Health (or adjacent fields).
+- Have little theoretical or practical experience of Bayesian ideas.
+- Would like some tools and know-how to get started in an approachable and friendly setting.
 
-```{.python code-line-numbers="5-15"}
-import numpy as np
-from scipy.stats import norm, uniform
-from scipy.special import logsumexp
+## This course is for those who
 
-def logpdf(params, data):
-    log_prior = (
-      norm.logpdf(params.alpha, loc=0.0, scale=10.0) +
-      uniform.logpdf(params.sigma, low=0.0, high=100.0) +
-      np.sum(norm.logpdf(params.beta, loc=0.0, scale=1.0))
-    )
+- Are interested or who have heard about Bayesian modeling.
+- Work in Environmental Health (or adjacent fields).
+- Have little theoretical or practical experience of Bayesian ideas.
+- Would like some tools and know-how to get started in an approachable and friendly setting.
 
-    mu = params.alpha + jnp.matmul(x, params.beta)
-    log_likelihood = norm.logpdf(data, mu, params.sigma)
+## R
 
-    return logsumexp(log_prior + log_likelihood, axis=0)
-```
+- R is an interactive environment developed by statisticians for data analysis.
+- A more detailed Introduction to R can be found at https://www.r-project.org.
+- This isn't a course to learn R...
 
-## They wrote their own samplers
+## R
 
-```{.python code-line-numbers="8-9"}
-import numpy as np
-
-def rw_metropolis_kernel(logpdf, data, position, log_prob):
-    move_proposals = np.random.normal(0, 0.1, size=position.shape)
-    proposal = position + move_proposals
-    proposal_log_prob = logpdf(proposal, data)
-
-    log_uniform = np.log(np.random.uniform(low=0, high=1))
-    do_accept = log_uniform < proposal_log_prob - log_prob
-
-    position = np.where(do_accept, proposal, position)
-    log_prob = np.where(do_accept, proposal_log_prob, log_prob)
-    return position, log_prob
-```
-
-## You are not Arianna Rosenbluth
-
-- You will make a mistake.
-- Why write code that people have written before?
-- Do you enjoy calibrating samplers?
-
-::: {.notes}
-You will make a mistake.
-People have done this before, and spent a lot more time doing this.
-They write better inference algorithms than you.
-
-It turns out that he and Arianna Rosenbluth (his wife) did most of the work. More specifically, he did the mathematical work, Arianna wrote the code that ran on the MANIAC, August Teller wrote an earlier version of the code, and Edward Teller gave some critical suggestions about the methodology. Finally, Nick Metropolis provided the computing time; as he was first author the method is therefore named after him. But perhaps a more appropriate name would have been the Rosenbluth algorithm.
-:::
-
-# Probabilistic programming languages
-
-# "Monolithic"
-
-::: {.notes}
-Thomas Wiecki, PyMC dev
-:::
-
-# WinBUGS
-
-## Write models in the BUGS language
+- Sample code:
 
 ```{.R}
 model(
@@ -130,389 +71,178 @@ model(
 )
 ```
 
-## Look at this <span style="color:#f928d2;">thrilling</span> output.
+##	RStudio
 
-![](assets/winbugs_screenshot.jpeg)
+- RStudio is an integrated development environment (IDE) for R developed by J J Allaire.
+- RStudio provides a convenient graphical interface to R, making it more user-friendly, and providing many useful features.
+- Such features include direct code execution, tools for plotting, history, debugging and workspace management.
+- A more detailed background on to RStudio can be found at https://www.rstudio.com/about/.
 
-## Is WinBugs still good?^[No]
+##	RStudio Cloud
 
-:::: {.columns}
-::: {.column width="50%"}
-::: {style="color: #58b364"}
-- Point and click
-- See your chains as they run
-:::
-:::
+- We will assume you have done the preliminary homework.
+- RStudio Cloud is a cloud-based RStudio which runs projects and code in the cloud.
+- RStudio Cloud allows convenient scaling and sharing of code, including for training programs such as SHARP.
+- Registration for free is available via https://rstudio.cloud/.
+- We will go through how to navigate RStudio Cloud in the basics folder a littlle later in the tutorial.
+- More details are available via https://rstudio.cloud/learn/guide.
 
-::: {.column width="50%"}
-::: {style="color: #fc6161"}
-- Slow
-- Old
-:::
-:::
+## GitHub
 
-::::
+- Version control to interface with RStudio Cloud.
+- This is just for information, as you will not be expected to be an expert on GitHub to participate in your SHARP course.
+- But! You should learn it in general as it's really essential in today's modern research environment.
 
-- No
+# Introduction to Bayesian methods
 
-# Stan
+## Thomas Bayes and Simon Pierre Laplace
 
-## Model in Stan
+- Started with these two.
+- Bayes is why it's called Bayesian
+- Sorry Laplace!
 
-```
-data {
-  int<lower=0> N;   // number of data items
-  int<lower=0> P;   // number of predictors
-  matrix[N, K] x;   // predictor matrix
-  vector[N] y;      // outcome vector
-}
-parameters {
-  real alpha;           // intercept
-  vector[P] beta;       // coefficients for predictors
-  real<lower=0> sigma;  // error scale
-}
-transformed parameters {
-  vector[N] mu;
-  mu = alpha + X * beta;
-}
-model {
-  alpha ~ normal(0., 10.);
-  beta ~ normal(0., 1.);
-  sigma ~ uniform(0., 100.);
-  y ~ normal(mu, sigma);  // likelihood
-}
-```
+## Classical probability
 
-::: aside
-Stan, not STAN
-:::
+- 'Frequentist'.
+- Concept of limit of long-run relative frequency.
+- Ratio of the number of times event occurred to the number of trials.
+- Dice example.
 
-::: {.notes}
-Stanislaw Ulam is probably best known for realising that electronic computers made it practical to apply statistical methods to functions without known solutions, and as computers have developed, the Monte Carlo method has become a common and standard approach to many problems.
-:::
+## Classical probability
 
-## The granddaddy of PPLs
+$$
+Equation
+$$
 
-:::: {.columns}
-
-::: {.column width="50%"}
-::: {style="color: #58b364"}
-- The statistician's choice
-- Reliable, battle-tested samplers (including NUTS)
-- Interface with `python`, `R` or `Julia`
-:::
-:::
-
-::: {.column width="50%"}
-::: {style="color: #fc6161"}
-- Difficult to extend
-- Writing things like `int<lower=0> N`
-:::
-:::
-
-::::
-
-- Using `brms` or `rstanarm`, you can write models like base `R` (like `y ~ 1 + x`) and the inference is done in Stan.
-
-# nimble
-
-## nimble model is like WinBUGS, but more flexible
+## Classical probability
 
 ```{.R}
-model(
-  # prior
-  alpha ~ dnorm(0, sd = 10)
-  sigma ~ dunif(0, 100)
-  beta[1:k] ~ dnorm(0, 1)
-
-  # likelihood
-  for (i in 1:n) {
-    y[i] ~ dnorm(mu[i], tau)
-    mu[i] <- alpha + (beta[1:p] %*% x[i, 1:p])[1,1]
-  }
-)
+CODE
 ```
 
-## I like nimble, but
+## Subjective probability
 
-:::: {.columns}
+- What about the probability that it will rain tomorrow?
+- Degree of belief involved.
+- Foundation of Bayesian thinking.
 
-::: {.column width="50%"}
-::: {style="color: #58b364"}
-- Compiles `R` to `C++` for speed and scalability
-- Automatically finds conjugate relationships
-- Can pick a different sampler for each parameter
-:::
-:::
+## Conditional probability
 
-::: {.column width="50%"}
-::: {style="color: #fc6161"}
-- If the sampler is not conjugate, it can mix poorly
-:::
-:::
+- Two events $A$ and $B$.
+- Conditional event $A$ given $B$.
+$$
+Equation
+$$
 
-::::
+## Conditional probability
 
-## Ranking these PPLs^[Entirely subjective]
-Usability:
+- Example with numbers.
 
-- How easy is it to fit a model?
-- How easy is it to run the model?
-- How good is the documentation?
-- Does it have everything I need?
-- How good is the performance?
+$$
+Equation
+$$
 
-## Ranking these PPLs^[Entirely subjective]
-Extensibility:
+## Conditional probability
 
-- If it can't do something, how easily can I make it do that?
-- How modular is it? Can other packages work with it?
-
-## Ranking these PPLs
-
-![](assets/usability-extensibility.png)
-
-![](assets/stan.png){.fragment .absolute top="75%" left="72%" width="6%"}
-![](assets/winbugs.png){.fragment .absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.fragment .absolute top="63%" left="55%" width="6%"}
-
-# Decoupled
-
-## Decoupled
-
-Separate the __model__ from the __inference__.
-
-- PPL defines the __log posterior probability density__
-- Makes use of great tensor libraries (`jax`, `tensorflow`, `PyTorch`, `aesara`) to do the maths
-
-## tensorflow probability
-
-```{.python}
-def model(np, x):
-    def joint_dist():
-        alpha = yield tfd.Normal(loc=0.0, scale=10.0)
-        sigma = yield tfd.Uniform(low=0.0, high=100.0)
-
-        beta = yield tfd.Normal(loc=tf.zeros(np), scale=1.0)
-
-        mu = alpha + tf.linalg.matmul(x, beta)
-
-        yield tfd.Normal(loc=mu, scale=sigma)
-
-    return tfd.JointDistributionCoroutineAutoBatched(joint_dist)
-```
-
-This is trash.
-
-Don't use it.
-
-## Ranking these PPLs
-
-![](assets/usability-extensibility.png)
-
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
-![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
-![](assets/tensorflow.png){.fragment .absolute top="55%" left="35%" width="6%"}
-
-## PyMC
-
-```{.python}
-import pymc as pm
-
-with pm.Model() as model:
-    alpha = pm.Normal("alpha", 0.0, sigma=10.0)
-    sigma = pm.Uniform("sigma", low=0.0, high=100.0)
-    beta = pm.Normal("beta", 0, sigma=1.0, shape=(np,))
-
-    mu = alpha + pt.matmul(x, beta)
-
-    likelihood = pm.Normal("y", mu=mu, sigma=sigma, observed=y)
-```
-
-## PyMC is the dev choice
-
-:::: {.columns}
-
-::: {.column width="50%"}
-::: {style="color: #58b364"}
-- Great open source community
-- `aesara` backend can compile to `jax`, `C`, `numba` (and more)
-- Runs on GPU easily
-- Best documentation
-:::
-:::
-
-::: {.column width="50%"}
-::: {style="color: #fc6161"}
-- Always in development/flux
-- Multiple backends can be confusing
-:::
-:::
-
-::::
-
-## Ranking these PPLs
-
-![](assets/usability-extensibility.png)
-
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
-![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
-![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
-![](assets/pymc.png){.fragment .absolute top="25%" left="75%" width="8%"}
-
-## numpyro
-
-```{.python}
-import jax.numpy as jnp
-
-def model(np, x, y=None):
-    alpha = numpyro.sample("alpha", dist.Normal(0.0, 10.0))
-    sigma = numpyro.sample("sigma", dist.Uniform(0.0, 100.0))
-
-    with numpyro.plate("plate_predictors", np):
-        beta = numpyro.sample("beta", dist.Normal(0.0, 1.0))
-
-    mu = alpha + jnp.matmul(x, beta)
-
-    with numpyro.plate("data", len(x)):
-        numpyro.sample("y", dist.Normal(mu, sigma), obs=y)
-```
-
-::: aside
-There is a related package called Pyro with a PyTorch backend, but numpyro's `jax` backend is better for sampling.
-:::
-
-## numpyro is my favourite (for now)
-
-:::: {.columns}
-
-::: {.column width="50%"}
-::: {style="color: #58b364"}
-- Really quick
-- Runs on GPU easily
-- Works with entire `jax` ecosystem
-:::
-:::
-
-::: {.column width="50%"}
-::: {style="color: #fc6161"}
-- Small learning curve to get used to `plate` notation
-:::
-:::
-
-::::
-
-## Ranking these PPLs
-
-![](assets/usability-extensibility.png)
-
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
-![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
-![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
-![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
-![](assets/numpyro.png){.fragment .absolute top="22%" left="78%" width="10%"}
-
-## Other packages
-
-`JAGS`, `greta`, `beanmachine`, `Turing.jl` etc
-
-## Ranking these PPLs
-
-![](assets/usability-extensibility.png)
-
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
-![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
-![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
-![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
-![](assets/numpyro.png){.absolute top="22%" left="78%" width="10%"}
-![](assets/jags.png){.fragment .absolute top="81%" left="30%" width="8%"}
-![](assets/greta.png){.fragment .absolute top="68%" left="34%" width="8%"}
-![](assets/beanmachine.png){.fragment .absolute top="65%" left="25%" width="6%"}
-![](assets/turing.png){.fragment .absolute top="40%" left="62%" width="6%"}
-
-## A note on blackjax
-1. Write any log probability function (either manually or in numpyro, PyMC, tfp etc)
-2. Sample using a vast array of samplers/inference algorithms written in `jax`
-
-## A note on blackjax
-```{.python}
-logdensity = lambda x: logdensity_fn(**x)
-
-def inference_loop(rng_key, kernel, initial_state, num_samples):
-    @jax.jit
-    def one_step(state, rng_key):
-        state, _ = kernel(rng_key, state)
-        return state, state
-
-    keys = jax.random.split(rng_key, num_samples)
-    _, states = jax.lax.scan(one_step, initial_state, keys)
-    return states
-
-nuts = blackjax.nuts(logdensity, **nuts_params)
-states = inference_loop(rng_key, jax.jit(nuts.step), nuts.init(initial_position), 10_000)
-```
-
-## And what about the samples
-
-Use `posterior` for `R`.
+- Example with numbers.
 
 ```{.R}
-eight_schools_df <- as_draws_df(eight_schools_array)
-summarise_draws(eight_schools_df)
-#> # A tibble: 10 × 10
-#>    variable  mean median    sd   mad      q5   q95  rhat ess_bulk ess_tail
-#>    <chr>    <num>  <num> <num> <num>   <num> <num> <num>    <num>    <num>
-#>  1 mu        4.18   4.16  3.40  3.57  -0.854  9.39  1.02     558.     322.
-#>  2 tau       4.16   3.07  3.58  2.89   0.309 11.0   1.01     246.     202.
-#>  3 theta[1]  6.75   5.97  6.30  4.87  -1.23  18.9   1.01     400.     254.
-#>  4 theta[2]  5.25   5.13  4.63  4.25  -1.97  12.5   1.02     564.     372.
-#>  5 theta[3]  3.04   3.99  6.80  4.94 -10.3   11.9   1.01     312.     205.
+CODE
 ```
 
-## And what about the samples
+## Bayes theorem
 
-And ArviZ for `python` or `Julia`
+- Conditional probability is the axis on which Bayesian statistics turns.
+- Same equation...
+- ...but different interpretation.
 
-```{.python}
-data = az.from_pystan(posterior=fit)
-az.summary(data, var_names=["mu", "tau"])
+$$
+Equation
+$$
 
-Out[1]:
-      mean     sd  hdi_3%  hdi_97%  ...  mcse_sd  ess_bulk  ess_tail  r_hat
-mu   4.486  3.487  -1.623   10.693  ...    0.160     241.0     659.0   1.02
-tau  4.124  3.102   0.896    9.668  ...    0.186      67.0      38.0   1.06
+## Prior and posterior
 
-[2 rows x 9 columns]
-```
+- Equating terms in Bayes theorem to prior and posterior
 
-# Is sampling the only way?
+$$
+Equation
+$$
 
-## Variational inference
+## Bayesian inference
 
-- Turn the inference problem into an optimisation problem
-- Minimise the difference between true posterior distribution, $p(z|x)$, and variational distribution, $q(z)$
+- Where it gets interesting...
+- likelihood
+- Prior belief
+- Bayesian crank to generate...
+- Posterior
 
-![](assets/variational_inference.png)
+## Bayesian inference
 
-::: {.notes}
-No guarantees like sampling of true posterior.
-Minimise the ELBO (minimise the sum of the log likelihood and the KL divergence between the variation distribution and the prior).
-Optimise the variational parameters of the variational (surrogate) distribution.
-In this case, variational approximation is a Gaussian (Laplace approximation)
-:::
+$$
+Equation
+$$
 
-## I've heard people talk about INLA. What is INLA?
+## Choosing priors (conjugate and non-conjugate)
 
-- Approximate Bayesian inference for latent Gaussian models^[has extensions for non-Gaussian]
-- Really good for spatial statistics
-- Really quick
-- Most real world cases are latent Gaussian – it just works
-- Only used by 3 people, 2 of whom are here today
+- Mathematically soluable or not.
+- Some are (conjugate)
+- Most are not (non-conjugate)...
 
----
+## Types of conjugate pairs
 
-![](assets/probabilistic-programming.png)
+- Binomial-Beta
+
+$$
+Equation
+$$
+
+## Types of conjugate pairs
+
+- Normal-Normal
+
+$$
+Equation
+$$
+
+## Types of conjugate pairs
+
+- Poisson-Gamma
+
+$$
+Equation
+$$
+
+## Why sample?
+
+- Because most are non-conjugate
+- Need non-analytical solution to infer distributions
+
+## Why sample?
+
+- Picture of sample chain
+
+## MCMC, Gibbs, approximations to sampling (variational inference)
+
+- Many different types.
+- Others will also discuss this.
+
+## Non-conjugate how to get posterior?
+
+- Some kind of software to help us implement models for inference.
+- Using R.
+- Packages.
+
+# Getting ready for this workshop
+
+## nimble
+
+- Description of nimble.
+
+## Why we’re using nimble for (almost) everything over the workshop
+
+- Interpretability.
+- Flexibility.
+
+## The lab for this session
+
+- Examples of above using samples.
