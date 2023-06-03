@@ -29,71 +29,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="bayesian_regression_and_temporal_modelling_for_environmental_health_files/libs/revealjs/dist/theme/quarto.css">
   <link href="bayesian_regression_and_temporal_modelling_for_environmental_health_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -393,7 +328,7 @@
 
 <section id="title-slide" data-background-color="#f3f4f4" data-background-image="../../assets/bmeh_normal.png" data-background-position="60% 120%" data-background-size="80%" class="quarto-title-block center">
   <h1 class="title">Bayesian Regression and temporal modelling for environmental health</h1>
-  <p class="subtitle">Regression etc.</p>
+  <p class="subtitle">Key ideas and concepts</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -411,574 +346,83 @@ Robbie M. Parks
 
   <p class="date">Aug 14, 2023</p>
 </section>
-<section id="brief-discussion-of-r" class="title-slide slide level1 center">
-<h1>Brief discussion of R</h1>
-
-</section>
-
-<section id="brief-discussion-of-rstudio-cloud" class="title-slide slide level1 center">
-<h1>Brief discussion of RStudio Cloud</h1>
-
-</section>
-
-<section id="regression" class="title-slide slide level1 center">
-<h1>Regression</h1>
-
-</section>
-
-<section id="generalised-linear-models" class="title-slide slide level1 center">
-<h1>Generalised linear models</h1>
-
-</section>
-
-<section id="brief-history-of-bayesian-thinking" class="title-slide slide level1 center">
-<h1>Brief history of Bayesian thinking</h1>
-
-</section>
-
-<section id="conditional-probability" class="title-slide slide level1 center">
-<h1>Conditional probability</h1>
-
-</section>
-
-<section id="bayes-theorem" class="title-slide slide level1 center">
-<h1>Bayes theorem</h1>
-
-</section>
-
-<section id="prior-and-posterior" class="title-slide slide level1 center">
-<h1>Prior and posterior</h1>
-
-</section>
-
-<section id="choosing-priors-conjugate-and-non-conjugate" class="title-slide slide level1 center">
-<h1>Choosing priors (conjugate and non-conjugate)</h1>
-
-</section>
-
-<section id="non-conjugate-how-to-get-posterior" class="title-slide slide level1 center">
-<h1>Non-conjugate how to get posterior?</h1>
-
-</section>
-
-<section id="why-sample" class="title-slide slide level1 center">
-<h1>Why sample?</h1>
-
-</section>
-
-<section id="mcmc-gibbs-others-briefly-laplace-approximation" class="title-slide slide level1 center">
-<h1>MCMC, Gibbs, others briefly (Laplace approximation?)</h1>
-
-</section>
-
-<section id="discussion-of-r-nimble" class="title-slide slide level1 center">
-<h1>Discussion of R-Nimble</h1>
-
-</section>
-
-<section id="why-were-using-it-for-everything-over-two-days" class="title-slide slide level1 center">
-<h1>Why we’re using it for everything over two days</h1>
-
+<section id="outline" class="title-slide slide level1 center">
+<h1>Outline</h1>
+<ul>
+<li class="fragment">Introduction</li>
+<li class="fragment">Generalized linear models</li>
+<li class="fragment">Getting ready for the lab</li>
+</ul>
 </section>
 
 <section>
-<section id="what-did-people-do-before-packages" class="title-slide slide level1 center">
-<h1>What did people do before packages?</h1>
+<section id="overview" class="title-slide slide level1 center">
+<h1>Overview</h1>
 
 </section>
-<section id="they-wrote-their-posterior-probability-density" class="slide level2">
-<h2>They wrote their posterior probability density</h2>
-<p><span class="math display">\[
-y_i \sim \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
-\epsilon_i \sim \text{Normal}(0, \sigma) \\
-\alpha \sim \text{Normal}(0, 10) \\
-\mathbf{\beta} \sim \text{Normal}(0, 1) \\
-\sigma \sim \text{Uniform}(0, 100)
-\]</span></p>
-</section>
-<section id="they-wrote-their-posterior-probability-density-1" class="slide level2">
-<h2>They wrote their posterior probability density</h2>
-<div class="sourceCode" id="cb1" data-code-line-numbers="5-15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm, uniform</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> scipy.special <span class="im">import</span> logsumexp</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">def</span> logpdf(params, data):</span>
-<span id="cb1-6"><a href="#cb1-6"></a>    log_prior <span class="op">=</span> (</span>
-<span id="cb1-7"><a href="#cb1-7"></a>      norm.logpdf(params.alpha, loc<span class="op">=</span><span class="fl">0.0</span>, scale<span class="op">=</span><span class="fl">10.0</span>) <span class="op">+</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>      uniform.logpdf(params.sigma, low<span class="op">=</span><span class="fl">0.0</span>, high<span class="op">=</span><span class="fl">100.0</span>) <span class="op">+</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>      np.<span class="bu">sum</span>(norm.logpdf(params.beta, loc<span class="op">=</span><span class="fl">0.0</span>, scale<span class="op">=</span><span class="fl">1.0</span>))</span>
-<span id="cb1-10"><a href="#cb1-10"></a>    )</span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a>    mu <span class="op">=</span> params.alpha <span class="op">+</span> jnp.matmul(x, params.beta)</span>
-<span id="cb1-13"><a href="#cb1-13"></a>    log_likelihood <span class="op">=</span> norm.logpdf(data, mu, params.sigma)</span>
-<span id="cb1-14"><a href="#cb1-14"></a></span>
-<span id="cb1-15"><a href="#cb1-15"></a>    <span class="cf">return</span> logsumexp(log_prior <span class="op">+</span> log_likelihood, axis<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="they-wrote-their-own-samplers" class="slide level2">
-<h2>They wrote their own samplers</h2>
-<div class="sourceCode" id="cb2" data-code-line-numbers="8-9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">def</span> rw_metropolis_kernel(logpdf, data, position, log_prob):</span>
-<span id="cb2-4"><a href="#cb2-4"></a>    move_proposals <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.1</span>, size<span class="op">=</span>position.shape)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    proposal <span class="op">=</span> position <span class="op">+</span> move_proposals</span>
-<span id="cb2-6"><a href="#cb2-6"></a>    proposal_log_prob <span class="op">=</span> logpdf(proposal, data)</span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a>    log_uniform <span class="op">=</span> np.log(np.random.uniform(low<span class="op">=</span><span class="dv">0</span>, high<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb2-9"><a href="#cb2-9"></a>    do_accept <span class="op">=</span> log_uniform <span class="op">&lt;</span> proposal_log_prob <span class="op">-</span> log_prob</span>
-<span id="cb2-10"><a href="#cb2-10"></a></span>
-<span id="cb2-11"><a href="#cb2-11"></a>    position <span class="op">=</span> np.where(do_accept, proposal, position)</span>
-<span id="cb2-12"><a href="#cb2-12"></a>    log_prob <span class="op">=</span> np.where(do_accept, proposal_log_prob, log_prob)</span>
-<span id="cb2-13"><a href="#cb2-13"></a>    <span class="cf">return</span> position, log_prob</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="you-are-not-arianna-rosenbluth" class="slide level2">
-<h2>You are not Arianna Rosenbluth</h2>
+<section id="regression-models" class="slide level2">
+<h2>Regression models</h2>
 <ul>
-<li class="fragment">You will make a mistake.</li>
-<li class="fragment">Why write code that people have written before?</li>
-<li class="fragment">Do you enjoy calibrating samplers?</li>
+<li class="fragment">Most commonly used to assess presence of a relationship between a dependent variable and one or more independent variables.</li>
+<li class="fragment">Bayesian regression originally used in econometrics.</li>
+<li class="fragment">Now wide range of fields use regression, including environmental epidemiology.</li>
 </ul>
-<aside class="notes">
-<p>You will make a mistake. People have done this before, and spent a lot more time doing this. They write better inference algorithms than you.</p>
-<p>It turns out that he and Arianna Rosenbluth (his wife) did most of the work. More specifically, he did the mathematical work, Arianna wrote the code that ran on the MANIAC, August Teller wrote an earlier version of the code, and Edward Teller gave some critical suggestions about the methodology. Finally, Nick Metropolis provided the computing time; as he was first author the method is therefore named after him. But perhaps a more appropriate name would have been the Rosenbluth algorithm.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section></section>
-<section id="probabilistic-programming-languages" class="title-slide slide level1 center">
-<h1>Probabilistic programming languages</h1>
-
 </section>
-
-<section id="monolithic" class="title-slide slide level1 center">
-<h1>“Monolithic”</h1>
-<aside class="notes">
-<p>Thomas Wiecki, PyMC dev</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
+<section id="linear-regression" class="slide level2">
+<h2>Linear regression</h2>
 </section>
-
-<section>
-<section id="winbugs" class="title-slide slide level1 center">
-<h1>WinBUGS</h1>
-
+<section id="linear-regression-example" class="slide level2">
+<h2>Linear regression: example</h2>
 </section>
-<section id="write-models-in-the-bugs-language" class="slide level2">
-<h2>Write models in the BUGS language</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">model</span>(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="co"># prior</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb3-7"><a href="#cb3-7"></a></span>
-<span id="cb3-8"><a href="#cb3-8"></a>  <span class="co"># likelihood</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb3-10"><a href="#cb3-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
-<span id="cb3-11"><a href="#cb3-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
-<span id="cb3-12"><a href="#cb3-12"></a>  }</span>
-<span id="cb3-13"><a href="#cb3-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="non-linear-regression" class="slide level2">
+<h2>Non-linear regression</h2>
 </section>
-<section id="look-at-this-thrilling-output." class="slide level2">
-<h2>Look at this <span style="color:#f928d2;">thrilling</span> output.</h2>
-
-<img data-src="assets/winbugs_screenshot.jpeg" class="r-stretch"></section>
-<section id="is-winbugs-still-good" class="slide level2">
-<h2>Is WinBugs still good?<sup>1</sup></h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div style="color: #58b364">
-<ul>
-<li class="fragment">Point and click</li>
-<li class="fragment">See your chains as they run</li>
-</ul>
-</div>
-</div><div class="column" style="width:50%;">
-<div style="color: #fc6161">
-<ul>
-<li class="fragment">Slow</li>
-<li class="fragment">Old</li>
-</ul>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">No</li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>No</p></li></ol></aside></section></section>
-<section>
-<section id="stan" class="title-slide slide level1 center">
-<h1>Stan</h1>
-
-</section>
-<section id="model-in-stan" class="slide level2">
-<h2>Model in Stan</h2>
-<pre><code>data {
-  int&lt;lower=0&gt; N;   // number of data items
-  int&lt;lower=0&gt; P;   // number of predictors
-  matrix[N, K] x;   // predictor matrix
-  vector[N] y;      // outcome vector
-}
-parameters {
-  real alpha;           // intercept
-  vector[P] beta;       // coefficients for predictors
-  real&lt;lower=0&gt; sigma;  // error scale
-}
-transformed parameters {
-  vector[N] mu;
-  mu = alpha + X * beta;
-}
-model {
-  alpha ~ normal(0., 10.);
-  beta ~ normal(0., 1.);
-  sigma ~ uniform(0., 100.);
-  y ~ normal(mu, sigma);  // likelihood
-}</code></pre>
-
-<aside class="notes">
-<p>Stanislaw Ulam is probably best known for realising that electronic computers made it practical to apply statistical methods to functions without known solutions, and as computers have developed, the Monte Carlo method has become a common and standard approach to many problems.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-<aside><div>
-<p>Stan, not STAN</p>
-</div></aside></section>
-<section id="the-granddaddy-of-ppls" class="slide level2">
-<h2>The granddaddy of PPLs</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div style="color: #58b364">
-<ul>
-<li class="fragment">The statistician’s choice</li>
-<li class="fragment">Reliable, battle-tested samplers (including NUTS)</li>
-<li class="fragment">Interface with <code>python</code>, <code>R</code> or <code>Julia</code></li>
-</ul>
-</div>
-</div><div class="column" style="width:50%;">
-<div style="color: #fc6161">
-<ul>
-<li class="fragment">Difficult to extend</li>
-<li class="fragment">Writing things like <code>int&lt;lower=0&gt; N</code></li>
-</ul>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">Using <code>brms</code> or <code>rstanarm</code>, you can write models like base <code>R</code> (like <code>y ~ 1 + x</code>) and the inference is done in Stan.</li>
-</ul>
+<section id="non-linear-regression-example" class="slide level2">
+<h2>Non-linear regression: example</h2>
 </section></section>
 <section>
-<section id="nimble" class="title-slide slide level1 center">
-<h1>nimble</h1>
+<section id="genrealized-linear-models" class="title-slide slide level1 center">
+<h1>Genrealized linear models</h1>
 
 </section>
-<section id="nimble-model-is-like-winbugs-but-more-flexible" class="slide level2">
-<h2>nimble model is like WinBUGS, but more flexible</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">model</span>(</span>
-<span id="cb5-2"><a href="#cb5-2"></a>  <span class="co"># prior</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb5-4"><a href="#cb5-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb5-5"><a href="#cb5-5"></a>  beta[<span class="dv">1</span><span class="sc">:</span>k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb5-6"><a href="#cb5-6"></a></span>
-<span id="cb5-7"><a href="#cb5-7"></a>  <span class="co"># likelihood</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb5-9"><a href="#cb5-9"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
-<span id="cb5-10"><a href="#cb5-10"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> (beta[<span class="dv">1</span><span class="sc">:</span>p] <span class="sc">%*%</span> x[i, <span class="dv">1</span><span class="sc">:</span>p])[<span class="dv">1</span>,<span class="dv">1</span>]</span>
-<span id="cb5-11"><a href="#cb5-11"></a>  }</span>
-<span id="cb5-12"><a href="#cb5-12"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="exponential-family-of-models" class="slide level2">
+<h2>Exponential family of models</h2>
+<ul>
+<li class="fragment">XX</li>
+</ul>
 </section>
-<section id="i-like-nimble-but" class="slide level2">
-<h2>I like nimble, but</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div style="color: #58b364">
+<section id="generalized-linear-models" class="slide level2">
+<h2>Generalized linear models</h2>
 <ul>
-<li class="fragment">Compiles <code>R</code> to <code>C++</code> for speed and scalability</li>
-<li class="fragment">Automatically finds conjugate relationships</li>
-<li class="fragment">Can pick a different sampler for each parameter</li>
+<li class="fragment">Extension of linear regression to when distribution not necessarily normally distributed.</li>
+<li class="fragment">Still part of exponential family</li>
+<li class="fragment">XX</li>
 </ul>
-</div>
-</div><div class="column" style="width:50%;">
-<div style="color: #fc6161">
-<ul>
-<li class="fragment">If the sampler is not conjugate, it can mix poorly</li>
-</ul>
-</div>
-</div>
-</div>
 </section>
-<section id="ranking-these-ppls" class="slide level2">
-<h2>Ranking these PPLs<sup>1</sup></h2>
-<p>Usability:</p>
-<ul>
-<li class="fragment">How easy is it to fit a model?</li>
-<li class="fragment">How easy is it to run the model?</li>
-<li class="fragment">How good is the documentation?</li>
-<li class="fragment">Does it have everything I need?</li>
-<li class="fragment">How good is the performance?</li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>Entirely subjective</p></li></ol></aside></section>
-<section id="ranking-these-ppls-1" class="slide level2">
-<h2>Ranking these PPLs<sup>1</sup></h2>
-<p>Extensibility:</p>
-<ul>
-<li class="fragment">If it can’t do something, how easily can I make it do that?</li>
-<li class="fragment">How modular is it? Can other packages work with it?</li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn3"><p>Entirely subjective</p></li></ol></aside></section>
-<section id="ranking-these-ppls-2" class="slide level2">
-<h2>Ranking these PPLs</h2>
-<p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="fragment absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="fragment absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="fragment absolute" style="top: 63%; left: 55%; width: 6%; "></p>
+<section id="logistic-regression" class="slide level2">
+<h2>Logistic regression</h2>
+</section>
+<section id="logistic-regression-example" class="slide level2">
+<h2>Logistic regression: example</h2>
+</section>
+<section id="poisson-regression" class="slide level2">
+<h2>Poisson regression</h2>
+</section>
+<section id="poisson-regression-example" class="slide level2">
+<h2>Poisson regression: example</h2>
 </section></section>
 <section>
-<section id="decoupled" class="title-slide slide level1 center">
-<h1>Decoupled</h1>
+<section id="getting-ready-for-the-lab" class="title-slide slide level1 center">
+<h1>Getting ready for the lab</h1>
 
 </section>
-<section id="decoupled-1" class="slide level2">
-<h2>Decoupled</h2>
-<p>Separate the <strong>model</strong> from the <strong>inference</strong>.</p>
-<ul>
-<li class="fragment">PPL defines the <strong>log posterior probability density</strong></li>
-<li class="fragment">Makes use of great tensor libraries (<code>jax</code>, <code>tensorflow</code>, <code>PyTorch</code>, <code>aesara</code>) to do the maths</li>
-</ul>
-</section>
-<section id="tensorflow-probability" class="slide level2">
-<h2>tensorflow probability</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">def</span> model(np, x):</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    <span class="kw">def</span> joint_dist():</span>
-<span id="cb6-3"><a href="#cb6-3"></a>        alpha <span class="op">=</span> <span class="cf">yield</span> tfd.Normal(loc<span class="op">=</span><span class="fl">0.0</span>, scale<span class="op">=</span><span class="fl">10.0</span>)</span>
-<span id="cb6-4"><a href="#cb6-4"></a>        sigma <span class="op">=</span> <span class="cf">yield</span> tfd.Uniform(low<span class="op">=</span><span class="fl">0.0</span>, high<span class="op">=</span><span class="fl">100.0</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a>        beta <span class="op">=</span> <span class="cf">yield</span> tfd.Normal(loc<span class="op">=</span>tf.zeros(np), scale<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a>        mu <span class="op">=</span> alpha <span class="op">+</span> tf.linalg.matmul(x, beta)</span>
-<span id="cb6-9"><a href="#cb6-9"></a></span>
-<span id="cb6-10"><a href="#cb6-10"></a>        <span class="cf">yield</span> tfd.Normal(loc<span class="op">=</span>mu, scale<span class="op">=</span>sigma)</span>
-<span id="cb6-11"><a href="#cb6-11"></a></span>
-<span id="cb6-12"><a href="#cb6-12"></a>    <span class="cf">return</span> tfd.JointDistributionCoroutineAutoBatched(joint_dist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This is trash.</p>
-<p>Don’t use it.</p>
-</section>
-<section id="ranking-these-ppls-3" class="slide level2">
-<h2>Ranking these PPLs</h2>
-<p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="fragment absolute" style="top: 55%; left: 35%; width: 6%; "></p>
-</section>
-<section id="pymc" class="slide level2">
-<h2>PyMC</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
-<span id="cb7-2"><a href="#cb7-2"></a></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
-<span id="cb7-4"><a href="#cb7-4"></a>    alpha <span class="op">=</span> pm.Normal(<span class="st">"alpha"</span>, <span class="fl">0.0</span>, sigma<span class="op">=</span><span class="fl">10.0</span>)</span>
-<span id="cb7-5"><a href="#cb7-5"></a>    sigma <span class="op">=</span> pm.Uniform(<span class="st">"sigma"</span>, low<span class="op">=</span><span class="fl">0.0</span>, high<span class="op">=</span><span class="fl">100.0</span>)</span>
-<span id="cb7-6"><a href="#cb7-6"></a>    beta <span class="op">=</span> pm.Normal(<span class="st">"beta"</span>, <span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">1.0</span>, shape<span class="op">=</span>(np,))</span>
-<span id="cb7-7"><a href="#cb7-7"></a></span>
-<span id="cb7-8"><a href="#cb7-8"></a>    mu <span class="op">=</span> alpha <span class="op">+</span> pt.matmul(x, beta)</span>
-<span id="cb7-9"><a href="#cb7-9"></a></span>
-<span id="cb7-10"><a href="#cb7-10"></a>    likelihood <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, mu<span class="op">=</span>mu, sigma<span class="op">=</span>sigma, observed<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="pymc-is-the-dev-choice" class="slide level2">
-<h2>PyMC is the dev choice</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div style="color: #58b364">
-<ul>
-<li class="fragment">Great open source community</li>
-<li class="fragment"><code>aesara</code> backend can compile to <code>jax</code>, <code>C</code>, <code>numba</code> (and more)</li>
-<li class="fragment">Runs on GPU easily</li>
-<li class="fragment">Best documentation</li>
-</ul>
-</div>
-</div><div class="column" style="width:50%;">
-<div style="color: #fc6161">
-<ul>
-<li class="fragment">Always in development/flux</li>
-<li class="fragment">Multiple backends can be confusing</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<section id="ranking-these-ppls-4" class="slide level2">
-<h2>Ranking these PPLs</h2>
-<p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="fragment absolute" style="top: 25%; left: 75%; width: 8%; "></p>
-</section>
-<section id="numpyro" class="slide level2">
-<h2>numpyro</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
-<span id="cb8-2"><a href="#cb8-2"></a></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">def</span> model(np, x, y<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb8-4"><a href="#cb8-4"></a>    alpha <span class="op">=</span> numpyro.sample(<span class="st">"alpha"</span>, dist.Normal(<span class="fl">0.0</span>, <span class="fl">10.0</span>))</span>
-<span id="cb8-5"><a href="#cb8-5"></a>    sigma <span class="op">=</span> numpyro.sample(<span class="st">"sigma"</span>, dist.Uniform(<span class="fl">0.0</span>, <span class="fl">100.0</span>))</span>
-<span id="cb8-6"><a href="#cb8-6"></a></span>
-<span id="cb8-7"><a href="#cb8-7"></a>    <span class="cf">with</span> numpyro.plate(<span class="st">"plate_predictors"</span>, np):</span>
-<span id="cb8-8"><a href="#cb8-8"></a>        beta <span class="op">=</span> numpyro.sample(<span class="st">"beta"</span>, dist.Normal(<span class="fl">0.0</span>, <span class="fl">1.0</span>))</span>
-<span id="cb8-9"><a href="#cb8-9"></a></span>
-<span id="cb8-10"><a href="#cb8-10"></a>    mu <span class="op">=</span> alpha <span class="op">+</span> jnp.matmul(x, beta)</span>
-<span id="cb8-11"><a href="#cb8-11"></a></span>
-<span id="cb8-12"><a href="#cb8-12"></a>    <span class="cf">with</span> numpyro.plate(<span class="st">"data"</span>, <span class="bu">len</span>(x)):</span>
-<span id="cb8-13"><a href="#cb8-13"></a>        numpyro.sample(<span class="st">"y"</span>, dist.Normal(mu, sigma), obs<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="the-lab-for-this-session" class="slide level2">
+<h2>The lab for this session</h2>
 
-<aside><div>
-<p>There is a related package called Pyro with a PyTorch backend, but numpyro’s <code>jax</code> backend is better for sampling.</p>
-</div></aside></section>
-<section id="numpyro-is-my-favourite-for-now" class="slide level2">
-<h2>numpyro is my favourite (for now)</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div style="color: #58b364">
-<ul>
-<li class="fragment">Really quick</li>
-<li class="fragment">Runs on GPU easily</li>
-<li class="fragment">Works with entire <code>jax</code> ecosystem</li>
-</ul>
-</div>
-</div><div class="column" style="width:50%;">
-<div style="color: #fc6161">
-<ul>
-<li class="fragment">Small learning curve to get used to <code>plate</code> notation</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<section id="ranking-these-ppls-5" class="slide level2">
-<h2>Ranking these PPLs</h2>
-<p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="absolute" style="top: 25%; left: 75%; width: 8%; "> <img data-src="assets/numpyro.png" class="fragment absolute" style="top: 22%; left: 78%; width: 10%; "></p>
-</section>
-<section id="other-packages" class="slide level2">
-<h2>Other packages</h2>
-<p><code>JAGS</code>, <code>greta</code>, <code>beanmachine</code>, <code>Turing.jl</code> etc</p>
-</section>
-<section id="ranking-these-ppls-6" class="slide level2">
-<h2>Ranking these PPLs</h2>
-<p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="absolute" style="top: 25%; left: 75%; width: 8%; "> <img data-src="assets/numpyro.png" class="absolute" style="top: 22%; left: 78%; width: 10%; "> <img data-src="assets/jags.png" class="fragment absolute" style="top: 81%; left: 30%; width: 8%; "> <img data-src="assets/greta.png" class="fragment absolute" style="top: 68%; left: 34%; width: 8%; "> <img data-src="assets/beanmachine.png" class="fragment absolute" style="top: 65%; left: 25%; width: 6%; "> <img data-src="assets/turing.png" class="fragment absolute" style="top: 40%; left: 62%; width: 6%; "></p>
-</section>
-<section id="a-note-on-blackjax" class="slide level2">
-<h2>A note on blackjax</h2>
-<ol type="1">
-<li class="fragment">Write any log probability function (either manually or in numpyro, PyMC, tfp etc)</li>
-<li class="fragment">Sample using a vast array of samplers/inference algorithms written in <code>jax</code></li>
-</ol>
-</section>
-<section id="a-note-on-blackjax-1" class="slide level2">
-<h2>A note on blackjax</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>logdensity <span class="op">=</span> <span class="kw">lambda</span> x: logdensity_fn(<span class="op">**</span>x)</span>
-<span id="cb9-2"><a href="#cb9-2"></a></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="kw">def</span> inference_loop(rng_key, kernel, initial_state, num_samples):</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    <span class="at">@jax.jit</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a>    <span class="kw">def</span> one_step(state, rng_key):</span>
-<span id="cb9-6"><a href="#cb9-6"></a>        state, _ <span class="op">=</span> kernel(rng_key, state)</span>
-<span id="cb9-7"><a href="#cb9-7"></a>        <span class="cf">return</span> state, state</span>
-<span id="cb9-8"><a href="#cb9-8"></a></span>
-<span id="cb9-9"><a href="#cb9-9"></a>    keys <span class="op">=</span> jax.random.split(rng_key, num_samples)</span>
-<span id="cb9-10"><a href="#cb9-10"></a>    _, states <span class="op">=</span> jax.lax.scan(one_step, initial_state, keys)</span>
-<span id="cb9-11"><a href="#cb9-11"></a>    <span class="cf">return</span> states</span>
-<span id="cb9-12"><a href="#cb9-12"></a></span>
-<span id="cb9-13"><a href="#cb9-13"></a>nuts <span class="op">=</span> blackjax.nuts(logdensity, <span class="op">**</span>nuts_params)</span>
-<span id="cb9-14"><a href="#cb9-14"></a>states <span class="op">=</span> inference_loop(rng_key, jax.jit(nuts.step), nuts.init(initial_position), <span class="dv">10_000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="and-what-about-the-samples" class="slide level2">
-<h2>And what about the samples</h2>
-<p>Use <code>posterior</code> for <code>R</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>eight_schools_df <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(eight_schools_array)</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">summarise_draws</span>(eight_schools_df)</span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; # A tibble: 10 × 10</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co">#&gt;    variable  mean median    sd   mad      q5   q95  rhat ess_bulk ess_tail</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;num&gt;  &lt;num&gt; &lt;num&gt; &lt;num&gt;   &lt;num&gt; &lt;num&gt; &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt;  1 mu        4.18   4.16  3.40  3.57  -0.854  9.39  1.02     558.     322.</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="co">#&gt;  2 tau       4.16   3.07  3.58  2.89   0.309 11.0   1.01     246.     202.</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="co">#&gt;  3 theta[1]  6.75   5.97  6.30  4.87  -1.23  18.9   1.01     400.     254.</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt;  4 theta[2]  5.25   5.13  4.63  4.25  -1.97  12.5   1.02     564.     372.</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#&gt;  5 theta[3]  3.04   3.99  6.80  4.94 -10.3   11.9   1.01     312.     205.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="and-what-about-the-samples-1" class="slide level2">
-<h2>And what about the samples</h2>
-<p>And ArviZ for <code>python</code> or <code>Julia</code></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>data <span class="op">=</span> az.from_pystan(posterior<span class="op">=</span>fit)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>az.summary(data, var_names<span class="op">=</span>[<span class="st">"mu"</span>, <span class="st">"tau"</span>])</span>
-<span id="cb11-3"><a href="#cb11-3"></a></span>
-<span id="cb11-4"><a href="#cb11-4"></a>Out[<span class="dv">1</span>]:</span>
-<span id="cb11-5"><a href="#cb11-5"></a>      mean     sd  hdi_3<span class="op">%</span>  hdi_97<span class="op">%</span>  ...  mcse_sd  ess_bulk  ess_tail  r_hat</span>
-<span id="cb11-6"><a href="#cb11-6"></a>mu   <span class="fl">4.486</span>  <span class="fl">3.487</span>  <span class="op">-</span><span class="fl">1.623</span>   <span class="fl">10.693</span>  ...    <span class="fl">0.160</span>     <span class="fl">241.0</span>     <span class="fl">659.0</span>   <span class="fl">1.02</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a>tau  <span class="fl">4.124</span>  <span class="fl">3.102</span>   <span class="fl">0.896</span>    <span class="fl">9.668</span>  ...    <span class="fl">0.186</span>      <span class="fl">67.0</span>      <span class="fl">38.0</span>   <span class="fl">1.06</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a></span>
-<span id="cb11-9"><a href="#cb11-9"></a>[<span class="dv">2</span> rows x <span class="dv">9</span> columns]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section></section>
-<section>
-<section id="is-sampling-the-only-way" class="title-slide slide level1 center">
-<h1>Is sampling the only way?</h1>
-
-</section>
-<section id="variational-inference" class="slide level2">
-<h2>Variational inference</h2>
-<ul>
-<li class="fragment">Turn the inference problem into an optimisation problem</li>
-<li class="fragment">Minimise the difference between true posterior distribution, <span class="math inline">\(p(z|x)\)</span>, and variational distribution, <span class="math inline">\(q(z)\)</span></li>
-</ul>
-
-<img data-src="assets/variational_inference.png" class="r-stretch"><aside class="notes">
-<p>No guarantees like sampling of true posterior. Minimise the ELBO (minimise the sum of the log likelihood and the KL divergence between the variation distribution and the prior). Optimise the variational parameters of the variational (surrogate) distribution. In this case, variational approximation is a Gaussian (Laplace approximation)</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="ive-heard-people-talk-about-inla.-what-is-inla" class="slide level2">
-<h2>I’ve heard people talk about INLA. What is INLA?</h2>
-<ul>
-<li class="fragment">Approximate Bayesian inference for latent Gaussian models<sup>1</sup></li>
-<li class="fragment">Really good for spatial statistics</li>
-<li class="fragment">Really quick</li>
-<li class="fragment">Most real world cases are latent Gaussian – it just works</li>
-<li class="fragment">Only used by 3 people, 2 of whom are here today</li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn4"><p>has extensions for non-Gaussian</p></li></ol></aside></section>
-<section class="slide level2">
-
-<p><img data-src="assets/probabilistic-programming.png"></p>
-<p><img src="../../assets/bmeh_normal.png" class="slide-logo"></p>
-<div class="footer footer-default">
+<img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
 </div>
 </section></section>
-
     </div>
   </div>
 
