@@ -13,24 +13,136 @@ format:
         # footer: <https://www.publichealth.columbia.edu/research/programs/precision-prevention/sharp-training-program/bayesian-modeling>
 ---
 
-- show Bayes formula again. “What can possibly go wrong?”
+# Bayesian inference
 
-- general principle while using a PPLs: focus on modelling, use diagnostic tools
+# 
 
-- diagnosing MCMC outputs: R-hat, trace-plots, ESS
+Bayes formula: $$ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}$$
 
-- what is a workflow? Box’s loop, modern Bayesian workflow
+# 
 
-- iterative model building: understand the domain, formulate the problem mathematically, implement the model, test, debug
+Bayes rule: $$\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}$$
 
-- prior predictive check, fit the model, assess convergence, posterior predictive, iterate
+. . .
 
-- SBC
+What can possibly go wrong?
 
-- example: SIR
+# 
 
-- example: GP
+### General principle of Bayesian inference:
 
-- conclusion
+-   specify a complete Bayesian model
 
-- references
+    -   consider data $y = \{y_1,...,y_n\}$ and parameter $\theta$
+
+    -   specify an \alert{observation model}, e.g.$$p(y|\theta) = \prod_i \mathcal{N}(y_i | \theta,1)$$
+
+    -   complete the model with a \alert{prior distribution, e.g.} $$p(\theta) = \mathcal{N}(0,1)$$
+
+-   sample the \alert{posterior distribution} of the parameter $\theta$.
+
+Sometimes posterior is available in a closed form. But rarely.
+
+# 
+
+### Probabilistic programming languages (PPLs)
+
+PPLs from a user's perspective:
+
+-   PPLs are designed to let the user \alert{focus on modelling} while inference happens automatically.
+-   Users need to specify
+    -   prior,
+    -   likelihood.
+-   Inference is performed via powerful algorithms such as \alert{MCMC} variations.
+-   Availability of \alert{diagnostic tools}.
+
+# 
+
+### Diagnosing MCMC outputs
+
+-   Convergence diagnostics
+    -   $\hat{R}$,
+    -   traceplots.
+-   Effective sample size (ESS):
+    -   samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities
+    -   ESS -- number of independent samples required to obtain the same level of uncertainty as from the available dependent samples
+
+# 
+
+### Diagnosing MCMC outputs
+
+We use multiple chains and inspect convergence after warm-up
+
+(insert image)
+
+# 
+
+### Diagnosing MCMC outputs
+
+We use multiple chains and inspect convergence after warm-up
+
+(insert another image)
+
+# 
+
+### Diagnosing MCMC outputs
+
+The post-warm-up samples of $\theta$ approximate its posterior distribution
+
+# Principles of Bayesian workflow
+
+# 
+
+### Workflows as 'good practice' standards
+
+Workflows exist in a variety of disciplines. For example, in machine learning workflow standards are being formalised under the name of MLOps:
+
+(MLOps image)
+
+# 
+### Box's loop
+
+In the 1960's, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box's loop by Blei et. al. (2014):
+
+(Box's loop image)
+
+# 
+### Modern Bayesian workflow
+
+A systematic review of the steps within the modern Bayesian workflow, described in Gelman et al. (2020):
+
+(image modern workflow)
+
+# 
+### Prior predictive checks
+
+Prior predictive checking consists in simulating data from the priors:
+
+-   visualize priors (especially after transformation)
+
+-   this shows the range of data compatible with the model
+
+-   it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values
+
+# 
+### Iterative model building
+
+A possible realisation of the Bayeisan workflow loop:
+
+-   Understand the domain and problem,
+
+-   Formulate the model mathematically,
+
+-   Implement model, test, debug,
+
+-   Perform prior predictive check,
+
+-   Fit the model,
+
+-   Assess convergence diagnostics,
+
+-   Perform posterior predictive check,
+
+-   Improve the model iteratively: from baseline to complex and computationally efficient models.
+
+# Examples
