@@ -1,0 +1,248 @@
+---
+title: "Introduction to Bayesian Methods"
+subtitle: "Key ideas and concepts"
+author:
+ - name: "Robbie M. Parks"
+   email: "robbie.parks@columbia.edu"
+institute: "Environmental Health Sciences, Columbia University"
+date: 2023-08-14
+date-format: medium
+title-slide-attributes:
+  data-background-color: "#f3f4f4"
+  data-background-image: "../../assets/bmeh_normal.png"
+  data-background-size: 80%
+  data-background-position: 60% 120%
+format:
+  revealjs:
+    slide-number: true
+    incremental: true
+    chalkboard:
+      buttons: false
+      preview-links: auto
+    logo: "../../assets/bmeh_normal.png"
+    theme: [default, ../../assets/style.scss]
+---
+
+# Outline
+
+- Overview
+- Introduction to Bayesian methods
+- Getting ready for this workshop
+
+# Overview
+
+## This course is for those who
+
+- Are interested or who have heard about Bayesian modeling.
+- Work in Environmental Health (or adjacent fields).
+- Have little theoretical or practical experience of Bayesian ideas.
+- Would like some tools and know-how to get started in an approachable and friendly setting.
+
+## This course is for those who
+
+- Are interested or who have heard about Bayesian modeling.
+- Work in Environmental Health (or adjacent fields).
+- Have little theoretical or practical experience of Bayesian ideas.
+- Would like some tools and know-how to get started in an approachable and friendly setting.
+
+## R
+
+- R is an interactive environment developed by statisticians for data analysis.
+- A more detailed Introduction to R can be found at https://www.r-project.org.
+- This isn't a course to learn R...
+
+## R
+
+- Sample code:
+
+```{.R}
+model(
+  # prior
+  alpha ~ dnorm(0, pow(10, -2))
+  sigma ~ dunif(0, 100)
+  tau <- pow(sigma, -2) # precision
+  for (k in 1:p) beta[k] ~ dnorm(0, 1)
+
+  # likelihood
+  for (i in 1:n) {
+    y[i] ~ dnorm(mu[i], tau)
+    mu[i] <- alpha + inprod(beta[1:p], x[i, 1:p])
+  }
+)
+```
+
+##	RStudio
+
+- RStudio is an integrated development environment (IDE) for R developed by J J Allaire.
+- RStudio provides a convenient graphical interface to R, making it more user-friendly, and providing many useful features.
+- Such features include direct code execution, tools for plotting, history, debugging and workspace management.
+- A more detailed background on to RStudio can be found at https://www.rstudio.com/about/.
+
+##	RStudio Cloud
+
+- We will assume you have done the preliminary homework.
+- RStudio Cloud is a cloud-based RStudio which runs projects and code in the cloud.
+- RStudio Cloud allows convenient scaling and sharing of code, including for training programs such as SHARP.
+- Registration for free is available via https://rstudio.cloud/.
+- We will go through how to navigate RStudio Cloud in the basics folder a littlle later in the tutorial.
+- More details are available via https://rstudio.cloud/learn/guide.
+
+## GitHub
+
+- Version control to interface with RStudio Cloud.
+- This is just for information, as you will not be expected to be an expert on GitHub to participate in your SHARP course.
+- But! You should learn it in general as it's really essential in today's modern research environment.
+
+# Introduction to Bayesian methods
+
+## Thomas Bayes and Simon Pierre Laplace
+
+- Started with these two.
+- Bayes is why it's called Bayesian
+- Sorry Laplace!
+
+## Classical probability
+
+- 'Frequentist'.
+- Concept of limit of long-run relative frequency.
+- Ratio of the number of times event occurred to the number of trials.
+- Dice example.
+
+## Classical probability
+
+$$
+Equation
+$$
+
+## Classical probability
+
+```{.R}
+CODE
+```
+
+## Subjective probability
+
+- What about the probability that it will rain tomorrow?
+- Degree of belief involved.
+- Foundation of Bayesian thinking.
+
+## Conditional probability
+
+- Two events $A$ and $B$.
+- Conditional event $A$ given $B$.
+$$
+Equation
+$$
+
+## Conditional probability
+
+- Example with numbers.
+
+$$
+Equation
+$$
+
+## Conditional probability
+
+- Example with numbers.
+
+```{.R}
+CODE
+```
+
+## Bayes theorem
+
+- Conditional probability is the axis on which Bayesian statistics turns.
+- Same equation...
+- ...but different interpretation.
+
+$$
+Equation
+$$
+
+## Prior and posterior
+
+- Equating terms in Bayes theorem to prior and posterior
+
+$$
+Equation
+$$
+
+## Bayesian inference
+
+- Where it gets interesting...
+- likelihood
+- Prior belief
+- Bayesian crank to generate...
+- Posterior
+
+## Bayesian inference
+
+$$
+Equation
+$$
+
+## Choosing priors (conjugate and non-conjugate)
+
+- Mathematically soluable or not.
+- Some are (conjugate)
+- Most are not (non-conjugate)...
+
+## Types of conjugate pairs
+
+- Binomial-Beta
+
+$$
+Equation
+$$
+
+## Types of conjugate pairs
+
+- Normal-Normal
+
+$$
+Equation
+$$
+
+## Types of conjugate pairs
+
+- Poisson-Gamma
+
+$$
+Equation
+$$
+
+## Why sample?
+
+- Because most are non-conjugate
+- Need non-analytical solution to infer distributions
+
+## Why sample?
+
+- Picture of sample chain
+
+## MCMC, Gibbs, approximations to sampling (variational inference)
+
+- Many different types.
+- Others will also discuss this.
+
+## Non-conjugate how to get posterior?
+
+- Some kind of software to help us implement models for inference.
+- Using R.
+- Packages.
+
+# Getting ready for this workshop
+
+## nimble
+
+- Description of nimble.
+
+## Why we’re using nimble for (almost) everything over the workshop
+
+- Interpretability.
+- Flexibility.
+
+## The lab for this session
+
+- Examples of above using samples.
