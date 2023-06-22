@@ -1,7 +1,7 @@
 ---
 title: "Hierarchical modelling"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
-author: "Theo Rashid"
+author: "Theo Rashid, Elizaveta Semenova"
 date: "August 2023"
 output: html_document
 ---
@@ -27,7 +27,7 @@ It will follow your basic:
 Aka radon model example. https://www.tensorflow.org/probability/examples/Multilevel_Modeling_Primer
 The difference being our subgroups will be regions of England or Italy.
 
-Load in the data at the level
+Load in the data
 
 ```{r}
 library(here)
@@ -45,13 +45,24 @@ data <- read_rds(here("data", "italy", "italy_mortality.rds"))
 data <- st_read(here("data", "england", "COVIDecoregression.shp"))
 ```
 
-Estimate the national prevalence/whatever the outcome is
+Estimate the regional prevalence/outcome at one point in time
 
-Estimate no pooling
-Estimate full pooling
+## Full pooling model
 
-Partial pooling model
-Discuss the advantages
-Try out different priors for sigma and see how that changes the fit
-Run some prior predictive checks for good practice
-Get used to diagnosing fit using the posterior and bayesplot package
+Treat all regions the same and estimate a single national prevalence.
+
+## No pooling model
+
+Treat all regions separately and estimate each region separately with fixed effects.
+
+## Partial pooling model
+
+Varying intercepts model. Random effect grouping all regions.
+Estimate hyperparamter sigma (explain how this is hierarchical)
+Follow the Bayesian workflow – look at MCMC outputs, r-hat using `posterior`, traceplots using `bayesplot`
+
+## A different prior on sigma for Bayesian workflow
+
+Maybe try a different prior on sigma, something really weird/informative and wrong.
+Run prior predictive simulation and show how it makes no sense
+Fit the model and look at posterior
