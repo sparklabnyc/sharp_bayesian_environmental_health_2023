@@ -23,7 +23,7 @@ format:
     theme: [default, ../../assets/style.scss]
 ---
 
-# Introduction 
+# Introduction
 
 ## What is spatial modelling?
 <center>
@@ -36,7 +36,7 @@ format:
 ![](figures/mapsno2.png){width=85%}
 </center>
 
-## Type of data 
+## Type of data
 <center>
 ![](figures/DataAvailability.png)
 </center>
@@ -181,7 +181,7 @@ O_i \sim \text{Poisson}(\lambda_i E_i) \\
 \theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
 \phi \sim \text{ICAR}(W, \sigma^2_{\phi})
 $$
-priors for $\alpha, \sigma_{\theta}^2 \; \text{and} \; \sigma^2_{\phi}$ 
+priors for $\alpha, \sigma_{\theta}^2 \; \text{and} \; \sigma^2_{\phi}$
 
 ## Example with childhood cancers in Switzerland (cont)
 - Plot $exp(\alpha + \theta_i + \phi_i)$
@@ -199,11 +199,11 @@ priors for $\alpha, \sigma_{\theta}^2 \; \text{and} \; \sigma^2_{\phi}$
 ## Other CAR models
 Let $\log \lambda_i = \alpha + b_i$:
 
-- The proper CAR 
+- The proper CAR
 $$
 b_i|b_j \sim \text{Normal}(\rho \sum_{j \in \partial_i}b_j/n_i, \sigma_b^2/n_i)
 $$
-- Leroux CAR prior 
+- Leroux CAR prior
 $$
 b_i|b_j \sim \text{Normal}\Bigg(\frac{\rho \sum_{j \in \partial_i}b_j}{\rho n_i + (1 - rho)}, \frac{\sigma_b^2}{{\rho n_i + (1 - \rho)}}\Bigg)
 $$
@@ -259,7 +259,7 @@ $$
 
 ## Interpretation of the parameters
 - $\exp(\beta)$ is the relative risk of disease associated with a unit increase in exposure $X$ (when X continuous)
-- $\exp(\theta_i + \phi_i)$ is the residual or adjusted relative risk of disease in area $i$ after accounting for the effect of $X$. 
+- $\exp(\theta_i + \phi_i)$ is the residual or adjusted relative risk of disease in area $i$ after accounting for the effect of $X$.
 
 ##  Extension to several variables
 $$
@@ -271,7 +271,7 @@ $$
 
 - $\exp(\beta_1)$ is the relative risk of disease associated with a unit increase in exposure $X$, after adjustment for $X_2, \dots ,X_k$
 - Same for $\exp(\beta_k)$, after adjustment for $X_1, \dots ,X_{k-1}$
-- $\exp(\theta_i + \phi_i)$ is the adjusted relative risk of disease in area $i$ after accounting for the effects of measured covariates 
+- $\exp(\theta_i + \phi_i)$ is the adjusted relative risk of disease in area $i$ after accounting for the effects of measured covariates
 
 ##  Example: HPV vaccination in Switzerland
 
@@ -283,11 +283,11 @@ Y_{kit} \sim \text{Binomial}(p_{kit}) \\
 $$
 
 - Covariates related with age, sex, period of survey, deprivation, religion, language region, etc.
-  
+
 ##  HPV vaccination uptake
 - Model without any covariates just the BYM prior
 - Plot $\theta_s + \phi_s$ (on the log-odds)
-  
+
 
 <center>
 ![](figures/HPVRR.png){width=75%}
@@ -353,8 +353,8 @@ Similar with the BYM model in space $\gamma_t$ is the temporal unstructured and 
 
 ```{r}
 data.frame(
-  Interaction = paste("type" , 1:4), 
-  Parameters = c("$\\nu_{it} = \\theta_i \\otimes \\gamma_t$", 
+  Interaction = paste("type" , 1:4),
+  Parameters = c("$\\nu_{it} = \\theta_i \\otimes \\gamma_t$",
                    "$\\nu_{it} = \\theta_i \\otimes \\xi_t$",
                    "$\\nu_{it} = \\phi_i \\otimes \\gamma_t$",
                    "$\\nu_{it} = \\phi_i \\otimes \\xi_t$")
@@ -377,7 +377,7 @@ knitr::kable(tab, escape = FALSE, align = "c")
 ```
 :::::
 
-## Summary 
+## Summary
 
 - Introduction to disease mapping and CAR priors
 - Extension to ecological regression and relevant interpretations
@@ -385,6 +385,6 @@ knitr::kable(tab, escape = FALSE, align = "c")
 - Higher spatiotemporal interactions
 - Examples using childhood cancers, HPV vaccination and cervical cancers in South Africa
 
-::::: {style="color: #58b364"} 
-Next : Coding these models in NIMBLE. 
+::::: {style="color: #58b364"}
+Next : Coding these models in NIMBLE.
 :::::
