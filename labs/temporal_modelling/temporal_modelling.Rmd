@@ -17,22 +17,24 @@ library(nimble)
 set.seed(2)
 ```
 
-Let's recreate the Kontis paper
-Run the counterfactual
+Explain the context of these studies
+Kontis covid paper: run the counterfactual
+Aim of practical is to train a model up to Feb 2020 and predict from the start of the pandemic
 
-Load in the data
-For this, we keep the time component, but we ignore the spatial component
+Either aggregate data to national level or pick a single region
 
-Plot the 5 year average
-Discuss why 5 year average isn't the best, and why we might want a probabilistic model
+Load in the data and plot
 
-Start building some time series models
+## Simple model with slope only (linear regression)
 
-Train the models 2015-18, forecast 2019
-Check convergence etc
-Pick the best model based on validation
+## Linear regression with covariate (e.g. temperature)
+
+## Model with slope and AR terms
+
+Focus on the process of fitting models convergence etc
 
 Train the best model 2015-19, fit 2020
 Calculate excess deaths and error
+Pick the best model based on validation
 
-Discuss (Bayesian) model averaging and covariates as an extension
+Discuss (Bayesian) model averaging as an extension
