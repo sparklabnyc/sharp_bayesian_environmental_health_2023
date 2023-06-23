@@ -1,122 +1,169 @@
 ---
 title: "Bayesian workflow"
-subtitle: ""
-author: "Elizaveta Semenova"
+subtitle: "The 'How' of Bayesian inference"
+author:
+ - name: "Elizaveta Semenova"
+   email: "elizaveta.p.semenova@gmail.com"
+institute: "Computer Science Department, University of Oxford"
+date: 2023-08-14
+date-format: medium
+title-slide-attributes:
+  data-background-color: "#f3f4f4"
+  data-background-image: "../../assets/bmeh_normal.png"
+  data-background-size: 80%
+  data-background-position: 60% 120%
 format:
-    revealjs:
-        slide-number: true
-        chalkboard:
-            buttons: false
-            preview-links: auto
-        # logo: images/quarto.png
-        # css: styles.css
-        # footer: <https://www.publichealth.columbia.edu/research/programs/precision-prevention/sharp-training-program/bayesian-modeling>
+  revealjs:
+    slide-number: true
+    incremental: true
+    chalkboard:
+      buttons: false
+      preview-links: auto
+    logo: "../../assets/bmeh_normal.png"
+    theme: [default, ../../assets/style.scss]
 ---
+
+# Outline
+
+-   Bayesian inference recap: What, Why, How
+-   What is a workflow and why do we need it?
+-   Principles of Bayesian workflow
+-   Modern Bayesian workflow
 
 # Bayesian inference
 
-# 
+## Bayes formula:
 
-Bayes formula: $$ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}$$
+$$ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}$$
 
-# 
+## Bayes rule:
 
-Bayes rule: $$\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}$$
+$$\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}$$
 
 . . .
 
+
+
 What can possibly go wrong?
 
-# 
+. . .
 
-### General principle of Bayesian inference:
+A lot can go wrong!
 
--   specify a complete Bayesian model
 
-    -   consider data $y = \{y_1,...,y_n\}$ and parameter $\theta$
+## General principle of Bayesian inference:
 
-    -   specify an \alert{observation model}, e.g.$$p(y|\theta) = \prod_i \mathcal{N}(y_i | \theta,1)$$
+-   Specify a complete Bayesian model
+    
+## General principle of Bayesian inference:
 
-    -   complete the model with a \alert{prior distribution, e.g.} $$p(\theta) = \mathcal{N}(0,1)$$
+-   Example:
+    - consider <ins>data</ins> $y = \{ y_1, ..., y_n\}$
+    - specify an <ins>observation model</ins>, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, 1)$$
+   <!-- - here $\theta$ is a parameter which we want to infer-->
+    - complete the model with a prior distribution, e.g. $$p(\theta)=N(0,1)$$
 
--   sample the \alert{posterior distribution} of the parameter $\theta$.
 
-Sometimes posterior is available in a closed form. But rarely.
+## General principle of Bayesian inference:
 
-# 
+-   Specify a complete Bayesian model
+-   Sample the posterior distribution of the parameter $\theta$.
+  
+. . .
 
-### Probabilistic programming languages (PPLs)
+Sometimes posterior is available in a closed form. 
 
-PPLs from a user's perspective:
+. . .
 
--   PPLs are designed to let the user \alert{focus on modelling} while inference happens automatically.
+But rarely.
+
+## Probabilistic programming languages
+
+Probabilistic programming languages (PPLs) from a user's perspective:
+
+-   PPLs are designed to let the user <ins>focus on modelling</ins> while inference happens automatically.
 -   Users need to specify
     -   prior,
     -   likelihood.
--   Inference is performed via powerful algorithms such as \alert{MCMC} variations.
--   Availability of \alert{diagnostic tools}.
+-   Inference is performed via powerful algorithms such as Markov Chain Monte Carlo (<ins>MCMC</ins>).
+-   Availability of <ins>diagnostic tools</ins>.
 
-# 
+## Remark on inference methods
 
-### Diagnosing MCMC outputs
+-   Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI). 
+-   We are opting to use MCMC whenever possible since it has theoretical guarantees.
+
+
+## Diagnosing MCMC outputs
+
+We use multiple chains of MCMC to estimate the posterior
+
+<center>
+![](assets/trace_theta.png){width=50%}
+
+
+
+## Diagnosing MCMC outputs
 
 -   Convergence diagnostics
-    -   $\hat{R}$,
+    -   $\hat{R}$ statistic,
     -   traceplots.
 -   Effective sample size (ESS):
     -   samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities
     -   ESS -- number of independent samples required to obtain the same level of uncertainty as from the available dependent samples
 
-# 
+## Diagnosing MCMC outputs
 
-### Diagnosing MCMC outputs
+We use multiple chains of MCMC to inspect convergence after warm-up
+
+<center>
+![](assets/trace_theta.png){width=50%} 
+
+
+
+## Diagnosing MCMC outputs
 
 We use multiple chains and inspect convergence after warm-up
 
-(insert image)
+<center>
+![](assets/trace_theta_bad.png){width=50%} 
 
-# 
 
-### Diagnosing MCMC outputs
 
-We use multiple chains and inspect convergence after warm-up
-
-(insert another image)
-
-# 
-
-### Diagnosing MCMC outputs
+## Diagnosing MCMC outputs
 
 The post-warm-up samples of $\theta$ approximate its posterior distribution
 
+<center>
+![](assets/post_theta.png){width=50%}
+
 # Principles of Bayesian workflow
 
-# 
-
-### Workflows as 'good practice' standards
+## Workflows as 'good practice' standards
 
 Workflows exist in a variety of disciplines. For example, in machine learning workflow standards are being formalised under the name of MLOps:
 
-(MLOps image)
+<center>
+![](assets/mlops-loop-en.png){width=50%}
 
-# 
-### Box's loop
+
+## Box's loop
 
 In the 1960's, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box's loop by Blei et. al. (2014):
 
-(Box's loop image)
+<center>
+![](assets/boxes_loop.png){width=40%} 
 
-# 
-### Modern Bayesian workflow
+## Modern Bayesian workflow
 
 A systematic review of the steps within the modern Bayesian workflow, described in Gelman et al. (2020):
 
-(image modern workflow)
+<center>
+![](assets/bayes_workflow.png){width=40%} 
 
-# 
-### Prior predictive checks
+## Prior predictive checks
 
-Prior predictive checking consists in simulating data from the priors:
+<ins>Prior predictive checking</ins> consists in simulating data from the priors:
 
 -   visualize priors (especially after transformation)
 
@@ -124,25 +171,59 @@ Prior predictive checking consists in simulating data from the priors:
 
 -   it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values
 
-# 
-### Iterative model building
+
+## Iterative model building
 
 A possible realisation of the Bayeisan workflow loop:
 
--   Understand the domain and problem,
+-   Understand the <ins>domain</ins> and problem,
 
--   Formulate the model mathematically,
+-   Formulate the model <ins>mathematically</ins>,
 
--   Implement model, test, debug,
+-   Implement model, test, <ins>debug</ins>,
 
--   Perform prior predictive check,
+-   <ins>debug, debug, debug</ins>
+
+
+## Iterative model building
+
+-   Understand the <ins>domain</ins> and problem,
+
+-   Formulate the model <ins>mathematically</ins>,
+
+-   Implement model, test, <ins>debug</ins>,
+
+-   Perform <ins>prior predictive</ins> check,
 
 -   Fit the model,
 
--   Assess convergence diagnostics,
+-   Assess <ins>convergence diagnostics</ins>,
 
--   Perform posterior predictive check,
+-   Perform <ins>posterior predictive</ins> check,
 
--   Improve the model iteratively: from baseline to complex and computationally efficient models.
+-   Improve the model <ins>iteratively</ins>: from baseline to complex and computationally efficient models.
 
 # Examples
+
+## Data
+(Let's generate some super simple data, i.e. linear regression. in 1d)
+
+## Model: formulate and implement
+
+## Prior predictive check
+(chose some horrible priors here, e.g. for sigma)
+
+## Prior predictive check
+(change to a better prior)
+
+## Prior redictive check
+(chose some horrible priors here)
+
+## Fit the model
+
+## Convergence diagnostics
+(show traceplots, R-hat, ESS)
+
+## Posterior predictive
+
+# References

@@ -326,171 +326,243 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" class="quarto-title-block center">
+<section id="title-slide" data-background-color="#f3f4f4" data-background-image="../../assets/bmeh_normal.png" data-background-position="60% 120%" data-background-size="80%" class="quarto-title-block center">
   <h1 class="title">Bayesian workflow</h1>
+  <p class="subtitle">The ‘How’ of Bayesian inference</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
 Elizaveta Semenova 
 </div>
+<div class="quarto-title-author-email">
+<a href="mailto:elizaveta.p.semenova@gmail.com">elizaveta.p.semenova@gmail.com</a>
 </div>
+        <p class="quarto-title-affiliation">
+            Computer Science Department, University of Oxford
+          </p>
+    </div>
 </div>
 
+  <p class="date">Aug 14, 2023</p>
 </section>
+<section id="outline" class="title-slide slide level1 center">
+<h1>Outline</h1>
+<ul>
+<li class="fragment">Bayesian inference recap: What, Why, How</li>
+<li class="fragment">What is a workflow and why do we need it?</li>
+<li class="fragment">Principles of Bayesian workflow</li>
+<li class="fragment">Modern Bayesian workflow</li>
+</ul>
+</section>
+
+<section>
 <section id="bayesian-inference" class="title-slide slide level1 center">
 <h1>Bayesian inference</h1>
 
 </section>
-
-<section id="section" class="title-slide slide level1 center">
-<h1></h1>
-<p>Bayes formula: <span class="math display">\[ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}\]</span></p>
+<section id="bayes-formula" class="slide level2">
+<h2>Bayes formula:</h2>
+<p><span class="math display">\[ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}\]</span></p>
 </section>
-
-<section id="section-1" class="title-slide slide level1 center">
-<h1></h1>
-<p>Bayes rule: <span class="math display">\[\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}\]</span></p>
+<section id="bayes-rule" class="slide level2">
+<h2>Bayes rule:</h2>
+<p><span class="math display">\[\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}\]</span></p>
 <div class="fragment">
 <p>What can possibly go wrong?</p>
 </div>
+<div class="fragment">
+<p>A lot can go wrong!</p>
+</div>
 </section>
-
-<section>
-<section id="section-2" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="general-principle-of-bayesian-inference">General principle of Bayesian inference:</h3>
+<section id="general-principle-of-bayesian-inference" class="slide level2">
+<h2>General principle of Bayesian inference:</h2>
 <ul>
-<li><p>specify a complete Bayesian model</p>
-<ul>
-<li><p>consider data <span class="math inline">\(y = \{y_1,...,y_n\}\)</span> and parameter <span class="math inline">\(\theta\)</span></p></li>
-<li><p>specify an , e.g.<span class="math display">\[p(y|\theta) = \prod_i \mathcal{N}(y_i | \theta,1)\]</span></p></li>
-<li><p>complete the model with a <span class="math display">\[p(\theta) = \mathcal{N}(0,1)\]</span></p></li>
-</ul></li>
-<li><p>sample the of the parameter <span class="math inline">\(\theta\)</span>.</p></li>
+<li class="fragment">Specify a complete Bayesian model</li>
 </ul>
-<p>Sometimes posterior is available in a closed form. But rarely.</p></section>
-<section>
-<section id="section-3" class="title-slide slide level1 center">
-<h1></h1>
-
 </section>
-<h3 id="probabilistic-programming-languages-ppls">Probabilistic programming languages (PPLs)</h3>
-<p>PPLs from a user’s perspective:</p>
+<section id="general-principle-of-bayesian-inference-1" class="slide level2">
+<h2>General principle of Bayesian inference:</h2>
 <ul>
-<li>PPLs are designed to let the user while inference happens automatically.</li>
-<li>Users need to specify
+<li class="fragment">Example:
 <ul>
-<li>prior,</li>
-<li>likelihood.</li>
+<li class="fragment">consider <ins>data</ins> <span class="math inline">\(y = \{ y_1, ..., y_n\}\)</span></li>
+<li class="fragment">specify an <ins>observation model</ins>, e.g.&nbsp;<span class="math display">\[p(y|\theta) = \prod_i N(y_i | \theta, 1)\]</span> <!-- - here $\theta$ is a parameter which we want to infer--></li>
+<li class="fragment">complete the model with a prior distribution, e.g.&nbsp;<span class="math display">\[p(\theta)=N(0,1)\]</span></li>
 </ul></li>
-<li>Inference is performed via powerful algorithms such as variations.</li>
-<li>Availability of .</li>
-</ul></section>
-<section>
-<section id="section-4" class="title-slide slide level1 center">
-<h1></h1>
-
+</ul>
 </section>
-<h3 id="diagnosing-mcmc-outputs">Diagnosing MCMC outputs</h3>
+<section id="general-principle-of-bayesian-inference-2" class="slide level2">
+<h2>General principle of Bayesian inference:</h2>
 <ul>
-<li>Convergence diagnostics
-<ul>
-<li><span class="math inline">\(\hat{R}\)</span>,</li>
-<li>traceplots.</li>
-</ul></li>
-<li>Effective sample size (ESS):
-<ul>
-<li>samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities</li>
-<li>ESS – number of independent samples required to obtain the same level of uncertainty as from the available dependent samples</li>
-</ul></li>
-</ul></section>
-<section>
-<section id="section-5" class="title-slide slide level1 center">
-<h1></h1>
-
+<li class="fragment">Specify a complete Bayesian model</li>
+<li class="fragment">Sample the posterior distribution of the parameter <span class="math inline">\(\theta\)</span>.</li>
+</ul>
+<div class="fragment">
+<p>Sometimes posterior is available in a closed form.</p>
+</div>
+<div class="fragment">
+<p>But rarely.</p>
+</div>
 </section>
-<h3 id="diagnosing-mcmc-outputs-1">Diagnosing MCMC outputs</h3>
+<section id="probabilistic-programming-languages" class="slide level2">
+<h2>Probabilistic programming languages</h2>
+<p>Probabilistic programming languages (PPLs) from a user’s perspective:</p>
+<ul>
+<li class="fragment">PPLs are designed to let the user <ins>focus on modelling</ins> while inference happens automatically.</li>
+<li class="fragment">Users need to specify
+<ul>
+<li class="fragment">prior,</li>
+<li class="fragment">likelihood.</li>
+</ul></li>
+<li class="fragment">Inference is performed via powerful algorithms such as Markov Chain Monte Carlo (<ins>MCMC</ins>).</li>
+<li class="fragment">Availability of <ins>diagnostic tools</ins>.</li>
+</ul>
+</section>
+<section id="remark-on-inference-methods" class="slide level2">
+<h2>Remark on inference methods</h2>
+<ul>
+<li class="fragment">Alongside “exact”methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI).</li>
+<li class="fragment">We are opting to use MCMC whenever possible since it has theoretical guarantees.</li>
+</ul>
+</section>
+<section id="diagnosing-mcmc-outputs" class="slide level2">
+<h2>Diagnosing MCMC outputs</h2>
+<p>We use multiple chains of MCMC to estimate the posterior</p>
+<center>
+<p><img data-src="assets/trace_theta.png" style="width:50.0%"></p>
+</center></section>
+<section id="diagnosing-mcmc-outputs-1" class="slide level2">
+<h2>Diagnosing MCMC outputs</h2>
+<ul>
+<li class="fragment">Convergence diagnostics
+<ul>
+<li class="fragment"><span class="math inline">\(\hat{R}\)</span> statistic,</li>
+<li class="fragment">traceplots.</li>
+</ul></li>
+<li class="fragment">Effective sample size (ESS):
+<ul>
+<li class="fragment">samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities</li>
+<li class="fragment">ESS – number of independent samples required to obtain the same level of uncertainty as from the available dependent samples</li>
+</ul></li>
+</ul>
+</section>
+<section id="diagnosing-mcmc-outputs-2" class="slide level2">
+<h2>Diagnosing MCMC outputs</h2>
+<p>We use multiple chains of MCMC to inspect convergence after warm-up</p>
+<center>
+<p><img data-src="assets/trace_theta.png" style="width:50.0%"></p>
+</center></section>
+<section id="diagnosing-mcmc-outputs-3" class="slide level2">
+<h2>Diagnosing MCMC outputs</h2>
 <p>We use multiple chains and inspect convergence after warm-up</p>
-<p>(insert image)</p></section>
+<center>
+<p><img data-src="assets/trace_theta_bad.png" style="width:50.0%"></p>
+</center></section>
+<section id="diagnosing-mcmc-outputs-4" class="slide level2">
+<h2>Diagnosing MCMC outputs</h2>
+<p>The post-warm-up samples of <span class="math inline">\(\theta\)</span> approximate its posterior distribution</p>
+<center>
+<p><img data-src="assets/post_theta.png" style="width:50.0%"></p>
+</center></section></section>
 <section>
-<section id="section-6" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="diagnosing-mcmc-outputs-2">Diagnosing MCMC outputs</h3>
-<p>We use multiple chains and inspect convergence after warm-up</p>
-<p>(insert another image)</p></section>
-<section>
-<section id="section-7" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="diagnosing-mcmc-outputs-3">Diagnosing MCMC outputs</h3>
-<p>The post-warm-up samples of <span class="math inline">\(\theta\)</span> approximate its posterior distribution</p></section>
 <section id="principles-of-bayesian-workflow" class="title-slide slide level1 center">
 <h1>Principles of Bayesian workflow</h1>
 
 </section>
-
-<section>
-<section id="section-8" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="workflows-as-good-practice-standards">Workflows as ‘good practice’ standards</h3>
+<section id="workflows-as-good-practice-standards" class="slide level2">
+<h2>Workflows as ‘good practice’ standards</h2>
 <p>Workflows exist in a variety of disciplines. For example, in machine learning workflow standards are being formalised under the name of MLOps:</p>
-<p>(MLOps image)</p></section>
-<section>
-<section id="section-9" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="boxs-loop">Box’s loop</h3>
+<center>
+<p><img data-src="assets/mlops-loop-en.png" style="width:50.0%"></p>
+</center></section>
+<section id="boxs-loop" class="slide level2">
+<h2>Box’s loop</h2>
 <p>In the 1960’s, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box’s loop by Blei et. al.&nbsp;(2014):</p>
-<p>(Box’s loop image)</p></section>
-<section>
-<section id="section-10" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="modern-bayesian-workflow">Modern Bayesian workflow</h3>
+<center>
+<p><img data-src="assets/boxes_loop.png" style="width:40.0%"></p>
+</center></section>
+<section id="modern-bayesian-workflow" class="slide level2">
+<h2>Modern Bayesian workflow</h2>
 <p>A systematic review of the steps within the modern Bayesian workflow, described in Gelman et al.&nbsp;(2020):</p>
-<p>(image modern workflow)</p></section>
-<section>
-<section id="section-11" class="title-slide slide level1 center">
-<h1></h1>
-
-</section>
-<h3 id="prior-predictive-checks">Prior predictive checks</h3>
-<p>Prior predictive checking consists in simulating data from the priors:</p>
+<center>
+<p><img data-src="assets/bayes_workflow.png" style="width:40.0%"></p>
+</center></section>
+<section id="prior-predictive-checks" class="slide level2">
+<h2>Prior predictive checks</h2>
+<ins>
+Prior predictive checking
+</ins>
+<p>consists in simulating data from the priors:</p>
 <ul>
-<li><p>visualize priors (especially after transformation)</p></li>
-<li><p>this shows the range of data compatible with the model</p></li>
-<li><p>it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values</p></li>
-</ul></section>
-<section>
-<section id="section-12" class="title-slide slide level1 center">
-<h1></h1>
-
+<li class="fragment"><p>visualize priors (especially after transformation)</p></li>
+<li class="fragment"><p>this shows the range of data compatible with the model</p></li>
+<li class="fragment"><p>it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values</p></li>
+</ul>
 </section>
-<h3 id="iterative-model-building">Iterative model building</h3>
+<section id="iterative-model-building" class="slide level2">
+<h2>Iterative model building</h2>
 <p>A possible realisation of the Bayeisan workflow loop:</p>
 <ul>
-<li><p>Understand the domain and problem,</p></li>
-<li><p>Formulate the model mathematically,</p></li>
-<li><p>Implement model, test, debug,</p></li>
-<li><p>Perform prior predictive check,</p></li>
-<li><p>Fit the model,</p></li>
-<li><p>Assess convergence diagnostics,</p></li>
-<li><p>Perform posterior predictive check,</p></li>
-<li><p>Improve the model iteratively: from baseline to complex and computationally efficient models.</p></li>
-</ul></section>
+<li class="fragment"><p>Understand the <ins>domain</ins> and problem,</p></li>
+<li class="fragment"><p>Formulate the model <ins>mathematically</ins>,</p></li>
+<li class="fragment"><p>Implement model, test, <ins>debug</ins>,</p></li>
+<li class="fragment"><ins>
+<p>debug, debug, debug</p>
+</ins></li>
+</ul>
+</section>
+<section id="iterative-model-building-1" class="slide level2">
+<h2>Iterative model building</h2>
+<ul>
+<li class="fragment"><p>Understand the <ins>domain</ins> and problem,</p></li>
+<li class="fragment"><p>Formulate the model <ins>mathematically</ins>,</p></li>
+<li class="fragment"><p>Implement model, test, <ins>debug</ins>,</p></li>
+<li class="fragment"><p>Perform <ins>prior predictive</ins> check,</p></li>
+<li class="fragment"><p>Fit the model,</p></li>
+<li class="fragment"><p>Assess <ins>convergence diagnostics</ins>,</p></li>
+<li class="fragment"><p>Perform <ins>posterior predictive</ins> check,</p></li>
+<li class="fragment"><p>Improve the model <ins>iteratively</ins>: from baseline to complex and computationally efficient models.</p></li>
+</ul>
+</section></section>
+<section>
 <section id="examples" class="title-slide slide level1 center">
 <h1>Examples</h1>
-<div class="footer footer-default">
+
+</section>
+<section id="data" class="slide level2">
+<h2>Data</h2>
+<p>(Let’s generate some super simple data, i.e.&nbsp;linear regression. in 1d)</p>
+</section>
+<section id="model-formulate-and-implement" class="slide level2">
+<h2>Model: formulate and implement</h2>
+</section>
+<section id="prior-predictive-check" class="slide level2">
+<h2>Prior predictive check</h2>
+<p>(chose some horrible priors here, e.g.&nbsp;for sigma)</p>
+</section>
+<section id="prior-predictive-check-1" class="slide level2">
+<h2>Prior predictive check</h2>
+<p>(change to a better prior)</p>
+</section>
+<section id="prior-redictive-check" class="slide level2">
+<h2>Prior redictive check</h2>
+<p>(chose some horrible priors here)</p>
+</section>
+<section id="fit-the-model" class="slide level2">
+<h2>Fit the model</h2>
+</section>
+<section id="convergence-diagnostics" class="slide level2">
+<h2>Convergence diagnostics</h2>
+<p>(show traceplots, R-hat, ESS)</p>
+</section>
+<section id="posterior-predictive" class="slide level2">
+<h2>Posterior predictive</h2>
+</section></section>
+<section id="references" class="title-slide slide level1 center">
+<h1>References</h1>
+
+<img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
 </div>
 </section>
