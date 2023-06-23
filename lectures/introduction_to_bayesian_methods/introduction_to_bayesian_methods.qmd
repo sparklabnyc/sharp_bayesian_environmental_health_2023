@@ -38,12 +38,6 @@ format:
 - Have little theoretical or practical experience of Bayesian ideas.
 - Would like some tools and know-how to get started in an approachable and friendly setting.
 
-## This course is for those who
-
-- Are interested or who have heard about Bayesian modeling.
-- Work in Environmental Health (or adjacent fields).
-- Have little theoretical or practical experience of Bayesian ideas.
-- Would like some tools and know-how to get started in an approachable and friendly setting.
 
 ## R
 
