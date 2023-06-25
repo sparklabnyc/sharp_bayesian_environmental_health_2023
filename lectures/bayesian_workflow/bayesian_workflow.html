@@ -387,7 +387,7 @@ Elizaveta Semenova
 <li class="fragment">Example:
 <ul>
 <li class="fragment">consider <ins>data</ins> <span class="math inline">\(y = \{ y_1, ..., y_n\}\)</span></li>
-<li class="fragment">specify an <ins>observation model</ins>, e.g.&nbsp;<span class="math display">\[p(y|\theta) = \prod_i N(y_i | \theta, 1)\]</span> <!-- - here $\theta$ is a parameter which we want to infer--></li>
+<li class="fragment">specify an <ins>observation model</ins>, e.g.&nbsp;<span class="math display">\[p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)\]</span> <!-- - here $\theta$ is a parameter which we want to infer--></li>
 <li class="fragment">complete the model with a prior distribution, e.g.&nbsp;<span class="math display">\[p(\theta)=N(0,1)\]</span></li>
 </ul></li>
 </ul>
@@ -480,7 +480,7 @@ Elizaveta Semenova
 <h2>Box’s loop</h2>
 <p>In the 1960’s, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box’s loop by Blei et. al.&nbsp;(2014):</p>
 <center>
-<p><img data-src="assets/boxes_loop.png" style="width:40.0%"></p>
+<p><img data-src="assets/boxes_loop.png" style="width:60.0%"></p>
 </center></section>
 <section id="modern-bayesian-workflow" class="slide level2">
 <h2>Modern Bayesian workflow</h2>
@@ -532,33 +532,95 @@ Prior predictive checking
 </section>
 <section id="data" class="slide level2">
 <h2>Data</h2>
-<p>(Let’s generate some super simple data, i.e.&nbsp;linear regression. in 1d)</p>
-</section>
-<section id="model-formulate-and-implement" class="slide level2">
-<h2>Model: formulate and implement</h2>
+<p>Assume that the true data comes from the model <span class="math display">\[y_i = a + b x_i + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2).\]</span></p>
+<center>
+<p><img data-src="assets/data1.png" style="width:45.0%"></p>
+</center></section>
+<section id="model" class="slide level2">
+<h2>Model</h2>
+<p>We implemented the model in our favorite PPL:</p>
+<div class="fragment">
+<pre><code>data {
+  int&lt;lower=0&gt; N;
+  vector[N] y;
+  vector[N] x;
+  real&lt;lower=0&gt; sigma;
+}
+parameters {
+  real a;
+  real b;
+}
+model {
+  y ~ normal(a, sigma);
+}</code></pre>
+</div>
 </section>
 <section id="prior-predictive-check" class="slide level2">
 <h2>Prior predictive check</h2>
-<p>(chose some horrible priors here, e.g.&nbsp;for sigma)</p>
+<p>Let us draw from the priors, i.e.&nbsp;we are not using any data at this stage, only trying to see what kind of data (<span class="math inline">\(y\)</span>) this model is able to generate.</p>
+<div class="fragment">
+<center>
+<p><img data-src="assets/data2.png" style="width:45.0%"></p>
+</center></div>
 </section>
 <section id="prior-predictive-check-1" class="slide level2">
 <h2>Prior predictive check</h2>
-<p>(change to a better prior)</p>
+<p>Something doesn’t look right…</p>
+<div class="fragment">
+<center>
+<p><img data-src="assets/data2.png" style="width:45.0%"></p>
+</center></div>
 </section>
-<section id="prior-redictive-check" class="slide level2">
-<h2>Prior redictive check</h2>
-<p>(chose some horrible priors here)</p>
+<section id="debug" class="slide level2">
+<h2>Debug</h2>
+<p>There was a bug in the model. Let’s correct it:</p>
+<pre><code>data {
+  int&lt;lower=0&gt; N;
+  vector[N] y;
+  vector[N] x;
+  real&lt;lower=0&gt; sigma;
+}
+parameters {
+  real a ~ normal(0,1);
+  real b ~ normal(0,1);
+}
+model {
+  y ~ normal(a + b*x, sigma);
+}</code></pre>
 </section>
+<section id="prior-redictive-check-again" class="slide level2">
+<h2>Prior redictive check again</h2>
+<center>
+<p><img data-src="assets/data3.png" style="width:45.0%"></p>
+<p>Better: now the range of prior predictive distribution is covering the data.</p>
+</center></section>
 <section id="fit-the-model" class="slide level2">
 <h2>Fit the model</h2>
-</section>
+Print summary:
+<center>
+<p><img data-src="assets/fit1.png" style="width:45.0%"></p>
+</center></section>
+<section id="plot-estimates" class="slide level2">
+<h2>Plot estimates</h2>
+<center>
+<p><img data-src="assets/est1.png" style="width:45.0%"></p>
+</center></section>
 <section id="convergence-diagnostics" class="slide level2">
 <h2>Convergence diagnostics</h2>
-<p>(show traceplots, R-hat, ESS)</p>
-</section>
-<section id="posterior-predictive" class="slide level2">
-<h2>Posterior predictive</h2>
-</section></section>
+<center>
+<p><img data-src="assets/fit1_conv.png" style="width:45.0%"></p>
+</center></section>
+<section id="convergence-diagnostics-1" class="slide level2">
+<h2>Convergence diagnostics</h2>
+<p>Traceplots</p>
+<center>
+<p><img data-src="assets/traceplots1.png" style="width:45.0%"></p>
+</center></section>
+<section id="posterior-predictive-check" class="slide level2">
+<h2>Posterior predictive check</h2>
+<center>
+<p><img data-src="assets/posterior1.png" style="width:45.0%"></p>
+</center></section></section>
 <section id="references" class="title-slide slide level1 center">
 <h1>References</h1>
 

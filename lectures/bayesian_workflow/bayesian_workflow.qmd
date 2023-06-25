@@ -59,7 +59,7 @@ A lot can go wrong!
 
 -   Example:
     - consider <ins>data</ins> $y = \{ y_1, ..., y_n\}$
-    - specify an <ins>observation model</ins>, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, 1)$$
+    - specify an <ins>observation model</ins>, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)$$
    <!-- - here $\theta$ is a parameter which we want to infer-->
     - complete the model with a prior distribution, e.g. $$p(\theta)=N(0,1)$$
 
@@ -152,7 +152,7 @@ Workflows exist in a variety of disciplines. For example, in machine learning wo
 In the 1960's, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box's loop by Blei et. al. (2014):
 
 <center>
-![](assets/boxes_loop.png){width=40%} 
+![](assets/boxes_loop.png){width=60%} 
 
 ## Modern Bayesian workflow
 
@@ -206,24 +206,106 @@ A possible realisation of the Bayeisan workflow loop:
 # Examples
 
 ## Data
-(Let's generate some super simple data, i.e. linear regression. in 1d)
+Assume that the true data comes from the model
+$$y_i = a + b x_i + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2).$$
 
-## Model: formulate and implement
+<center>
+![](assets/data1.png){width=45%} 
+
+
+
+## Model
+We implemented the model in our favorite PPL:
+
+. . .
+
+```
+data {
+  int<lower=0> N;
+  vector[N] y;
+  vector[N] x;
+  real<lower=0> sigma;
+}
+parameters {
+  real a;
+  real b;
+}
+model {
+  y ~ normal(a, sigma);
+}
+```
+
 
 ## Prior predictive check
-(chose some horrible priors here, e.g. for sigma)
+Let us draw from the priors, i.e. we are not using any data at this stage, only trying to see what kind of data ($y$) this model is able to generate.
+
+. . .
+
+<center>
+![](assets/data2.png){width=45%} 
 
 ## Prior predictive check
-(change to a better prior)
+Something doesn't look right...
 
-## Prior redictive check
-(chose some horrible priors here)
+. . .
+
+<center>
+![](assets/data2.png){width=45%} 
+
+
+## Debug
+There was a bug in the model. Let's correct it:
+
+```
+data {
+  int<lower=0> N;
+  vector[N] y;
+  vector[N] x;
+  real<lower=0> sigma;
+}
+parameters {
+  real a ~ normal(0,1);
+  real b ~ normal(0,1);
+}
+model {
+  y ~ normal(a + b*x, sigma);
+}
+```
+
+## Prior redictive check again
+<center>
+![](assets/data3.png){width=45%} 
+
+Better: now the range of prior predictive distribution is covering the data.
+
 
 ## Fit the model
+Print summary:
+<center>
+![](assets/fit1.png){width=45%} 
+
+## Plot estimates
+<center>
+![](assets/est1.png){width=45%} 
+
 
 ## Convergence diagnostics
-(show traceplots, R-hat, ESS)
 
-## Posterior predictive
+
+<center>
+![](assets/fit1_conv.png){width=45%} 
+
+
+## Convergence diagnostics
+
+Traceplots
+
+<center>
+![](assets/traceplots1.png){width=45%} 
+
+## Posterior predictive check
+
+<center>
+![](assets/posterior1.png){width=45%} 
 
 # References
