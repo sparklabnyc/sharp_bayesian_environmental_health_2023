@@ -432,15 +432,7 @@ Robbie M. Parks
 <li class="fragment">Work in Environmental Health (or adjacent fields).</li>
 <li class="fragment">Have little theoretical or practical experience of Bayesian ideas.</li>
 <li class="fragment">Would like some tools and know-how to get started in an approachable and friendly setting.</li>
-</ul>
-</section>
-<section id="this-course-is-for-those-who-1" class="slide level2">
-<h2>This course is for those who</h2>
-<ul>
-<li class="fragment">Are interested or who have heard about Bayesian modeling.</li>
-<li class="fragment">Work in Environmental Health (or adjacent fields).</li>
-<li class="fragment">Have little theoretical or practical experience of Bayesian ideas.</li>
-<li class="fragment">Would like some tools and know-how to get started in an approachable and friendly setting.</li>
+<li class="fragment">People who would like to have some fun while learning!</li>
 </ul>
 </section>
 <section id="r" class="slide level2">
@@ -448,27 +440,56 @@ Robbie M. Parks
 <ul>
 <li class="fragment">R is an interactive environment developed by statisticians for data analysis.</li>
 <li class="fragment">A more detailed Introduction to R can be found at https://www.r-project.org.</li>
-<li class="fragment">This isn’t a course to learn R…</li>
+<li class="fragment">R is the environment we will use throughout the workshop.</li>
+<li class="fragment">But this isn’t a course to learn R…</li>
 </ul>
 </section>
-<section id="r-1" class="slide level2">
-<h2>R</h2>
+<section id="r-code" class="slide level2">
+<h2>R code</h2>
+<div>
 <ul>
-<li class="fragment">Sample code:</li>
+<li>Sample R code:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">model</span>(</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="co"># prior</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="co"># likelihood</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb1-10"><a href="#cb1-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
-<span id="cb1-11"><a href="#cb1-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
-<span id="cb1-12"><a href="#cb1-12"></a>  }</span>
-<span id="cb1-13"><a href="#cb1-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rnorm</span>(<span class="dv">100</span>),<span class="at">y=</span><span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a>p <span class="ot">=</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="fu">plot</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="r-code-output" class="slide level2">
+<h2>R code output</h2>
+<div>
+<ul>
+<li>Output of code:</li>
+</ul>
+</div>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
+<section id="r-with-nimble" class="slide level2">
+<h2>R with nimble</h2>
+<div>
+<ul>
+<li>Sample R nimble code:</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">model</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># prior</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="co"># likelihood</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb2-10"><a href="#cb2-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
+<span id="cb2-12"><a href="#cb2-12"></a>  }</span>
+<span id="cb2-13"><a href="#cb2-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="rstudio" class="slide level2">
 <h2>RStudio</h2>
@@ -478,6 +499,10 @@ Robbie M. Parks
 <li class="fragment">Such features include direct code execution, tools for plotting, history, debugging and workspace management.</li>
 <li class="fragment">A more detailed background on to RStudio can be found at https://www.rstudio.com/about/.</li>
 </ul>
+</section>
+<section id="rstudio-1" class="slide level2">
+<h2>RStudio</h2>
+<img data-src="assets/what_is_rstudio.png" class="r-stretch">
 </section>
 <section id="rstudio-cloud" class="slide level2">
 <h2>RStudio Cloud</h2>
@@ -497,6 +522,7 @@ Robbie M. Parks
 <li class="fragment">This is just for information, as you will not be expected to be an expert on GitHub to participate in your SHARP course.</li>
 <li class="fragment">But! You should learn it in general as it’s really essential in today’s modern research environment.</li>
 </ul>
+<img data-src="assets/github_banner.png" class="r-stretch">
 </section></section>
 <section>
 <section id="introduction-to-bayesian-methods" class="title-slide slide level1 center">
@@ -507,34 +533,81 @@ Robbie M. Parks
 <h2>Thomas Bayes and Simon Pierre Laplace</h2>
 <ul>
 <li class="fragment">Started with these two.</li>
-<li class="fragment">Bayes is why it’s called Bayesian</li>
+<li class="fragment">Bayes is why it’s called <span style="color:red;">Bayes</span>ian.</li>
 <li class="fragment">Sorry Laplace!</li>
 </ul>
+<p><img data-src="assets/thomas_bayes_wikipedia.jpg" class="absolute" style="top: 100px; right: 50px; width: 200px; height: 200px; "></p>
+<p><img data-src="assets/simon_laplace_wikipedia.jpg" class="absolute" style="top: 350px; right: 50px; width: 200px; height: 200px; "></p>
+<p><img data-src="assets/big_red_cross.png" class="absolute" style="top: 350px; right: 50px; width: 200px; height: 200px; "></p>
 </section>
 <section id="classical-probability" class="slide level2">
 <h2>Classical probability</h2>
 <ul>
-<li class="fragment">‘Frequentist’.</li>
-<li class="fragment">Concept of limit of long-run relative frequency.</li>
+<li class="fragment">“Frequentist”.</li>
+<li class="fragment">Limit of long-run relative frequency.</li>
 <li class="fragment">Ratio of the number of times event occurred to the number of trials.</li>
-<li class="fragment">Dice example.</li>
 </ul>
 </section>
 <section id="classical-probability-1" class="slide level2">
 <h2>Classical probability</h2>
-<p><span class="math display">\[
-Equation
-\]</span></p>
+<p><img data-src="assets/dice_wikipedia.svg" class="absolute" style="top: 100px; right: 50px; width: 200px; height: 200px; "></p>
+<ul>
+<li class="fragment">Consider rolling a fair six-sided die many times.</li>
+<li class="fragment">We are seeing how often we roll a <span class="math inline">\(2\)</span>.</li>
+<li class="fragment">We roll die a large number of times (<span class="math inline">\(N\)</span>).</li>
+<li class="fragment">Probability that we roll a <span class="math inline">\(2\)</span>:</li>
+<li class="fragment"><span class="math display">\[Pr(X=2) = N(X=2)/N\]</span></li>
+<li class="fragment">This will tend to <span class="math inline">\(1/6=0.16666666...\)</span> as <span class="math inline">\(N \rightarrow \infty\)</span></li>
+</ul>
 </section>
 <section id="classical-probability-2" class="slide level2">
 <h2>Classical probability</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>CODE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>n<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rdunif</span>(n,<span class="dv">6</span>))</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x,<span class="at">y=</span><span class="fu">after_stat</span>(count)<span class="sc">/</span><span class="fu">sum</span>(<span class="fu">after_stat</span>(count)))) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="fu">xlab</span>(<span class="st">'Roll value'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Count'</span>) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">'Rolling n = '</span>,n,<span class="st">' times'</span>)) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+<section id="classical-probability-3" class="slide level2">
+<h2>Classical probability</h2>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"></section>
+<section id="classical-probability-4" class="slide level2">
+<h2>Classical probability</h2>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
+<section id="classical-probability-5" class="slide level2">
+<h2>Classical probability</h2>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<section id="classical-probability-6" class="slide level2">
+<h2>Classical probability</h2>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<section id="classical-probability-7" class="slide level2">
+<h2>Classical probability</h2>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
 <section id="subjective-probability" class="slide level2">
+<h2>Subjective probability</h2>
+<img data-src="assets/rain_nyt.png" class="r-stretch">
+</section>
+<section id="subjective-probability-1" class="slide level2">
 <h2>Subjective probability</h2>
 <ul>
 <li class="fragment">What about the probability that it will rain tomorrow?</li>
+<li class="fragment">What is the probability that the next president will be a woman?</li>
+<li class="fragment">What is the probability that aliens built the pyramids?</li>
+<li class="fragment">Such questions cannot be answered by long-run probability.</li>
 <li class="fragment">Degree of belief involved.</li>
+<li class="fragment">However, long-run reasoning can inform these estimations.</li>
 <li class="fragment">Foundation of Bayesian thinking.</li>
 </ul>
 </section>
@@ -542,116 +615,266 @@ Equation
 <h2>Conditional probability</h2>
 <ul>
 <li class="fragment">Two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>.</li>
-<li class="fragment">Conditional event <span class="math inline">\(A\)</span> given <span class="math inline">\(B\)</span>. <span class="math display">\[
-Equation
+<li class="fragment">Conditional event <span class="math inline">\(A\)</span> given <span class="math inline">\(B\)</span>.</li>
+<li class="fragment"><span class="math display">\[
+P(A|B) = \frac{P(A \cap B)}{P(B)}
 \]</span></li>
 </ul>
 </section>
 <section id="conditional-probability-1" class="slide level2">
 <h2>Conditional probability</h2>
-<ul>
-<li class="fragment">Example with numbers.</li>
-</ul>
-<p><span class="math display">\[
-Equation
-\]</span></p>
+<img data-src="assets/venn_diagram.png" class="r-stretch">
 </section>
 <section id="conditional-probability-2" class="slide level2">
 <h2>Conditional probability</h2>
+<p>In a group of 100 SHARP workshop attendees, 40 chose to stay in Manhattan, 30 chose to stay for the entire week, and 20 chose to stay in Manhattan and for the entire week. If a car buyer chosen at random chose to stay in Manhattan, what is the probability they chose to stay for the entire week?</p>
+<p><span class="math display">\[
+P(A|B) = \frac{P(A \cap B)}{P(B)} = 20 / 40 = 0.5
+\]</span></p>
+</section>
+<section id="conditional-probability-3" class="slide level2 smaller">
+<h2>Conditional probability</h2>
 <ul>
-<li class="fragment">Example with numbers.</li>
+<li class="fragment"><span class="math display">\[
+P(A|B) = \frac{P(A \cap B)}{P(B)}
+\]</span></li>
+<li class="fragment">can also be written as…</li>
+<li class="fragment"><span class="math display">\[
+P(A \cap B) = P(A|B) P(B)
+\]</span></li>
+<li class="fragment">Also…</li>
+<li class="fragment"><span class="math display">\[
+P(B|A) = \frac{P(A \cap B)}{P(A)}
+\]</span></li>
+<li class="fragment">Substituting top into bottom gets…</li>
+<li class="fragment"><span class="math display">\[
+P(B|A) = \frac{P(A|B) P(B)}{P(A)}
+\]</span></li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>CODE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="bayes-theorem" class="slide level2">
 <h2>Bayes theorem</h2>
 <ul>
-<li class="fragment">Conditional probability is the axis on which Bayesian statistics turns.</li>
-<li class="fragment">Same equation…</li>
-<li class="fragment">…but different interpretation.</li>
+<li class="fragment"><p>Conditional probability is the axis on which Bayesian statistics turns.</p></li>
+<li class="fragment"><p>Same equation…</p></li>
+<li class="fragment"><p>…but different interpretation.</p></li>
+<li class="fragment"><p><span class="math display">\[
+P(B|A) = \frac{P(A|B) P(B)}{P(A)}
+\]</span></p></li>
 </ul>
-<p><span class="math display">\[
-Equation
-\]</span></p>
 </section>
-<section id="prior-and-posterior" class="slide level2">
-<h2>Prior and posterior</h2>
+<section id="prior-likelihood-and-posterior" class="slide level2">
+<h2>Prior, likelihood and posterior</h2>
 <ul>
-<li class="fragment">Equating terms in Bayes theorem to prior and posterior</li>
+<li class="fragment"><p><span class="math display">\[
+P(\theta|y) \propto P(y|\theta) P(\theta)
+\]</span></p></li>
+<li class="fragment"><p><span class="math inline">\(P(\theta)\)</span> is the prior</p></li>
+<li class="fragment"><p><span class="math inline">\(P(y|\theta)\)</span> is the likelihood</p></li>
+<li class="fragment"><p><span class="math inline">\(P(\theta|y)\)</span> is the posterior</p></li>
+<li class="fragment"><p>Prior is what is known or estimated a priori</p></li>
+<li class="fragment"><p>Likelihood is probability of data given parameters of interest</p></li>
+<li class="fragment"><p>Posterior is probability of parameters of interest given data</p></li>
 </ul>
-<p><span class="math display">\[
-Equation
-\]</span></p>
 </section>
 <section id="bayesian-inference" class="slide level2">
 <h2>Bayesian inference</h2>
 <ul>
-<li class="fragment">Where it gets interesting…</li>
-<li class="fragment">likelihood</li>
-<li class="fragment">Prior belief</li>
-<li class="fragment">Bayesian crank to generate…</li>
-<li class="fragment">Posterior</li>
+<li class="fragment">Leaving behind Frequentist inference here.</li>
+<li class="fragment">Bayesian when prior is unknown and is distribution is specified.</li>
 </ul>
+<img data-src="assets/bmeh_normal.png" class="r-stretch">
 </section>
-<section id="bayesian-inference-1" class="slide level2">
-<h2>Bayesian inference</h2>
-<p><span class="math display">\[
-Equation
-\]</span></p>
-</section>
-<section id="choosing-priors-conjugate-and-non-conjugate" class="slide level2">
-<h2>Choosing priors (conjugate and non-conjugate)</h2>
+<section id="choosing-the-prior-distribution-conjugate-or-not" class="slide level2">
+<h2>Choosing the prior distribution (conjugate or not)</h2>
 <ul>
+<li class="fragment">Prior choice is vital.</li>
+<li class="fragment">Type of distribution (we will see in a second).</li>
+<li class="fragment">Hyperparameters/hyperpriors.</li>
+<li class="fragment">Often a ‘natural’ candidate for prior choice.</li>
 <li class="fragment">Mathematically soluable or not.</li>
 <li class="fragment">Some are (conjugate)</li>
 <li class="fragment">Most are not (non-conjugate)…</li>
 </ul>
 </section>
-<section id="types-of-conjugate-pairs" class="slide level2">
-<h2>Types of conjugate pairs</h2>
+<section id="binomial-beta" class="slide level2 smaller">
+<h2>Binomial-Beta</h2>
 <ul>
-<li class="fragment">Binomial-Beta</li>
+<li class="fragment"><p>Likelihood</p></li>
+<li class="fragment"><p>Binomial distribution is when there is success (1) or failure (0) with the proportion of success (<span class="math inline">\(\pi\)</span>).</p></li>
+<li class="fragment"><p><span class="math inline">\(n\)</span> trials.</p></li>
+<li class="fragment"><p><span class="math display">\[
+y|\pi \sim Binomial(\pi,n)
+\]</span></p></li>
+<li class="fragment"><p>Prior</p></li>
+<li class="fragment"><p>Beta distribution is mathematically the conjugate of binomial defined by two parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p></li>
+<li class="fragment"><p>Beta distributuon is ‘natural’ fit becasue it ranges from 0 to 1.</p></li>
+<li class="fragment"><p><span class="math display">\[
+\pi \sim Beta(a,b)
+\]</span></p></li>
 </ul>
-<p><span class="math display">\[
-Equation
-\]</span></p>
 </section>
-<section id="types-of-conjugate-pairs-1" class="slide level2">
-<h2>Types of conjugate pairs</h2>
+<section id="binomial-beta-1" class="slide level2">
+<h2>Binomial-Beta</h2>
 <ul>
-<li class="fragment">Normal-Normal</li>
+<li class="fragment"><p>Posterior</p></li>
+<li class="fragment"><p>Because of conjugacy, there is an analytical solution for the posterior.</p></li>
+<li class="fragment"><p><span class="math display">\[
+p(\pi|y) \sim Beta(y+a,n-y+b)
+\]</span></p></li>
 </ul>
-<p><span class="math display">\[
-Equation
-\]</span></p>
 </section>
-<section id="types-of-conjugate-pairs-2" class="slide level2">
-<h2>Types of conjugate pairs</h2>
+<section id="examples-of-beta-distributions" class="slide level2">
+<h2>Examples of Beta distributions</h2>
+<p><span class="math display">\[Beta(2,10)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-beta-distributions-1" class="slide level2">
+<h2>Examples of Beta distributions</h2>
+<p><span class="math display">\[Beta(0.5,0.5)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-beta-distributions-2" class="slide level2">
+<h2>Examples of Beta distributions</h2>
+<p><span class="math display">\[Beta(5,1)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-beta-distributions-3" class="slide level2">
+<h2>Examples of Beta distributions</h2>
+<p><span class="math display">\[Beta(5,5)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-beta-distributions-4" class="slide level2">
+<h2>Examples of Beta distributions</h2>
+<p><span class="math display">\[Beta(5,20)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-beta-distributions-5" class="slide level2">
+<h2>Examples of Beta distributions</h2>
+<p><span class="math display">\[Beta(50,200)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
+<section id="types-of-conjugate-pairs-normal-normal" class="slide level2 smaller">
+<h2>Types of conjugate pairs: Normal-Normal</h2>
 <ul>
-<li class="fragment">Poisson-Gamma</li>
+<li class="fragment"><p>Likelihood</p></li>
+<li class="fragment"><p>Normal distribution is defined by two parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>.</p></li>
+<li class="fragment"><p>Bell curve.</p></li>
+<li class="fragment"><p><span class="math inline">\(\mu\)</span> is mean.</p></li>
+<li class="fragment"><p><span class="math inline">\(\sigma\)</span> is standard deviation.</p></li>
+<li class="fragment"><p><span class="math display">\[
+y|\mu,\sigma \sim Normal(\mu,\sigma^2)
+\]</span></p></li>
+<li class="fragment"><p>Prior</p></li>
+<li class="fragment"><p>Normal distribution is mathematically the conjugate of itself, with hyperparameters <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\sigma_0\)</span>.</p></li>
+<li class="fragment"><p><span class="math display">\[
+\mu \sim Normal(\mu_0,\sigma_0^2)
+\]</span></p></li>
 </ul>
-<p><span class="math display">\[
-Equation
-\]</span></p>
+</section>
+<section id="normal-normal" class="slide level2">
+<h2>Normal-Normal</h2>
+<ul>
+<li class="fragment"><p>Posterior</p></li>
+<li class="fragment"><p>Because of conjugacy, there is an analytical solution for the posterior.</p></li>
+<li class="fragment"><p><span class="math display">\[
+TO DO
+\]</span></p></li>
+</ul>
+</section>
+<section id="examples-of-normal-distributions" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(1,0)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-normal-distributions-1" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(1,0)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-normal-distributions-2" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(0,5)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-normal-distributions-3" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(0,20)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
+<section id="types-of-conjugate-pairs-poisson-gamma" class="slide level2 smaller">
+<h2>Types of conjugate pairs: Poisson-Gamma</h2>
+<ul>
+<li class="fragment"><p>Likelihood</p></li>
+<li class="fragment"><p>Normal distribution is defined by on parameters <span class="math inline">\(\lambda\)</span>.</p></li>
+<li class="fragment"><p>Very common for count data.</p></li>
+<li class="fragment"><p><span class="math inline">\(\lambda\)</span> is rate.</p></li>
+<li class="fragment"><p><span class="math display">\[
+y|\lambda \sim Poisson(\lambda)
+\]</span></p></li>
+<li class="fragment"><p>Prior</p></li>
+<li class="fragment"><p>Gamma distribution is mathematically the conjugate of Poisson, with hyperparameters <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\sigma_0\)</span>.</p></li>
+<li class="fragment"><p>Gamma distributuon is ‘natural’ fit becasue it ranges from 0 to <span class="math inline">\(\infty\)</span>.</p></li>
+<li class="fragment"><p><span class="math display">\[
+\lambda \sim Gamma(a,b)
+\]</span></p></li>
+</ul>
+</section>
+<section id="poisson-gamma" class="slide level2">
+<h2>Poisson-Gamma</h2>
+<ul>
+<li class="fragment"><p>Posterior</p></li>
+<li class="fragment"><p>Because of conjugacy, there is an analytical solution for the posterior.</p></li>
+<li class="fragment"><p><span class="math display">\[
+\rho | y \sim Gamma(a+y,b+E)
+\]</span></p></li>
+</ul>
+</section>
+<section id="examples-of-gamma-distributions" class="slide level2">
+<h2>Examples of Gamma distributions</h2>
+<p><span class="math display">\[Gamma(0.1,0.1)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-gamma-distributions-1" class="slide level2">
+<h2>Examples of Gamma distributions</h2>
+<p><span class="math display">\[Gamma(1,1)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-gamma-distributions-2" class="slide level2">
+<h2>Examples of Gamma distributions</h2>
+<p><span class="math display">\[Gamma(3,3)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-gamma-distributions-3" class="slide level2">
+<h2>Examples of Gamma distributions</h2>
+<p><span class="math display">\[Gamma(3,0.5)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
+<section id="informative-or-non-informative-priors" class="slide level2">
+<h2>Informative or non-informative priors</h2>
+<ul>
+<li class="fragment">Main source of criticism from non-Bayesians is how priors are chosen.</li>
+<li class="fragment">Priors should be informed by existing knowledge.</li>
+<li class="fragment">But what if we don’t know anything really prior to inference?</li>
+<li class="fragment">Non-informative/informative priors outside scope of this but something to pay attention to.</li>
+</ul>
 </section>
 <section id="why-sample" class="slide level2">
 <h2>Why sample?</h2>
 <ul>
-<li class="fragment">Because most are non-conjugate</li>
-<li class="fragment">Need non-analytical solution to infer distributions</li>
+<li class="fragment">Because most are non-conjugate.</li>
+<li class="fragment">Need non-analytical solution to infer distributions.</li>
 </ul>
 </section>
 <section id="why-sample-1" class="slide level2">
 <h2>Why sample?</h2>
-<ul>
-<li class="fragment">Picture of sample chain</li>
-</ul>
+<img data-src="assets/nimble_samples_example.png" class="r-stretch">
 </section>
 <section id="mcmc-gibbs-approximations-to-sampling-variational-inference" class="slide level2">
 <h2>MCMC, Gibbs, approximations to sampling (variational inference)</h2>
 <ul>
 <li class="fragment">Many different types.</li>
-<li class="fragment">Others will also discuss this.</li>
+<li class="fragment">Theo and others will also discuss this.</li>
 </ul>
 </section>
 <section id="non-conjugate-how-to-get-posterior" class="slide level2">
@@ -660,6 +883,7 @@ Equation
 <li class="fragment">Some kind of software to help us implement models for inference.</li>
 <li class="fragment">Using R.</li>
 <li class="fragment">Packages.</li>
+<li class="fragment">We will be focusing on using NIMBLE throughout the two days.</li>
 </ul>
 </section></section>
 <section>
@@ -668,13 +892,27 @@ Equation
 
 </section>
 <section id="nimble" class="slide level2">
-<h2>nimble</h2>
+<h2>NIMBLE</h2>
 <ul>
-<li class="fragment">Description of nimble.</li>
+<li class="fragment">NIMBLE adopts and extends BUGS as a modeling language and lets you program with the models you create.</li>
+<li class="fragment">Looks like below.</li>
 </ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">model</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="co"># prior</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="co"># likelihood</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
+<span id="cb4-12"><a href="#cb4-12"></a>  }</span>
+<span id="cb4-13"><a href="#cb4-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="why-were-using-nimble-for-almost-everything-over-the-workshop" class="slide level2">
-<h2>Why we’re using nimble for (almost) everything over the workshop</h2>
+<h2>Why we’re using NIMBLE for (almost) everything over the workshop</h2>
 <ul>
 <li class="fragment">Interpretability.</li>
 <li class="fragment">Flexibility.</li>
@@ -683,13 +921,23 @@ Equation
 <section id="the-lab-for-this-session" class="slide level2">
 <h2>The lab for this session</h2>
 <ul>
-<li class="fragment">Examples of above using samples.</li>
+<li class="fragment">Beta distribution.</li>
+<li class="fragment">Binomial-Beta example.</li>
+<li class="fragment">Normal distribution.</li>
+<li class="fragment">Normal-Normal example.</li>
+<li class="fragment">Gamma distribution</li>
+<li class="fragment">Poisson-Gamma example.</li>
+<li class="fragment">Introduction to NIMBLE format.</li>
+<li class="fragment">First basic examples of NIMBLE and how to use it.</li>
 </ul>
+</section></section>
+<section id="questions" class="title-slide slide level1 center">
+<h1>Questions?</h1>
 
 <img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
 </div>
-</section></section>
+</section>
     </div>
   </div>
 
@@ -903,6 +1151,44 @@ Equation
         ]
       });
     </script>
+
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {

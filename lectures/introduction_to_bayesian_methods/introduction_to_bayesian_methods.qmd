@@ -37,19 +37,59 @@ format:
 - Work in Environmental Health (or adjacent fields).
 - Have little theoretical or practical experience of Bayesian ideas.
 - Would like some tools and know-how to get started in an approachable and friendly setting.
-
+- People who would like to have some fun while learning!
 
 ## R
 
 - R is an interactive environment developed by statisticians for data analysis.
 - A more detailed Introduction to R can be found at https://www.r-project.org.
-- This isn't a course to learn R...
+- R is the environment we will use throughout the workshop.
+- But this isn't a course to learn R...
 
-## R
+## R code
 
-- Sample code:
+::: nonincremental
+- Sample R code:
+:::
 
-```{.R}
+``` R
+library(ggplot2)
+set.seed(100)
+data = data.frame(x=rnorm(100),y=rnorm(100))
+
+p = ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "loess")
+
+plot(p)
+```
+
+## R code output
+
+::: nonincremental
+- Output of code:
+:::
+
+```{r}
+#| echo: false
+library(ggplot2)
+set.seed(100)
+data = data.frame(x=rnorm(100),y=rnorm(100))
+
+p = ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "loess")
+
+plot(p)
+```
+
+## R with nimble
+
+::: nonincremental
+- Sample R nimble code:
+:::
+
+``` R
 model(
   # prior
   alpha ~ dnorm(0, pow(10, -2))
@@ -65,14 +105,18 @@ model(
 )
 ```
 
-##	RStudio
+## RStudio
 
 - RStudio is an integrated development environment (IDE) for R developed by J J Allaire.
 - RStudio provides a convenient graphical interface to R, making it more user-friendly, and providing many useful features.
 - Such features include direct code execution, tools for plotting, history, debugging and workspace management.
 - A more detailed background on to RStudio can be found at https://www.rstudio.com/about/.
 
-##	RStudio Cloud
+## RStudio
+
+![](assets/what_is_rstudio.png){.r-stretch}
+
+## RStudio Cloud
 
 - We will assume you have done the preliminary homework.
 - RStudio Cloud is a cloud-based RStudio which runs projects and code in the cloud.
@@ -87,62 +131,191 @@ model(
 - This is just for information, as you will not be expected to be an expert on GitHub to participate in your SHARP course.
 - But! You should learn it in general as it's really essential in today's modern research environment.
 
+![](assets/github_banner.png){.r-stretch}
+
 # Introduction to Bayesian methods
 
 ## Thomas Bayes and Simon Pierre Laplace
 
 - Started with these two.
-- Bayes is why it's called Bayesian
+- Bayes is why it's called <span style="color:red;">Bayes</span>ian.
 - Sorry Laplace!
 
+![](assets/thomas_bayes_wikipedia.jpg){.absolute top=100 right=50 width="200" height="200"}
+
+![](assets/simon_laplace_wikipedia.jpg){.absolute top=350 right=50 width="200" height="200"}
+
+![](assets/big_red_cross.png){.absolute top=350 right=50 width="200" height="200"}
+
 ## Classical probability
 
-- 'Frequentist'.
-- Concept of limit of long-run relative frequency.
+- "Frequentist".
+- Limit of long-run relative frequency.
 - Ratio of the number of times event occurred to the number of trials.
-- Dice example.
 
 ## Classical probability
 
-$$
-Equation
-$$
+![](assets/dice_wikipedia.svg){.absolute top=100 right=50 width="200" height="200"}
+
+- Consider rolling a fair six-sided die many times.
+- We are seeing how often we roll a $2$.
+- We roll die a large number of times ($N$).
+- Probability that we roll a $2$:
+- $$Pr(X=2) = N(X=2)/N$$
+- This will tend to $1/6=0.16666666...$ as $N \rightarrow \infty$
 
 ## Classical probability
 
-```{.R}
-CODE
+``` R
+library(ggplot2)
+library(purrr)
+set.seed(100)
+n=1
+data = data.frame(x=rdunif(n,6))
+
+ggplot(data) +
+  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
+  geom_hline(yintercept = 1/6, linetype=2) +
+  xlab('Roll value') + ylab('Count') +
+  ggtitle(paste0('Rolling n = ',n,' times')) +
+  theme_bw()
+```
+
+## Classical probability
+
+```{r}
+library(ggplot2)
+library(purrr)
+set.seed(100)
+n=100
+data = data.frame(x=rdunif(n,6))
+
+ggplot(data) +
+  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
+  geom_hline(yintercept = 1/6, linetype=2) +
+  xlab('Roll value') + ylab('Count') +
+  ggtitle(paste0('Rolling n = ',n,' times')) +
+  theme_bw()
+```
+
+## Classical probability
+
+```{r}
+library(ggplot2)
+library(purrr)
+set.seed(100)
+n=1000
+data = data.frame(x=rdunif(n,6))
+
+ggplot(data) +
+  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
+  geom_hline(yintercept = 1/6, linetype=2) +
+  xlab('Roll value') + ylab('Count') +
+  ggtitle(paste0('Rolling n = ',n,' times')) +
+  theme_bw()
+```
+
+## Classical probability
+
+```{r}
+library(ggplot2)
+library(purrr)
+set.seed(100)
+n=10000
+data = data.frame(x=rdunif(n,6))
+
+ggplot(data) +
+  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
+  geom_hline(yintercept = 1/6, linetype=2) +
+  xlab('Roll value') + ylab('Count') +
+  ggtitle(paste0('Rolling n = ',n,' times')) +
+  theme_bw()
+```
+
+## Classical probability
+
+```{r}
+library(ggplot2)
+library(purrr)
+set.seed(100)
+n=100000
+data = data.frame(x=rdunif(n,6))
+
+ggplot(data) +
+  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
+  geom_hline(yintercept = 1/6, linetype=2) +
+  xlab('Roll value') + ylab('Count') +
+  ggtitle(paste0('Rolling n = ',format(n, scientific=F),' times')) +
+  theme_bw()
+```
+
+## Classical probability
+
+```{r}
+library(ggplot2)
+library(purrr)
+set.seed(100)
+n=1000000
+data = data.frame(x=rdunif(n,6))
+
+ggplot(data) +
+  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
+  geom_hline(yintercept = 1/6, linetype=2) +
+  xlab('Roll value') + ylab('Count') +
+  ggtitle(paste0('Rolling n = ',format(n, scientific=F),' times')) +
+  theme_bw()
 ```
 
 ## Subjective probability
 
+![](assets/rain_nyt.png){.r-stretch}
+
+## Subjective probability
+
 - What about the probability that it will rain tomorrow?
+- What is the probability that the next president will be a woman?
+- What is the probability that aliens built the pyramids?
+- Such questions cannot be answered by long-run probability.
 - Degree of belief involved.
+- However, long-run reasoning can inform these estimations.
 - Foundation of Bayesian thinking.
 
 ## Conditional probability
 
 - Two events $A$ and $B$.
 - Conditional event $A$ given $B$.
-$$
-Equation
-$$
+- $$
+  P(A|B) = \frac{P(A \cap B)}{P(B)}
+  $$
 
 ## Conditional probability
 
-- Example with numbers.
-
-$$
-Equation
-$$
+![](assets/venn_diagram.png){.r-stretch}
 
 ## Conditional probability
 
-- Example with numbers.
+In a group of 100 SHARP workshop attendees, 40 chose to stay in Manhattan, 30 chose to stay for the entire week, and 20 chose to stay in Manhattan and for the entire week. If a car buyer chosen at random chose to stay in Manhattan, what is the probability they chose to stay for the entire week?
 
-```{.R}
-CODE
-```
+$$
+P(A|B) = \frac{P(A \cap B)}{P(B)} = 20 / 40 = 0.5
+$$
+
+## Conditional probability {.smaller}
+- $$
+  P(A|B) = \frac{P(A \cap B)}{P(B)}
+  $$
+- can also be written as...
+- $$
+  P(A \cap B) = P(A|B) P(B)
+  $$
+- Also...
+- $$
+  P(B|A) = \frac{P(A \cap B)}{P(A)}
+  $$
+- Substituting top into bottom gets...
+- $$
+  P(B|A) = \frac{P(A|B) P(B)}{P(A)}
+  $$
 
 ## Bayes theorem
 
@@ -150,93 +323,352 @@ CODE
 - Same equation...
 - ...but different interpretation.
 
-$$
-Equation
-$$
+- $$
+  P(B|A) = \frac{P(A|B) P(B)}{P(A)}
+  $$
 
-## Prior and posterior
+## Prior, likelihood and posterior
 
-- Equating terms in Bayes theorem to prior and posterior
+- $$
+  P(\theta|y) \propto P(y|\theta) P(\theta)
+  $$
+- $P(\theta)$ is the prior
+- $P(y|\theta)$ is the likelihood
+- $P(\theta|y)$ is the posterior
 
-$$
-Equation
-$$
-
-## Bayesian inference
-
-- Where it gets interesting...
-- likelihood
-- Prior belief
-- Bayesian crank to generate...
-- Posterior
+- Prior is what is known or estimated a priori
+- Likelihood is probability of data given parameters of interest
+- Posterior is probability of parameters of interest given data
 
 ## Bayesian inference
 
-$$
-Equation
-$$
+- Leaving behind Frequentist inference here.
+- Bayesian when prior is unknown and is distribution is specified.
 
-## Choosing priors (conjugate and non-conjugate)
+![](assets/bmeh_normal.png){.r-stretch}
 
+## Choosing the prior distribution (conjugate or not)
+
+- Prior choice is vital.
+- Type of distribution (we will see in a second).
+- Hyperparameters/hyperpriors.
+- Often a 'natural' candidate for prior choice.
 - Mathematically soluable or not.
 - Some are (conjugate)
 - Most are not (non-conjugate)...
 
-## Types of conjugate pairs
+## Binomial-Beta {.smaller}
 
-- Binomial-Beta
+- Likelihood
+- Binomial distribution is when there is success (1) or failure (0) with the proportion of success ($\pi$).
+- $n$ trials.
 
-$$
-Equation
-$$
+- $$
+  y|\pi \sim Binomial(\pi,n)
+  $$
+- Prior
+- Beta distribution is mathematically the conjugate of binomial defined by two parameters $a$ and $b$.
+- Beta distributuon is 'natural' fit becasue it ranges from 0 to 1.
 
-## Types of conjugate pairs
+- $$
+  \pi \sim Beta(a,b)
+  $$
 
-- Normal-Normal
+## Binomial-Beta
 
-$$
-Equation
-$$
+- Posterior
+- Because of conjugacy, there is an analytical solution for the posterior.
 
-## Types of conjugate pairs
+- $$
+  p(\pi|y) \sim Beta(y+a,n-y+b)
+  $$
 
-- Poisson-Gamma
+## Examples of Beta distributions
 
-$$
-Equation
-$$
+$$Beta(2,10)$$
+
+```{r}
+#| echo: false
+p = seq(0,1, length=100)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 2, 10), type='l')
+```
+
+## Examples of Beta distributions
+
+$$Beta(0.5,0.5)$$
+
+```{r}
+#| echo: false
+p = seq(0,1, length=100)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 0.5, 0.5), type='l')
+```
+
+## Examples of Beta distributions
+
+$$Beta(5,1)$$
+
+```{r}
+#| echo: false
+p = seq(0,1, length=100)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 1), type='l')
+```
+
+## Examples of Beta distributions
+
+$$Beta(5,5)$$
+
+```{r}
+#| echo: false
+p = seq(0,1, length=100)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 5), type='l')
+```
+
+## Examples of Beta distributions
+
+$$Beta(5,20)$$
+
+```{r}
+#| echo: false
+p = seq(0,1, length=100)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 20), type='l')
+```
+
+## Examples of Beta distributions
+
+$$Beta(50,200)$$
+
+```{r}
+#| echo: false
+p = seq(0,1, length=100)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 50, 200), type='l')
+```
+
+## Types of conjugate pairs: Normal-Normal {.smaller}
+
+- Likelihood
+- Normal distribution is defined by two parameters $\mu$ and $\sigma$.
+- Bell curve.
+- $\mu$ is mean.
+- $\sigma$ is standard deviation.
+
+- $$
+  y|\mu,\sigma \sim Normal(\mu,\sigma^2)
+  $$
+- Prior
+- Normal distribution is mathematically the conjugate of itself, with hyperparameters $\mu_0$ and $\sigma_0$.
+
+- $$
+  \mu \sim Normal(\mu_0,\sigma_0^2)
+  $$
+
+## Normal-Normal
+
+- Posterior
+- Because of conjugacy, there is an analytical solution for the posterior.
+
+- $$
+  TO DO
+  $$
+
+## Examples of Normal distributions
+
+$$Normal(1,0)$$
+
+```{r}
+#| echo: false
+p = seq(-10,10, length=10000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type='l')
+```
+## Examples of Normal distributions
+
+$$Normal(1,0)$$
+
+```{r}
+#| echo: false
+p = seq(-100,100, length=10000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type='l')
+```
+
+## Examples of Normal distributions
+
+$$Normal(0,5)$$
+
+```{r}
+#| echo: false
+p = seq(-100,100, length=10000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 5), type='l')
+```
+
+## Examples of Normal distributions
+
+$$Normal(0,20)$$
+
+```{r}
+#| echo: false
+p = seq(-100,100, length=10000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 20), type='l')
+```
+
+## Types of conjugate pairs: Poisson-Gamma {.smaller}
+
+- Likelihood
+- Normal distribution is defined by on parameters $\lambda$.
+- Very common for count data.
+- $\lambda$ is rate.
+
+- $$
+  y|\lambda \sim Poisson(\lambda)
+  $$
+- Prior
+- Gamma distribution is mathematically the conjugate of Poisson, with hyperparameters $\mu_0$ and $\sigma_0$.
+- Gamma distributuon is 'natural' fit becasue it ranges from 0 to $\infty$.
+
+- $$
+  \lambda \sim Gamma(a,b)
+  $$
+
+## Poisson-Gamma
+
+- Posterior
+- Because of conjugacy, there is an analytical solution for the posterior.
+
+- $$
+  \rho | y \sim Gamma(a+y,b+E)
+  $$
+
+## Examples of Gamma distributions
+
+$$Gamma(0.1,0.1)$$
+
+```{r}
+#| echo: false
+p = seq(0,30, length=1000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 0.1, 0.1), type='l')
+```
+
+## Examples of Gamma distributions
+
+$$Gamma(1,1)$$
+
+```{r}
+#| echo: false
+p = seq(0,30, length=1000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 1, 1), type='l')
+```
+
+## Examples of Gamma distributions
+
+$$Gamma(3,3)$$
+
+```{r}
+#| echo: false
+p = seq(0,30, length=1000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 3, 3), type='l')
+```
+
+## Examples of Gamma distributions
+
+$$Gamma(3,0.5)$$
+
+```{r}
+#| echo: false
+p = seq(0,30, length=1000)
+
+#create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 3, 0.5), type='l')
+```
+
+## Informative or non-informative priors
+
+- Main source of criticism from non-Bayesians is how priors are chosen.
+- Priors should be informed by existing knowledge.
+- But what if we don't know anything really prior to inference?
+- Non-informative/informative priors outside scope of this but something to pay attention to.
 
 ## Why sample?
 
-- Because most are non-conjugate
-- Need non-analytical solution to infer distributions
+- Because most are non-conjugate.
+- Need non-analytical solution to infer distributions.
 
 ## Why sample?
 
-- Picture of sample chain
+![](assets/nimble_samples_example.png){.r-stretch}
 
 ## MCMC, Gibbs, approximations to sampling (variational inference)
 
 - Many different types.
-- Others will also discuss this.
+- Theo and others will also discuss this.
 
 ## Non-conjugate how to get posterior?
 
 - Some kind of software to help us implement models for inference.
 - Using R.
 - Packages.
+- We will be focusing on using NIMBLE throughout the two days.
 
 # Getting ready for this workshop
 
-## nimble
+## NIMBLE
 
-- Description of nimble.
+- NIMBLE adopts and extends BUGS as a modeling language and lets you program with the models you create.
+- Looks like below.
 
-## Why we’re using nimble for (almost) everything over the workshop
+``` R
+model(
+  # prior
+  alpha ~ dnorm(0, pow(10, -2))
+  sigma ~ dunif(0, 100)
+  tau <- pow(sigma, -2) # precision
+  for (k in 1:p) beta[k] ~ dnorm(0, 1)
 
-- Interpretability.
-- Flexibility.
+  # likelihood
+  for (i in 1:n) {
+    y[i] ~ dnorm(mu[i], tau)
+    mu[i] <- alpha + inprod(beta[1:p], x[i, 1:p])
+  }
+)
+```
+
+## Why we're using NIMBLE for (almost) everything over the workshop
+
+-   Interpretability.
+-   Flexibility.
 
 ## The lab for this session
 
-- Examples of above using samples.
+- Beta distribution.
+- Binomial-Beta example.
+- Normal distribution.
+- Normal-Normal example.
+- Gamma distribution
+- Poisson-Gamma example.
+- Introduction to NIMBLE format.
+- First basic examples of NIMBLE and how to use it.
+
+# Questions?
