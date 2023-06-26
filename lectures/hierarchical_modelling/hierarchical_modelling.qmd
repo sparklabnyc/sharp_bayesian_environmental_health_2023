@@ -25,29 +25,29 @@ format:
 
 # Outline
 
--   Recap: assumptions of linear models
--   Why is that not enough?
--   Two extremes of hierarchy
--   Complete, partial and no pooling
--   Random effects
--   Types of nestedness
+- Recap: assumptions of linear models
+- Why is that not enough?
+- Two extremes of hierarchy
+- Complete, partial and no pooling
+- Random effects
+- Types of nestedness
 
 
 
 # Assumptions of linear models
--   Homoskedasticity
--   No error in predictors $X$
--   No missing data
--   Normally distributed errors
--   Error in $Y$ variable is measurement error
--   Observations $Y_i$ are independent
+- Homoskedasticity
+- No error in predictors $X$
+- No missing data
+- Normally distributed errors
+- Error in $Y$ variable is measurement error
+- Observations $Y_i$ are independent
 
 # We want
--   To model variance
--   Capture errors in variables
--   Missing data models
--   Use GLMs
--   Use spatial and/or temporal error structure
+- To model variance
+- Capture errors in variables
+- Missing data models
+- Use GLMs
+- Use spatial and/or temporal error structure
 
 # Hierarchical models
 
@@ -69,9 +69,9 @@ A common mean across data:
 $$E(Y_i)= m, \quad i=1,..., n$$
 
 
--   It ignores any differences between measurement blocks and does not acknowledge variability block to block.
+- It ignores any differences between measurement blocks and does not acknowledge variability block to block.
 
--   Observation within each unit are more likely to be like each other.
+- Observation within each unit are more likely to be like each other.
 
 
 # Hierarchical models
@@ -89,10 +89,10 @@ $$E(Y_3)= m3$$
 Independent models for each of the datasets:
 $$E(Y_i)= m_i, \quad i=1,...,n$$
 
--   Captures variability, but not the overall pattern
--   Assummes that there is no relashionship between the means of models 
--   We might be interested in capturing information across the datasets
--   Does not provide ways to extrapolate
+- Captures variability, but not the overall pattern
+- Assummes that there is no relashionship between the means of models 
+- We might be interested in capturing information across the datasets
+- Does not provide ways to extrapolate
 
 
 # Hierarchical models
@@ -109,8 +109,8 @@ $$E(Y_i)=\theta_i$$
 $$E(\theta_i)=m$$
 
 # Hierarchical models
--   Variablility can be captured at different scales
--   We can make predictions
+- Variablility can be captured at different scales
+- We can make predictions
 
 
 # Example
@@ -142,16 +142,16 @@ $$ \mu \sim N(\mu_0, v_0), \tau^2 \sim IG(t_1, t_2)$$
 
 # Hierarchy
 
--   Data model -> 
--   Proess model -> 
--   Parameter mdel -> 
--   Hyperparameters
+- Data model -> 
+- Proess model -> 
+- Parameter mdel -> 
+- Hyperparameters
 
 # Key points about hierarchical models
--   Writing down models that explain variability in the parameters of a model
--   Partition variabilty more explicitely into multiple terms
--   Borrow strength across data sets
--   'Hierarchy' is with respoect to parameters
+- Writing down models that explain variability in the parameters of a model
+- Partition variabilty more explicitely into multiple terms
+- Borrow strength across data sets
+- 'Hierarchy' is with respect to parameters
 
 # Random effects
 
@@ -164,16 +164,16 @@ $$ \mu \sim N(\mu_0, v_0), \tau^2 \sim IG(t_1, t_2)$$
 
 # Unused notes
 
-* Data can have several types of structure. Including nestedness, which we call “hierarchical”.
+- Data can have several types of structure. Including nestedness, which we call “hierarchical”.
 
-* hierarchical models: nested models, multi-level models
+- hierarchical models: nested models, multi-level models
 
-* pooled model: ignore the grouping structure
-- important information is neglected
+- pooled model: ignore the grouping structure
+  - important information is neglected
 
-* unpooled: model each group separately
-— many distinct groups
-— some groups have small sample size
+- unpooled: model each group separately
+  - many distinct groups
+  - some groups have small sample size
 
-* partial pooling, hierarchical modellingi
-— complexity
+- partial pooling, hierarchical modellingi
+  - complexity
