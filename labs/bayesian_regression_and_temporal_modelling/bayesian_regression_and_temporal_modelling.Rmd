@@ -1,0 +1,28 @@
+---
+title: "Bayesian Regression and Temporal Modelling"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Robbie M. Parks"
+date: "August 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+## Load pacakges
+```{r}
+library(here)
+library(tidyverse)
+library(nimble)
+set.seed(2)
+```
+
+## Goal of lab
+
+This lab will involve taking some concepts from the lectures and introduce you to several types of regression.
+
+## Linear regression.
+## Non-linear regression.
+## Logistic regression.
+## Poisson regression.
