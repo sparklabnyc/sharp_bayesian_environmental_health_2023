@@ -30,7 +30,7 @@ This lab will involve taking some concepts from the lectures and introduce you t
 
 ## Normal-Normal example.
 
-## Gamma distribution
+## Gamma distribution.
 
 ## Poisson-Gamma example.
 

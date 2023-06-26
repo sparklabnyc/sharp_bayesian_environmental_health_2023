@@ -23,6 +23,9 @@ set.seed(2)
 This lab will involve taking some concepts from the lectures and introduce you to several types of regression.
 
 ## Linear regression.
+
 ## Non-linear regression.
+
 ## Logistic regression.
+
 ## Poisson regression.
