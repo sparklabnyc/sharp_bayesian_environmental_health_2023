@@ -268,7 +268,7 @@ ggplot(data) +
 
 ## Subjective probability
 
-![](assets/rain_nyt.png){.r-stretch}
+![](assets/rain_nyt_small.jpg){.r-stretch}
 
 ## Subjective probability
 
