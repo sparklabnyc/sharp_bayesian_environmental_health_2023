@@ -83,10 +83,10 @@ p = ggplot(data, aes(x, y)) +
 plot(p)
 ```
 
-## R with nimble
+## R with NIMBLE
 
 ::: nonincremental
-- Sample R nimble code:
+- Sample R NIMBLE code:
 :::
 
 ``` R
