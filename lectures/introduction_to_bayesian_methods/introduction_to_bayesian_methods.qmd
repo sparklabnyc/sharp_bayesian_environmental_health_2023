@@ -662,6 +662,7 @@ model(
 
 ## The lab for this session
 
+- In this session, we are going to go through examples usuing NIMBLE with the following:
 - Beta distribution.
 - Binomial-Beta example.
 - Normal distribution.
