@@ -26,12 +26,11 @@ format:
 # Outline
 
 - Recap: assumptions of linear models
-- Why is that not enough?
+- Why are linear models not enough?
 - Two extremes of hierarchy
-- Complete, partial and no pooling
+- Complete pooling, partial pooling and no pooling
 - Random effects
 - Types of nestedness
-
 
 
 # Assumptions of linear models
@@ -71,7 +70,7 @@ $$E(Y_i)= m, \quad i=1,..., n$$
 
 - It ignores any differences between measurement blocks and does not acknowledge variability block to block.
 
-- Observation within each unit are more likely to be like each other.
+- Observations within each unit are more likely to be like each other.
 
 
 # Hierarchical models
@@ -90,7 +89,7 @@ Independent models for each of the datasets:
 $$E(Y_i)= m_i, \quad i=1,...,n$$
 
 - Captures variability, but not the overall pattern
-- Assummes that there is no relashionship between the means of models 
+- Assummes that there is no relashionship between the means of the models 
 - We might be interested in capturing information across the datasets
 - Does not provide ways to extrapolate
 
@@ -143,7 +142,7 @@ $$ \mu \sim N(\mu_0, v_0), \tau^2 \sim IG(t_1, t_2)$$
 # Hierarchy
 
 - Data model -> 
-- Proess model -> 
+- Process model -> 
 - Parameter mdel -> 
 - Hyperparameters
 
