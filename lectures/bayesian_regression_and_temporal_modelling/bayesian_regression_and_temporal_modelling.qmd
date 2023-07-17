@@ -1,0 +1,225 @@
+---
+title: "Bayesian Regression and Temporal Modelling"
+subtitle: "Key ideas and concepts"
+author:
+ - name: "Robbie M. Parks"
+   email: "robbie.parks@columbia.edu"
+institute: "Environmental Health Sciences, Columbia University"
+date: 2023-08-14
+date-format: medium
+title-slide-attributes:
+  data-background-color: "#f3f4f4"
+  data-background-image: "../../assets/bmeh_normal.png"
+  data-background-size: 80%
+  data-background-position: 60% 120%
+format:
+  revealjs:
+    slide-number: true
+    incremental: true
+    chalkboard:
+      buttons: false
+      preview-links: auto
+    logo: "../../assets/bmeh_normal.png"
+    theme: [default, ../../assets/style.scss]
+---
+
+# Outline
+
+- Introduction
+- Generalized linear models
+- Getting ready for the lab
+
+# Overview
+
+## Regression models
+
+- Most commonly used to assess presence of a relationship between a dependent variable and one or more independent variables.
+- Bayesian regression originally used in econometrics.
+- Now wide range of fields use regression, including environmental epidemiology.
+- That's why we find ourselves here today!
+
+## Regression models
+
+- Basic steps to regression models:
+- 1. Estbalish suitable probability distribution for observations.
+- 2. Identify type of relationship between predictor(s) and outcome.
+- <span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.
+
+## Linear regression
+
+- Simplest regression model.
+- Assuming a linear relationship between predictors and the outcome.
+- Used in countless different applications.
+
+## Normal distribution
+
+- Description of characteristics of normal distribution.
+
+## Linear regression
+
+- Each outcome $y_i$ is normally distributed as follows:
+- $$y_i \sim Normal(\mu_i,\sigma^2)$$
+- Remember what these symbols all mean?
+
+## Link function
+
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
+- You will see several of the remaining time in the workshop.
+
+## Back to linear regression
+
+- Assuming we just express $\mu_i$ as a linear function of parameters of interest
+- $$\mu_i = ...$$
+
+## Reminder of regression model steps
+
+::: nonincremental
+- Basic steps to regression models:
+- 1. Estbalish suitable probability distribution for observations.
+- 2. Identify type of relationship between predictor(s) and outcome.
+- <span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.
+:::
+
+## Reminder of regression model steps
+
+::: nonincremental
+- Basic steps to regression models:
+- 1. Estbalish suitable probability distribution for observations. (done)
+- 2. Identify type of relationship between predictor(s) and outcome. (done)
+- <span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>. (need to specify)
+:::
+
+## Setting priors
+
+- Need to do this on:
+- The regression parameters (i.e., the $\Beta$ parameters).
+- Variance of outcome ($\sigma^2$).
+
+## Setting priors
+
+- In absence of information, set priors as vague:
+- [[[beta priors]]]
+- [[[sigma prior]]]
+
+## Linear regression
+
+- In NIMBLE, we can write:
+
+``` R
+model(
+  # prior
+  alpha ~ dnorm(0, pow(10, -2))
+  sigma ~ dunif(0, 100)
+  tau <- pow(sigma, -2) # precision
+  for (k in 1:p) beta[k] ~ dnorm(0, 1)
+
+  # likelihood
+  for (i in 1:n) {
+    y[i] ~ dnorm(mu[i], tau)
+    mu[i] <- alpha + inprod(beta[1:p], x[i, 1:p])
+  }
+)
+```
+
+## Linear regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset)
+
+## Evaluating model fit
+
+- Sometimes a seemingly reasonable approach can result in unexpected results.
+- When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.
+- Ideally residuals after model fit are essentially random centered around zero.
+
+## Non-linear regression
+
+- Seasonality can exist in data, for example, that requires accounting for.
+
+## Non-linear regression
+
+- Also, there can be autocorrelation between neighboring time points.
+
+## Non-linear regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset but progression from linear)
+
+# Genrealized linear models
+
+## Exponential family of models
+
+- Sometimes dependent variable is not normally distributed.
+- Exponential family is family of models described in a certain way (won't get into it in this workshop):
+- $$ XX $$
+
+## Generalized linear models
+
+- Extension of linear regression to when distribution not necessarily normally distributed.
+- Distributions which are part of the exponential family can describe all sort of non-normally distributed variables.
+- Many examples commonly encountered in environmental health.
+- We'll go through a few now...
+
+## Logistic regression
+
+- Part of exponential family.
+- Standard for binary outcomes (yes/no).
+- Many examples in environmental health, such as whether a person died.
+
+## Logistic regression
+
+- If dependent variable represents individual units:
+- Distributed with Bernoulli (only zero or one).
+
+## Logistic regression
+
+- If dependent variable represents sets of trails of yes/no:
+- Distributed with Binomial (zero to $n$ successes).
+
+## Link function
+
+::: nonincremental
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
+- You will see several of the remaining time in the workshop.
+:::
+
+## Link function fo logistic regression
+
+- Binomial formula.
+- Link function on $pi$ is $logit$ (ln(p/1-p)). (log odds).
+
+## Logistic regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset but progression from linear (mortality?))
+
+## Poisson regression
+
+- Part of exponential family.
+- Used typically with count data (number of events happening within a discrete space and time).
+- Can approximate to Binomial for high n and low p.
+
+## Link function
+
+::: nonincremental
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
+- You will see several of the remaining time in the workshop.
+:::
+
+## Link function fo logistic regression
+
+- Poisson formula.
+- Link function on log link (ensures counts don't ever become negative).
+
+## Poisson regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset but progression from linear)
+
+# Getting ready for the lab
+
+## The lab for this session
+
+- In this session, we are going to go through examples usuing NIMBLE with the following:
+- Linear regression.
+- Non-linear regression.
+- Logistic regression.
+- Poisson regression.
+
+# Questions?

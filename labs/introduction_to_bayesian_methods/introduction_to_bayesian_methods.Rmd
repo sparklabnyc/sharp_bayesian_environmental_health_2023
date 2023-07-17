@@ -1,0 +1,39 @@
+---
+title: "Introduction to Bayesian Methods"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Robbie M. Parks"
+date: "August 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+## Load pacakges
+```{r}
+library(here)
+library(tidyverse)
+library(nimble)
+set.seed(2)
+```
+
+## Goal of lab
+
+This lab will involve taking some concepts from the lectures and introduce you to the way NIMBLE works.
+
+## Beta distribution.
+
+## Binomial-Beta example.
+
+## Normal distribution.
+
+## Normal-Normal example.
+
+## Gamma distribution.
+
+## Poisson-Gamma example.
+
+## Introduction to NIMBLE format.
+
+## First basic examples of NIMBLE and how to use it.

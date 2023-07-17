@@ -1,0 +1,22 @@
+---
+title: "test"
+author: "Jaime Benavides"
+date: '2023-06-30'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(OCTAVE_EXECUTABLE = "/usr/bin/octave")
+octaveExe <- Sys.getenv("OCTAVE_EXECUTABLE")
+```
+
+## Running octave from Rstudio cloud example. Requirements are installing octave in the machine [octave link](https://octave.org/download) and also installing the statistics package [how to install a package in ubuntu link](https://askubuntu.com/questions/936022/how-to-install-statistics-package-in-octave4-0-0-in-ubuntu-16-04)
+
+
+
+```{octave test}
+sample_n = 1000;
+sample_n
+```
+

@@ -25,10 +25,10 @@ format:
 
 # Outline
 
--   Bayesian inference recap: What, Why, How
--   What is a workflow and why do we need it?
--   Principles of Bayesian workflow
--   Modern Bayesian workflow
+- Bayesian inference recap: What, Why, How
+- What is a workflow and why do we need it?
+- Principles of Bayesian workflow
+- Modern Bayesian workflow
 
 # Bayesian inference
 
@@ -53,21 +53,21 @@ A lot can go wrong!
 
 ## General principle of Bayesian inference:
 
--   Specify a complete Bayesian model
+- Specify a complete Bayesian model
     
 ## General principle of Bayesian inference:
 
--   Example:
-    - consider <ins>data</ins> $y = \{ y_1, ..., y_n\}$
-    - specify an <ins>observation model</ins>, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)$$
+- Example:
+  - consider <ins>data</ins> $y = \{ y_1, ..., y_n\}$
+  - specify an <ins>observation model</ins>, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)$$
    <!-- - here $\theta$ is a parameter which we want to infer-->
-    - complete the model with a prior distribution, e.g. $$p(\theta)=N(0,1)$$
+  - complete the model with a prior distribution, e.g. $$p(\theta)=N(0,1)$$
 
 
 ## General principle of Bayesian inference:
 
--   Specify a complete Bayesian model
--   Sample the posterior distribution of the parameter $\theta$.
+- Specify a complete Bayesian model
+- Sample the posterior distribution of the parameter $\theta$.
   
 . . .
 
@@ -81,17 +81,17 @@ But rarely.
 
 Probabilistic programming languages (PPLs) from a user's perspective:
 
--   PPLs are designed to let the user <ins>focus on modelling</ins> while inference happens automatically.
--   Users need to specify
-    -   prior,
-    -   likelihood.
--   Inference is performed via powerful algorithms such as Markov Chain Monte Carlo (<ins>MCMC</ins>).
--   Availability of <ins>diagnostic tools</ins>.
+- PPLs are designed to let the user <ins>focus on modelling</ins> while inference happens automatically.
+- Users need to specify
+  - prior,
+  - likelihood.
+- Inference is performed via powerful algorithms such as Markov Chain Monte Carlo (<ins>MCMC</ins>).
+- Availability of <ins>diagnostic tools</ins>.
 
 ## Remark on inference methods
 
--   Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI). 
--   We are opting to use MCMC whenever possible since it has theoretical guarantees.
+- Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI). 
+- We are opting to use MCMC whenever possible since it has theoretical guarantees.
 
 
 ## Diagnosing MCMC outputs
@@ -105,12 +105,12 @@ We use multiple chains of MCMC to estimate the posterior
 
 ## Diagnosing MCMC outputs
 
--   Convergence diagnostics
-    -   $\hat{R}$ statistic,
-    -   traceplots.
--   Effective sample size (ESS):
-    -   samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities
-    -   ESS -- number of independent samples required to obtain the same level of uncertainty as from the available dependent samples
+- Convergence diagnostics
+  - $\hat{R}$ statistic,
+  - traceplots.
+- Effective sample size (ESS):
+  - samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities
+  - ESS -- number of independent samples required to obtain the same level of uncertainty as from the available dependent samples
 
 ## Diagnosing MCMC outputs
 
@@ -165,43 +165,43 @@ A systematic review of the steps within the modern Bayesian workflow, described 
 
 <ins>Prior predictive checking</ins> consists in simulating data from the priors:
 
--   visualize priors (especially after transformation)
+- visualize priors (especially after transformation)
 
--   this shows the range of data compatible with the model
+- this shows the range of data compatible with the model
 
--   it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values
+- it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values
 
 
 ## Iterative model building
 
 A possible realisation of the Bayeisan workflow loop:
 
--   Understand the <ins>domain</ins> and problem,
+- Understand the <ins>domain</ins> and problem,
 
--   Formulate the model <ins>mathematically</ins>,
+- Formulate the model <ins>mathematically</ins>,
 
--   Implement model, test, <ins>debug</ins>,
+- Implement model, test, <ins>debug</ins>,
 
--   <ins>debug, debug, debug</ins>
+- <ins>debug, debug, debug</ins>
 
 
 ## Iterative model building
 
--   Understand the <ins>domain</ins> and problem,
+- Understand the <ins>domain</ins> and problem,
 
--   Formulate the model <ins>mathematically</ins>,
+- Formulate the model <ins>mathematically</ins>,
 
--   Implement model, test, <ins>debug</ins>,
+- Implement model, test, <ins>debug</ins>,
 
--   Perform <ins>prior predictive</ins> check,
+- Perform <ins>prior predictive</ins> check,
 
--   Fit the model,
+- Fit the model,
 
--   Assess <ins>convergence diagnostics</ins>,
+- Assess <ins>convergence diagnostics</ins>,
 
--   Perform <ins>posterior predictive</ins> check,
+- Perform <ins>posterior predictive</ins> check,
 
--   Improve the model <ins>iteratively</ins>: from baseline to complex and computationally efficient models.
+- Improve the model <ins>iteratively</ins>: from baseline to complex and computationally efficient models.
 
 # Examples
 
@@ -244,6 +244,8 @@ Let us draw from the priors, i.e. we are not using any data at this stage, only 
 <center>
 ![](assets/data2.png){width=45%} 
 
+(add uncertainty bounds)
+
 ## Prior predictive check
 Something doesn't look right...
 
@@ -278,11 +280,13 @@ model {
 
 Better: now the range of prior predictive distribution is covering the data.
 
+(add uncertainty bounds)
+
 
 ## Fit the model
 Print summary:
 <center>
-![](assets/fit1.png){width=45%} 
+![](assets/fit1.png){width=60%} 
 
 ## Plot estimates
 <center>
@@ -293,7 +297,7 @@ Print summary:
 
 
 <center>
-![](assets/fit1_conv.png){width=45%} 
+![](assets/fit1_conv.png){width=60%} 
 
 
 ## Convergence diagnostics
@@ -307,5 +311,7 @@ Traceplots
 
 <center>
 ![](assets/posterior1.png){width=45%} 
+
+(add uncertainty bounds)
 
 # References
