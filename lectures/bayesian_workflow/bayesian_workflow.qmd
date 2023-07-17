@@ -54,7 +54,7 @@ A lot can go wrong!
 ## General principle of Bayesian inference:
 
 - Specify a complete Bayesian model
-    
+
 ## General principle of Bayesian inference:
 
 - Example:
@@ -68,10 +68,10 @@ A lot can go wrong!
 
 - Specify a complete Bayesian model
 - Sample the posterior distribution of the parameter $\theta$.
-  
+
 . . .
 
-Sometimes posterior is available in a closed form. 
+Sometimes posterior is available in a closed form.
 
 . . .
 
@@ -90,7 +90,7 @@ Probabilistic programming languages (PPLs) from a user's perspective:
 
 ## Remark on inference methods
 
-- Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI). 
+- Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI).
 - We are opting to use MCMC whenever possible since it has theoretical guarantees.
 
 
@@ -117,7 +117,7 @@ We use multiple chains of MCMC to estimate the posterior
 We use multiple chains of MCMC to inspect convergence after warm-up
 
 <center>
-![](assets/trace_theta.png){width=50%} 
+![](assets/trace_theta.png){width=50%}
 
 
 
@@ -126,7 +126,7 @@ We use multiple chains of MCMC to inspect convergence after warm-up
 We use multiple chains and inspect convergence after warm-up
 
 <center>
-![](assets/trace_theta_bad.png){width=50%} 
+![](assets/trace_theta_bad.png){width=50%}
 
 
 
@@ -152,14 +152,14 @@ Workflows exist in a variety of disciplines. For example, in machine learning wo
 In the 1960's, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box's loop by Blei et. al. (2014):
 
 <center>
-![](assets/boxes_loop.png){width=60%} 
+![](assets/boxes_loop.png){width=60%}
 
 ## Modern Bayesian workflow
 
 A systematic review of the steps within the modern Bayesian workflow, described in Gelman et al. (2020):
 
 <center>
-![](assets/bayes_workflow.png){width=40%} 
+![](assets/bayes_workflow.png){width=40%}
 
 ## Prior predictive checks
 
@@ -210,7 +210,7 @@ Assume that the true data comes from the model
 $$y_i = a + b x_i + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2).$$
 
 <center>
-![](assets/data1.png){width=45%} 
+![](assets/data1.png){width=45%}
 
 
 
@@ -242,7 +242,7 @@ Let us draw from the priors, i.e. we are not using any data at this stage, only 
 . . .
 
 <center>
-![](assets/data2.png){width=45%} 
+![](assets/data2.png){width=45%}
 
 (add uncertainty bounds)
 
@@ -252,7 +252,7 @@ Something doesn't look right...
 . . .
 
 <center>
-![](assets/data2.png){width=45%} 
+![](assets/data2.png){width=45%}
 
 
 ## Debug
@@ -276,7 +276,7 @@ model {
 
 ## Prior redictive check again
 <center>
-![](assets/data3.png){width=45%} 
+![](assets/data3.png){width=45%}
 
 Better: now the range of prior predictive distribution is covering the data.
 
@@ -286,18 +286,18 @@ Better: now the range of prior predictive distribution is covering the data.
 ## Fit the model
 Print summary:
 <center>
-![](assets/fit1.png){width=60%} 
+![](assets/fit1.png){width=60%}
 
 ## Plot estimates
 <center>
-![](assets/est1.png){width=45%} 
+![](assets/est1.png){width=45%}
 
 
 ## Convergence diagnostics
 
 
 <center>
-![](assets/fit1_conv.png){width=60%} 
+![](assets/fit1_conv.png){width=60%}
 
 
 ## Convergence diagnostics
@@ -305,12 +305,12 @@ Print summary:
 Traceplots
 
 <center>
-![](assets/traceplots1.png){width=45%} 
+![](assets/traceplots1.png){width=45%}
 
 ## Posterior predictive check
 
 <center>
-![](assets/posterior1.png){width=45%} 
+![](assets/posterior1.png){width=45%}
 
 (add uncertainty bounds)
 
