@@ -68,11 +68,7 @@ data |>
   geom_histogram()
 ```
 
-Estimate the region-specific death rate/relative risk/excess?
-
-ASK GARY WHAT EXPECTED IS. THEN WE CAN KNOW WHAT WE ARE ESTIMATING
-Same as this I think: https://gkonstantinoudis.github.io/nimble/RmarkSLC.html
-<!-- We also have a variable `expected` for the expected number of deaths. We can use this instead of modelling a mean. -->
+Estimate the region-specific standardised mortality ratio.
 
 ## Full pooling model
 
@@ -153,6 +149,8 @@ partial_pooling_posterior <- as_draws_df(partial_pooling_posterior)
 summarise_draws(partial_pooling_posterior, default_summary_measures())
 summarise_draws(partial_pooling_posterior, default_convergence_measures())
 ```
+
+SMR is `alpha + theta[i]`
 
 ## A different prior on sigma for Bayesian workflow
 
