@@ -458,8 +458,7 @@ Robbie M. Parks
 <section id="normal-distribution" class="slide level2">
 <h2>Normal distribution</h2>
 <ul>
-<li class="fragment">XX</li>
-<li class="fragment">XX</li>
+<li class="fragment">Description of characteristics of normal distribution.</li>
 </ul>
 </section>
 <section id="linear-regression-1" class="slide level2">
@@ -551,12 +550,35 @@ Robbie M. Parks
 </section>
 <section id="linear-regression-real-world-example" class="slide level2">
 <h2>Linear regression: Real world example</h2>
+<ul>
+<li class="fragment">A preview of lab (something from UK/Italy dataset)</li>
+</ul>
+</section>
+<section id="evaluating-model-fit" class="slide level2">
+<h2>Evaluating model fit</h2>
+<ul>
+<li class="fragment">Sometimes a seemingly reasonable approach can result in unexpected results.</li>
+<li class="fragment">When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.</li>
+<li class="fragment">Ideally residuals after model fit are essentially random centered around zero.</li>
+</ul>
 </section>
 <section id="non-linear-regression" class="slide level2">
 <h2>Non-linear regression</h2>
+<ul>
+<li class="fragment">Seasonality can exist in data, for example, that requires accounting for.</li>
+</ul>
 </section>
-<section id="non-linear-regression-example" class="slide level2">
-<h2>Non-linear regression: example</h2>
+<section id="non-linear-regression-1" class="slide level2">
+<h2>Non-linear regression</h2>
+<ul>
+<li class="fragment">Also, there can be autocorrelation between neighboring time points.</li>
+</ul>
+</section>
+<section id="non-linear-regression-real-world-example" class="slide level2">
+<h2>Non-linear regression: Real world example</h2>
+<ul>
+<li class="fragment">A preview of lab (something from UK/Italy dataset but progression from linear)</li>
+</ul>
 </section></section>
 <section>
 <section id="genrealized-linear-models" class="title-slide slide level1 center">
@@ -566,28 +588,93 @@ Robbie M. Parks
 <section id="exponential-family-of-models" class="slide level2">
 <h2>Exponential family of models</h2>
 <ul>
-<li class="fragment">XX</li>
+<li class="fragment">Sometimes dependent variable is not normally distributed.</li>
+<li class="fragment">Exponential family is family of models described in a certain way (won’t get into it in this workshop):</li>
+<li class="fragment"><span class="math display">\[ XX \]</span></li>
 </ul>
 </section>
 <section id="generalized-linear-models" class="slide level2">
 <h2>Generalized linear models</h2>
 <ul>
 <li class="fragment">Extension of linear regression to when distribution not necessarily normally distributed.</li>
-<li class="fragment">Still part of exponential family</li>
-<li class="fragment">XX</li>
+<li class="fragment">Distributions which are part of the exponential family can describe all sort of non-normally distributed variables.</li>
+<li class="fragment">Many examples commonly encountered in environmental health.</li>
+<li class="fragment">We’ll go through a few now…</li>
 </ul>
 </section>
 <section id="logistic-regression" class="slide level2">
 <h2>Logistic regression</h2>
+<ul>
+<li class="fragment">Part of exponential family.</li>
+<li class="fragment">Standard for binary outcomes (yes/no).</li>
+<li class="fragment">Many examples in environmental health, such as whether a person died.</li>
+</ul>
 </section>
-<section id="logistic-regression-example" class="slide level2">
-<h2>Logistic regression: example</h2>
+<section id="logistic-regression-1" class="slide level2">
+<h2>Logistic regression</h2>
+<ul>
+<li class="fragment">If dependent variable represents individual units:</li>
+<li class="fragment">Distributed with Bernoulli (only zero or one).</li>
+</ul>
+</section>
+<section id="logistic-regression-2" class="slide level2">
+<h2>Logistic regression</h2>
+<ul>
+<li class="fragment">If dependent variable represents sets of trails of yes/no:</li>
+<li class="fragment">Distributed with Binomial (zero to <span class="math inline">\(n\)</span> successes).</li>
+</ul>
+</section>
+<section id="link-function-1" class="slide level2">
+<h2>Link function</h2>
+<div>
+<ul>
+<li>When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship</li>
+<li>You will see several of the remaining time in the workshop.</li>
+</ul>
+</div>
+</section>
+<section id="link-function-fo-logistic-regression" class="slide level2">
+<h2>Link function fo logistic regression</h2>
+<ul>
+<li class="fragment">Binomial formula.</li>
+<li class="fragment">Link function on <span class="math inline">\(pi\)</span> is <span class="math inline">\(logit\)</span> (ln(p/1-p)). (log odds).</li>
+</ul>
+</section>
+<section id="logistic-regression-real-world-example" class="slide level2">
+<h2>Logistic regression: Real world example</h2>
+<ul>
+<li class="fragment">A preview of lab (something from UK/Italy dataset but progression from linear (mortality?))</li>
+</ul>
 </section>
 <section id="poisson-regression" class="slide level2">
 <h2>Poisson regression</h2>
+<ul>
+<li class="fragment">Part of exponential family.</li>
+<li class="fragment">Used typically with count data (number of events happening within a discrete space and time).</li>
+<li class="fragment">Can approximate to Binomial for high n and low p.</li>
+</ul>
 </section>
-<section id="poisson-regression-example" class="slide level2">
-<h2>Poisson regression: example</h2>
+<section id="link-function-2" class="slide level2">
+<h2>Link function</h2>
+<div>
+<ul>
+<li>When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship</li>
+<li>You will see several of the remaining time in the workshop.</li>
+</ul>
+</div>
+</section>
+<section id="link-function-fo-logistic-regression-1" class="slide level2">
+<h2>Link function fo logistic regression</h2>
+<ul>
+<li class="fragment">Poisson formula.</li>
+<li class="fragment">Link function on log link (ensures counts don’t ever become negative).</li>
+</ul>
+</section>
+<section id="poisson-regression-real-world-example" class="slide level2">
+<h2>Poisson regression: Real world example</h2>
+<ul>
+<li class="fragment">A preview of lab (something from UK/Italy dataset but progression from linear)</li>
+</ul>
 </section></section>
 <section>
 <section id="getting-ready-for-the-lab" class="title-slide slide level1 center">
@@ -597,10 +684,11 @@ Robbie M. Parks
 <section id="the-lab-for-this-session" class="slide level2">
 <h2>The lab for this session</h2>
 <ul>
-<li class="fragment">Linear regression</li>
-<li class="fragment">Non-linear regressions</li>
-<li class="fragment">Logistic regression</li>
-<li class="fragment">Poisson regression</li>
+<li class="fragment">In this session, we are going to go through examples usuing NIMBLE with the following:</li>
+<li class="fragment">Linear regression.</li>
+<li class="fragment">Non-linear regression.</li>
+<li class="fragment">Logistic regression.</li>
+<li class="fragment">Poisson regression.</li>
 </ul>
 </section></section>
 <section id="questions" class="title-slide slide level1 center">

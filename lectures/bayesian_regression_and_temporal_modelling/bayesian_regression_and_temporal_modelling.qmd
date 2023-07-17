@@ -53,8 +53,7 @@ format:
 
 ## Normal distribution
 
-- XX
-- XX
+- Description of characteristics of normal distribution.
 
 ## Linear regression
 
@@ -124,37 +123,103 @@ model(
 
 ## Linear regression: Real world example
 
+- A preview of lab (something from UK/Italy dataset)
+
+## Evaluating model fit
+
+- Sometimes a seemingly reasonable approach can result in unexpected results.
+- When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.
+- Ideally residuals after model fit are essentially random centered around zero.
+
 ## Non-linear regression
 
-## Non-linear regression: example
+- Seasonality can exist in data, for example, that requires accounting for.
+
+## Non-linear regression
+
+- Also, there can be autocorrelation between neighboring time points.
+
+## Non-linear regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset but progression from linear)
 
 # Genrealized linear models
 
 ## Exponential family of models
 
-- XX
+- Sometimes dependent variable is not normally distributed.
+- Exponential family is family of models described in a certain way (won't get into it in this workshop):
+- $$ XX $$
 
 ## Generalized linear models
 
 - Extension of linear regression to when distribution not necessarily normally distributed.
-- Still part of exponential family
-- XX
+- Distributions which are part of the exponential family can describe all sort of non-normally distributed variables.
+- Many examples commonly encountered in environmental health.
+- We'll go through a few now...
 
 ## Logistic regression
 
-## Logistic regression: example
+- Part of exponential family.
+- Standard for binary outcomes (yes/no).
+- Many examples in environmental health, such as whether a person died.
+
+## Logistic regression
+
+- If dependent variable represents individual units:
+- Distributed with Bernoulli (only zero or one).
+
+## Logistic regression
+
+- If dependent variable represents sets of trails of yes/no:
+- Distributed with Binomial (zero to $n$ successes).
+
+## Link function
+
+::: nonincremental
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
+- You will see several of the remaining time in the workshop.
+:::
+
+## Link function fo logistic regression
+
+- Binomial formula.
+- Link function on $pi$ is $logit$ (ln(p/1-p)). (log odds).
+
+## Logistic regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset but progression from linear (mortality?))
 
 ## Poisson regression
 
-## Poisson regression: example
+- Part of exponential family.
+- Used typically with count data (number of events happening within a discrete space and time).
+- Can approximate to Binomial for high n and low p.
+
+## Link function
+
+::: nonincremental
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
+- You will see several of the remaining time in the workshop.
+:::
+
+## Link function fo logistic regression
+
+- Poisson formula.
+- Link function on log link (ensures counts don't ever become negative).
+
+## Poisson regression: Real world example
+
+- A preview of lab (something from UK/Italy dataset but progression from linear)
 
 # Getting ready for the lab
 
 ## The lab for this session
 
-- Linear regression
-- Non-linear regressions
-- Logistic regression
-- Poisson regression
+- In this session, we are going to go through examples usuing NIMBLE with the following:
+- Linear regression.
+- Non-linear regression.
+- Logistic regression.
+- Poisson regression.
 
 # Questions?
