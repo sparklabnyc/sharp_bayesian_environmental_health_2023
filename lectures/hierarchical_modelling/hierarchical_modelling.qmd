@@ -89,7 +89,7 @@ Independent models for each of the datasets:
 $$E(Y_i)= m_i, \quad i=1,...,n$$
 
 - Captures variability, but not the overall pattern
-- Assummes that there is no relashionship between the means of the models 
+- Assummes that there is no relashionship between the means of the models
 - We might be interested in capturing information across the datasets
 - Does not provide ways to extrapolate
 
@@ -100,7 +100,7 @@ $$E(Y_i)= m_i, \quad i=1,...,n$$
 
 # Hierarchical models
 
-Hierarchical models fill in the continuum between those two extremes. 
+Hierarchical models fill in the continuum between those two extremes.
 hey allow us to estimate models for each measurement block where each dataset is being fit to its own model, and
 then there is a higher level model - a hierarchical model - describing variability in parameters of those models.
 
@@ -141,9 +141,9 @@ $$ \mu \sim N(\mu_0, v_0), \tau^2 \sim IG(t_1, t_2)$$
 
 # Hierarchy
 
-- Data model -> 
-- Process model -> 
-- Parameter mdel -> 
+- Data model ->
+- Process model ->
+- Parameter mdel ->
 - Hyperparameters
 
 # Key points about hierarchical models
