@@ -15,25 +15,173 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 library(here)
 library(tidyverse)
 library(nimble)
-set.seed(2)
 ```
 
-## Goal of lab
+## Goal of this computing lab session
 
 This lab will involve taking some concepts from the lectures and introduce you to the way NIMBLE works.
 
-## Beta distribution.
-
-## Binomial-Beta example.
-
-## Normal distribution.
-
-## Normal-Normal example.
-
-## Gamma distribution.
-
-## Poisson-Gamma example.
-
 ## Introduction to NIMBLE format.
 
+NIMBLE is written in a slightly unusual format if you're used to just using R. It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London. 
+
 ## First basic examples of NIMBLE and how to use it.
+
+This example will be for a basic regression model using linear predictors (Normal distribution implicitly)
+
+Adapted from https://r-nimble.org/examples
+
+First create some example data for our model
+[[[FORMULA HERE IN LaTeX]]]
+```{r}
+set.seed(1)
+p <- 3    # number of explanatory variables
+n <- 100   # number of observations
+X <- matrix(rnorm(p*n), nrow = n, ncol = p) # explanatory variables
+true_betas <- c(c(0.2, 0.5, 0.3)) # coefficients
+sigma <- 0.5
+y <- rnorm(n, X %*% true_betas, sigma)
+```
+
+What does the dataset look like?
+```{r}
+head(data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+```
+
+Create the NIMBLE model
+```{r}
+code = nimbleCode({
+  
+  # priors for parameters
+  beta0 ~ dnorm(0, sd = 100) # prior for beta0
+  beta1 ~ dnorm(0, sd = 100) # prior for beta1
+  beta2 ~ dnorm(0, sd = 100) # prior for beta2
+  beta3 ~ dnorm(0, sd = 100) # prior for beta3
+  sigma ~ dunif(0, 100)      # prior for variance components
+  
+  # regression formula
+  for(i in 1:n) {
+    y[i] ~ dnorm(beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i], sd = sigma) # manual entry of linear predictors
+  }
+  
+})
+```
+
+Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance
+```{r}
+x1 <- X[,1] - mean(X[,1])
+x2 <- X[,2] - mean(X[,2])
+x3 <- X[,3] - mean(X[,3])
+```
+
+Final preparation of data into lists
+```{r}
+constants <- list(n = n, x1 = x1, x2 = x2, x3 = x3)
+data <- list(y = y)
+```
+
+Set initial values for MCMC samples
+```{r}
+inits <- list(beta0 = mean(y), beta1 = 0, beta2 = 0, beta3 = 0, sigma = 1)
+```
+
+Create the NIMBLE model from the BUGS code above ready to run in MCMC (redundant)
+```{r}
+model <- nimbleModel(code, constants = constants, data = data, inits = inits)
+```
+
+The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
+```{r}
+# mcmcConf <- configureMCMC(model)
+```
+
+Specify the number of MCMC samples
+```{r}
+ni = 10000
+```
+
+Run the MCMC simulations
+```{r}
+t0 = Sys.time()
+nimbleMCMC_samples_initial = nimbleMCMC(
+                           code = code,
+                           data = data,
+                           constants = constants, 
+                           inits = inits,
+                           # model = model,
+                           niter = ni,
+                           setSeed = 1,
+                           summary = TRUE)
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the samples?
+```{r}
+nimbleMCMC_samples_initial$summary
+```
+
+What do the samples of one of the unknown parameters actually look like? Let's have a look at beta1 (which we know is 0.2)
+```{r}
+plot(nimbleMCMC_samples_initial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+     ylab = expression(Beta_1))
+```
+
+So it looks like the samples are converging quickly from the initial parameter to ~0.2. But typically we will throw some samples at the beginning to ensure that the transient samples (which is when the model samples haven't stabilized around a particular value) are not included in calculating estimates of the mean and credible intervals. This is called the 'burn in' or 'warm up period'.
+
+Let's do it again but with a burn in of 1000 samples.
+
+```{r}
+ni = 10000
+nb = 1000 
+
+t0 = Sys.time()
+nimbleMCMC_samples_burnin = nimbleMCMC(code = code,
+                           data = data,
+                           constants = constants, 
+                           inits = inits,
+                           # model = model,
+                           niter = ni,
+                           nburnin = nb,
+                           setSeed = 1,
+                           summary = TRUE,
+)
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the samples with burn in?
+```{r}
+nimbleMCMC_samples_burnin$summary
+```
+
+Now the samples look to be very tidily centered around 0.2.
+```{r}
+plot(nimbleMCMC_samples_burnin$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+     ylab = expression(Beta_1))
+```
+
+What about if we want to know which model fits better? Use Watanabe–Akaike information criterion (WAIC)
+```{r}
+
+```
+
+What does equivalent frequentist model output look like?
+```{r}
+
+```
+
+## Binomial-Beta example.
+```{r}
+
+```
+
+## Gamma distribution.
+```{r}
+
+```
+
+## Poisson-Gamma example.
+```{r}
+
+```

@@ -212,6 +212,10 @@ model(
 
 - A preview of lab (something from UK/Italy dataset but progression from linear)
 
+## Temporal modelling
+
+- TO DO
+
 # Getting ready for the lab
 
 ## The lab for this session

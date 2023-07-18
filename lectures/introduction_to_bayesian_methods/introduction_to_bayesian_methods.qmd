@@ -57,7 +57,7 @@ library(ggplot2)
 set.seed(100)
 data = data.frame(x=rnorm(100),y=rnorm(100))
 
-p = ggplot(data, aes(x, y)) +
+p <- ggplot(data, aes(x, y)) +
   geom_point() +
   geom_smooth(method = "loess")
 
@@ -94,12 +94,11 @@ model(
   # prior
   alpha ~ dnorm(0, pow(10, -2))
   sigma ~ dunif(0, 100)
-  tau <- pow(sigma, -2) # precision
   for (k in 1:p) beta[k] ~ dnorm(0, 1)
 
   # likelihood
   for (i in 1:n) {
-    y[i] ~ dnorm(mu[i], tau)
+    y[i] ~ dnorm(mu[i], sigma)
     mu[i] <- alpha + inprod(beta[1:p], x[i, 1:p])
   }
 )
@@ -353,7 +352,7 @@ $$
 - Type of distribution (we will see in a second).
 - Hyperparameters/hyperpriors.
 - Often a 'natural' candidate for prior choice.
-- Mathematically soluable or not.
+- Mathematically solvable or not.
 - Some are (conjugate)
 - Most are not (non-conjugate)...
 
