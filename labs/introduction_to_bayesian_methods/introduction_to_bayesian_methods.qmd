@@ -27,9 +27,13 @@ NIMBLE is written in a slightly unusual format if you're used to just using R. I
 
 ## First basic examples of NIMBLE and how to use it.
 
-This example will be for a basic regression model using linear predictors (Normal distribution implicitly)
+These examples will be for basic regression modesl using linear predictors
 
 Adapted from https://r-nimble.org/examples
+
+## Normal-Normal example.
+
+The first example will utilize a simple regression
 
 First create some example data for our model
 [[[FORMULA HERE IN LaTeX]]]
@@ -46,6 +50,14 @@ y <- rnorm(n, X %*% true_betas, sigma)
 What does the dataset look like?
 ```{r}
 head(data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+```
+
+What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
+```{r}
+model_freq = lm(y~x1+x2+x3,data=data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+central_est = t(t(model_freq$coefficients))
+conf_int = confint(model_freq)
+print(cbind(central_est, conf_int))
 ```
 
 Create the NIMBLE model
@@ -85,14 +97,10 @@ Set initial values for MCMC samples
 inits <- list(beta0 = mean(y), beta1 = 0, beta2 = 0, beta3 = 0, sigma = 1)
 ```
 
-Create the NIMBLE model from the BUGS code above ready to run in MCMC (redundant)
-```{r}
-model <- nimbleModel(code, constants = constants, data = data, inits = inits)
-```
-
 The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
 ```{r}
-# mcmcConf <- configureMCMC(model)
+model <- nimbleModel(code, constants = constants, data = data, inits = inits)
+mcmcConf <- configureMCMC(model)
 ```
 
 Specify the number of MCMC samples
@@ -108,7 +116,6 @@ nimbleMCMC_samples_initial = nimbleMCMC(
                            data = data,
                            constants = constants, 
                            inits = inits,
-                           # model = model,
                            niter = ni,
                            setSeed = 1,
                            summary = TRUE)
@@ -126,13 +133,16 @@ What do the samples of one of the unknown parameters actually look like? Let's h
 plot(nimbleMCMC_samples_initial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
      ylab = expression(Beta_1))
 ```
+Let's have a look at beta1 another way via a histogram of samples (which we know is 0.2)
+```{r}
+hist(nimbleMCMC_samples_initial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+     ylab = expression(Beta_1))
+```
 
 So it looks like the samples are converging quickly from the initial parameter to ~0.2. But typically we will throw some samples at the beginning to ensure that the transient samples (which is when the model samples haven't stabilized around a particular value) are not included in calculating estimates of the mean and credible intervals. This is called the 'burn in' or 'warm up period'.
 
 Let's do it again but with a burn in of 1000 samples.
-
 ```{r}
-ni = 10000
 nb = 1000 
 
 t0 = Sys.time()
@@ -140,7 +150,6 @@ nimbleMCMC_samples_burnin = nimbleMCMC(code = code,
                            data = data,
                            constants = constants, 
                            inits = inits,
-                           # model = model,
                            niter = ni,
                            nburnin = nb,
                            setSeed = 1,
@@ -161,22 +170,126 @@ plot(nimbleMCMC_samples_burnin$samples[ , 'beta1'], type = 'l', xlab = 'iteratio
      ylab = expression(Beta_1))
 ```
 
-What about if we want to know which model fits better? Use Watanabe–Akaike information criterion (WAIC)
+What's the influence of tighter priors?
 ```{r}
-
+code_tighter_priors = nimbleCode({
+  
+  # priors for parameters
+  beta0 ~ dnorm(0, sd = 1) # prior for beta0
+  beta1 ~ dnorm(0, sd = 1) # prior for beta1
+  beta2 ~ dnorm(0, sd = 1) # prior for beta2
+  beta3 ~ dnorm(0, sd = 1) # prior for beta3
+  sigma ~ dunif(0, 1)      # prior for variance components
+  
+  # regression formula
+  for(i in 1:n) {
+    y[i] ~ dnorm(beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i], sd = sigma) # manual entry of linear predictors
+  }
+  
+})
 ```
 
-What does equivalent frequentist model output look like?
+Run the MCMC simulations
 ```{r}
-
+t0 = Sys.time()
+nimbleMCMC_samples_tighter_priors = nimbleMCMC(
+                           code = code_tighter_priors,
+                           data = data,
+                           constants = constants, 
+                           inits = inits,
+                           niter = ni,
+                           nburnin = nb,
+                           setSeed = 1,
+                           summary = TRUE)
+t1 =  Sys.time()
+t1 - t0
 ```
 
-## Binomial-Beta example.
+What is the summary of each estimated parameter from the samples with tighter priors?
 ```{r}
-
+nimbleMCMC_samples_tighter_priors$summary
+```
+Say we wanted to establish the estimated difference between two betas? Let's say Beta_1 and Beta_2 in this case
+```{r}
+code_diff_betas = nimbleCode({
+  
+  # priors for parameters
+  beta0 ~ dnorm(0, sd = 100) # prior for beta0
+  beta1 ~ dnorm(0, sd = 100) # prior for beta1
+  beta2 ~ dnorm(0, sd = 100) # prior for beta2
+  beta3 ~ dnorm(0, sd = 100) # prior for beta3
+  sigma ~ dunif(0, 100)      # prior for variance components
+  
+  # regression formula
+  for(i in 1:n) {
+    y[i] ~ dnorm(beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i], sd = sigma) # manual entry of linear predictors
+  }
+  
+  # difference between beta1 and beta2
+  beta12_diff <- beta2 - beta1
+  
+})
 ```
 
-## Gamma distribution.
+Run the MCMC simulations for monitoring specifically differences between beta1 and beta2
+```{r}
+parameters_to_monitor = c('beta12_diff')
+
+t0 = Sys.time()
+nimbleMCMC_samples_diff_betas = nimbleMCMC(
+                           code = code_diff_betas,
+                           data = data,
+                           constants = constants, 
+                           inits = inits,
+                           monitors = parameters_to_monitor,
+                           niter = ni,
+                           nburnin = nb,
+                           setSeed = 1,
+                           summary = TRUE)
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the samples when monitoring difference between beta1 and beta2?
+```{r}
+nimbleMCMC_samples_diff_betas$summary
+```
+
+## Binomial-Beta example (logistic regression).
+
+Based on https://stats.stackexchange.com/questions/46523/how-to-simulate-artificial-data-for-logistic-regression
+
+First create some example data for our model
+[[[FORMULA HERE IN LaTeX]]]
+```{r}
+n = 100
+
+set.seed(1)
+x1 = rnorm(n)           # some continuous variables 
+x2 = rnorm(n)
+x3 = rnorm(n)
+z = 1 + 0.2*x1 + 0.3*x2 - 0.5*x3        # linear combination with a bias
+pr = 1/(1+exp(-z))         # pass through an inv-logit function
+y = rbinom(n,1,pr)      # bernoulli response variable
+ 
+#now feed it to glm:
+df = data.frame(y=y,x1=x1,x2=x2,x3=x3)
+glm( y~x1+x2+x3,data=df,family="binomial")
+```
+
+What does the dataset look like?
+```{r}
+head(data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+```
+
+What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
+```{r}
+model_freq = lm(y~x1+x2+x3,data=data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+central_est = t(t(model_freq$coefficients))
+conf_int = confint(model_freq)
+print(cbind(central_est, conf_int))
+```
+
 ```{r}
 
 ```
