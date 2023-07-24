@@ -161,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="normal-normal-example." class="level2">
 <h2 class="anchored" data-anchor-id="normal-normal-example.">Normal-Normal example.</h2>
-<p>The first example will utilize a simple regression of</p>
+<p>The first example will utilize a simple regression</p>
 <p>First create some example data for our model [[[FORMULA HERE IN LaTeX]]]</p>
 <div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-2_7b04fb4d251adb777a686b0a98e7706f">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
@@ -361,20 +361,19 @@ graphical parameter "type" is obsolete</code></pre>
 </div>
 <p>So it looks like the samples are converging quickly from the initial parameter to ~0.2. But typically we will throw some samples at the beginning to ensure that the transient samples (which is when the model samples haven’t stabilized around a particular value) are not included in calculating estimates of the mean and credible intervals. This is called the ‘burn in’ or ‘warm up period’.</p>
 <p>Let’s do it again but with a burn in of 1000 samples.</p>
-<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-15_d948d0d9e811917af00b280e7c68c60b">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ni <span class="ot">=</span> <span class="dv">10000</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">=</span> <span class="dv">1000</span> </span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_burnin <span class="ot">=</span> <span class="fu">nimbleMCMC</span>(<span class="at">code =</span> code,</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> data,</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">constants =</span> constants, </span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">inits =</span> inits,</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">niter =</span> ni,</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nburnin =</span> nb,</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">summary =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-15_577fcdbf36ae8f5214d2dcbb3e795b47">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">=</span> <span class="dv">1000</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_burnin <span class="ot">=</span> <span class="fu">nimbleMCMC</span>(<span class="at">code =</span> code,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> data,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">constants =</span> constants, </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">inits =</span> inits,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">niter =</span> ni,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nburnin =</span> nb,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">summary =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Defining model</code></pre>
 </div>
@@ -409,7 +408,7 @@ graphical parameter "type" is obsolete</code></pre>
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 13.79982 secs</code></pre>
+<pre><code>Time difference of 13.87466 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples with burn in?</p>
@@ -593,21 +592,71 @@ beta12_diff 0.3020827 0.3015337 0.07876361 0.1470535 0.4569414</code></pre>
 </div>
 </div>
 </section>
-<section id="binomial-beta-example." class="level2">
-<h2 class="anchored" data-anchor-id="binomial-beta-example.">Binomial-Beta example.</h2>
-<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-24_1ecd6db74c0d5609a91472403d7acab7">
+<section id="binomial-beta-example-logistic-regression." class="level2">
+<h2 class="anchored" data-anchor-id="binomial-beta-example-logistic-regression.">Binomial-Beta example (logistic regression).</h2>
+<p>Based on https://stats.stackexchange.com/questions/46523/how-to-simulate-artificial-data-for-logistic-regression</p>
+<p>First create some example data for our model [[[FORMULA HERE IN LaTeX]]]</p>
+<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-24_e54de4fd80c504acea0d2b22767d939f">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">rnorm</span>(n)           <span class="co"># some continuous variables (fix this!)</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">=</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.2</span><span class="sc">*</span>x1 <span class="sc">+</span> <span class="fl">0.3</span><span class="sc">*</span>x2 <span class="sc">-</span> <span class="fl">0.5</span><span class="sc">*</span>x3        <span class="co"># linear combination with a bias</span></span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(<span class="sc">-</span>z))         <span class="co"># pass through an inv-logit function</span></span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rbinom</span>(n,<span class="dv">1</span>,pr)      <span class="co"># bernoulli response variable</span></span>
+<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb85-11"><a href="#cb85-11" aria-hidden="true" tabindex="-1"></a><span class="co">#now feed it to glm:</span></span>
+<span id="cb85-12"><a href="#cb85-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">y=</span>y,<span class="at">x1=</span>x1,<span class="at">x2=</span>x2,<span class="at">x3=</span>x3)</span>
+<span id="cb85-13"><a href="#cb85-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>( y<span class="sc">~</span>x1<span class="sc">+</span>x2<span class="sc">+</span>x3,<span class="at">data=</span>df,<span class="at">family=</span><span class="st">"binomial"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glm(formula = y ~ x1 + x2 + x3, family = "binomial", data = df)
 
+Coefficients:
+(Intercept)           x1           x2           x3  
+     0.9921       0.2530       0.5746      -0.7675  
+
+Degrees of Freedom: 99 Total (i.e. Null);  96 Residual
+Null Deviance:      123.8 
+Residual Deviance: 107.1    AIC: 115.1</code></pre>
 </div>
-</section>
-<section id="gamma-distribution." class="level2">
-<h2 class="anchored" data-anchor-id="gamma-distribution.">Gamma distribution.</h2>
-<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-25_754faf00fe26a8becafca68a83da9c65">
+</div>
+<p>What does the dataset look like?</p>
+<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-25_69c2a7b879e04d2b5ad6d9165d23fac3">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="at">y=</span>y,<span class="at">x1=</span>X[,<span class="dv">1</span>],<span class="at">x2=</span>X[,<span class="dv">2</span>],<span class="at">x3=</span>X[,<span class="dv">3</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  y         x1          x2         x3
+1 0 -0.6264538 -0.62036668  0.4094018
+2 0  0.1836433  0.04211587  1.6888733
+3 0 -0.8356286 -0.91092165  1.5865884
+4 1  1.5952808  0.15802877 -0.3309078
+5 0  0.3295078 -0.65458464 -2.2852355
+6 0 -0.8204684  1.76728727  2.4976616</code></pre>
+</div>
+</div>
+<p>What does equivalent frequentist model output look like for reference? What’s the interpretation of the 95% CI?</p>
+<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-26_f65f744a0f30ad985e6f79dc65245c4f">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>model_freq <span class="ot">=</span> <span class="fu">lm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2<span class="sc">+</span>x3,<span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">y=</span>y,<span class="at">x1=</span>X[,<span class="dv">1</span>],<span class="at">x2=</span>X[,<span class="dv">2</span>],<span class="at">x3=</span>X[,<span class="dv">3</span>]))</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>central_est <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">t</span>(model_freq<span class="sc">$</span>coefficients))</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>conf_int <span class="ot">=</span> <span class="fu">confint</span>(model_freq)</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">cbind</span>(central_est, conf_int))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              2.5 %      97.5 %
+(Intercept)  0.69297722  0.60604320  0.77991123
+x1           0.04659479 -0.04987883  0.14306841
+x2           0.10562882  0.01507000  0.19618763
+x3          -0.13672712 -0.22061179 -0.05284246</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-27_5e33fecb117873a126c435c988bac897">
 
 </div>
 </section>
 <section id="poisson-gamma-example." class="level2">
 <h2 class="anchored" data-anchor-id="poisson-gamma-example.">Poisson-Gamma example.</h2>
-<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-26_6296915931badd8d43736bfb1af4579d">
+<div class="cell" data-hash="introduction_to_bayesian_methods_cache/html/unnamed-chunk-28_b66190d2face850db479e471ee379531">
 
 </div>
 </section>
