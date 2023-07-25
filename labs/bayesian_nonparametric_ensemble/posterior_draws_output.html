@@ -365,15 +365,15 @@ library(here)</code></pre>
 <pre><code>## nimble version 1.0.1 is loaded.
 ## For more information on NIMBLE and a User Manual,
 ## please visit https://R-nimble.org.
-## 
+##
 ## Note for advanced users who have written their own MCMC samplers:
 ##   As of version 0.13.0, NIMBLE&#39;s protocol for handling posterior
 ##   predictive nodes has changed in a way that could affect user-defined
 ##   samplers in some situations. Please see Section 15.5.1 of the User Manual.</code></pre>
-<pre><code>## 
+<pre><code>##
 ## Attaching package: &#39;nimble&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
+##
 ##     simulate</code></pre>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
@@ -413,20 +413,20 @@ for(year_selected in c(2010:2015)){
 <div id="load-zcta-washington-shapefile-from-httpswww2.census.govgeotigertiger2010zcta52010cdoa" class="section level2">
 <h2>Load ZCTA Washington shapefile from <a href="https://www2.census.gov/geo/tiger/TIGER2010/ZCTA5/2010/?C=D;O=A" class="uri">https://www2.census.gov/geo/tiger/TIGER2010/ZCTA5/2010/?C=D;O=A</a></h2>
 <pre class="r"><code># state_shapefile = rgdal::readOGR(dsn=paste0(here::here(),&#39;/data/shapefiles/zcta/tl_2010_&#39;,state_selected,&#39;_zcta510&#39;), layer=paste0(&#39;tl_2010_&#39;,state_selected,&#39;_zcta510&#39;))
-# 
+#
 # # prepare ZCTA column for merging later
 # state_shapefile$ZCTA5CE10 = as.integer(state_shapefile$ZCTA5CE10)
-# 
+#
 # # reproject shapefile
 # state_shapefile = spTransform(state_shapefile, CRS(&quot;+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs&quot;))
-# 
+#
 # # fortify to prepare for plotting in ggplot
 # map = fortify(state_shapefile)
-# 
+#
 # # extract data from shapefile
 # state_shapefile@data$id = rownames(state_shapefile@data)
 # shapefile.data = state_shapefile@data
-# 
+#
 # # merge selected data to map_create dataframe for colouring of ggplot
 # shapefile.df = merge(map, shapefile.data, by=&#39;id&#39;)</code></pre>
 </div>
