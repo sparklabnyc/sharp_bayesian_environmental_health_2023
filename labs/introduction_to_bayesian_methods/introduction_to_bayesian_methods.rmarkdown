@@ -6,7 +6,9 @@ date: "August 2023"
 output: html_document
 ---
 
+
 ## Load pacakges
+
 ```{r}
 library(here)
 library(tidyverse)
@@ -14,6 +16,7 @@ library(nimble)
 library(bayesplot)
 library(posterior)
 ```
+
 
 ## Goal of this computing lab session
 
@@ -38,6 +41,7 @@ First create some example data for our model:
 $$
 y = max + c
 $$
+
 ```{r}
 set.seed(1)
 p <- 3    # number of explanatory variables
@@ -48,12 +52,16 @@ sigma <- 0.5
 y <- rnorm(n, X %*% true_betas, sigma)
 ```
 
+
 What does the dataset look like?
+
 ```{r}
 head(data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
 ```
 
+
 What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
+
 ```{r}
 model_freq <- lm(y~x1+x2+x3,data=data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
 central_est <- t(t(model_freq$coefficients))
@@ -61,7 +69,9 @@ conf_int <- confint(model_freq)
 print(cbind(central_est, conf_int))
 ```
 
+
 Create the NIMBLE model
+
 ```{r}
 code <- nimbleCode({
   
@@ -80,36 +90,48 @@ code <- nimbleCode({
 })
 ```
 
+
 Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance
+
 ```{r}
 x1 <- X[,1] - mean(X[,1])
 x2 <- X[,2] - mean(X[,2])
 x3 <- X[,3] - mean(X[,3])
 ```
 
+
 Final preparation of data into lists
+
 ```{r}
 constants <- list(n = n)
 data <- list(y = y, x1 = x1, x2 = x2, x3 = x3)
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(beta0 = mean(y), beta1 = 0, beta2 = 0, beta3 = 0, sigma = 1)
 ```
 
+
 The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
+
 ```{r}
 model <- nimbleModel(code, constants = constants, data = data, inits = inits)
 mcmcConf <- configureMCMC(model)
 ```
 
+
 Specify the number of MCMC samples
+
 ```{r}
 ni = 10000
 ```
 
+
 Run the MCMC simulations
+
 ```{r}
 t0 = Sys.time()
 nimbleMCMC_samples_initial = nimbleMCMC(
@@ -126,7 +148,9 @@ t1 =  Sys.time()
 t1 - t0
 ```
 
+
 What is the summary of each estimated parameter from the samples?
+
 ```{r}
 nimbleMCMC_samples_initial$summary
 
@@ -135,15 +159,19 @@ nimbleMCMC_samples_initial$summary
 # bayesplot::mcmc_trace(nimbleMCMC_samples_initial)
 ```
 
+
 What do the samples of one of the unknown parameters actually look like? Let's have a look at beta1 (which we know is 0.2)
+
 ```{r}
 plot(nimbleMCMC_samples_initial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
      ylab = expression(Beta_1))
 ```
 
+
 So it looks like the samples are converging quickly from the initial parameter to ~0.2. But typically we will throw some samples at the beginning to ensure that the transient samples (which is when the model samples haven't stabilized around a particular value) are not included in calculating estimates of the mean and credible intervals. This is called the 'burn in' or 'warm up period'.
 
 Let's do it again but with a burn in of 1000 samples.
+
 ```{r}
 nb = 1000 
 
@@ -161,18 +189,24 @@ t1 =  Sys.time()
 t1 - t0
 ```
 
+
 What is the summary of each estimated parameter from the samples with burn in?
+
 ```{r}
 nimbleMCMC_samples_burnin$summary
 ```
 
+
 Now the samples look to be very tidily centered around 0.2.
+
 ```{r}
 plot(nimbleMCMC_samples_burnin$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
      ylab = expression(Beta_1))
 ```
 
+
 What's the influence of tighter priors?
+
 ```{r}
 code_tighter_priors = nimbleCode({
   
@@ -191,7 +225,9 @@ code_tighter_priors = nimbleCode({
 })
 ```
 
+
 Run the MCMC simulations
+
 ```{r}
 t0 = Sys.time()
 nimbleMCMC_samples_tighter_priors = nimbleMCMC(
@@ -207,11 +243,15 @@ t1 =  Sys.time()
 t1 - t0
 ```
 
+
 What is the summary of each estimated parameter from the samples with tighter priors?
+
 ```{r}
 nimbleMCMC_samples_tighter_priors$summary
 ```
+
 Say we wanted to establish the estimated difference between two betas? Let's say Beta_1 and Beta_2 in this case
+
 ```{r}
 code_diff_betas = nimbleCode({
   
@@ -233,7 +273,9 @@ code_diff_betas = nimbleCode({
 })
 ```
 
+
 Run the MCMC simulations for monitoring specifically differences between beta1 and beta2
+
 ```{r}
 parameters_to_monitor = c('beta12_diff')
 
@@ -252,10 +294,13 @@ t1 =  Sys.time()
 t1 - t0
 ```
 
+
 What is the summary of each estimated parameter from the samples when monitoring difference between beta1 and beta2?
+
 ```{r}
 nimbleMCMC_samples_diff_betas$summary
 ```
+
 
 ## Logistic regression example.
 
@@ -264,6 +309,7 @@ First create some example data for our model:
 $$
 y = max + c
 $$
+
 
 ```{r}
 n = 10000
@@ -279,12 +325,16 @@ pr = 1/(1+exp(-z))         # pass through an inv-logit function
 y = rbinom(n,1,pr)      # bernoulli response variable
 ```
 
+
 What does the dataset look like?
+
 ```{r}
 head(data.frame(y=y,x1=x1,x2=x2,x3=x3))
 ```
 
+
 What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
+
 ```{r}
 #now feed it to glm:
 df = data.frame(y=y,x1=x1,x2=x2,x3=x3)
@@ -294,7 +344,9 @@ conf_int = confint(model_freq)
 print(cbind(central_est, conf_int))
 ```
 
+
 Create the NIMBLE model
+
 ```{r}
 code_binomial <- nimbleCode({
   
@@ -315,31 +367,41 @@ code_binomial <- nimbleCode({
 })
 ```
 
+
 Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance
+
 ```{r}
 x1 <- x1 - mean(x1)
 x2 <- x2 - mean(x2)
 x3 <- x3 - mean(x3)
 ```
 
+
 Final preparation of data into lists
+
 ```{r}
 constants <- list(n = n)
 data <- list(y = y, x1 = x1, x2 = x2, x3 = x3)
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(beta0 = 0, beta1 = 0, beta2 = 0, beta3 = 0)
 ```
 
+
 The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
+
 ```{r}
 model_binomial <- nimbleModel(code_binomial, constants = constants, data = data, inits = inits)
 mcmcConf <- configureMCMC(model_binomial)
 ```
 
+
 Let's run the model.
+
 ```{r}
 ni = 10000
 nb = 1000 
@@ -358,16 +420,21 @@ t1 =  Sys.time()
 t1 - t0
 ```
 
+
 What is the summary of each estimated parameter from the binomial model?
+
 ```{r}
 nimbleMCMC_samples_binomial$summary
 ```
 
+
 Now the samples look to be very tidily centered around 2.
+
 ```{r}
 plot(nimbleMCMC_samples_binomial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
      ylab = expression(Beta_1))
 ```
+
 
 ## Poisson-Gamma example.
 
@@ -376,6 +443,7 @@ First create some example data for our model:
 $$
 y = max + c
 $$
+
 
 ```{r}
 n = 10000
@@ -390,12 +458,16 @@ lambda = exp(z)
 y = rpois(n,lambda)    
 ```
 
+
 What does the dataset look like?
+
 ```{r}
 head(data.frame(y=y,x1=x1,x2=x2,x3=x3))
 ```
 
+
 What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
+
 ```{r}
 #now feed it to glm:
 df = data.frame(y=y,x1=x1,x2=x2,x3=x3)
@@ -405,7 +477,9 @@ conf_int = confint(model_freq)
 print(cbind(central_est, conf_int))
 ```
 
+
 Create the NIMBLE model
+
 ```{r}
 code_poisson <- nimbleCode({
   
@@ -424,31 +498,41 @@ code_poisson <- nimbleCode({
 })
 ```
 
+
 Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance
+
 ```{r}
 x1 <- x1 - mean(x1)
 x2 <- x2 - mean(x2)
 x3 <- x3 - mean(x3)
 ```
 
+
 Final preparation of data into lists
+
 ```{r}
 constants <- list(n = n)
 data <- list(y = y, x1 = x1, x2 = x2, x3 = x3)
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(beta0 = 0, beta1 = 0, beta2 = 0, beta3 = 0)
 ```
 
+
 The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
+
 ```{r}
 model_poisson <- nimbleModel(code_poisson, constants = constants, data = data, inits = inits)
 mcmcConf <- configureMCMC(model_poisson)
 ```
 
+
 Let's run the model.
+
 ```{r}
 ni = 10000
 nb = 1000 
@@ -467,12 +551,16 @@ t1 =  Sys.time()
 t1 - t0
 ```
 
+
 What is the summary of each estimated parameter from the binomial model?
+
 ```{r}
 nimbleMCMC_samples_poisson$summary
 ```
 
+
 Now the samples look to be very tidily centered around 0.3.
+
 ```{r}
 plot(nimbleMCMC_samples_poisson$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
      ylab = expression(Beta_1))
