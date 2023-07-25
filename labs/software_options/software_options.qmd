@@ -56,14 +56,14 @@ data |>
 
 ```{r}
 fml = deaths ~ 1 + f(SIGLA,model='iid')
-model = inla(fml, data=data, family='poisson', E=expected, 
+model = inla(fml, data=data, family='poisson', E=expected,
              control.predictor = list(link = 1), # log-link
              control.compute=list(config = TRUE)) # so that we can make draws of posterior
 ```
 
 ```{r}
 fml.adjusted.priors = deaths ~ 1 + f(SIGLA,model='iid', hyper=list(prec=list(prior='loggamma', param=c(0.1,0.1))))
-model.adjusted.priors = inla(fml.adjusted.priors, data=data, family='poisson', E=expected, 
+model.adjusted.priors = inla(fml.adjusted.priors, data=data, family='poisson', E=expected,
              control.predictor = list(link = 1), # log-link
              control.compute=list(config = TRUE)) # so that we can make draws of posterior
 ```
@@ -94,7 +94,7 @@ italy.adj = nb2INLA(temp)
 
 ```{r}
 fml.spatial = deaths ~ 1 + f(SIGLA,model='bym', graph=italy.adj)
-model.spatial = inla(fml.spatial, data=data_arranged, family='poisson', E=expected, 
+model.spatial = inla(fml.spatial, data=data_arranged, family='poisson', E=expected,
              control.predictor = list(link = 1), # log-link
              control.compute=list(config = TRUE)) # so that we can make draws of posterior
 ```

@@ -21,7 +21,7 @@ This lab will involve taking some concepts from the lectures and introduce you t
 
 ## Introduction to NIMBLE format.
 
-NIMBLE is written in a slightly unusual format if you're used to just using R. It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London. 
+NIMBLE is written in a slightly unusual format if you're used to just using R. It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London.
 
 ## First basic examples of NIMBLE and how to use it.
 
@@ -64,19 +64,19 @@ print(cbind(central_est, conf_int))
 Create the NIMBLE model
 ```{r}
 code <- nimbleCode({
-  
+
   # priors for parameters
   beta0 ~ dnorm(0, sd = 100) # prior for beta0
   beta1 ~ dnorm(0, sd = 100) # prior for beta1
   beta2 ~ dnorm(0, sd = 100) # prior for beta2
   beta3 ~ dnorm(0, sd = 100) # prior for beta3
   sigma ~ dunif(0, 100)      # prior for variance components
-  
+
   # regression formula
   for(i in 1:n) {
     y[i] ~ dnorm(beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i], sd = sigma) # manual entry of linear predictors
   }
-  
+
 })
 ```
 
@@ -115,7 +115,7 @@ t0 = Sys.time()
 nimbleMCMC_samples_initial = nimbleMCMC(
                            code = code,
                            data = data,
-                           constants = constants, 
+                           constants = constants,
                            inits = inits,
                            niter = ni,
                            setSeed = 1,
@@ -137,7 +137,7 @@ nimbleMCMC_samples_initial$summary
 
 What do the samples of one of the unknown parameters actually look like? Let's have a look at beta1 (which we know is 0.2)
 ```{r}
-plot(nimbleMCMC_samples_initial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+plot(nimbleMCMC_samples_initial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',
      ylab = expression(Beta_1))
 ```
 
@@ -145,12 +145,12 @@ So it looks like the samples are converging quickly from the initial parameter t
 
 Let's do it again but with a burn in of 1000 samples.
 ```{r}
-nb = 1000 
+nb = 1000
 
 t0 = Sys.time()
 nimbleMCMC_samples_burnin = nimbleMCMC(code = code,
                            data = data,
-                           constants = constants, 
+                           constants = constants,
                            inits = inits,
                            niter = ni,
                            nburnin = nb,
@@ -168,26 +168,26 @@ nimbleMCMC_samples_burnin$summary
 
 Now the samples look to be very tidily centered around 0.2.
 ```{r}
-plot(nimbleMCMC_samples_burnin$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+plot(nimbleMCMC_samples_burnin$samples[ , 'beta1'], type = 'l', xlab = 'iteration',
      ylab = expression(Beta_1))
 ```
 
 What's the influence of tighter priors?
 ```{r}
 code_tighter_priors = nimbleCode({
-  
+
   # priors for parameters
   beta0 ~ dnorm(0, sd = 1) # prior for beta0
   beta1 ~ dnorm(0, sd = 1) # prior for beta1
   beta2 ~ dnorm(0, sd = 1) # prior for beta2
   beta3 ~ dnorm(0, sd = 1) # prior for beta3
   sigma ~ dunif(0, 1)      # prior for variance components
-  
+
   # regression formula
   for(i in 1:n) {
     y[i] ~ dnorm(beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i], sd = sigma) # manual entry of linear predictors
   }
-  
+
 })
 ```
 
@@ -197,7 +197,7 @@ t0 = Sys.time()
 nimbleMCMC_samples_tighter_priors = nimbleMCMC(
                            code = code_tighter_priors,
                            data = data,
-                           constants = constants, 
+                           constants = constants,
                            inits = inits,
                            niter = ni,
                            nburnin = nb,
@@ -214,22 +214,22 @@ nimbleMCMC_samples_tighter_priors$summary
 Say we wanted to establish the estimated difference between two betas? Let's say Beta_1 and Beta_2 in this case
 ```{r}
 code_diff_betas = nimbleCode({
-  
+
   # priors for parameters
   beta0 ~ dnorm(0, sd = 100) # prior for beta0
   beta1 ~ dnorm(0, sd = 100) # prior for beta1
   beta2 ~ dnorm(0, sd = 100) # prior for beta2
   beta3 ~ dnorm(0, sd = 100) # prior for beta3
   sigma ~ dunif(0, 100)      # prior for variance components
-  
+
   # regression formula
   for(i in 1:n) {
     y[i] ~ dnorm(beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i], sd = sigma) # manual entry of linear predictors
   }
-  
+
   # difference between beta1 and beta2
   beta12_diff <- beta2 - beta1
-  
+
 })
 ```
 
@@ -241,7 +241,7 @@ t0 = Sys.time()
 nimbleMCMC_samples_diff_betas = nimbleMCMC(
                            code = code_diff_betas,
                            data = data,
-                           constants = constants, 
+                           constants = constants,
                            inits = inits,
                            monitors = parameters_to_monitor,
                            niter = ni,
@@ -297,7 +297,7 @@ print(cbind(central_est, conf_int))
 Create the NIMBLE model
 ```{r}
 code_binomial <- nimbleCode({
-  
+
   # priors for parameters
   beta0 ~ dnorm(0, sd = 100) # prior for beta0
   beta1 ~ dnorm(0, sd = 100) # prior for beta1
@@ -311,7 +311,7 @@ code_binomial <- nimbleCode({
     y[i] ~ dbin(p[i], 1)
     logit(p[i]) <- beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i]
   }
-  
+
 })
 ```
 
@@ -342,12 +342,12 @@ mcmcConf <- configureMCMC(model_binomial)
 Let's run the model.
 ```{r}
 ni = 10000
-nb = 1000 
+nb = 1000
 
 t0 = Sys.time()
 nimbleMCMC_samples_binomial = nimbleMCMC(code = code_binomial,
                            data = data,
-                           constants = constants, 
+                           constants = constants,
                            inits = inits,
                            niter = ni,
                            nburnin = nb,
@@ -365,7 +365,7 @@ nimbleMCMC_samples_binomial$summary
 
 Now the samples look to be very tidily centered around 2.
 ```{r}
-plot(nimbleMCMC_samples_binomial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+plot(nimbleMCMC_samples_binomial$samples[ , 'beta1'], type = 'l', xlab = 'iteration',
      ylab = expression(Beta_1))
 ```
 
@@ -385,9 +385,9 @@ x1 = round(rnorm(n),2)
 x2 = round(rnorm(n),2)
 x3 = round(rnorm(n),2)
 
-z = 4 + 0.3*x1 - 0.1*x2 + 0.6*x3       
-lambda = exp(z)       
-y = rpois(n,lambda)    
+z = 4 + 0.3*x1 - 0.1*x2 + 0.6*x3
+lambda = exp(z)
+y = rpois(n,lambda)
 ```
 
 What does the dataset look like?
@@ -408,7 +408,7 @@ print(cbind(central_est, conf_int))
 Create the NIMBLE model
 ```{r}
 code_poisson <- nimbleCode({
-  
+
   # priors for parameters
   beta0 ~ dnorm(0, sd = 100) # prior for beta0
   beta1 ~ dnorm(0, sd = 100) # prior for beta1
@@ -420,7 +420,7 @@ code_poisson <- nimbleCode({
     y[i] ~ dpois(lambda[i])
     log(lambda[i]) <- beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i]
   }
-  
+
 })
 ```
 
@@ -451,12 +451,12 @@ mcmcConf <- configureMCMC(model_poisson)
 Let's run the model.
 ```{r}
 ni = 10000
-nb = 1000 
+nb = 1000
 
 t0 = Sys.time()
 nimbleMCMC_samples_poisson = nimbleMCMC(code = code_poisson,
                            data = data,
-                           constants = constants, 
+                           constants = constants,
                            inits = inits,
                            niter = ni,
                            nburnin = nb,
@@ -474,6 +474,6 @@ nimbleMCMC_samples_poisson$summary
 
 Now the samples look to be very tidily centered around 0.3.
 ```{r}
-plot(nimbleMCMC_samples_poisson$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+plot(nimbleMCMC_samples_poisson$samples[ , 'beta1'], type = 'l', xlab = 'iteration',
      ylab = expression(Beta_1))
 ```
