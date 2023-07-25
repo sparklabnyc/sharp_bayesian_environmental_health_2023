@@ -37,7 +37,7 @@ First create some example data for our model
 set.seed(1)
 p <- 3    # number of explanatory variables
 n <- 100   # number of observations
-X <- matrix(rnorm(p*n), nrow = n, ncol = p) # explanatory variables
+X <- matrix(round(rnorm(p*n),2), nrow = n, ncol = p) # explanatory variables
 true_betas <- c(c(0.2, 0.5, 0.3)) # coefficients
 sigma <- 0.5
 y <- rnorm(n, X %*% true_betas, sigma)
@@ -50,15 +50,15 @@ head(data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
 
 What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
 ```{r}
-model_freq = lm(y~x1+x2+x3,data=data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
-central_est = t(t(model_freq$coefficients))
-conf_int = confint(model_freq)
+model_freq <- lm(y~x1+x2+x3,data=data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+central_est <- t(t(model_freq$coefficients))
+conf_int <- confint(model_freq)
 print(cbind(central_est, conf_int))
 ```
 
 Create the NIMBLE model
 ```{r}
-code = nimbleCode({
+code <- nimbleCode({
   
   # priors for parameters
   beta0 ~ dnorm(0, sd = 100) # prior for beta0
@@ -258,38 +258,107 @@ Based on https://stats.stackexchange.com/questions/46523/how-to-simulate-artific
 First create some example data for our model
 [[[FORMULA HERE IN LaTeX]]]
 ```{r}
-n = 100
+n = 1000
 p = 3
 
 set.seed(1)
-x1 = rnorm(n)
-x2 = rnorm(n)
-x3 = rnorm(n)
+x1 = round(rnorm(n),2)
+x2 = round(rnorm(n),2)
+x3 = round(rnorm(n),2)
 
-z = 1 + 0.2*x1 + 0.3*x2 - 0.5*x3        # linear combination with a bias
+z = 1 + 2*x1 + 3*x2 - 5*x3       # linear combination with a bias
 pr = 1/(1+exp(-z))         # pass through an inv-logit function
 y = rbinom(n,1,pr)      # bernoulli response variable
- 
-#now feed it to glm:
-df = data.frame(y=y,x1=x1,x2=x2,x3=x3)
-glm(y~x1+x2+x3,data=df,family="binomial")
 ```
 
 What does the dataset look like?
 ```{r}
-head(data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+head(data.frame(y=y,x1=x1,x2=x2,x3=x3))
 ```
 
 What does equivalent frequentist model output look like for reference? What's the interpretation of the 95% CI?
 ```{r}
-model_freq = lm(y~x1+x2+x3,data=data.frame(y=y,x1=X[,1],x2=X[,2],x3=X[,3]))
+#now feed it to glm:
+df = data.frame(y=y,x1=x1,x2=x2,x3=x3)
+model_freq = glm(y~x1+x2+x3,data=df,family="binomial")
 central_est = t(t(model_freq$coefficients))
 conf_int = confint(model_freq)
 print(cbind(central_est, conf_int))
 ```
 
+Create the NIMBLE model
 ```{r}
+code_binomial <- nimbleCode({
+  
+  # priors for parameters
+  beta0 ~ dnorm(0, sd = 100) # prior for beta0
+  beta1 ~ dnorm(0, sd = 100) # prior for beta1
+  beta2 ~ dnorm(0, sd = 100) # prior for beta2
+  beta3 ~ dnorm(0, sd = 100) # prior for beta3
+  # shape1 ~ dunif(0, 100)     # prior for shape1 of beta
+  # shape2 ~ dunif(0, 100)     # prior for shape1 of beta
 
+  # regression formula
+  for(i in 1:n) {
+    y[i] ~ dbinom(1, p[i])
+    logit(p[i]) <- beta0 + beta1*x1[i] + beta2*x2[i] + beta3*x3[i]
+  }
+  
+})
+```
+
+Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance
+```{r}
+x1 <- X[,1] - mean(X[,1])
+x2 <- X[,2] - mean(X[,2])
+x3 <- X[,3] - mean(X[,3])
+```
+
+Final preparation of data into lists
+```{r}
+constants <- list(n = n, x1 = x1, x2 = x2, x3 = x3)
+data <- list(y = y)
+```
+
+Set initial values for MCMC samples
+```{r}
+inits <- list(beta0 = 0, beta1 = 0, beta2 = 0, beta3 = 0)
+```
+
+The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
+```{r}
+model <- nimbleModel(code, constants = constants, data = data, inits = inits)
+mcmcConf <- configureMCMC(model)
+```
+
+Let's do it again but with a burn in of 1000 samples.
+```{r}
+ni = 10000
+nb = 1000 
+
+t0 = Sys.time()
+nimbleMCMC_samples_binomial = nimbleMCMC(code = code_binomial,
+                           data = data,
+                           constants = constants, 
+                           inits = inits,
+                           niter = ni,
+                           nburnin = nb,
+                           setSeed = 1,
+                           summary = TRUE,
+)
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the binomial model?
+```{r}
+nimbleMCMC_samples_binomial$summary
+```
+
+Now the samples look to be very tidily centered around 0.2.
+```{r}
+plot(nimbleMCMC_samples_burnin$samples[ , 'beta1'], type = 'l', xlab = 'iteration',  
+     ylab = expression(Beta_1))
 ```
 
 ## Poisson-Gamma example.
