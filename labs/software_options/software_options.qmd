@@ -1,0 +1,100 @@
+---
+title: "Software options"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Theo Rashid"
+date: "August 2023"
+output: html_document
+---
+
+## Load pacakges
+```{r}
+library(here)
+library(tidyverse)
+library(nimble)
+library(INLA)
+library(geojsonsf)
+library(sf)
+library(spdep)
+```
+
+## Exploratory data analysis
+
+```{r}
+data <- read_rds(here("data", "italy", "italy_mortality.rds"))
+glimpse(data)
+summary(data)
+```
+
+Let's collapse the time dimension for now and focus on estimating the death rate in the final year and the 9th month.
+
+```{r}
+data <- data |>
+  mutate(provincia_id = data |> group_by(SIGLA) |> group_indices()) |>
+  filter(year == 2018) |>
+  filter(month == 9)
+```
+
+```{r}
+data |>
+  ggplot(aes(x = SIGLA, y = deaths)) +
+  geom_jitter()
+```
+
+We have a variable `expected`, which gives a good approximation to the number of deaths
+```{r}
+data |>
+  ggplot(aes(x = expected, y = deaths)) +
+  geom_abline(slope = 1, intercept = 0, linewidth = 0.1) +
+  geom_point(size = 0.3)
+```
+
+```{r}
+data |>
+  ggplot(aes(x = deaths / expected)) +
+  geom_histogram()
+```
+
+```{r}
+fml = deaths ~ 1 + f(SIGLA,model='iid')
+model = inla(fml, data=data, family='poisson', E=expected, 
+             control.predictor = list(link = 1), # log-link
+             control.compute=list(config = TRUE)) # so that we can make draws of posterior
+```
+
+```{r}
+fml.adjusted.priors = deaths ~ 1 + f(SIGLA,model='iid', hyper=list(prec=list(prior='loggamma', param=c(0.1,0.1))))
+model.adjusted.priors = inla(fml.adjusted.priors, data=data, family='poisson', E=expected, 
+             control.predictor = list(link = 1), # log-link
+             control.compute=list(config = TRUE)) # so that we can make draws of posterior
+```
+
+```{r}
+plot(model)
+```
+
+```{r}
+summary(model)
+head(model$summary.random)
+```
+
+```{r}
+shapefile_italy <- geojson_sf(here('data','italy','italy.geojson'))
+p = ggplot(data=shapefile_italy) + geom_sf(aes(fill=mean.pop))
+ggsave('~/Desktop/a.png',p)
+```
+
+```{r}
+data_arranged = data %>% arrange(SIGLA)
+shapefile_arranged = shapefile_italy %>% arrange(SIGLA)
+
+temp = poly2nb(shapefile_arranged,row.names = shapefile_arranged$SIGLA)
+
+italy.adj = nb2INLA(temp)
+```
+
+```{r}
+fml.spatial = deaths ~ 1 + f(SIGLA,model='bym', graph=italy.adj)
+model.spatial = inla(fml.spatial, data=data_arranged, family='poisson', E=expected, 
+             control.predictor = list(link = 1), # log-link
+             control.compute=list(config = TRUE)) # so that we can make draws of posterior
+```

@@ -6,10 +6,6 @@ date: "August 2023"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
-```
-
 ## Load pacakges
 ```{r}
 library(here)
@@ -263,18 +259,20 @@ First create some example data for our model
 [[[FORMULA HERE IN LaTeX]]]
 ```{r}
 n = 100
+p = 3
 
 set.seed(1)
-x1 = rnorm(n)           # some continuous variables (fix this!)
+x1 = rnorm(n)
 x2 = rnorm(n)
 x3 = rnorm(n)
+
 z = 1 + 0.2*x1 + 0.3*x2 - 0.5*x3        # linear combination with a bias
 pr = 1/(1+exp(-z))         # pass through an inv-logit function
 y = rbinom(n,1,pr)      # bernoulli response variable
  
 #now feed it to glm:
 df = data.frame(y=y,x1=x1,x2=x2,x3=x3)
-glm( y~x1+x2+x3,data=df,family="binomial")
+glm(y~x1+x2+x3,data=df,family="binomial")
 ```
 
 What does the dataset look like?
