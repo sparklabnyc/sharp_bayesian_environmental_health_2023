@@ -239,6 +239,7 @@ model(
 ::::
 
 ## Ranking these PPLs^[Entirely subjective]
+
 Usability:
 
 - How easy is it to fit a model?
@@ -248,6 +249,7 @@ Usability:
 - How good is the performance?
 
 ## Ranking these PPLs^[Entirely subjective]
+
 Extensibility:
 
 - If it can't do something, how easily can I make it do that?
@@ -497,6 +499,35 @@ In this case, variational approximation is a Gaussian (Laplace approximation)
 - Really quick
 - Most real world cases are latent Gaussian – it just works
 - Only used by 3 people, 2 of whom are here today
+
+## So how does it work?
+
+INLA computes accurate and fast approximations to the posterior marginals of the components of the latent Gaussian variables.
+
+## So how does it work???
+
+![](assets/laplace_approximation.png)
+
+Basically, the Laplace Approximation (IN __LA__) means that we approximate a distribution with a Gaussian.
+Most things in the real world are Gaussian, so this works well.
+
+## Do I fit models like all the PPLs above?
+
+No, actually, the syntax is more like base `R`.
+
+For example, this is how to specify a model with an intercept and a random effect.
+
+```{.R}
+formula_iid <- y ~ 1 + f(SIGLA, model = "iid")
+```
+
+So it's easier to specify models, and there's a lot of inbuilt functionality.
+
+__But__ it's much more difficult to *customise*.
+
+## I think I'm <span style="color:#f928d2;">INLA</span>
+
+Good, we'll cover more in the practical.
 
 ---
 
