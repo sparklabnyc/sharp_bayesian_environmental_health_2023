@@ -21,7 +21,7 @@ library(spdep)
 The aim of this practical is to recreate the nimble model in the `hierarchical_modelling` lab using INLA.
 As a reminder, here is the model again.
 
-```
+```{.R}
 nimbleCode({
   # priors
   alpha ~ dnorm(0, 5)
@@ -53,7 +53,7 @@ data <- data |>
 INLA specifies the model in a formula, much like `glm` in base `R`.
 For a simple IID random effect for each province, we can write the model as
 ```{r}
-formula_iid = deaths ~ 1 + f(SIGLA, model = "iid")
+formula_iid <- deaths ~ 1 + f(SIGLA, model = "iid")
 ```
 
 This means we have an intercept signified by `1`.
@@ -64,7 +64,7 @@ INLA usually chooses some good defaults for you, but here, I will put a non-defa
 
 We can run the model by calling the `inla` function.
 ```{r}
-model = inla(
+model <- inla(
   formula_iid_priors,
   data = data,
   E = expected,
@@ -113,10 +113,10 @@ ggplot(data = shp_italy2) + geom_sf(aes(fill = mean.pop)) + theme_void()
 The following code extracts the adjacency matrix from the shapefile.
 ```{r}
 data = data |> arrange(SIGLA)
-shp_italy = shp_italy |> arrange(SIGLA)
+shp_italy <- shp_italy |> arrange(SIGLA)
 
-italy_nb = poly2nb(shp_italy,row.names = data$SIGLA)
-italy_adj = nb2INLA(file = here("data", "italy", "italy.graph"), nb = italy_nb)
+italy_nb <- poly2nb(shp_italy,row.names = data$SIGLA)
+italy_adj <- nb2INLA(file = here("data", "italy", "italy.graph"), nb = italy_nb)
 ```
 
 And we can visualise the adjacency matrix.
@@ -127,8 +127,8 @@ image(inla.graph2matrix(G), xlab = "", ylab = "") # plot adjacency matrix
 
 Finally, let's use the graph in a BYM model.
 ```{r}
-formula_spatial = deaths ~ 1 + f(SIGLA, model = "bym", graph = G)
-model = inla(
+formula_spatial <- deaths ~ 1 + f(SIGLA, model = "bym", graph = G)
+model <- inla(
   formula_spatial,
   data = data,
   E = expected,
