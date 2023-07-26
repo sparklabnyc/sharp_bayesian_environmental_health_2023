@@ -6,8 +6,7 @@ date: "August 2023"
 output: html_document
 ---
 
-## Load pacakges
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(here)
 library(tidyverse)
 library(nimble)
@@ -17,84 +16,126 @@ library(sf)
 library(spdep)
 ```
 
-## Exploratory data analysis
+## Setting the scene
 
-```{r}
-data <- read_rds(here("data", "italy", "italy_mortality.rds"))
-glimpse(data)
-summary(data)
+The aim of this practical is to recreate the nimble model in the `hierarchical_modelling` lab using INLA.
+As a reminder, here is the model again.
+
+```
+nimbleCode({
+  # priors
+  alpha ~ dnorm(0, 5)
+  sigma_p ~ T(dnorm(0, 1), 0, Inf)
+
+  for (j in 1:Np) {
+    theta[j] ~ dnorm(0, sd = sigma_p)
+  }
+
+  # likelihood
+  for (i in 1:N) {
+    y[i] ~ dpois(mu[i])
+    log(mu[i]) <- log(E[i]) + alpha + theta[province[i]]
+  }
+})
 ```
 
-Let's collapse the time dimension for now and focus on estimating the death rate in the final year and the 9th month.
-
+And let's load in the data.
 ```{r}
+data <- read_rds(here("data", "italy", "italy_mortality.rds"))
+
 data <- data |>
-  mutate(provincia_id = data |> group_by(SIGLA) |> group_indices()) |>
   filter(year == 2018) |>
   filter(month == 9)
 ```
 
+## Writing the model in INLA
+
+INLA specifies the model in a formula, much like `glm` in base `R`.
+For a simple IID random effect for each province, we can write the model as
 ```{r}
-data |>
-  ggplot(aes(x = SIGLA, y = deaths)) +
-  geom_jitter()
+formula_iid = deaths ~ 1 + f(SIGLA, model = "iid")
 ```
 
-We have a variable `expected`, which gives a good approximation to the number of deaths
+This means we have an intercept signified by `1`.
+This is the equivalent of `alpha` in the nimble model.
+
+The formula gives us an IID effect, but no control over the hyperprior for the variance of the effect.
+INLA usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (`1/sigma**2`).
+
+We can run the model by calling the `inla` function.
 ```{r}
-data |>
-  ggplot(aes(x = expected, y = deaths)) +
-  geom_abline(slope = 1, intercept = 0, linewidth = 0.1) +
-  geom_point(size = 0.3)
+model = inla(
+  formula_iid_priors,
+  data = data,
+  E = expected,
+  family = "poisson",
+  control.predictor = list(link = 1), # log-link
+  control.compute = list(config = TRUE) # so that we can simulate draws of posterior
+)
 ```
 
-```{r}
-data |>
-  ggplot(aes(x = deaths / expected)) +
-  geom_histogram()
-```
+Take a moment to look at each of the arguments and convince yourself that it is the same model as nimble.
 
-```{r}
-fml = deaths ~ 1 + f(SIGLA,model='iid')
-model = inla(fml, data=data, family='poisson', E=expected,
-             control.predictor = list(link = 1), # log-link
-             control.compute=list(config = TRUE)) # so that we can make draws of posterior
-```
+## Exploring the model in INLA
 
-```{r}
-fml.adjusted.priors = deaths ~ 1 + f(SIGLA,model='iid', hyper=list(prec=list(prior='loggamma', param=c(0.1,0.1))))
-model.adjusted.priors = inla(fml.adjusted.priors, data=data, family='poisson', E=expected,
-             control.predictor = list(link = 1), # log-link
-             control.compute=list(config = TRUE)) # so that we can make draws of posterior
-```
-
+INLA has a lot of nice inbuilt functionality to explore how the model has fit.
 ```{r}
 plot(model)
 ```
 
+INLA often "just works".
+If it runs, it has usually fitted correctly.
+If it doesn't run, or it hangs, there is an issue with the model and it will let you know.
+
+Note, as explained in the lecture, INLA does not fit models through sampling.
+It approximates the posterior distribution.
+Once you have the posterior, you are able
 ```{r}
 summary(model)
 head(model$summary.random)
 ```
 
+## Fitting a spatial model with INLA
+
+INLA is used widely amongst spatial statisticians.
+There are a lot of inbuilt functions which make the task of inference in spatial settings very efficient.
+INLA can deal with both areal data and point processes.
+For more information, see the [examples](https://www.r-inla.org/examples-tutorials).
+
+Here, we're going to fit a BYM model in place of the IID effect.
+
+For this, INLA needs to know the spatial adjacency matrix ("graph" in INLA's language).
 ```{r}
-shapefile_italy <- geojson_sf(here('data','italy','italy.geojson'))
-p = ggplot(data=shapefile_italy) + geom_sf(aes(fill=mean.pop))
-ggsave('~/Desktop/a.png',p)
+shp_italy <- read_rds(here("data", "italy", "italy_shp.rds"))
+ggplot(data = shp_italy2) + geom_sf(aes(fill = mean.pop)) + theme_void()
 ```
 
+The following code extracts the adjacency matrix from the shapefile.
 ```{r}
-data_arranged = data %>% arrange(SIGLA)
-shapefile_arranged = shapefile_italy %>% arrange(SIGLA)
+data = data |> arrange(SIGLA)
+shp_italy = shp_italy |> arrange(SIGLA)
 
-temp = poly2nb(shapefile_arranged,row.names = shapefile_arranged$SIGLA)
-
-italy.adj = nb2INLA(temp)
+italy_nb = poly2nb(shp_italy,row.names = data$SIGLA)
+italy_adj = nb2INLA(file = here("data", "italy", "italy.graph"), nb = italy_nb)
 ```
 
+And we can visualise the adjacency matrix.
 ```{r}
-fml.spatial = deaths ~ 1 + f(SIGLA,model='bym', graph=italy.adj)
-model.spatial = inla(fml.spatial, data=data_arranged, family='poisson', E=expected,
-             control.predictor = list(link = 1), # log-link
-             control.compute=list(config = TRUE)) # so that we can make draws of posterior
+G <- inla.read.graph(here("data", "italy", "italy.graph"))
+image(inla.graph2matrix(G), xlab = "", ylab = "") # plot adjacency matrix
 ```
+
+Finally, let's use the graph in a BYM model.
+```{r}
+formula_spatial = deaths ~ 1 + f(SIGLA, model = "bym", graph = G)
+model = inla(
+  formula_spatial,
+  data = data,
+  E = expected,
+  family = "poisson",
+  control.predictor = list(link = 1),
+  control.compute = list(config = TRUE)
+)
+```
+
+Try and test out different spatial models, such as `"besag"`.
