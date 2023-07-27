@@ -1,0 +1,267 @@
+---
+title: "Temporal modelling"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Robbie M. Parks"
+date: "August 2023"
+output: html_document
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(here)
+library(tidyverse)
+library(nimble)
+library(bayesplot)
+library(posterior)
+library(hrbrthemes)
+
+extrafont::loadfonts()
+theme_set(theme_ipsum())
+
+color_scheme_set(scheme = "viridis")
+
+set.seed(2)
+```
+
+## Goal of this computing lab session
+
+This lab will involve taking some key temporal modelling concepts, including linear slopes, seasonal terms, random walks, autoregressive models, and forecasting.
+
+## Introduction to data we will be using.
+
+We will be using national death count data for Spain during 2010-2020 as taken from the paper:
+
+V. Kontis, J.E. Bennett, R.M. Parks, T. Rashid, J. Pearson-Stuttard, P. Asaria, B. Zhou, M. Guillot, C.D. Mathers, Y.H. Khang, M. McKee and M. Ezzati. Lessons learned and lessons missed: impact of the coronavirus disease 2019 (COVID-19) pandemic on all-cause mortality in 40 industrialised countries prior to mass vaccination. Wellcome Open Research 2021, 6:279 (paper) (code).
+
+Let's load in the data.
+```{r}
+data <- read_csv(here("data", "National_multicountry", "data.csv")) |>
+  filter(country=='spain') |>
+  filter(year(week)<2020)
+```
+
+Here's a preview of the data
+```{r}
+data |> head()
+```
+
+Now let's summarise the data by week nationally
+```{r}
+data_national <- data |>
+  group_by(week,week_of_year) |>
+  summarise(deaths=sum(deaths),
+            population=sum(population),
+            t2m=mean(t2m),
+            weekly_t2m_anomaly=mean(weekly_t2m_anomaly))
+```
+
+Here's a preview of the summarised national data
+```{r}
+data_national |> head()
+```
+
+Let's plot the number of deaths over time
+```{r}
+ggplot(data = data_national) + geom_point(aes(x=week,y=deaths)) #+ theme_void()
+```
+
+Let's calculate crude death rates over time too
+```{r}
+data_national = data_national |>
+  mutate(rate=100000*deaths/population)
+```
+
+Let's plot the death rates over time
+```{r}
+ggplot(data = data_national) + geom_point(aes(x=week,y=rate))
+```
+
+Before running NIMBLE, extract data for week and center around zero for better MCMC performance
+```{r}
+data_national = data_national |>
+  ungroup() |>
+  mutate(weekc = row_number()) |>
+  mutate(weekc = weekc-mean(weekc)) |>
+  mutate(month = month(week))
+```
+
+## Linear model over time
+
+The first model we will create and assess is a linear model over time, which assumes that death rates are simply going up or down at a constant rate throughout our study. This is very basic and just to show how to start with some analysis. Since we are dealing with count data, a Poisson model could make sense:
+
+$$
+y = max + c
+$$
+
+Let's write the NIMBLE code
+```{r}
+code_linear <- nimbleCode({
+
+  # priors for parameters
+  alpha ~ dnorm(0, sd = 100) # prior for alpha
+  beta_week ~ dnorm(0, sd = 100) # prior for beta_week
+
+  # regression formula
+  for(t in 1:weeks) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- alpha + beta_week * t + log(population[t])
+  }
+  
+  # exponentiate the estimated parameters to reverse the log-link function
+  alpha_exp <- exp(alpha)
+  beta_week_exp <- exp(beta_week)
+  
+  # what's the estimated annual rate of change?
+  beta_year <- exp(52 * beta_week)
+  beta_year_exp <- exp(beta_year)
+})
+```
+
+Final preparation of data into lists
+```{r}
+constants <- list(weeks = nrow(data_national))
+data <- list(deaths = data_national$deaths, 
+             week = data_national$weekc,
+             population = data_national$population)
+```
+
+Set initial values for MCMC samples
+```{r}
+inits <- list(alpha = 0, beta_week = 0)
+parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp')
+```
+
+Let's run the model.
+```{r}
+t0 = Sys.time()
+nimbleMCMC_samples_linear <- nimbleMCMC(
+  code = code_linear,
+  data = data,
+  constants = constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 15000,
+  nburnin = 3000,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE
+)
+
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the Poisson model?
+```{r}
+summarise_draws(nimbleMCMC_samples_linear, default_summary_measures())
+summarise_draws(nimbleMCMC_samples_linear, default_convergence_measures())
+```
+
+Now the samples look to be very tidily centred.
+```{r}
+mcmc_trace(nimbleMCMC_samples_linear)
+```
+
+Now let's look at the residuals of the fit, which should be randomly distributed around zero without any obvious pattern
+```{r}
+# TO DO
+```
+
+## Linear model with random term over time
+
+The residuals look like there may be a seasonal pattern, and so let us attempt to remove that by including a weekly random effect
+
+$$
+y = max + c
+$$
+
+```{r}
+code_weekly_random_effect <- nimbleCode({
+
+  # priors for parameters
+  alpha ~ dnorm(0, sd = 100) # prior for alpha
+  beta_week ~ dnorm(0, sd = 100) # prior for beta_week
+  sigma ~ dunif(0, 100)      # prior for variance of weekly effects
+
+  # regression formula
+  for(t in 1:weeks) {
+
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- alpha + alpha_week[t] + beta_week * t + log(population[t])
+
+  }
+  
+  # weekly random effect
+  for (w in 1:n_weeks) {
+    alpha_week[w] ~ dnorm(0, sigma)
+  }
+  
+  # exponentiate the estimated parameters to reverse the log-link function
+  alpha_exp <- exp(alpha)
+  beta_week_exp <- exp(beta_week)
+  
+  # what's the estimated annual rate of change?
+  beta_year <- exp(52 * beta_week)
+  beta_year_exp <- exp(beta_year)
+})
+```
+
+Final preparation of data into lists
+```{r}
+constants <- list(weeks = nrow(data_national),
+                  n_weeks = max(data_national$week_of_year),
+                  week = data_national$weekc,
+                  week_of_year = data_national$week_of_year)
+
+data <- list(deaths = data_national$deaths, 
+             population = data_national$population)
+```
+
+Set initial values for MCMC samples
+```{r}
+inits <- list(alpha = 0, beta_week = 0)
+parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp')
+```
+
+Let's run the model.
+```{r}
+t0 = Sys.time()
+nimbleMCMC_samples_week_random_effect <- nimbleMCMC(
+  code = code_weekly_random_effect,
+  data = data,
+  constants = constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 15000,
+  nburnin = 3000,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE
+)
+
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the Poisson model?
+```{r}
+summarise_draws(nimbleMCMC_samples_week_random_effect, default_summary_measures())
+summarise_draws(nimbleMCMC_samples_week_random_effect, default_convergence_measures())
+```
+
+Now the samples look to be very tidily centred.
+```{r}
+mcmc_trace(nimbleMCMC_samples_week_random_effect)
+```
+
+## Linear model with random walk over time
+```{r}
+
+```
+
+## Linear model with autoregressive term over time
+```{r}
+
+```
+
+## Forecasting
+```{r}
+
+```

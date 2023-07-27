@@ -22,7 +22,7 @@ color_scheme_set(scheme = "viridis")
 set.seed(2)
 ```
 
-## Goal of this computing lab session
+## Goal of this computing lab session.
 
 This lab will involve taking some concepts from the lectures and introduce you to the way NIMBLE works.
 

@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Robbie M. Parks">
+<meta name="dcterms.date" content="2023-08-01">
+
+<title>Temporal modelling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="temporal_modelling_files/libs/clipboard/clipboard.min.js"></script>
+<script src="temporal_modelling_files/libs/quarto-html/quarto.js"></script>
+<script src="temporal_modelling_files/libs/quarto-html/popper.min.js"></script>
+<script src="temporal_modelling_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="temporal_modelling_files/libs/quarto-html/anchor.min.js"></script>
+<link href="temporal_modelling_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="temporal_modelling_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="temporal_modelling_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="temporal_modelling_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="temporal_modelling_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Temporal modelling</h1>
+<p class="subtitle lead">SHARP Bayesian Modeling for Environmental Health Workshop</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Robbie M. Parks </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 1, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<section id="goal-of-this-computing-lab-session" class="level2">
+<h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
+<p>This lab will involve taking some key temporal modelling concepts, including linear slopes, seasonal terms, random walks, autoregressive models, and forecasting.</p>
+</section>
+<section id="introduction-to-data-we-will-be-using." class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-data-we-will-be-using.">Introduction to data we will be using.</h2>
+<p>We will be using national death count data for Spain during 2010-2020 as taken from the paper:</p>
+<p>V. Kontis, J.E. Bennett, R.M. Parks, T. Rashid, J. Pearson-Stuttard, P. Asaria, B. Zhou, M. Guillot, C.D. Mathers, Y.H. Khang, M. McKee and M. Ezzati. Lessons learned and lessons missed: impact of the coronavirus disease 2019 (COVID-19) pandemic on all-cause mortality in 40 industrialised countries prior to mass vaccination. Wellcome Open Research 2021, 6:279 (paper) (code).</p>
+<p>Let’s load in the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"National_multicountry"</span>, <span class="st">"data.csv"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country<span class="sc">==</span><span class="st">'spain'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(week)<span class="sc">&lt;</span><span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 42696 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): country, sex, age
+dbl  (8): week_id, week_of_year, deaths, population, t2m, weekly_t2m_anomaly...
+lgl  (5): bank_holiday_early_may, bank_holiday_easter_monday, bank_holiday_g...
+date (1): week
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Here’s a preview of the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 17
+  country sex   age   week       week_id week_of_year deaths population   t2m
+  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;date&gt;       &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+1 spain   men   0-64  2010-01-04       1            1    858  19656900.  3.60
+2 spain   men   0-64  2010-01-11       2            2    895  19656628.  5.32
+3 spain   men   0-64  2010-01-18       3            3    871  19656356.  7.49
+4 spain   men   0-64  2010-01-25       4            4    883  19656083.  4.24
+5 spain   men   0-64  2010-02-01       5            5    797  19655811.  5.20
+6 spain   men   0-64  2010-02-08       6            6    846  19655538.  3.28
+# ℹ 8 more variables: weekly_t2m_anomaly &lt;dbl&gt;, bank_holiday_christmas &lt;dbl&gt;,
+#   bank_holiday_new_year &lt;dbl&gt;, bank_holiday_early_may &lt;lgl&gt;,
+#   bank_holiday_easter_monday &lt;lgl&gt;, bank_holiday_good_friday &lt;lgl&gt;,
+#   bank_holiday_spring &lt;lgl&gt;, bank_holiday_summer &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>Now let’s summarise the data by week nationally</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_national <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(week,week_of_year) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">deaths=</span><span class="fu">sum</span>(deaths),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">population=</span><span class="fu">sum</span>(population),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">t2m=</span><span class="fu">mean</span>(t2m),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">weekly_t2m_anomaly=</span><span class="fu">mean</span>(weekly_t2m_anomaly))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'week'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<p>Here’s a preview of the summarised national data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_national <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+# Groups:   week [6]
+  week       week_of_year deaths population   t2m weekly_t2m_anomaly
+  &lt;date&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;              &lt;dbl&gt;
+1 2010-01-04            1   8205  46489587.  3.60             -1.79 
+2 2010-01-11            2   8640  46493050.  5.32              0.517
+3 2010-01-18            3   8322  46496512.  7.49              2.10 
+4 2010-01-25            4   8063  46499975.  4.24             -0.872
+5 2010-02-01            5   8154  46503438.  5.20             -0.671
+6 2010-02-08            6   7954  46506901.  3.28             -1.66 </code></pre>
+</div>
+</div>
+<p>Let’s plot the number of deaths over time</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_national) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>week,<span class="at">y=</span>deaths)) <span class="co">#+ theme_void()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Let’s calculate crude death rates over time too</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data_national <span class="ot">=</span> data_national <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rate=</span><span class="dv">100000</span><span class="sc">*</span>deaths<span class="sc">/</span>population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s plot the death rates over time</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_national) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>week,<span class="at">y=</span>rate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Before running NIMBLE, extract data for week and center around zero for better MCMC performance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data_national <span class="ot">=</span> data_national <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekc =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekc =</span> weekc<span class="sc">-</span><span class="fu">mean</span>(weekc)) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">month</span>(week))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="linear-model-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="linear-model-over-time">Linear model over time</h2>
+<p>The first model we will create and assess is a linear model over time, which assumes that death rates are simply going up or down at a constant rate throughout our study. This is very basic and just to show how to start with some analysis. Since we are dealing with count data, a Poisson model could make sense:</p>
+<p><span class="math display">\[
+y = max + c
+\]</span></p>
+<p>Let’s write the NIMBLE code</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>code_linear <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors for parameters</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  beta_week <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta_week</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>weeks) {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta_week <span class="sc">*</span> t <span class="sc">+</span> <span class="fu">log</span>(population[t])</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># exponentiate the estimated parameters to reverse the log-link function</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  alpha_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(alpha)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  beta_week_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_week)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  beta_year_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_year)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Final preparation of data into lists</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">weeks =</span> <span class="fu">nrow</span>(data_national))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">deaths =</span> data_national<span class="sc">$</span>deaths, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">week =</span> data_national<span class="sc">$</span>weekc,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">population =</span> data_national<span class="sc">$</span>population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Set initial values for MCMC samples</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_week =</span> <span class="dv">0</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'alpha'</span>,<span class="st">'beta_week'</span>,<span class="st">'alpha_exp'</span>,<span class="st">'beta_week_exp'</span>,<span class="st">'beta_year'</span>,<span class="st">'beta_year_exp'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s run the model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_linear <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_linear,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">15000</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">3000</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Defining model</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Building model</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting data and initial values</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  [Note] 'week' is provided in 'data' but is not a variable in the model and is being ignored.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Running calculate on model
+  [Note] Any error reports that follow may simply reflect missing values in model variables.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Checking model sizes and dimensions</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Checking model calculations</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling
+  [Note] This may take a minute.
+  [Note] Use 'showCompilerOutput = TRUE' to see C++ compilation details.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>running chain 1...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 10.53283 secs</code></pre>
+</div>
+</div>
+<p>What is the summary of each estimated parameter from the Poisson model?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_linear, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  variable           mean    median          sd         mad        q5       q95
+  &lt;chr&gt;             &lt;num&gt;     &lt;num&gt;       &lt;num&gt;       &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
+1 alpha         -8.75     -8.75     0.00104     0.00102     -8.75     -8.75    
+2 alpha_exp      0.000158  0.000158 0.000000165 0.000000161  0.000158  0.000159
+3 beta_week      0.000179  0.000179 0.00000340  0.00000340   0.000173  0.000184
+4 beta_week_exp  1.00      1.00     0.00000340  0.00000340   1.00      1.00    
+5 beta_year      1.01      1.01     0.000178    0.000178     1.01      1.01    
+6 beta_year_exp  2.74      2.74     0.000490    0.000490     2.74      2.74    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_linear, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  variable       rhat ess_bulk ess_tail
+  &lt;chr&gt;         &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+1 alpha          1.00     336.     789.
+2 alpha_exp      1.00     336.     789.
+3 beta_week      1.00     331.     562.
+4 beta_week_exp  1.00     331.     562.
+5 beta_year      1.00     331.     562.
+6 beta_year_exp  1.00     331.     562.</code></pre>
+</div>
+</div>
+<p>Now the samples look to be very tidily centred.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now let’s look at the residuals of the fit, which should be randomly distributed around zero without any obvious pattern</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TO DO</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="linear-model-with-random-term-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="linear-model-with-random-term-over-time">Linear model with random term over time</h2>
+<p>The residuals look like there may be a seasonal pattern, and so let us attempt to remove that by including a weekly random effect</p>
+<p><span class="math display">\[
+y = max + c
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>code_weekly_random_effect <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors for parameters</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  beta_week <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta_week</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)      <span class="co"># prior for variance of weekly effects</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>weeks) {</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> alpha <span class="sc">+</span> alpha_week[t] <span class="sc">+</span> beta_week <span class="sc">*</span> t <span class="sc">+</span> <span class="fu">log</span>(population[t])</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># weekly random effect</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (w <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_weeks) {</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    alpha_week[w] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, sigma)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># exponentiate the estimated parameters to reverse the log-link function</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  alpha_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(alpha)</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  beta_week_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_week)</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  beta_year_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_year)</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Final preparation of data into lists</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">weeks =</span> <span class="fu">nrow</span>(data_national),</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_weeks =</span> <span class="fu">max</span>(data_national<span class="sc">$</span>week_of_year),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">week =</span> data_national<span class="sc">$</span>weekc,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">week_of_year =</span> data_national<span class="sc">$</span>week_of_year)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">deaths =</span> data_national<span class="sc">$</span>deaths, </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">population =</span> data_national<span class="sc">$</span>population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Set initial values for MCMC samples</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_week =</span> <span class="dv">0</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'alpha'</span>,<span class="st">'beta_week'</span>,<span class="st">'alpha_exp'</span>,<span class="st">'beta_week_exp'</span>,<span class="st">'beta_year'</span>,<span class="st">'beta_year_exp'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s run the model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_effect <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_weekly_random_effect,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">15000</span>,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">3000</span>,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Defining model</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  [Note] 'week' is provided in 'constants' but not used in the model code and is being ignored.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  [Note] 'week_of_year' is provided in 'constants' but not used in the model code and is being ignored.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Building model</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting data and initial values</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Running calculate on model
+  [Note] Any error reports that follow may simply reflect missing values in model variables.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Checking model sizes and dimensions</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  [Note] This model is not fully initialized. This is not an error.
+         To see which variables are not initialized, use model$initializeInfo().
+         For more information on model initialization, see help(modelInitialization).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Checking model calculations</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Note] NAs were detected in model variables: sigma, logProb_sigma, alpha_week, lifted_d1_over_sqrt_oPsigma_cP, mu, logProb_alpha_week, logProb_deaths.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling
+  [Note] This may take a minute.
+  [Note] Use 'showCompilerOutput = TRUE' to see C++ compilation details.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>running chain 1...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>warning: value in right-hand-side-only variable is NA or NaN, in variable: alpha_week
+warning: value of deterministic node mu[53]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[54]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[55]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[56]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[57]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[58]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[59]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[60]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[61]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[62]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[63]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[64]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[65]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[66]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[67]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[68]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[69]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[70]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[71]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[72]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[73]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[74]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[75]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[76]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[77]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[78]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[79]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[80]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[81]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[82]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[83]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[84]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[85]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[86]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[87]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[88]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[89]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[90]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[91]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[92]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[93]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[94]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[95]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[96]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[97]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[98]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[99]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[100]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[101]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[102]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[103]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[104]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[105]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[106]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[107]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[108]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[109]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[110]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[111]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[112]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[113]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[114]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[115]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[116]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[117]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[118]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[119]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[120]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[121]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[122]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[123]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[124]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[125]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[126]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[127]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[128]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[129]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[130]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[131]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[132]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[133]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[134]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[135]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[136]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[137]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[138]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[139]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[140]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[141]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[142]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[143]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[144]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[145]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[146]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[147]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[148]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[149]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[150]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[151]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[152]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[153]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[154]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[155]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[156]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[157]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[158]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[159]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[160]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[161]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[162]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[163]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[164]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[165]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[166]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[167]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[168]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[169]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[170]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[171]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[172]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[173]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[174]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[175]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[176]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[177]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[178]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[179]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[180]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[181]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[182]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[183]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[184]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[185]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[186]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[187]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[188]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[189]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[190]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[191]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[192]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[193]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[194]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[195]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[196]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[197]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[198]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[199]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[200]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[201]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[202]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[203]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[204]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[205]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[206]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[207]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[208]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[209]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[210]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[211]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[212]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[213]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[214]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[215]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[216]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[217]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[218]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[219]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[220]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[221]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[222]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[223]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[224]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[225]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[226]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[227]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[228]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[229]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[230]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[231]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[232]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[233]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[234]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[235]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[236]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[237]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[238]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[239]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[240]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[241]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[242]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[243]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[244]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[245]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[246]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[247]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[248]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[249]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[250]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[251]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[252]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[253]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[254]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[255]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[256]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[257]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[258]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[259]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[260]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[261]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[262]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[263]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[264]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[265]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[266]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[267]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[268]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[269]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[270]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[271]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[272]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[273]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[274]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[275]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[276]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[277]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[278]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[279]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[280]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[281]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[282]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[283]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[284]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[285]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[286]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[287]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[288]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[289]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[290]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[291]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[292]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[293]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[294]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[295]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[296]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[297]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[298]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[299]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[300]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[301]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[302]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[303]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[304]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[305]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[306]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[307]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[308]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[309]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[310]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[311]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[312]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[313]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[314]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[315]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[316]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[317]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[318]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[319]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[320]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[321]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[322]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[323]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[324]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[325]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[326]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[327]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[328]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[329]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[330]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[331]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[332]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[333]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[334]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[335]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[336]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[337]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[338]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[339]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[340]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[341]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[342]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[343]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[344]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[345]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[346]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[347]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[348]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[349]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[350]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[351]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[352]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[353]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[354]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[355]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[356]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[357]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[358]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[359]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[360]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[361]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[362]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[363]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[364]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[365]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[366]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[367]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[368]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[369]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[370]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[371]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[372]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[373]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[374]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[375]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[376]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[377]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[378]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[379]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[380]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[381]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[382]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[383]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[384]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[385]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[386]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[387]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[388]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[389]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[390]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[391]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[392]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[393]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[394]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[395]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[396]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[397]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[398]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[399]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[400]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[401]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[402]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[403]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[404]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[405]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[406]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[407]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[408]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[409]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[410]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[411]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[412]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[413]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[414]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[415]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[416]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[417]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[418]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[419]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[420]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[421]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[422]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[423]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[424]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[425]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[426]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[427]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[428]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[429]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[430]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[431]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[432]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[433]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[434]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[435]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[436]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[437]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[438]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[439]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[440]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[441]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[442]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[443]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[444]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[445]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[446]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[447]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[448]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[449]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[450]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[451]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[452]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[453]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[454]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[455]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[456]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[457]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[458]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[459]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[460]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[461]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[462]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[463]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[464]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[465]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[466]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[467]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[468]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[469]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[470]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[471]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[472]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[473]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[474]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[475]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[476]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[477]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[478]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[479]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[480]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[481]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[482]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[483]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[484]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[485]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[486]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[487]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[488]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[489]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[490]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[491]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[492]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[493]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[494]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[495]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[496]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[497]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[498]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[499]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[500]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[501]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[502]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[503]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[504]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[505]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[506]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[507]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[508]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[509]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[510]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[511]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[512]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[513]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[514]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[515]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[516]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[517]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[518]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[519]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[520]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[521]: value is NA or NaN even after trying to calculate.
+warning: value of deterministic node mu[522]: value is NA or NaN even after trying to calculate.
+warning: logProb of data node deaths[53]: logProb is NA or NaN.
+warning: logProb of data node deaths[54]: logProb is NA or NaN.
+warning: logProb of data node deaths[55]: logProb is NA or NaN.
+warning: logProb of data node deaths[56]: logProb is NA or NaN.
+warning: logProb of data node deaths[57]: logProb is NA or NaN.
+warning: logProb of data node deaths[58]: logProb is NA or NaN.
+warning: logProb of data node deaths[59]: logProb is NA or NaN.
+warning: logProb of data node deaths[60]: logProb is NA or NaN.
+warning: logProb of data node deaths[61]: logProb is NA or NaN.
+warning: logProb of data node deaths[62]: logProb is NA or NaN.
+warning: logProb of data node deaths[63]: logProb is NA or NaN.
+warning: logProb of data node deaths[64]: logProb is NA or NaN.
+warning: logProb of data node deaths[65]: logProb is NA or NaN.
+warning: logProb of data node deaths[66]: logProb is NA or NaN.
+warning: logProb of data node deaths[67]: logProb is NA or NaN.
+warning: logProb of data node deaths[68]: logProb is NA or NaN.
+warning: logProb of data node deaths[69]: logProb is NA or NaN.
+warning: logProb of data node deaths[70]: logProb is NA or NaN.
+warning: logProb of data node deaths[71]: logProb is NA or NaN.
+warning: logProb of data node deaths[72]: logProb is NA or NaN.
+warning: logProb of data node deaths[73]: logProb is NA or NaN.
+warning: logProb of data node deaths[74]: logProb is NA or NaN.
+warning: logProb of data node deaths[75]: logProb is NA or NaN.
+warning: logProb of data node deaths[76]: logProb is NA or NaN.
+warning: logProb of data node deaths[77]: logProb is NA or NaN.
+warning: logProb of data node deaths[78]: logProb is NA or NaN.
+warning: logProb of data node deaths[79]: logProb is NA or NaN.
+warning: logProb of data node deaths[80]: logProb is NA or NaN.
+warning: logProb of data node deaths[81]: logProb is NA or NaN.
+warning: logProb of data node deaths[82]: logProb is NA or NaN.
+warning: logProb of data node deaths[83]: logProb is NA or NaN.
+warning: logProb of data node deaths[84]: logProb is NA or NaN.
+warning: logProb of data node deaths[85]: logProb is NA or NaN.
+warning: logProb of data node deaths[86]: logProb is NA or NaN.
+warning: logProb of data node deaths[87]: logProb is NA or NaN.
+warning: logProb of data node deaths[88]: logProb is NA or NaN.
+warning: logProb of data node deaths[89]: logProb is NA or NaN.
+warning: logProb of data node deaths[90]: logProb is NA or NaN.
+warning: logProb of data node deaths[91]: logProb is NA or NaN.
+warning: logProb of data node deaths[92]: logProb is NA or NaN.
+warning: logProb of data node deaths[93]: logProb is NA or NaN.
+warning: logProb of data node deaths[94]: logProb is NA or NaN.
+warning: logProb of data node deaths[95]: logProb is NA or NaN.
+warning: logProb of data node deaths[96]: logProb is NA or NaN.
+warning: logProb of data node deaths[97]: logProb is NA or NaN.
+warning: logProb of data node deaths[98]: logProb is NA or NaN.
+warning: logProb of data node deaths[99]: logProb is NA or NaN.
+warning: logProb of data node deaths[100]: logProb is NA or NaN.
+warning: logProb of data node deaths[101]: logProb is NA or NaN.
+warning: logProb of data node deaths[102]: logProb is NA or NaN.
+warning: logProb of data node deaths[103]: logProb is NA or NaN.
+warning: logProb of data node deaths[104]: logProb is NA or NaN.
+warning: logProb of data node deaths[105]: logProb is NA or NaN.
+warning: logProb of data node deaths[106]: logProb is NA or NaN.
+warning: logProb of data node deaths[107]: logProb is NA or NaN.
+warning: logProb of data node deaths[108]: logProb is NA or NaN.
+warning: logProb of data node deaths[109]: logProb is NA or NaN.
+warning: logProb of data node deaths[110]: logProb is NA or NaN.
+warning: logProb of data node deaths[111]: logProb is NA or NaN.
+warning: logProb of data node deaths[112]: logProb is NA or NaN.
+warning: logProb of data node deaths[113]: logProb is NA or NaN.
+warning: logProb of data node deaths[114]: logProb is NA or NaN.
+warning: logProb of data node deaths[115]: logProb is NA or NaN.
+warning: logProb of data node deaths[116]: logProb is NA or NaN.
+warning: logProb of data node deaths[117]: logProb is NA or NaN.
+warning: logProb of data node deaths[118]: logProb is NA or NaN.
+warning: logProb of data node deaths[119]: logProb is NA or NaN.
+warning: logProb of data node deaths[120]: logProb is NA or NaN.
+warning: logProb of data node deaths[121]: logProb is NA or NaN.
+warning: logProb of data node deaths[122]: logProb is NA or NaN.
+warning: logProb of data node deaths[123]: logProb is NA or NaN.
+warning: logProb of data node deaths[124]: logProb is NA or NaN.
+warning: logProb of data node deaths[125]: logProb is NA or NaN.
+warning: logProb of data node deaths[126]: logProb is NA or NaN.
+warning: logProb of data node deaths[127]: logProb is NA or NaN.
+warning: logProb of data node deaths[128]: logProb is NA or NaN.
+warning: logProb of data node deaths[129]: logProb is NA or NaN.
+warning: logProb of data node deaths[130]: logProb is NA or NaN.
+warning: logProb of data node deaths[131]: logProb is NA or NaN.
+warning: logProb of data node deaths[132]: logProb is NA or NaN.
+warning: logProb of data node deaths[133]: logProb is NA or NaN.
+warning: logProb of data node deaths[134]: logProb is NA or NaN.
+warning: logProb of data node deaths[135]: logProb is NA or NaN.
+warning: logProb of data node deaths[136]: logProb is NA or NaN.
+warning: logProb of data node deaths[137]: logProb is NA or NaN.
+warning: logProb of data node deaths[138]: logProb is NA or NaN.
+warning: logProb of data node deaths[139]: logProb is NA or NaN.
+warning: logProb of data node deaths[140]: logProb is NA or NaN.
+warning: logProb of data node deaths[141]: logProb is NA or NaN.
+warning: logProb of data node deaths[142]: logProb is NA or NaN.
+warning: logProb of data node deaths[143]: logProb is NA or NaN.
+warning: logProb of data node deaths[144]: logProb is NA or NaN.
+warning: logProb of data node deaths[145]: logProb is NA or NaN.
+warning: logProb of data node deaths[146]: logProb is NA or NaN.
+warning: logProb of data node deaths[147]: logProb is NA or NaN.
+warning: logProb of data node deaths[148]: logProb is NA or NaN.
+warning: logProb of data node deaths[149]: logProb is NA or NaN.
+warning: logProb of data node deaths[150]: logProb is NA or NaN.
+warning: logProb of data node deaths[151]: logProb is NA or NaN.
+warning: logProb of data node deaths[152]: logProb is NA or NaN.
+warning: logProb of data node deaths[153]: logProb is NA or NaN.
+warning: logProb of data node deaths[154]: logProb is NA or NaN.
+warning: logProb of data node deaths[155]: logProb is NA or NaN.
+warning: logProb of data node deaths[156]: logProb is NA or NaN.
+warning: logProb of data node deaths[157]: logProb is NA or NaN.
+warning: logProb of data node deaths[158]: logProb is NA or NaN.
+warning: logProb of data node deaths[159]: logProb is NA or NaN.
+warning: logProb of data node deaths[160]: logProb is NA or NaN.
+warning: logProb of data node deaths[161]: logProb is NA or NaN.
+warning: logProb of data node deaths[162]: logProb is NA or NaN.
+warning: logProb of data node deaths[163]: logProb is NA or NaN.
+warning: logProb of data node deaths[164]: logProb is NA or NaN.
+warning: logProb of data node deaths[165]: logProb is NA or NaN.
+warning: logProb of data node deaths[166]: logProb is NA or NaN.
+warning: logProb of data node deaths[167]: logProb is NA or NaN.
+warning: logProb of data node deaths[168]: logProb is NA or NaN.
+warning: logProb of data node deaths[169]: logProb is NA or NaN.
+warning: logProb of data node deaths[170]: logProb is NA or NaN.
+warning: logProb of data node deaths[171]: logProb is NA or NaN.
+warning: logProb of data node deaths[172]: logProb is NA or NaN.
+warning: logProb of data node deaths[173]: logProb is NA or NaN.
+warning: logProb of data node deaths[174]: logProb is NA or NaN.
+warning: logProb of data node deaths[175]: logProb is NA or NaN.
+warning: logProb of data node deaths[176]: logProb is NA or NaN.
+warning: logProb of data node deaths[177]: logProb is NA or NaN.
+warning: logProb of data node deaths[178]: logProb is NA or NaN.
+warning: logProb of data node deaths[179]: logProb is NA or NaN.
+warning: logProb of data node deaths[180]: logProb is NA or NaN.
+warning: logProb of data node deaths[181]: logProb is NA or NaN.
+warning: logProb of data node deaths[182]: logProb is NA or NaN.
+warning: logProb of data node deaths[183]: logProb is NA or NaN.
+warning: logProb of data node deaths[184]: logProb is NA or NaN.
+warning: logProb of data node deaths[185]: logProb is NA or NaN.
+warning: logProb of data node deaths[186]: logProb is NA or NaN.
+warning: logProb of data node deaths[187]: logProb is NA or NaN.
+warning: logProb of data node deaths[188]: logProb is NA or NaN.
+warning: logProb of data node deaths[189]: logProb is NA or NaN.
+warning: logProb of data node deaths[190]: logProb is NA or NaN.
+warning: logProb of data node deaths[191]: logProb is NA or NaN.
+warning: logProb of data node deaths[192]: logProb is NA or NaN.
+warning: logProb of data node deaths[193]: logProb is NA or NaN.
+warning: logProb of data node deaths[194]: logProb is NA or NaN.
+warning: logProb of data node deaths[195]: logProb is NA or NaN.
+warning: logProb of data node deaths[196]: logProb is NA or NaN.
+warning: logProb of data node deaths[197]: logProb is NA or NaN.
+warning: logProb of data node deaths[198]: logProb is NA or NaN.
+warning: logProb of data node deaths[199]: logProb is NA or NaN.
+warning: logProb of data node deaths[200]: logProb is NA or NaN.
+warning: logProb of data node deaths[201]: logProb is NA or NaN.
+warning: logProb of data node deaths[202]: logProb is NA or NaN.
+warning: logProb of data node deaths[203]: logProb is NA or NaN.
+warning: logProb of data node deaths[204]: logProb is NA or NaN.
+warning: logProb of data node deaths[205]: logProb is NA or NaN.
+warning: logProb of data node deaths[206]: logProb is NA or NaN.
+warning: logProb of data node deaths[207]: logProb is NA or NaN.
+warning: logProb of data node deaths[208]: logProb is NA or NaN.
+warning: logProb of data node deaths[209]: logProb is NA or NaN.
+warning: logProb of data node deaths[210]: logProb is NA or NaN.
+warning: logProb of data node deaths[211]: logProb is NA or NaN.
+warning: logProb of data node deaths[212]: logProb is NA or NaN.
+warning: logProb of data node deaths[213]: logProb is NA or NaN.
+warning: logProb of data node deaths[214]: logProb is NA or NaN.
+warning: logProb of data node deaths[215]: logProb is NA or NaN.
+warning: logProb of data node deaths[216]: logProb is NA or NaN.
+warning: logProb of data node deaths[217]: logProb is NA or NaN.
+warning: logProb of data node deaths[218]: logProb is NA or NaN.
+warning: logProb of data node deaths[219]: logProb is NA or NaN.
+warning: logProb of data node deaths[220]: logProb is NA or NaN.
+warning: logProb of data node deaths[221]: logProb is NA or NaN.
+warning: logProb of data node deaths[222]: logProb is NA or NaN.
+warning: logProb of data node deaths[223]: logProb is NA or NaN.
+warning: logProb of data node deaths[224]: logProb is NA or NaN.
+warning: logProb of data node deaths[225]: logProb is NA or NaN.
+warning: logProb of data node deaths[226]: logProb is NA or NaN.
+warning: logProb of data node deaths[227]: logProb is NA or NaN.
+warning: logProb of data node deaths[228]: logProb is NA or NaN.
+warning: logProb of data node deaths[229]: logProb is NA or NaN.
+warning: logProb of data node deaths[230]: logProb is NA or NaN.
+warning: logProb of data node deaths[231]: logProb is NA or NaN.
+warning: logProb of data node deaths[232]: logProb is NA or NaN.
+warning: logProb of data node deaths[233]: logProb is NA or NaN.
+warning: logProb of data node deaths[234]: logProb is NA or NaN.
+warning: logProb of data node deaths[235]: logProb is NA or NaN.
+warning: logProb of data node deaths[236]: logProb is NA or NaN.
+warning: logProb of data node deaths[237]: logProb is NA or NaN.
+warning: logProb of data node deaths[238]: logProb is NA or NaN.
+warning: logProb of data node deaths[239]: logProb is NA or NaN.
+warning: logProb of data node deaths[240]: logProb is NA or NaN.
+warning: logProb of data node deaths[241]: logProb is NA or NaN.
+warning: logProb of data node deaths[242]: logProb is NA or NaN.
+warning: logProb of data node deaths[243]: logProb is NA or NaN.
+warning: logProb of data node deaths[244]: logProb is NA or NaN.
+warning: logProb of data node deaths[245]: logProb is NA or NaN.
+warning: logProb of data node deaths[246]: logProb is NA or NaN.
+warning: logProb of data node deaths[247]: logProb is NA or NaN.
+warning: logProb of data node deaths[248]: logProb is NA or NaN.
+warning: logProb of data node deaths[249]: logProb is NA or NaN.
+warning: logProb of data node deaths[250]: logProb is NA or NaN.
+warning: logProb of data node deaths[251]: logProb is NA or NaN.
+warning: logProb of data node deaths[252]: logProb is NA or NaN.
+warning: logProb of data node deaths[253]: logProb is NA or NaN.
+warning: logProb of data node deaths[254]: logProb is NA or NaN.
+warning: logProb of data node deaths[255]: logProb is NA or NaN.
+warning: logProb of data node deaths[256]: logProb is NA or NaN.
+warning: logProb of data node deaths[257]: logProb is NA or NaN.
+warning: logProb of data node deaths[258]: logProb is NA or NaN.
+warning: logProb of data node deaths[259]: logProb is NA or NaN.
+warning: logProb of data node deaths[260]: logProb is NA or NaN.
+warning: logProb of data node deaths[261]: logProb is NA or NaN.
+warning: logProb of data node deaths[262]: logProb is NA or NaN.
+warning: logProb of data node deaths[263]: logProb is NA or NaN.
+warning: logProb of data node deaths[264]: logProb is NA or NaN.
+warning: logProb of data node deaths[265]: logProb is NA or NaN.
+warning: logProb of data node deaths[266]: logProb is NA or NaN.
+warning: logProb of data node deaths[267]: logProb is NA or NaN.
+warning: logProb of data node deaths[268]: logProb is NA or NaN.
+warning: logProb of data node deaths[269]: logProb is NA or NaN.
+warning: logProb of data node deaths[270]: logProb is NA or NaN.
+warning: logProb of data node deaths[271]: logProb is NA or NaN.
+warning: logProb of data node deaths[272]: logProb is NA or NaN.
+warning: logProb of data node deaths[273]: logProb is NA or NaN.
+warning: logProb of data node deaths[274]: logProb is NA or NaN.
+warning: logProb of data node deaths[275]: logProb is NA or NaN.
+warning: logProb of data node deaths[276]: logProb is NA or NaN.
+warning: logProb of data node deaths[277]: logProb is NA or NaN.
+warning: logProb of data node deaths[278]: logProb is NA or NaN.
+warning: logProb of data node deaths[279]: logProb is NA or NaN.
+warning: logProb of data node deaths[280]: logProb is NA or NaN.
+warning: logProb of data node deaths[281]: logProb is NA or NaN.
+warning: logProb of data node deaths[282]: logProb is NA or NaN.
+warning: logProb of data node deaths[283]: logProb is NA or NaN.
+warning: logProb of data node deaths[284]: logProb is NA or NaN.
+warning: logProb of data node deaths[285]: logProb is NA or NaN.
+warning: logProb of data node deaths[286]: logProb is NA or NaN.
+warning: logProb of data node deaths[287]: logProb is NA or NaN.
+warning: logProb of data node deaths[288]: logProb is NA or NaN.
+warning: logProb of data node deaths[289]: logProb is NA or NaN.
+warning: logProb of data node deaths[290]: logProb is NA or NaN.
+warning: logProb of data node deaths[291]: logProb is NA or NaN.
+warning: logProb of data node deaths[292]: logProb is NA or NaN.
+warning: logProb of data node deaths[293]: logProb is NA or NaN.
+warning: logProb of data node deaths[294]: logProb is NA or NaN.
+warning: logProb of data node deaths[295]: logProb is NA or NaN.
+warning: logProb of data node deaths[296]: logProb is NA or NaN.
+warning: logProb of data node deaths[297]: logProb is NA or NaN.
+warning: logProb of data node deaths[298]: logProb is NA or NaN.
+warning: logProb of data node deaths[299]: logProb is NA or NaN.
+warning: logProb of data node deaths[300]: logProb is NA or NaN.
+warning: logProb of data node deaths[301]: logProb is NA or NaN.
+warning: logProb of data node deaths[302]: logProb is NA or NaN.
+warning: logProb of data node deaths[303]: logProb is NA or NaN.
+warning: logProb of data node deaths[304]: logProb is NA or NaN.
+warning: logProb of data node deaths[305]: logProb is NA or NaN.
+warning: logProb of data node deaths[306]: logProb is NA or NaN.
+warning: logProb of data node deaths[307]: logProb is NA or NaN.
+warning: logProb of data node deaths[308]: logProb is NA or NaN.
+warning: logProb of data node deaths[309]: logProb is NA or NaN.
+warning: logProb of data node deaths[310]: logProb is NA or NaN.
+warning: logProb of data node deaths[311]: logProb is NA or NaN.
+warning: logProb of data node deaths[312]: logProb is NA or NaN.
+warning: logProb of data node deaths[313]: logProb is NA or NaN.
+warning: logProb of data node deaths[314]: logProb is NA or NaN.
+warning: logProb of data node deaths[315]: logProb is NA or NaN.
+warning: logProb of data node deaths[316]: logProb is NA or NaN.
+warning: logProb of data node deaths[317]: logProb is NA or NaN.
+warning: logProb of data node deaths[318]: logProb is NA or NaN.
+warning: logProb of data node deaths[319]: logProb is NA or NaN.
+warning: logProb of data node deaths[320]: logProb is NA or NaN.
+warning: logProb of data node deaths[321]: logProb is NA or NaN.
+warning: logProb of data node deaths[322]: logProb is NA or NaN.
+warning: logProb of data node deaths[323]: logProb is NA or NaN.
+warning: logProb of data node deaths[324]: logProb is NA or NaN.
+warning: logProb of data node deaths[325]: logProb is NA or NaN.
+warning: logProb of data node deaths[326]: logProb is NA or NaN.
+warning: logProb of data node deaths[327]: logProb is NA or NaN.
+warning: logProb of data node deaths[328]: logProb is NA or NaN.
+warning: logProb of data node deaths[329]: logProb is NA or NaN.
+warning: logProb of data node deaths[330]: logProb is NA or NaN.
+warning: logProb of data node deaths[331]: logProb is NA or NaN.
+warning: logProb of data node deaths[332]: logProb is NA or NaN.
+warning: logProb of data node deaths[333]: logProb is NA or NaN.
+warning: logProb of data node deaths[334]: logProb is NA or NaN.
+warning: logProb of data node deaths[335]: logProb is NA or NaN.
+warning: logProb of data node deaths[336]: logProb is NA or NaN.
+warning: logProb of data node deaths[337]: logProb is NA or NaN.
+warning: logProb of data node deaths[338]: logProb is NA or NaN.
+warning: logProb of data node deaths[339]: logProb is NA or NaN.
+warning: logProb of data node deaths[340]: logProb is NA or NaN.
+warning: logProb of data node deaths[341]: logProb is NA or NaN.
+warning: logProb of data node deaths[342]: logProb is NA or NaN.
+warning: logProb of data node deaths[343]: logProb is NA or NaN.
+warning: logProb of data node deaths[344]: logProb is NA or NaN.
+warning: logProb of data node deaths[345]: logProb is NA or NaN.
+warning: logProb of data node deaths[346]: logProb is NA or NaN.
+warning: logProb of data node deaths[347]: logProb is NA or NaN.
+warning: logProb of data node deaths[348]: logProb is NA or NaN.
+warning: logProb of data node deaths[349]: logProb is NA or NaN.
+warning: logProb of data node deaths[350]: logProb is NA or NaN.
+warning: logProb of data node deaths[351]: logProb is NA or NaN.
+warning: logProb of data node deaths[352]: logProb is NA or NaN.
+warning: logProb of data node deaths[353]: logProb is NA or NaN.
+warning: logProb of data node deaths[354]: logProb is NA or NaN.
+warning: logProb of data node deaths[355]: logProb is NA or NaN.
+warning: logProb of data node deaths[356]: logProb is NA or NaN.
+warning: logProb of data node deaths[357]: logProb is NA or NaN.
+warning: logProb of data node deaths[358]: logProb is NA or NaN.
+warning: logProb of data node deaths[359]: logProb is NA or NaN.
+warning: logProb of data node deaths[360]: logProb is NA or NaN.
+warning: logProb of data node deaths[361]: logProb is NA or NaN.
+warning: logProb of data node deaths[362]: logProb is NA or NaN.
+warning: logProb of data node deaths[363]: logProb is NA or NaN.
+warning: logProb of data node deaths[364]: logProb is NA or NaN.
+warning: logProb of data node deaths[365]: logProb is NA or NaN.
+warning: logProb of data node deaths[366]: logProb is NA or NaN.
+warning: logProb of data node deaths[367]: logProb is NA or NaN.
+warning: logProb of data node deaths[368]: logProb is NA or NaN.
+warning: logProb of data node deaths[369]: logProb is NA or NaN.
+warning: logProb of data node deaths[370]: logProb is NA or NaN.
+warning: logProb of data node deaths[371]: logProb is NA or NaN.
+warning: logProb of data node deaths[372]: logProb is NA or NaN.
+warning: logProb of data node deaths[373]: logProb is NA or NaN.
+warning: logProb of data node deaths[374]: logProb is NA or NaN.
+warning: logProb of data node deaths[375]: logProb is NA or NaN.
+warning: logProb of data node deaths[376]: logProb is NA or NaN.
+warning: logProb of data node deaths[377]: logProb is NA or NaN.
+warning: logProb of data node deaths[378]: logProb is NA or NaN.
+warning: logProb of data node deaths[379]: logProb is NA or NaN.
+warning: logProb of data node deaths[380]: logProb is NA or NaN.
+warning: logProb of data node deaths[381]: logProb is NA or NaN.
+warning: logProb of data node deaths[382]: logProb is NA or NaN.
+warning: logProb of data node deaths[383]: logProb is NA or NaN.
+warning: logProb of data node deaths[384]: logProb is NA or NaN.
+warning: logProb of data node deaths[385]: logProb is NA or NaN.
+warning: logProb of data node deaths[386]: logProb is NA or NaN.
+warning: logProb of data node deaths[387]: logProb is NA or NaN.
+warning: logProb of data node deaths[388]: logProb is NA or NaN.
+warning: logProb of data node deaths[389]: logProb is NA or NaN.
+warning: logProb of data node deaths[390]: logProb is NA or NaN.
+warning: logProb of data node deaths[391]: logProb is NA or NaN.
+warning: logProb of data node deaths[392]: logProb is NA or NaN.
+warning: logProb of data node deaths[393]: logProb is NA or NaN.
+warning: logProb of data node deaths[394]: logProb is NA or NaN.
+warning: logProb of data node deaths[395]: logProb is NA or NaN.
+warning: logProb of data node deaths[396]: logProb is NA or NaN.
+warning: logProb of data node deaths[397]: logProb is NA or NaN.
+warning: logProb of data node deaths[398]: logProb is NA or NaN.
+warning: logProb of data node deaths[399]: logProb is NA or NaN.
+warning: logProb of data node deaths[400]: logProb is NA or NaN.
+warning: logProb of data node deaths[401]: logProb is NA or NaN.
+warning: logProb of data node deaths[402]: logProb is NA or NaN.
+warning: logProb of data node deaths[403]: logProb is NA or NaN.
+warning: logProb of data node deaths[404]: logProb is NA or NaN.
+warning: logProb of data node deaths[405]: logProb is NA or NaN.
+warning: logProb of data node deaths[406]: logProb is NA or NaN.
+warning: logProb of data node deaths[407]: logProb is NA or NaN.
+warning: logProb of data node deaths[408]: logProb is NA or NaN.
+warning: logProb of data node deaths[409]: logProb is NA or NaN.
+warning: logProb of data node deaths[410]: logProb is NA or NaN.
+warning: logProb of data node deaths[411]: logProb is NA or NaN.
+warning: logProb of data node deaths[412]: logProb is NA or NaN.
+warning: logProb of data node deaths[413]: logProb is NA or NaN.
+warning: logProb of data node deaths[414]: logProb is NA or NaN.
+warning: logProb of data node deaths[415]: logProb is NA or NaN.
+warning: logProb of data node deaths[416]: logProb is NA or NaN.
+warning: logProb of data node deaths[417]: logProb is NA or NaN.
+warning: logProb of data node deaths[418]: logProb is NA or NaN.
+warning: logProb of data node deaths[419]: logProb is NA or NaN.
+warning: logProb of data node deaths[420]: logProb is NA or NaN.
+warning: logProb of data node deaths[421]: logProb is NA or NaN.
+warning: logProb of data node deaths[422]: logProb is NA or NaN.
+warning: logProb of data node deaths[423]: logProb is NA or NaN.
+warning: logProb of data node deaths[424]: logProb is NA or NaN.
+warning: logProb of data node deaths[425]: logProb is NA or NaN.
+warning: logProb of data node deaths[426]: logProb is NA or NaN.
+warning: logProb of data node deaths[427]: logProb is NA or NaN.
+warning: logProb of data node deaths[428]: logProb is NA or NaN.
+warning: logProb of data node deaths[429]: logProb is NA or NaN.
+warning: logProb of data node deaths[430]: logProb is NA or NaN.
+warning: logProb of data node deaths[431]: logProb is NA or NaN.
+warning: logProb of data node deaths[432]: logProb is NA or NaN.
+warning: logProb of data node deaths[433]: logProb is NA or NaN.
+warning: logProb of data node deaths[434]: logProb is NA or NaN.
+warning: logProb of data node deaths[435]: logProb is NA or NaN.
+warning: logProb of data node deaths[436]: logProb is NA or NaN.
+warning: logProb of data node deaths[437]: logProb is NA or NaN.
+warning: logProb of data node deaths[438]: logProb is NA or NaN.
+warning: logProb of data node deaths[439]: logProb is NA or NaN.
+warning: logProb of data node deaths[440]: logProb is NA or NaN.
+warning: logProb of data node deaths[441]: logProb is NA or NaN.
+warning: logProb of data node deaths[442]: logProb is NA or NaN.
+warning: logProb of data node deaths[443]: logProb is NA or NaN.
+warning: logProb of data node deaths[444]: logProb is NA or NaN.
+warning: logProb of data node deaths[445]: logProb is NA or NaN.
+warning: logProb of data node deaths[446]: logProb is NA or NaN.
+warning: logProb of data node deaths[447]: logProb is NA or NaN.
+warning: logProb of data node deaths[448]: logProb is NA or NaN.
+warning: logProb of data node deaths[449]: logProb is NA or NaN.
+warning: logProb of data node deaths[450]: logProb is NA or NaN.
+warning: logProb of data node deaths[451]: logProb is NA or NaN.
+warning: logProb of data node deaths[452]: logProb is NA or NaN.
+warning: logProb of data node deaths[453]: logProb is NA or NaN.
+warning: logProb of data node deaths[454]: logProb is NA or NaN.
+warning: logProb of data node deaths[455]: logProb is NA or NaN.
+warning: logProb of data node deaths[456]: logProb is NA or NaN.
+warning: logProb of data node deaths[457]: logProb is NA or NaN.
+warning: logProb of data node deaths[458]: logProb is NA or NaN.
+warning: logProb of data node deaths[459]: logProb is NA or NaN.
+warning: logProb of data node deaths[460]: logProb is NA or NaN.
+warning: logProb of data node deaths[461]: logProb is NA or NaN.
+warning: logProb of data node deaths[462]: logProb is NA or NaN.
+warning: logProb of data node deaths[463]: logProb is NA or NaN.
+warning: logProb of data node deaths[464]: logProb is NA or NaN.
+warning: logProb of data node deaths[465]: logProb is NA or NaN.
+warning: logProb of data node deaths[466]: logProb is NA or NaN.
+warning: logProb of data node deaths[467]: logProb is NA or NaN.
+warning: logProb of data node deaths[468]: logProb is NA or NaN.
+warning: logProb of data node deaths[469]: logProb is NA or NaN.
+warning: logProb of data node deaths[470]: logProb is NA or NaN.
+warning: logProb of data node deaths[471]: logProb is NA or NaN.
+warning: logProb of data node deaths[472]: logProb is NA or NaN.
+warning: logProb of data node deaths[473]: logProb is NA or NaN.
+warning: logProb of data node deaths[474]: logProb is NA or NaN.
+warning: logProb of data node deaths[475]: logProb is NA or NaN.
+warning: logProb of data node deaths[476]: logProb is NA or NaN.
+warning: logProb of data node deaths[477]: logProb is NA or NaN.
+warning: logProb of data node deaths[478]: logProb is NA or NaN.
+warning: logProb of data node deaths[479]: logProb is NA or NaN.
+warning: logProb of data node deaths[480]: logProb is NA or NaN.
+warning: logProb of data node deaths[481]: logProb is NA or NaN.
+warning: logProb of data node deaths[482]: logProb is NA or NaN.
+warning: logProb of data node deaths[483]: logProb is NA or NaN.
+warning: logProb of data node deaths[484]: logProb is NA or NaN.
+warning: logProb of data node deaths[485]: logProb is NA or NaN.
+warning: logProb of data node deaths[486]: logProb is NA or NaN.
+warning: logProb of data node deaths[487]: logProb is NA or NaN.
+warning: logProb of data node deaths[488]: logProb is NA or NaN.
+warning: logProb of data node deaths[489]: logProb is NA or NaN.
+warning: logProb of data node deaths[490]: logProb is NA or NaN.
+warning: logProb of data node deaths[491]: logProb is NA or NaN.
+warning: logProb of data node deaths[492]: logProb is NA or NaN.
+warning: logProb of data node deaths[493]: logProb is NA or NaN.
+warning: logProb of data node deaths[494]: logProb is NA or NaN.
+warning: logProb of data node deaths[495]: logProb is NA or NaN.
+warning: logProb of data node deaths[496]: logProb is NA or NaN.
+warning: logProb of data node deaths[497]: logProb is NA or NaN.
+warning: logProb of data node deaths[498]: logProb is NA or NaN.
+warning: logProb of data node deaths[499]: logProb is NA or NaN.
+warning: logProb of data node deaths[500]: logProb is NA or NaN.
+warning: logProb of data node deaths[501]: logProb is NA or NaN.
+warning: logProb of data node deaths[502]: logProb is NA or NaN.
+warning: logProb of data node deaths[503]: logProb is NA or NaN.
+warning: logProb of data node deaths[504]: logProb is NA or NaN.
+warning: logProb of data node deaths[505]: logProb is NA or NaN.
+warning: logProb of data node deaths[506]: logProb is NA or NaN.
+warning: logProb of data node deaths[507]: logProb is NA or NaN.
+warning: logProb of data node deaths[508]: logProb is NA or NaN.
+warning: logProb of data node deaths[509]: logProb is NA or NaN.
+warning: logProb of data node deaths[510]: logProb is NA or NaN.
+warning: logProb of data node deaths[511]: logProb is NA or NaN.
+warning: logProb of data node deaths[512]: logProb is NA or NaN.
+warning: logProb of data node deaths[513]: logProb is NA or NaN.
+warning: logProb of data node deaths[514]: logProb is NA or NaN.
+warning: logProb of data node deaths[515]: logProb is NA or NaN.
+warning: logProb of data node deaths[516]: logProb is NA or NaN.
+warning: logProb of data node deaths[517]: logProb is NA or NaN.
+warning: logProb of data node deaths[518]: logProb is NA or NaN.
+warning: logProb of data node deaths[519]: logProb is NA or NaN.
+warning: logProb of data node deaths[520]: logProb is NA or NaN.
+warning: logProb of data node deaths[521]: logProb is NA or NaN.
+warning: logProb of data node deaths[522]: logProb is NA or NaN.
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 9.275253 secs</code></pre>
+</div>
+</div>
+<p>What is the summary of each estimated parameter from the Poisson model?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_effect, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  variable       mean median    sd   mad    q5   q95
+  &lt;chr&gt;         &lt;num&gt;  &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;
+1 alpha          0      0        0     0  0     0   
+2 alpha_exp      1      1        0     0  1     1   
+3 beta_week      0      0        0     0  0     0   
+4 beta_week_exp  1      1        0     0  1     1   
+5 beta_year      1      1        0     0  1     1   
+6 beta_year_exp  2.72   2.72     0     0  2.72  2.72</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_effect, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  variable       rhat ess_bulk ess_tail
+  &lt;chr&gt;         &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+1 alpha            NA       NA       NA
+2 alpha_exp        NA       NA       NA
+3 beta_week        NA       NA       NA
+4 beta_week_exp    NA       NA       NA
+5 beta_year        NA       NA       NA
+6 beta_year_exp    NA       NA       NA</code></pre>
+</div>
+</div>
+<p>Now the samples look to be very tidily centred.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_week_random_effect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="linear-model-with-random-walk-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="linear-model-with-random-walk-over-time">Linear model with random walk over time</h2>
+<div class="cell">
+
+</div>
+</section>
+<section id="linear-model-with-autoregressive-term-over-time" class="level2">
+<h2 class="anchored" data-anchor-id="linear-model-with-autoregressive-term-over-time">Linear model with autoregressive term over time</h2>
+<div class="cell">
+
+</div>
+</section>
+<section id="forecasting" class="level2">
+<h2 class="anchored" data-anchor-id="forecasting">Forecasting</h2>
+<div class="cell">
+
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
