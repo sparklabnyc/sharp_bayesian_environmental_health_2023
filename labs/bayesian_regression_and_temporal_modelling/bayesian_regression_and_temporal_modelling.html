@@ -88,16 +88,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<script src="temporal_modelling_files/libs/clipboard/clipboard.min.js"></script>
-<script src="temporal_modelling_files/libs/quarto-html/quarto.js"></script>
-<script src="temporal_modelling_files/libs/quarto-html/popper.min.js"></script>
-<script src="temporal_modelling_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="temporal_modelling_files/libs/quarto-html/anchor.min.js"></script>
-<link href="temporal_modelling_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="temporal_modelling_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="temporal_modelling_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="temporal_modelling_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="temporal_modelling_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="bayesian_regression_and_temporal_modelling_files/libs/clipboard/clipboard.min.js"></script>
+<script src="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/quarto.js"></script>
+<script src="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/popper.min.js"></script>
+<script src="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/anchor.min.js"></script>
+<link href="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="bayesian_regression_and_temporal_modelling_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="bayesian_regression_and_temporal_modelling_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="bayesian_regression_and_temporal_modelling_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -220,7 +220,7 @@ date (1): week
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_national) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>week,<span class="at">y=</span>deaths)) <span class="co">#+ theme_void()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Let’s calculate crude death rates over time too</p>
@@ -232,7 +232,7 @@ date (1): week
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_national) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>week,<span class="at">y=</span>rate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Before running NIMBLE, extract data for week and center around zero for better MCMC performance</p>
@@ -336,7 +336,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 10.53283 secs</code></pre>
+<pre><code>Time difference of 10.3336 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -370,7 +370,7 @@ y = max + c
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Now let’s look at the residuals of the fit, which should be randomly distributed around zero without any obvious pattern</p>
@@ -1432,7 +1432,7 @@ warning: logProb of data node deaths[522]: logProb is NA or NaN.
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 9.275253 secs</code></pre>
+<pre><code>Time difference of 9.413619 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -1466,7 +1466,7 @@ warning: logProb of data node deaths[522]: logProb is NA or NaN.
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_week_random_effect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="temporal_modelling_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
