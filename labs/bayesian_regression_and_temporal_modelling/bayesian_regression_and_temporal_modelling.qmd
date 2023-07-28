@@ -34,7 +34,7 @@ V. Kontis, J.E. Bennett, R.M. Parks, T. Rashid, J. Pearson-Stuttard, P. Asaria, 
 
 Let's load in the data.
 ```{r}
-data <- read_csv(here("data", "Spain", "data.csv")) |>
+data <- read_csv(here("data", "Spain", "data_spain.csv")) |>
   filter(year(week)<2020) # avoiding COVID for now
 ```
 
@@ -184,7 +184,7 @@ code_weekly_random_effect <- nimbleCode({
   for(t in 1:weeks) {
 
     deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- alpha + alpha_week[t] + beta_week * t + log(population[t])
+    log(mu[t]) <- alpha + alpha_week[week_of_year[t]] + beta_week * t + log(population[t])
 
   }
   
