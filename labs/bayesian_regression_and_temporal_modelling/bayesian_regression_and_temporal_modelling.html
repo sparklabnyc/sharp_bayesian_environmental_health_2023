@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -97,17 +97,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Robbie M. Parks </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 </header>
 
@@ -179,10 +179,10 @@ lgl (8): bank_holiday_early_may, bank_holiday_easter_monday, bank_holiday_go...
 # Groups:   week [6]
   week       week_of_year deaths population   t2m weekly_t2m_anomaly
   &lt;date&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;              &lt;dbl&gt;
-1 2010-01-04            1  35280  263311048  3.60             -1.28 
+1 2010-01-04            1  35280  263311048  3.60             -1.28
 2 2010-01-11            2  37162  263325210  5.32              0.832
-3 2010-01-18            3  35808  263339364  7.49              2.02 
-4 2010-01-25            4  34790  263353516  4.24             -1.26 
+3 2010-01-18            3  35808  263339364  7.49              2.02
+4 2010-01-25            4  34790  263353516  4.24             -1.26
 5 2010-02-01            5  34938  263367674  5.20             -0.964
 6 2010-02-08            6  34210  263381826  3.28             -1.92 </code></pre>
 </div>
@@ -470,11 +470,11 @@ y = max + c
 <pre><code># A tibble: 6 × 7
   variable           mean    median          sd         mad        q5       q95
   &lt;chr&gt;             &lt;num&gt;     &lt;num&gt;       &lt;num&gt;       &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
-1 alpha         -8.87     -8.87     0.00162     0.00151     -8.87     -8.87    
+1 alpha         -8.87     -8.87     0.00162     0.00151     -8.87     -8.87
 2 alpha_exp      0.000141  0.000141 0.000000228 0.000000213  0.000140  0.000141
 3 beta_week      0.000211  0.000211 0.00000158  0.00000159   0.000208  0.000213
-4 beta_week_exp  1.00      1.00     0.00000158  0.00000159   1.00      1.00    
-5 beta_year      1.01      1.01     0.0000828   0.0000835    1.01      1.01    
+4 beta_week_exp  1.00      1.00     0.00000158  0.00000159   1.00      1.00
+5 beta_year      1.01      1.01     0.0000828   0.0000835    1.01      1.01
 6 beta_year_exp  2.75      2.75     0.000228    0.000230     2.75      2.75    </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_effect, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -627,11 +627,11 @@ y = max + c
 <pre><code># A tibble: 6 × 7
   variable           mean    median          sd         mad        q5       q95
   &lt;chr&gt;             &lt;num&gt;     &lt;num&gt;       &lt;num&gt;       &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
-1 alpha         -8.87     -8.87     0.00152     0.00159     -8.87     -8.86    
+1 alpha         -8.87     -8.87     0.00152     0.00159     -8.87     -8.86
 2 alpha_exp      0.000141  0.000141 0.000000214 0.000000225  0.000141  0.000141
 3 beta_week      0.000198  0.000198 0.00000168  0.00000166   0.000195  0.000201
-4 beta_week_exp  1.00      1.00     0.00000168  0.00000166   1.00      1.00    
-5 beta_year      1.01      1.01     0.0000882   0.0000873    1.01      1.01    
+4 beta_week_exp  1.00      1.00     0.00000168  0.00000166   1.00      1.00
+5 beta_year      1.01      1.01     0.0000882   0.0000873    1.01      1.01
 6 beta_year_exp  2.75      2.75     0.000242    0.000240     2.75      2.75    </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_effect_with_temperature, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -687,7 +687,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();  
+  toggleBodyColorPrimary();
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -697,7 +697,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
+      if (clz.startsWith('code-annotation-')) {
         return true;
       }
     }
@@ -728,11 +728,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();    
+      tooltip.show();
     }
     setTimeout(function() {
       if (tooltip) {
@@ -762,7 +762,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config); 
+    window.tippy(el, config);
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -807,7 +807,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
+            // cook up a div (if necessary) and position it
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");

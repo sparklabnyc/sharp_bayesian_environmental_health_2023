@@ -189,7 +189,7 @@ code_weekly_random_effect <- nimbleCode({
     log(mu[t]) <- alpha + alpha_week[week_of_year[t]] + beta_week * t + log(population[t])
 
   }
-  
+
   # weekly random effect
   alpha_week[1] <- 0
   for (w in 2:n_weeks) {
@@ -253,7 +253,7 @@ Now the samples look to be very tidily centred.
 mcmc_trace(nimbleMCMC_samples_week_random_effect)
 ```
 
-What do the random weekly terms looks like? (Theo) 
+What do the random weekly terms looks like? (Theo)
 ```{r}
 
 ```
@@ -281,13 +281,13 @@ code_weekly_random_effect_with_temperature <- nimbleCode({
     log(mu[t]) <- alpha + alpha_week[week_of_year[t]] + beta_week * t + beta_temperature_week[week_of_year[t]] * weekly_t2m_anomaly[t] + log(population[t])
 
   }
-  
+
   # weekly random effect
   alpha_week[1] <- 0
   for (w in 2:n_weeks) {
     alpha_week[w] ~ dnorm(0, sigma_week)
   }
-  
+
   # weekly temperature random effect
   beta_temperature_week[1] <- 0
   for (w in 2:n_weeks) {
@@ -352,7 +352,7 @@ Now the samples look to be very tidily centred.
 mcmc_trace(nimbleMCMC_samples_week_random_effect_with_temperature)
 ```
 
-What do the random weekly terms looks like? (Theo) 
+What do the random weekly terms looks like? (Theo)
 ```{r}
 
 ```
