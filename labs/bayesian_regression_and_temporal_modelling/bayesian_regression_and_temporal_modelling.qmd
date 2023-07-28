@@ -34,8 +34,7 @@ V. Kontis, J.E. Bennett, R.M. Parks, T. Rashid, J. Pearson-Stuttard, P. Asaria, 
 
 Let's load in the data.
 ```{r}
-data <- read_csv(here("data", "Spain", "data_spain.csv")) |>
-  filter(year(week)<2020) # avoiding COVID for now
+data <- read_csv(here("data", "Spain", "data_spain.csv"))
 ```
 
 Here's a preview of the data
@@ -50,7 +49,10 @@ data_national <- data |>
   summarise(deaths=sum(deaths),
             population=sum(population),
             t2m=mean(t2m),
-            weekly_t2m_anomaly=mean(weekly_t2m_anomaly))
+            weekly_t2m_anomaly=mean(weekly_t2m_anomaly)) |>
+  mutate(week=dmy(week)) |>
+  arrange(week) |>
+  filter(year(week)<2020) # avoiding COVID for now
 ```
 
 Here's a preview of the summarised national data
@@ -164,7 +166,7 @@ Now let's look at the residuals of the fit, which should be randomly distributed
 # TO DO
 ```
 
-## Linear model with random term over time
+## Linear model over time with random weekly term
 
 The residuals look like there may be a seasonal pattern, and so let us attempt to remove that by including a weekly random effect
 
@@ -187,9 +189,10 @@ code_weekly_random_effect <- nimbleCode({
     log(mu[t]) <- alpha + alpha_week[week_of_year[t]] + beta_week * t + log(population[t])
 
   }
-
+  
   # weekly random effect
-  for (w in 1:n_weeks) {
+  alpha_week[1] <- 0
+  for (w in 2:n_weeks) {
     alpha_week[w] ~ dnorm(0, sigma)
   }
 
@@ -217,7 +220,7 @@ data <- list(deaths = data_national$deaths,
 Set initial values for MCMC samples
 ```{r}
 inits <- list(alpha = 0, beta_week = 0)
-parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp')
+parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp') # ,'alpha_week') Theo how to do all the bits below while not making plots look bad when including alpha_week?
 ```
 
 Let's run the model.
@@ -229,8 +232,8 @@ nimbleMCMC_samples_week_random_effect <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 15000,
-  nburnin = 3000,
+  niter = 30000,
+  nburnin = 5000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -248,6 +251,110 @@ summarise_draws(nimbleMCMC_samples_week_random_effect, default_convergence_measu
 Now the samples look to be very tidily centred.
 ```{r}
 mcmc_trace(nimbleMCMC_samples_week_random_effect)
+```
+
+What do the random weekly terms looks like? (Theo) 
+```{r}
+
+```
+
+## Linear model over time with random weekly term and temperature term
+
+Let's see what adding a slope for temperature does
+$$
+y = max + c
+$$
+
+```{r}
+code_weekly_random_effect_with_temperature <- nimbleCode({
+
+  # priors for parameters
+  alpha ~ dnorm(0, sd = 100) # prior for alpha
+  beta_week ~ dnorm(0, sd = 100) # prior for beta_week
+  sigma_week ~ dunif(0, 100) # prior for variance of weekly effects
+  sigma_temperature ~ dunif(0, 100) # prior for variance of temperature effects
+
+  # regression formula
+  for(t in 1:weeks) {
+
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- alpha + alpha_week[week_of_year[t]] + beta_week * t + beta_temperature_week[week_of_year[t]] * weekly_t2m_anomaly[t] + log(population[t])
+
+  }
+  
+  # weekly random effect
+  alpha_week[1] <- 0
+  for (w in 2:n_weeks) {
+    alpha_week[w] ~ dnorm(0, sigma_week)
+  }
+  
+  # weekly temperature random effect
+  beta_temperature_week[1] <- 0
+  for (w in 2:n_weeks) {
+    beta_temperature_week[w] ~ dnorm(0, sigma_temperature)
+  }
+
+  # exponentiate the estimated parameters to reverse the log-link function
+  alpha_exp <- exp(alpha)
+  beta_week_exp <- exp(beta_week)
+
+  # what's the estimated annual rate of change?
+  beta_year <- exp(52 * beta_week)
+  beta_year_exp <- exp(beta_year)
+})
+```
+
+Final preparation of data into lists
+```{r}
+constants <- list(weeks = nrow(data_national),
+                  n_weeks = max(data_national$week_of_year),
+                  week = data_national$weekc,
+                  week_of_year = data_national$week_of_year)
+
+data <- list(deaths = data_national$deaths,
+             population = data_national$population,
+             weekly_t2m_anomaly = data_national$weekly_t2m_anomaly)
+```
+
+Set initial values for MCMC samples
+```{r}
+inits <- list(alpha = 0, beta_week = 0)
+parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp')
+```
+
+Let's run the model.
+```{r}
+t0 = Sys.time()
+nimbleMCMC_samples_week_random_effect_with_temperature <- nimbleMCMC(
+  code = code_weekly_random_effect_with_temperature,
+  data = data,
+  constants = constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 30000,
+  nburnin = 5000,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE
+)
+
+t1 =  Sys.time()
+t1 - t0
+```
+
+What is the summary of each estimated parameter from the Poisson model?
+```{r}
+summarise_draws(nimbleMCMC_samples_week_random_effect_with_temperature, default_summary_measures())
+summarise_draws(nimbleMCMC_samples_week_random_effect_with_temperature, default_convergence_measures())
+```
+
+Now the samples look to be very tidily centred.
+```{r}
+mcmc_trace(nimbleMCMC_samples_week_random_effect_with_temperature)
+```
+
+What do the random weekly terms looks like? (Theo) 
+```{r}
+
 ```
 
 ## Linear model with random walk over time
