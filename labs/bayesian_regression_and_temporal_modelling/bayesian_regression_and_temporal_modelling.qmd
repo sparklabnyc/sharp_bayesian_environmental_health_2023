@@ -104,11 +104,11 @@ code_linear <- nimbleCode({
     deaths[t] ~ dpois(mu[t])
     log(mu[t]) <- alpha + beta_week * t + log(population[t])
   }
-  
+
   # exponentiate the estimated parameters to reverse the log-link function
   alpha_exp <- exp(alpha)
   beta_week_exp <- exp(beta_week)
-  
+
   # what's the estimated annual rate of change?
   beta_year <- exp(52 * beta_week)
   beta_year_exp <- exp(beta_year)
@@ -118,7 +118,7 @@ code_linear <- nimbleCode({
 Final preparation of data into lists
 ```{r}
 constants <- list(weeks = nrow(data_national))
-data <- list(deaths = data_national$deaths, 
+data <- list(deaths = data_national$deaths,
              week = data_national$weekc,
              population = data_national$population)
 ```
@@ -187,16 +187,16 @@ code_weekly_random_effect <- nimbleCode({
     log(mu[t]) <- alpha + alpha_week[week_of_year[t]] + beta_week * t + log(population[t])
 
   }
-  
+
   # weekly random effect
   for (w in 1:n_weeks) {
     alpha_week[w] ~ dnorm(0, sigma)
   }
-  
+
   # exponentiate the estimated parameters to reverse the log-link function
   alpha_exp <- exp(alpha)
   beta_week_exp <- exp(beta_week)
-  
+
   # what's the estimated annual rate of change?
   beta_year <- exp(52 * beta_week)
   beta_year_exp <- exp(beta_year)
@@ -210,7 +210,7 @@ constants <- list(weeks = nrow(data_national),
                   week = data_national$weekc,
                   week_of_year = data_national$week_of_year)
 
-data <- list(deaths = data_national$deaths, 
+data <- list(deaths = data_national$deaths,
              population = data_national$population)
 ```
 
