@@ -34,9 +34,8 @@ V. Kontis, J.E. Bennett, R.M. Parks, T. Rashid, J. Pearson-Stuttard, P. Asaria, 
 
 Let's load in the data.
 ```{r}
-data <- read_csv(here("data", "National_multicountry", "data.csv")) |>
-  filter(country=='spain') |>
-  filter(year(week)<2020)
+data <- read_csv(here("data", "Spain", "data.csv")) |>
+  filter(year(week)<2020) # avoiding COVID for now
 ```
 
 Here's a preview of the data
@@ -261,7 +260,7 @@ mcmc_trace(nimbleMCMC_samples_week_random_effect)
 
 ```
 
-## Forecasting
+## Forecasting (what might have happened in 2020 without COVID?)
 ```{r}
 
 ```
