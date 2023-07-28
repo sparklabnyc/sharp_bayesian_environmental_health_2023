@@ -494,3 +494,5 @@ Now the samples look to be very tidily centred around 0.3.
 ```{r}
 mcmc_trace(nimbleMCMC_samples_poisson)
 ```
+
+## Negative Binomial example
