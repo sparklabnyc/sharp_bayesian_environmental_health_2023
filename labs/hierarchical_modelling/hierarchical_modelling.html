@@ -502,12 +502,12 @@ Same as this I think: <a href="https://gkonstantinoudis.github.io/nimble/RmarkSL
 prevalence.</p>
 <p>Priors <span class="math display">\[
 \alpha \sim N(0,5), \\
-\sigma_p \sim N^+(1),\\
-\theta_j \sim N(0, \sigma^2_p), \quad j=1,..., N_p
+\sigma \sim N^+(1),\\
+\theta \sim N(0, \sigma^2),
 \]</span> Likelihood: <span class="math display">\[
+\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta,\\
 y_i \sim \text{Pois}(\mu_i),\\
-\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta\\
-i=1,..., N \quad (observation)
+i=1,..., N
 \]</span> Parameter <span class="math inline">\(\theta\)</span> here is
 common for all observations <span class="math inline">\(y_i\)</span>,
 regardless of what province the observation belongs to.</p>
@@ -516,6 +516,15 @@ regardless of what province the observation belongs to.</p>
 <h2>No pooling model</h2>
 <p>Treat all regions separately and estimate each region separately with
 fixed effects.</p>
+<p><span class="math display">\[
+\alpha \sim N(0,5), \\
+\sigma \sim N^+(1),\\
+\theta_i \sim N(0, \sigma^2),
+\]</span> Likelihood: <span class="math display">\[
+\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta_i,\\
+y_i \sim \text{Pois}(\mu_i),\\
+i=1,..., N
+\]</span></p>
 </div>
 <div id="partial-pooling-model" class="section level2">
 <h2>Partial pooling model</h2>
@@ -530,7 +539,7 @@ Estimate hyperparamter sigma (explain how this is hierarchical)</p>
 y_i \sim \text{Pois}(\mu_i),\\
 \text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta_j\\
 i=1,..., N \quad (observation) \\
-j=1,..., N_p \quad (province) \\
+j=1,..., N_p \quad (province)
 \]</span></p>
 <pre class="r"><code>constants &lt;- list(
   N = nrow(data),
