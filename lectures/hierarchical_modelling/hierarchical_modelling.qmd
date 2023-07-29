@@ -25,154 +25,184 @@ format:
 
 # Outline
 
-- Recap: assumptions of linear models
+- Assumptions of linear models
 - Why are linear models not enough?
-- Two extremes of hierarchy
-- Complete pooling, partial pooling and no pooling
+- Two extremes of hierarchy: <ins>partial pooling</ins> and <ins>no pooling</ins>
+- The golden middle: <ins>complete pooling</ins>
 - Random effects
 - Types of nestedness
 
+## Assumptions of linear models
 
-# Assumptions of linear models
 - Homoskedasticity
-- No error in predictors $X$
+
+<center>![](assets/dogs1.jpeg){width=40%} 
+
+## Assumptions of linear models
+
+- Homoskedasticity
+  - equal or similar variances in different groups
+  - sometimes it is appropriate
+  - ![](assets/dogs1.jpeg){width=30%} 
+  
+  
+## Assumptions of linear models
+
+- Homoskedasticity?
+  
+<center>
+![](assets/dogs1.jpeg){width=40%}
+![](assets/dogs4.jpeg){width=40%}
+
+## Assumptions of linear models
+- Homoskedasticity: equal or similar variances in different groups
+- No error in predictors *x*
 - No missing data
 - Normally distributed errors
-- Error in $Y$ variable is measurement error
-- Observations $Y_i$ are independent
+- Observations *$y_i$* are independent
 
-# We want
+## We want
 - To model variance
 - Capture errors in variables
 - Missing data models
-- Use GLMs
+- Use generalised linear models (GLMs)
 - Use spatial and/or temporal error structure
 
 # Hierarchical models
 
 Exist on the continuum of two extreme cases:
 
-# Hierarchical models
-(picture of complete pooling)
+- <ins>complete pooling</ins>
+- <ins>no pooling</ins>
 
-# Hierarchical models
 
-A common mean across all data:
-$$E(Y_1)= m$$
-$$E(Y_2)= m$$
-$$E(Y_3)= m$$
+## Complete pooling
+<center>
+![](assets/pooled_model.png){width=60%}
 
-# Hierarchical models
+- A *pooled* model implies that the data are sampled from the same model. 
+- This ignores all variation  among the units being sampled. 
+- All observations share common parameter $\theta.$
+ 
+<font size="1"> Image: courtesy of Chris Fonnesbeck</font> 
 
-A common mean across data:
-$$E(Y_i)= m, \quad i=1,..., n$$
 
+## Excercise
+
+- Complete pooling?
+  
+<center>
+![](assets/dogs1.jpeg){width=30%}
+![](assets/dogs4.jpeg){width=30%}
+
+## Excercise
+
+- Complete pooling:
+  
+<center>
+![](assets/dogs1.jpeg){width=30%}
+![](assets/dogs4.jpeg){width=30%}
 
 - It ignores any differences between measurement blocks and does not acknowledge variability block to block.
-
 - Observations within each unit are more likely to be like each other.
 
+## No pooling
 
-# Hierarchical models
+<center>
+![](assets/unpooled_model.png){width=60%}
 
-Independent model for each of the datasets:
-$$E(Y_1)= m1$$
-$$E(Y_2)= m2$$
-$$E(Y_3)= m3$$
+- An *unpooled* model implies that the data are sampled from independent parameters.
+- Parameter $\theta_i$ is different for each observation.
+ 
+<font size="1"> Image: courtesy of Chris Fonnesbeck</font> 
 
-# Hierarchical models
-(picture of independent models)
+## Excercise
 
-# Hierarchical models
+- No pooling?
+  
+<center>
+![](assets/dogs1.jpeg){width=30%}
+![](assets/dogs4.jpeg){width=30%}
 
-Independent models for each of the datasets:
-$$E(Y_i)= m_i, \quad i=1,...,n$$
-
-- Captures variability, but not the overall pattern
-- Assummes that there is no relashionship between the means of the models
-- We might be interested in capturing information across the datasets
-- Does not provide ways to extrapolate
-
-
-# Hierarchical models
-(picture of hierarchical structure)
+- Captures variability, but not the overall pattern.
+- Assumes that there is no relationship between the models. 
+- Does not provide ways to extrapolate.
 
 
-# Hierarchical models
+## Partial pooling
+<center>
+![](assets/partial_pooled_model.png){width=60%}
 
-Hierarchical models fill in the continuum between those two extremes.
-hey allow us to estimate models for each measurement block where each dataset is being fit to its own model, and
-then there is a higher level model - a hierarchical model - describing variability in parameters of those models.
+- In a *partially pooled* or *multilevel* or *hierarchical* model, parameters are viewed as a sample from a distribution of parameters.
 
-$$E(Y_i)=\theta_i$$
-$$E(\theta_i)=m$$
+## Hierarchical models
 
-# Hierarchical models
-- Variablility can be captured at different scales
-- We can make predictions
+- Hierarchical models fill in the continuum between the two extremes. 
+- They allow us to estimate models for each measurement block where each dataset is being fit to its own model. - There is a higher level model, a *hierarchical model*, describing variability in parameters of those sub-models.
+
+## Excercise
+
+- Partial pooling?
+  
+<center>
+![](assets/dogs1.jpeg){width=30%}
+![](assets/dogs4.jpeg){width=30%}
+</center>
+
+- Variability can be captured at different scales.
+- We can make predictions.
 
 
-# Example
-Normal model - common mean
+## Example
+Normal model: common mean
 
-$$Y \sim N(\mu, \sigma^2) $$
+$$y_i \sim N(\mu, \sigma^2), \quad i=1, ..., N$$
 
-# Example
+## Example
 
-Normal model - common variance
+Normal model: common variance
 
-$$Y_i \sim N(\mu_i, \sigma^2) $$
+$$y_i \sim N(\mu_i, \sigma^2) $$
 $$\mu_i \sim N(\mu, \tau^2) $$
 $$\sigma^2 \sim IG(\alpha, \beta) $$
 
-Instead of assuming that $\mu$ and $\tau$ are fixed known values, we assume they are uknown parameters which need to get estimated.
+Instead of assuming that $\mu$ and $\tau$ are *fixed known values*, we assume they are *uknown parameters* which need to estimate.
 
+## Example
 
-# Example
+Normal model: common variance
 
-Normal model - common variance
-
-$$Y_i \sim N(\mu_i, \sigma^2) $$
+$$y_i \sim N(\mu_i, \sigma^2) $$
 $$\mu_i \sim N(\mu, \tau^2) $$
 $$\sigma^2 \sim IG(\alpha, \beta) $$
 Hyperpriors
 
-$$ \mu \sim N(\mu_0, v_0), \tau^2 \sim IG(t_1, t_2)$$
+$$ \mu \sim N(\mu_0, v_0), \\
+\tau^2 \sim IG(t_1, t_2)$$
 
-# Hierarchy
+## Levels of hierarchy
 
-- Data model ->
-- Process model ->
-- Parameter mdel ->
+- Data model
+- Process model 
+- Parameter model 
 - Hyperparameters
 
-# Key points about hierarchical models
-- Writing down models that explain variability in the parameters of a model
-- Partition variabilty more explicitely into multiple terms
-- Borrow strength across data sets
-- 'Hierarchy' is with respect to parameters
+## Key points about hierarchical models
+- They allow to write down models that explain *variability in the parameters* of a model.
+- *Partition variability* more explicitly into multiple terms.
+- *Borrow strength* across data sets.
+- 'Hierarchy' is with respect to parameters.
 
-# Random effects
+## Excercise
 
-# Nestedness
+- How would you model these observations?
+
+<center>
+![](assets/dogs1.jpeg){width=30%}
+![](assets/dogs4.jpeg){width=30%}
+![](assets/cats1.jpeg){width=28%}
+</center>
+
+# Questions?
 
 
-
-
-# References
-
-# Unused notes
-
-- Data can have several types of structure. Including nestedness, which we call “hierarchical”.
-
-- hierarchical models: nested models, multi-level models
-
-- pooled model: ignore the grouping structure
-  - important information is neglected
-
-- unpooled: model each group separately
-  - many distinct groups
-  - some groups have small sample size
-
-- partial pooling, hierarchical modellingi
-  - complexity

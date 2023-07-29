@@ -26,7 +26,7 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
   </style>
@@ -41,11 +41,11 @@
 
   .callout {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1em;  
     border-radius: .25rem;
   }
 
-  .callout.callout-style-simple {
+  .callout.callout-style-simple { 
     padding: 0em 0.5em;
     border-left: solid #acacac .3rem;
     border-right: solid 1px silver;
@@ -96,7 +96,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-
+    
   .callout.callout-titled.callout-style-simple .callout-content  p {
     margin-top: 0;
   }
@@ -147,7 +147,7 @@
   .callout-title {
     display: flex
   }
-
+    
   .callout-icon::before {
     margin-top: 1rem;
     padding-right: .5rem;
@@ -259,12 +259,12 @@
     }
     .reveal .footnotes ol {
       counter-reset: ol;
-      list-style-type: none;
+      list-style-type: none; 
       margin-left: 0;
     }
     .reveal .footnotes ol li:before {
       counter-increment: ol;
-      content: counter(ol) ". ";
+      content: counter(ol) ". "; 
     }
     .reveal .footnotes ol li > p:first-child {
       display: inline-block;
@@ -306,19 +306,19 @@
     .reveal .slide > img.r-stretch.quarto-figure-center {
       display: block;
       margin-left: auto;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-left,
     .reveal .slide > img.r-stretch.quarto-figure-left  {
       display: block;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-right,
     .reveal .slide > img.r-stretch.quarto-figure-right  {
       display: block;
       margin-left: auto;
-      margin-right: 0;
+      margin-right: 0; 
     }
   </style>
 </head>
@@ -332,7 +332,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Elizaveta Semenova
+Elizaveta Semenova 
 </div>
 <div class="quarto-title-author-email">
 <a href="mailto:elizaveta.p.semenova@gmail.com">elizaveta.p.semenova@gmail.com</a>
@@ -345,179 +345,207 @@ Elizaveta Semenova
 
   <p class="date">Aug 14, 2023</p>
 </section>
+<section>
 <section id="outline" class="title-slide slide level1 center">
 <h1>Outline</h1>
 <ul>
-<li class="fragment">Recap: assumptions of linear models</li>
+<li class="fragment">Assumptions of linear models</li>
 <li class="fragment">Why are linear models not enough?</li>
-<li class="fragment">Two extremes of hierarchy</li>
-<li class="fragment">Complete pooling, partial pooling and no pooling</li>
+<li class="fragment">Two extremes of hierarchy: <ins>partial pooling</ins> and <ins>no pooling</ins></li>
+<li class="fragment">The golden middle: <ins>complete pooling</ins></li>
 <li class="fragment">Random effects</li>
 <li class="fragment">Types of nestedness</li>
 </ul>
 </section>
-
-<section id="assumptions-of-linear-models" class="title-slide slide level1 center">
-<h1>Assumptions of linear models</h1>
+<section id="assumptions-of-linear-models" class="slide level2">
+<h2>Assumptions of linear models</h2>
 <ul>
 <li class="fragment">Homoskedasticity</li>
-<li class="fragment">No error in predictors <span class="math inline">\(X\)</span></li>
-<li class="fragment">No missing data</li>
-<li class="fragment">Normally distributed errors</li>
-<li class="fragment">Error in <span class="math inline">\(Y\)</span> variable is measurement error</li>
-<li class="fragment">Observations <span class="math inline">\(Y_i\)</span> are independent</li>
+</ul>
+<center>
+<p><img data-src="assets/dogs1.jpeg" style="width:40.0%"></p>
+</center></section>
+<section id="assumptions-of-linear-models-1" class="slide level2">
+<h2>Assumptions of linear models</h2>
+<ul>
+<li class="fragment">Homoskedasticity
+<ul>
+<li class="fragment">equal or similar variances in different groups</li>
+<li class="fragment">sometimes it is appropriate</li>
+<li class="fragment"><img data-src="assets/dogs1.jpeg" style="width:30.0%"></li>
+</ul></li>
 </ul>
 </section>
-
-<section id="we-want" class="title-slide slide level1 center">
-<h1>We want</h1>
+<section id="assumptions-of-linear-models-2" class="slide level2">
+<h2>Assumptions of linear models</h2>
+<ul>
+<li class="fragment">Homoskedasticity?</li>
+</ul>
+<center>
+<p><img data-src="assets/dogs1.jpeg" style="width:40.0%"> <img data-src="assets/dogs4.jpeg" style="width:40.0%"></p>
+</center></section>
+<section id="assumptions-of-linear-models-3" class="slide level2">
+<h2>Assumptions of linear models</h2>
+<ul>
+<li class="fragment">Homoskedasticity: equal or similar variances in different groups</li>
+<li class="fragment">No error in predictors <em>x</em></li>
+<li class="fragment">No missing data</li>
+<li class="fragment">Normally distributed errors</li>
+<li class="fragment">Observations <em><span class="math inline">\(y_i\)</span></em> are independent</li>
+</ul>
+</section>
+<section id="we-want" class="slide level2">
+<h2>We want</h2>
 <ul>
 <li class="fragment">To model variance</li>
 <li class="fragment">Capture errors in variables</li>
 <li class="fragment">Missing data models</li>
-<li class="fragment">Use GLMs</li>
+<li class="fragment">Use generalised linear models (GLMs)</li>
 <li class="fragment">Use spatial and/or temporal error structure</li>
 </ul>
-</section>
-
+</section></section>
+<section>
 <section id="hierarchical-models" class="title-slide slide level1 center">
 <h1>Hierarchical models</h1>
 <p>Exist on the continuum of two extreme cases:</p>
-</section>
-
-<section id="hierarchical-models-1" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>(picture of complete pooling)</p>
-</section>
-
-<section id="hierarchical-models-2" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>A common mean across all data: <span class="math display">\[E(Y_1)= m\]</span> <span class="math display">\[E(Y_2)= m\]</span> <span class="math display">\[E(Y_3)= m\]</span></p>
-</section>
-
-<section id="hierarchical-models-3" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>A common mean across data: <span class="math display">\[E(Y_i)= m, \quad i=1,..., n\]</span></p>
 <ul>
-<li class="fragment"><p>It ignores any differences between measurement blocks and does not acknowledge variability block to block.</p></li>
-<li class="fragment"><p>Observations within each unit are more likely to be like each other.</p></li>
+<li class="fragment"><ins>
+complete pooling
+</ins></li>
+<li class="fragment"><ins>
+no pooling
+</ins></li>
 </ul>
 </section>
-
-<section id="hierarchical-models-4" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>Independent model for each of the datasets: <span class="math display">\[E(Y_1)= m1\]</span> <span class="math display">\[E(Y_2)= m2\]</span> <span class="math display">\[E(Y_3)= m3\]</span></p>
-</section>
-
-<section id="hierarchical-models-5" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>(picture of independent models)</p>
-</section>
-
-<section id="hierarchical-models-6" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>Independent models for each of the datasets: <span class="math display">\[E(Y_i)= m_i, \quad i=1,...,n\]</span></p>
+<section id="complete-pooling" class="slide level2">
+<h2>Complete pooling</h2>
+<center>
+<p><img data-src="assets/pooled_model.png" style="width:60.0%"></p>
 <ul>
-<li class="fragment">Captures variability, but not the overall pattern</li>
-<li class="fragment">Assummes that there is no relashionship between the means of the models</li>
-<li class="fragment">We might be interested in capturing information across the datasets</li>
-<li class="fragment">Does not provide ways to extrapolate</li>
+<li class="fragment">A <em>pooled</em> model implies that the data are sampled from the same model.</li>
+<li class="fragment">This ignores all variation among the units being sampled.</li>
+<li class="fragment">All observations share common parameter <span class="math inline">\(\theta.\)</span></li>
+</ul>
+<p><font size="1"> Image: courtesy of Chris Fonnesbeck</font></p>
+</center></section>
+<section id="excercise" class="slide level2">
+<h2>Excercise</h2>
+<ul>
+<li class="fragment">Complete pooling?</li>
+</ul>
+<center>
+<p><img data-src="assets/dogs1.jpeg" style="width:30.0%"> <img data-src="assets/dogs4.jpeg" style="width:30.0%"></p>
+</center></section>
+<section id="excercise-1" class="slide level2">
+<h2>Excercise</h2>
+<ul>
+<li class="fragment">Complete pooling:</li>
+</ul>
+<center>
+<p><img data-src="assets/dogs1.jpeg" style="width:30.0%"> <img data-src="assets/dogs4.jpeg" style="width:30.0%"></p>
+<ul>
+<li class="fragment">It ignores any differences between measurement blocks and does not acknowledge variability block to block.</li>
+<li class="fragment">Observations within each unit are more likely to be like each other.</li>
+</ul>
+</center></section>
+<section id="no-pooling" class="slide level2">
+<h2>No pooling</h2>
+<center>
+<p><img data-src="assets/unpooled_model.png" style="width:60.0%"></p>
+<ul>
+<li class="fragment">An <em>unpooled</em> model implies that the data are sampled from independent parameters.</li>
+<li class="fragment">Parameter <span class="math inline">\(\theta_i\)</span> is different for each observation.</li>
+</ul>
+<p><font size="1"> Image: courtesy of Chris Fonnesbeck</font></p>
+</center></section>
+<section id="excercise-2" class="slide level2">
+<h2>Excercise</h2>
+<ul>
+<li class="fragment">No pooling?</li>
+</ul>
+<center>
+<p><img data-src="assets/dogs1.jpeg" style="width:30.0%"> <img data-src="assets/dogs4.jpeg" style="width:30.0%"></p>
+<ul>
+<li class="fragment">Captures variability, but not the overall pattern.</li>
+<li class="fragment">Assumes that there is no relationship between the models.</li>
+<li class="fragment">Does not provide ways to extrapolate.</li>
+</ul>
+</center></section>
+<section id="partial-pooling" class="slide level2">
+<h2>Partial pooling</h2>
+<center>
+<p><img data-src="assets/partial_pooled_model.png" style="width:60.0%"></p>
+<ul>
+<li class="fragment">In a <em>partially pooled</em> or <em>multilevel</em> or <em>hierarchical</em> model, parameters are viewed as a sample from a distribution of parameters.</li>
+</ul>
+</center></section>
+<section id="hierarchical-models-1" class="slide level2">
+<h2>Hierarchical models</h2>
+<ul>
+<li class="fragment">Hierarchical models fill in the continuum between the two extremes.</li>
+<li class="fragment">They allow us to estimate models for each measurement block where each dataset is being fit to its own model. - There is a higher level model, a <em>hierarchical model</em>, describing variability in parameters of those sub-models.</li>
 </ul>
 </section>
-
-<section id="hierarchical-models-7" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>(picture of hierarchical structure)</p>
-</section>
-
-<section id="hierarchical-models-8" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
-<p>Hierarchical models fill in the continuum between those two extremes. hey allow us to estimate models for each measurement block where each dataset is being fit to its own model, and then there is a higher level model - a hierarchical model - describing variability in parameters of those models.</p>
-<p><span class="math display">\[E(Y_i)=\theta_i\]</span> <span class="math display">\[E(\theta_i)=m\]</span></p>
-</section>
-
-<section id="hierarchical-models-9" class="title-slide slide level1 center">
-<h1>Hierarchical models</h1>
+<section id="excercise-3" class="slide level2">
+<h2>Excercise</h2>
 <ul>
-<li class="fragment">Variablility can be captured at different scales</li>
-<li class="fragment">We can make predictions</li>
+<li class="fragment">Partial pooling?</li>
+</ul>
+<center>
+<img data-src="assets/dogs1.jpeg" style="width:30.0%"> <img data-src="assets/dogs4.jpeg" style="width:30.0%">
+</center>
+<ul>
+<li class="fragment">Variability can be captured at different scales.</li>
+<li class="fragment">We can make predictions.</li>
 </ul>
 </section>
-
-<section id="example" class="title-slide slide level1 center">
-<h1>Example</h1>
-<p>Normal model - common mean</p>
-<p><span class="math display">\[Y \sim N(\mu, \sigma^2) \]</span></p>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+<p>Normal model: common mean</p>
+<p><span class="math display">\[y_i \sim N(\mu, \sigma^2), \quad i=1, ..., N\]</span></p>
 </section>
-
-<section id="example-1" class="title-slide slide level1 center">
-<h1>Example</h1>
-<p>Normal model - common variance</p>
-<p><span class="math display">\[Y_i \sim N(\mu_i, \sigma^2) \]</span> <span class="math display">\[\mu_i \sim N(\mu, \tau^2) \]</span> <span class="math display">\[\sigma^2 \sim IG(\alpha, \beta) \]</span></p>
-<p>Instead of assuming that <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span> are fixed known values, we assume they are uknown parameters which need to get estimated.</p>
+<section id="example-1" class="slide level2">
+<h2>Example</h2>
+<p>Normal model: common variance</p>
+<p><span class="math display">\[y_i \sim N(\mu_i, \sigma^2) \]</span> <span class="math display">\[\mu_i \sim N(\mu, \tau^2) \]</span> <span class="math display">\[\sigma^2 \sim IG(\alpha, \beta) \]</span></p>
+<p>Instead of assuming that <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span> are <em>fixed known values</em>, we assume they are <em>uknown parameters</em> which need to estimate.</p>
 </section>
-
-<section id="example-2" class="title-slide slide level1 center">
-<h1>Example</h1>
-<p>Normal model - common variance</p>
-<p><span class="math display">\[Y_i \sim N(\mu_i, \sigma^2) \]</span> <span class="math display">\[\mu_i \sim N(\mu, \tau^2) \]</span> <span class="math display">\[\sigma^2 \sim IG(\alpha, \beta) \]</span> Hyperpriors</p>
-<p><span class="math display">\[ \mu \sim N(\mu_0, v_0), \tau^2 \sim IG(t_1, t_2)\]</span></p>
+<section id="example-2" class="slide level2">
+<h2>Example</h2>
+<p>Normal model: common variance</p>
+<p><span class="math display">\[y_i \sim N(\mu_i, \sigma^2) \]</span> <span class="math display">\[\mu_i \sim N(\mu, \tau^2) \]</span> <span class="math display">\[\sigma^2 \sim IG(\alpha, \beta) \]</span> Hyperpriors</p>
+<p><span class="math display">\[ \mu \sim N(\mu_0, v_0), \\
+\tau^2 \sim IG(t_1, t_2)\]</span></p>
 </section>
-
-<section id="hierarchy" class="title-slide slide level1 center">
-<h1>Hierarchy</h1>
+<section id="levels-of-hierarchy" class="slide level2">
+<h2>Levels of hierarchy</h2>
 <ul>
-<li class="fragment">Data model -&gt;</li>
-<li class="fragment">Process model -&gt;</li>
-<li class="fragment">Parameter mdel -&gt;</li>
+<li class="fragment">Data model</li>
+<li class="fragment">Process model</li>
+<li class="fragment">Parameter model</li>
 <li class="fragment">Hyperparameters</li>
 </ul>
 </section>
-
-<section id="key-points-about-hierarchical-models" class="title-slide slide level1 center">
-<h1>Key points about hierarchical models</h1>
+<section id="key-points-about-hierarchical-models" class="slide level2">
+<h2>Key points about hierarchical models</h2>
 <ul>
-<li class="fragment">Writing down models that explain variability in the parameters of a model</li>
-<li class="fragment">Partition variabilty more explicitely into multiple terms</li>
-<li class="fragment">Borrow strength across data sets</li>
-<li class="fragment">‘Hierarchy’ is with respect to parameters</li>
+<li class="fragment">They allow to write down models that explain <em>variability in the parameters</em> of a model.</li>
+<li class="fragment"><em>Partition variability</em> more explicitly into multiple terms.</li>
+<li class="fragment"><em>Borrow strength</em> across data sets.</li>
+<li class="fragment">‘Hierarchy’ is with respect to parameters.</li>
 </ul>
 </section>
-
-<section id="random-effects" class="title-slide slide level1 center">
-<h1>Random effects</h1>
-
-</section>
-
-<section id="nestedness" class="title-slide slide level1 center">
-<h1>Nestedness</h1>
-
-</section>
-
-<section id="references" class="title-slide slide level1 center">
-<h1>References</h1>
-
-</section>
-
-<section id="unused-notes" class="title-slide slide level1 center">
-<h1>Unused notes</h1>
+<section id="excercise-4" class="slide level2">
+<h2>Excercise</h2>
 <ul>
-<li class="fragment"><p>Data can have several types of structure. Including nestedness, which we call “hierarchical”.</p></li>
-<li class="fragment"><p>hierarchical models: nested models, multi-level models</p></li>
-<li class="fragment"><p>pooled model: ignore the grouping structure</p>
-<ul>
-<li class="fragment">important information is neglected</li>
-</ul></li>
-<li class="fragment"><p>unpooled: model each group separately</p>
-<ul>
-<li class="fragment">many distinct groups</li>
-<li class="fragment">some groups have small sample size</li>
-</ul></li>
-<li class="fragment"><p>partial pooling, hierarchical modellingi</p>
-<ul>
-<li class="fragment">complexity</li>
-</ul></li>
+<li class="fragment">How would you model these observations?</li>
 </ul>
+<center>
+<img data-src="assets/dogs1.jpeg" style="width:30.0%"> <img data-src="assets/dogs4.jpeg" style="width:30.0%"> <img data-src="assets/cats1.jpeg" style="width:28.0%">
+</center>
+</section></section>
+<section id="questions" class="title-slide slide level1 center">
+<h1>Questions?</h1>
 
 <img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
@@ -535,7 +563,7 @@ Elizaveta Semenova
   <script src="hierarchical_modelling_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="hierarchical_modelling_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="hierarchical_modelling_files/libs/revealjs/plugin/quarto-support/support.js"></script>
-
+  
 
   <script src="hierarchical_modelling_files/libs/revealjs/plugin/notes/notes.js"></script>
   <script src="hierarchical_modelling_files/libs/revealjs/plugin/search/search.js"></script>
@@ -558,7 +586,7 @@ Elizaveta Semenova
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'chalkboard': {"buttons":false,"preview-links":"auto"},
 'smaller': false,
-
+ 
         // Display controls in the bottom right corner
         controls: false,
 
@@ -755,14 +783,14 @@ Elizaveta Semenova
           toggleBodyColorMode(bsSheetEl);
         }
       }
-      toggleBodyColorPrimary();
+      toggleBodyColorPrimary();  
       const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
       const isCodeAnnotation = (el) => {
         for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {
+          if (clz.startsWith('code-annotation-')) {                     
             return true;
           }
         }
@@ -793,11 +821,11 @@ Elizaveta Semenova
           button.setAttribute("data-bs-toggle", "tooltip");
           button.setAttribute("data-bs-placement", "left");
           button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button,
-            { trigger: "manual",
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
               customClass: "code-copy-button-tooltip",
               offset: [0, -8]});
-          tooltip.show();
+          tooltip.show();    
         }
         setTimeout(function() {
           if (tooltip) {
@@ -829,7 +857,7 @@ Elizaveta Semenova
         };
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
-        window.tippy(el, config);
+        window.tippy(el, config); 
       }
       const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
       for (var i=0; i<noterefs.length; i++) {
@@ -882,6 +910,6 @@ Elizaveta Semenova
       }
     });
     </script>
-
+    
 
 </body></html>
