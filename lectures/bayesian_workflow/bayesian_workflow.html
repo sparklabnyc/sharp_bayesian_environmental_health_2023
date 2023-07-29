@@ -8,7 +8,7 @@
 <link href="bayesian_workflow_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="bayesian_workflow_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="bayesian_workflow_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.354">
+  <meta name="generator" content="quarto-1.3.361">
 
   <meta name="author" content="Elizaveta Semenova">
   <title>Bayesian workflow</title>
@@ -26,9 +26,74 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="bayesian_workflow_files/libs/revealjs/dist/theme/quarto.css">
   <link href="bayesian_workflow_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -41,11 +106,11 @@
 
   .callout {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1em;  
     border-radius: .25rem;
   }
 
-  .callout.callout-style-simple {
+  .callout.callout-style-simple { 
     padding: 0em 0.5em;
     border-left: solid #acacac .3rem;
     border-right: solid 1px silver;
@@ -96,6 +161,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
+    
   .callout.callout-titled.callout-style-simple .callout-content  p {
     margin-top: 0;
   }
@@ -146,6 +212,7 @@
   .callout-title {
     display: flex
   }
+    
   .callout-icon::before {
     margin-top: 1rem;
     padding-right: .5rem;
@@ -257,12 +324,12 @@
     }
     .reveal .footnotes ol {
       counter-reset: ol;
-      list-style-type: none;
+      list-style-type: none; 
       margin-left: 0;
     }
     .reveal .footnotes ol li:before {
       counter-increment: ol;
-      content: counter(ol) ". ";
+      content: counter(ol) ". "; 
     }
     .reveal .footnotes ol li > p:first-child {
       display: inline-block;
@@ -304,19 +371,19 @@
     .reveal .slide > img.r-stretch.quarto-figure-center {
       display: block;
       margin-left: auto;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-left,
     .reveal .slide > img.r-stretch.quarto-figure-left  {
       display: block;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-right,
     .reveal .slide > img.r-stretch.quarto-figure-right  {
       display: block;
       margin-left: auto;
-      margin-right: 0;
+      margin-right: 0; 
     }
   </style>
 </head>
@@ -326,12 +393,12 @@
 
 <section id="title-slide" data-background-color="#f3f4f4" data-background-image="../../assets/bmeh_normal.png" data-background-position="60% 120%" data-background-size="80%" class="quarto-title-block center">
   <h1 class="title">Bayesian workflow</h1>
-  <p class="subtitle">The ‘How’ of Bayesian inference</p>
+  <p class="subtitle">Good practice of Bayesian inference</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Elizaveta Semenova
+Elizaveta Semenova 
 </div>
 <div class="quarto-title-author-email">
 <a href="mailto:elizaveta.p.semenova@gmail.com">elizaveta.p.semenova@gmail.com</a>
@@ -347,8 +414,8 @@ Elizaveta Semenova
 <section id="outline" class="title-slide slide level1 center">
 <h1>Outline</h1>
 <ul>
-<li class="fragment">Bayesian inference recap: What, Why, How</li>
-<li class="fragment">What is a workflow and why do we need it?</li>
+<li class="fragment">Bayesian inference recap: What? Why? How?</li>
+<li class="fragment">What is a Bayesian workflow and why do we need it?</li>
 <li class="fragment">Principles of Bayesian workflow</li>
 <li class="fragment">Modern Bayesian workflow</li>
 </ul>
@@ -361,11 +428,22 @@ Elizaveta Semenova
 </section>
 <section id="bayes-formula" class="slide level2">
 <h2>Bayes formula:</h2>
-<p><span class="math display">\[ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}\]</span></p>
+<p><span class="math display">\[p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}\]</span> Can you recall what the components of the Bayes formula are?</p>
+<img data-src="assets/bmeh_normal.png" class="r-stretch">
+</section>
+<section id="bayes-formula-1" class="slide level2">
+<h2>Bayes formula:</h2>
+<p><span class="math display">\[p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}\]</span> Can you recall what the components of the Bayes formula are?</p>
+<img data-src="assets/bmeh_normal.png" class="r-stretch">
+<ul>
+<li class="fragment"><span class="math inline">\(p(\theta)\)</span> is the <em>prior</em> distribution, i.e.&nbsp;what is known <em>a priori</em></li>
+<li class="fragment"><span class="math inline">\(p(y|\theta)\)</span> is the <em>likelihood</em>, i.e.&nbsp;probability of observing the data given parameters <span class="math inline">\(\theta\)</span></li>
+<li class="fragment"><span class="math inline">\(p(\theta|y)\)</span> is the <em>posterior</em> distribution, i.e.&nbsp;the distribution of parameters of interest after data were observed</li>
+</ul>
 </section>
 <section id="bayes-rule" class="slide level2">
 <h2>Bayes rule:</h2>
-<p><span class="math display">\[\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}\]</span></p>
+<p><span class="math display">\[\underbrace{p(\theta|y)}_\text{posterior} \propto \underbrace{p(y | \theta)}_{\text{likelihood}}  \underbrace{p(\theta)}_{\text{prior}}\]</span></p>
 <div class="fragment">
 <p>What can possibly go wrong?</p>
 </div>
@@ -376,7 +454,11 @@ Elizaveta Semenova
 <section id="general-principle-of-bayesian-inference" class="slide level2">
 <h2>General principle of Bayesian inference:</h2>
 <ul>
-<li class="fragment">Specify a complete Bayesian model</li>
+<li class="fragment">Specify a complete Bayesian model:
+<ul>
+<li class="fragment">specify likelihood</li>
+<li class="fragment">specify priors for all parameters (saying “I don’t know” is also a prior)</li>
+</ul></li>
 </ul>
 </section>
 <section id="general-principle-of-bayesian-inference-1" class="slide level2">
@@ -413,7 +495,7 @@ Elizaveta Semenova
 <li class="fragment">prior,</li>
 <li class="fragment">likelihood.</li>
 </ul></li>
-<li class="fragment">Inference is performed via powerful algorithms such as Markov Chain Monte Carlo (<ins>MCMC</ins>).</li>
+<li class="fragment">Inference is performed via powerful algorithms such as, for example, Markov Chain Monte Carlo (<ins>MCMC</ins>).</li>
 <li class="fragment">Availability of <ins>diagnostic tools</ins>.</li>
 </ul>
 </section>
@@ -426,50 +508,63 @@ Elizaveta Semenova
 </section>
 <section id="diagnosing-mcmc-outputs" class="slide level2">
 <h2>Diagnosing MCMC outputs</h2>
-<p>We use multiple chains of MCMC to estimate the posterior</p>
+<p>We use multiple chains of MCMC to estimate the posterior:</p>
+<div class="fragment">
 <center>
 <p><img data-src="assets/trace_theta.png" style="width:50.0%"></p>
-</center></section>
+</center></div>
+</section>
 <section id="diagnosing-mcmc-outputs-1" class="slide level2">
 <h2>Diagnosing MCMC outputs</h2>
 <ul>
-<li class="fragment">Convergence diagnostics
+<li class="fragment"><ins>
+Convergence diagnostics
+</ins>
 <ul>
 <li class="fragment"><span class="math inline">\(\hat{R}\)</span> statistic,</li>
 <li class="fragment">traceplots.</li>
 </ul></li>
-<li class="fragment">Effective sample size (ESS):
+<li class="fragment"><ins>
+Effective sample size (ESS)
+</ins>
+:
 <ul>
-<li class="fragment">samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities</li>
-<li class="fragment">ESS – number of independent samples required to obtain the same level of uncertainty as from the available dependent samples</li>
+<li class="fragment">samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities,</li>
+<li class="fragment">ESS – number of <em>independent</em> samples required to obtain the same level of uncertainty as from the available dependent samples.</li>
 </ul></li>
 </ul>
 </section>
 <section id="diagnosing-mcmc-outputs-2" class="slide level2">
 <h2>Diagnosing MCMC outputs</h2>
-<p>We use multiple chains of MCMC to inspect convergence after warm-up</p>
+<p>We use multiple chains of MCMC to inspect convergence after warm-up:</p>
+<div class="fragment">
 <center>
 <p><img data-src="assets/trace_theta.png" style="width:50.0%"></p>
-</center></section>
+</center></div>
+</section>
 <section id="diagnosing-mcmc-outputs-3" class="slide level2">
 <h2>Diagnosing MCMC outputs</h2>
-<p>We use multiple chains and inspect convergence after warm-up</p>
+<p>We use multiple chains and inspect convergence after warm-up:</p>
+<div class="fragment">
 <center>
 <p><img data-src="assets/trace_theta_bad.png" style="width:50.0%"></p>
-</center></section>
+</center></div>
+</section>
 <section id="diagnosing-mcmc-outputs-4" class="slide level2">
 <h2>Diagnosing MCMC outputs</h2>
-<p>The post-warm-up samples of <span class="math inline">\(\theta\)</span> approximate its posterior distribution</p>
+<p>The post-warm-up samples of <span class="math inline">\(\theta\)</span> approximate its posterior distribution:</p>
+<div class="fragment">
 <center>
 <p><img data-src="assets/post_theta.png" style="width:50.0%"></p>
-</center></section></section>
+</center></div>
+</section></section>
 <section>
 <section id="principles-of-bayesian-workflow" class="title-slide slide level1 center">
 <h1>Principles of Bayesian workflow</h1>
 
 </section>
-<section id="workflows-as-good-practice-standards" class="slide level2">
-<h2>Workflows as ‘good practice’ standards</h2>
+<section id="workflows-as-a-good-practice" class="slide level2">
+<h2>Workflows as a ‘good practice’</h2>
 <p>Workflows exist in a variety of disciplines. For example, in machine learning workflow standards are being formalised under the name of MLOps:</p>
 <center>
 <p><img data-src="assets/mlops-loop-en.png" style="width:50.0%"></p>
@@ -493,9 +588,9 @@ Prior predictive checking
 </ins>
 <p>consists in simulating data from the priors:</p>
 <ul>
-<li class="fragment"><p>visualize priors (especially after transformation)</p></li>
-<li class="fragment"><p>this shows the range of data compatible with the model</p></li>
-<li class="fragment"><p>it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values</p></li>
+<li class="fragment"><p>visualize priors (especially after transformation),</p></li>
+<li class="fragment"><p>this shows the range of data compatible with the model,</p></li>
+<li class="fragment"><p>it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values.</p></li>
 </ul>
 </section>
 <section id="iterative-model-building" class="slide level2">
@@ -538,28 +633,27 @@ Prior predictive checking
 <h2>Model</h2>
 <p>We implemented the model in our favorite PPL:</p>
 <div class="fragment">
-<pre><code>data {
-  int&lt;lower=0&gt; N;
-  vector[N] y;
-  vector[N] x;
-  real&lt;lower=0&gt; sigma;
-}
-parameters {
-  real a;
-  real b;
-}
-model {
-  y ~ normal(a, sigma);
-}</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource breezedark number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>data {</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  int&lt;lower=0&gt; N;</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  vector[N] y;</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  vector[N] x;</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  real&lt;lower=0&gt; sigma;</span>
+<span id="cb1-6"><a href="#cb1-6"></a>}</span>
+<span id="cb1-7"><a href="#cb1-7"></a>parameters {</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  real a;</span>
+<span id="cb1-9"><a href="#cb1-9"></a>  real b;</span>
+<span id="cb1-10"><a href="#cb1-10"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11"></a>model {</span>
+<span id="cb1-12"><a href="#cb1-12"></a>  y ~ normal(a, sigma);</span>
+<span id="cb1-13"><a href="#cb1-13"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="prior-predictive-check" class="slide level2">
 <h2>Prior predictive check</h2>
-<p>Let us draw from the priors, i.e.&nbsp;we are not using any data at this stage, only trying to see what kind of data (<span class="math inline">\(y\)</span>) this model is able to generate.</p>
+<p>Let us draw samples <ins>from the priors</ins>, i.e.&nbsp;we are <ins>not using any data at this stage yet</ins>, only trying to see what kind of data (<span class="math inline">\(y\)</span>) this model is able to generate.</p>
 <div class="fragment">
 <center>
 <p><img data-src="assets/data2.png" style="width:45.0%"></p>
-<p>(add uncertainty bounds)</p>
 </center></div>
 </section>
 <section id="prior-predictive-check-1" class="slide level2">
@@ -573,26 +667,25 @@ model {
 <section id="debug" class="slide level2">
 <h2>Debug</h2>
 <p>There was a bug in the model. Let’s correct it:</p>
-<pre><code>data {
-  int&lt;lower=0&gt; N;
-  vector[N] y;
-  vector[N] x;
-  real&lt;lower=0&gt; sigma;
-}
-parameters {
-  real a ~ normal(0,1);
-  real b ~ normal(0,1);
-}
-model {
-  y ~ normal(a + b*x, sigma);
-}</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource breezedark number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href="#cb2-1"></a>data {</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  int&lt;lower=0&gt; N;</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  vector[N] y;</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  vector[N] x;</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  real&lt;lower=0&gt; sigma;</span>
+<span id="cb2-6"><a href="#cb2-6"></a>}</span>
+<span id="cb2-7"><a href="#cb2-7"></a>parameters {</span>
+<span id="cb2-8"><a href="#cb2-8"></a>  real a ~ normal(0,1);</span>
+<span id="cb2-9"><a href="#cb2-9"></a>  real b ~ normal(0,1);</span>
+<span id="cb2-10"><a href="#cb2-10"></a>}</span>
+<span id="cb2-11"><a href="#cb2-11"></a>model {</span>
+<span id="cb2-12"><a href="#cb2-12"></a>  y ~ normal(a + b*x, sigma);</span>
+<span id="cb2-13"><a href="#cb2-13"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="prior-redictive-check-again" class="slide level2">
 <h2>Prior redictive check again</h2>
 <center>
 <p><img data-src="assets/data3.png" style="width:45.0%"></p>
-<p>Better: now the range of prior predictive distribution is covering the data.</p>
-<p>(add uncertainty bounds)</p>
+<p>Better: now the range of prior predictive draws is covering the data.</p>
 </center></section>
 <section id="fit-the-model" class="slide level2">
 <h2>Fit the model</h2>
@@ -620,10 +713,9 @@ Print summary:
 <h2>Posterior predictive check</h2>
 <center>
 <p><img data-src="assets/posterior1.png" style="width:45.0%"></p>
-<p>(add uncertainty bounds)</p>
 </center></section></section>
-<section id="references" class="title-slide slide level1 center">
-<h1>References</h1>
+<section id="questions" class="title-slide slide level1 center">
+<h1>Questions?</h1>
 
 <img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
@@ -641,6 +733,7 @@ Print summary:
   <script src="bayesian_workflow_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="bayesian_workflow_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="bayesian_workflow_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
 
   <script src="bayesian_workflow_files/libs/revealjs/plugin/notes/notes.js"></script>
   <script src="bayesian_workflow_files/libs/revealjs/plugin/search/search.js"></script>
@@ -663,6 +756,7 @@ Print summary:
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'chalkboard': {"buttons":false,"preview-links":"auto"},
 'smaller': false,
+ 
         // Display controls in the bottom right corner
         controls: false,
 
@@ -859,14 +953,14 @@ Print summary:
           toggleBodyColorMode(bsSheetEl);
         }
       }
-      toggleBodyColorPrimary();
+      toggleBodyColorPrimary();  
       const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
       const isCodeAnnotation = (el) => {
         for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {
+          if (clz.startsWith('code-annotation-')) {                     
             return true;
           }
         }
@@ -897,11 +991,11 @@ Print summary:
           button.setAttribute("data-bs-toggle", "tooltip");
           button.setAttribute("data-bs-placement", "left");
           button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button,
-            { trigger: "manual",
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
               customClass: "code-copy-button-tooltip",
               offset: [0, -8]});
-          tooltip.show();
+          tooltip.show();    
         }
         setTimeout(function() {
           if (tooltip) {
@@ -933,7 +1027,7 @@ Print summary:
         };
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
-        window.tippy(el, config);
+        window.tippy(el, config); 
       }
       const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
       for (var i=0; i<noterefs.length; i++) {
@@ -986,6 +1080,6 @@ Print summary:
       }
     });
     </script>
-
+    
 
 </body></html>

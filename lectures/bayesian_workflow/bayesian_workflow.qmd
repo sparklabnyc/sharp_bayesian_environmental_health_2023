@@ -1,6 +1,6 @@
 ---
 title: "Bayesian workflow"
-subtitle: "The 'How' of Bayesian inference"
+subtitle: "Good practice of Bayesian inference"
 author:
  - name: "Elizaveta Semenova"
    email: "elizaveta.p.semenova@gmail.com"
@@ -25,8 +25,8 @@ format:
 
 # Outline
 
-- Bayesian inference recap: What, Why, How
-- What is a workflow and why do we need it?
+- Bayesian inference recap: What? Why? How?
+- What is a Bayesian workflow and why do we need it?
 - Principles of Bayesian workflow
 - Modern Bayesian workflow
 
@@ -34,14 +34,28 @@ format:
 
 ## Bayes formula:
 
-$$ p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}$$
+ $$p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}$$
+Can you recall what the components of the Bayes formula are?
+
+![](assets/bmeh_normal.png){.r-stretch}
+
+## Bayes formula:
+
+ $$p(\theta|y) = \frac{p(y | \theta) p(\theta)}{p(y)}$$
+Can you recall what the components of the Bayes formula are?
+
+![](assets/bmeh_normal.png){.r-stretch}
+
+- $p(\theta)$ is the *prior* distribution, i.e. what is known *a priori*
+- $p(y|\theta)$ is the *likelihood*, i.e. probability of observing the data given parameters $\theta$
+- $p(\theta|y)$ is the *posterior* distribution, i.e. the distribution of parameters of interest after data were observed
+
 
 ## Bayes rule:
 
-$$\underbrace{p(\theta|y)}_\text{Posterior} \propto \underbrace{p(y | \theta)}_{\text{Likelihood}}  \underbrace{p(\theta)}_{\text{Prior}}$$
+$$\underbrace{p(\theta|y)}_\text{posterior} \propto \underbrace{p(y | \theta)}_{\text{likelihood}}  \underbrace{p(\theta)}_{\text{prior}}$$
 
 . . .
-
 
 
 What can possibly go wrong?
@@ -53,8 +67,10 @@ A lot can go wrong!
 
 ## General principle of Bayesian inference:
 
-- Specify a complete Bayesian model
-
+- Specify a complete Bayesian model:
+  - specify likelihood
+  - specify priors for all parameters (saying "I don't know" is also a prior)
+    
 ## General principle of Bayesian inference:
 
 - Example:
@@ -68,10 +84,10 @@ A lot can go wrong!
 
 - Specify a complete Bayesian model
 - Sample the posterior distribution of the parameter $\theta$.
-
+  
 . . .
 
-Sometimes posterior is available in a closed form.
+Sometimes posterior is available in a closed form. 
 
 . . .
 
@@ -85,18 +101,20 @@ Probabilistic programming languages (PPLs) from a user's perspective:
 - Users need to specify
   - prior,
   - likelihood.
-- Inference is performed via powerful algorithms such as Markov Chain Monte Carlo (<ins>MCMC</ins>).
+- Inference is performed via powerful algorithms such as, for example, Markov Chain Monte Carlo (<ins>MCMC</ins>).
 - Availability of <ins>diagnostic tools</ins>.
 
 ## Remark on inference methods
 
-- Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI).
+- Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI). 
 - We are opting to use MCMC whenever possible since it has theoretical guarantees.
 
 
 ## Diagnosing MCMC outputs
 
-We use multiple chains of MCMC to estimate the posterior
+We use multiple chains of MCMC to estimate the posterior:
+
+. . .
 
 <center>
 ![](assets/trace_theta.png){width=50%}
@@ -105,41 +123,47 @@ We use multiple chains of MCMC to estimate the posterior
 
 ## Diagnosing MCMC outputs
 
-- Convergence diagnostics
+- <ins>Convergence diagnostics</ins>
   - $\hat{R}$ statistic,
   - traceplots.
-- Effective sample size (ESS):
-  - samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities
-  - ESS -- number of independent samples required to obtain the same level of uncertainty as from the available dependent samples
+- <ins>Effective sample size (ESS)</ins>:
+  - samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities,
+  - ESS -- number of *independent* samples required to obtain the same level of uncertainty as from the available dependent samples.
 
 ## Diagnosing MCMC outputs
 
-We use multiple chains of MCMC to inspect convergence after warm-up
+We use multiple chains of MCMC to inspect convergence after warm-up:
+
+. . .
 
 <center>
-![](assets/trace_theta.png){width=50%}
+![](assets/trace_theta.png){width=50%} 
 
 
 
 ## Diagnosing MCMC outputs
 
-We use multiple chains and inspect convergence after warm-up
+We use multiple chains and inspect convergence after warm-up:
+
+. . .
 
 <center>
-![](assets/trace_theta_bad.png){width=50%}
+![](assets/trace_theta_bad.png){width=50%} 
 
 
 
 ## Diagnosing MCMC outputs
 
-The post-warm-up samples of $\theta$ approximate its posterior distribution
+The post-warm-up samples of $\theta$ approximate its posterior distribution:
+
+. . .
 
 <center>
 ![](assets/post_theta.png){width=50%}
 
 # Principles of Bayesian workflow
 
-## Workflows as 'good practice' standards
+## Workflows as a 'good practice'
 
 Workflows exist in a variety of disciplines. For example, in machine learning workflow standards are being formalised under the name of MLOps:
 
@@ -152,24 +176,24 @@ Workflows exist in a variety of disciplines. For example, in machine learning wo
 In the 1960's, the statistician Box formulated the notion of a loop to understand the nature of the scientific method. This loop is called Box's loop by Blei et. al. (2014):
 
 <center>
-![](assets/boxes_loop.png){width=60%}
+![](assets/boxes_loop.png){width=60%} 
 
 ## Modern Bayesian workflow
 
 A systematic review of the steps within the modern Bayesian workflow, described in Gelman et al. (2020):
 
 <center>
-![](assets/bayes_workflow.png){width=40%}
+![](assets/bayes_workflow.png){width=40%} 
 
 ## Prior predictive checks
 
 <ins>Prior predictive checking</ins> consists in simulating data from the priors:
 
-- visualize priors (especially after transformation)
+- visualize priors (especially after transformation),
 
-- this shows the range of data compatible with the model
+- this shows the range of data compatible with the model,
 
-- it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values
+- it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values.
 
 
 ## Iterative model building
@@ -210,7 +234,7 @@ Assume that the true data comes from the model
 $$y_i = a + b x_i + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2).$$
 
 <center>
-![](assets/data1.png){width=45%}
+![](assets/data1.png){width=45%} 
 
 
 
@@ -219,7 +243,7 @@ We implemented the model in our favorite PPL:
 
 . . .
 
-```
+```breezedark
 data {
   int<lower=0> N;
   vector[N] y;
@@ -237,14 +261,13 @@ model {
 
 
 ## Prior predictive check
-Let us draw from the priors, i.e. we are not using any data at this stage, only trying to see what kind of data ($y$) this model is able to generate.
+Let us draw samples <ins>from the priors</ins>, i.e. we are <ins>not using any data at this stage yet</ins>, only trying to see what kind of data ($y$) this model is able to generate.
 
 . . .
 
 <center>
-![](assets/data2.png){width=45%}
+![](assets/data2.png){width=45%} 
 
-(add uncertainty bounds)
 
 ## Prior predictive check
 Something doesn't look right...
@@ -252,13 +275,13 @@ Something doesn't look right...
 . . .
 
 <center>
-![](assets/data2.png){width=45%}
+![](assets/data2.png){width=45%} 
 
 
 ## Debug
 There was a bug in the model. Let's correct it:
 
-```
+```breezedark
 data {
   int<lower=0> N;
   vector[N] y;
@@ -276,28 +299,26 @@ model {
 
 ## Prior redictive check again
 <center>
-![](assets/data3.png){width=45%}
+![](assets/data3.png){width=45%} 
 
-Better: now the range of prior predictive distribution is covering the data.
-
-(add uncertainty bounds)
+Better: now the range of prior predictive draws is covering the data.
 
 
 ## Fit the model
 Print summary:
 <center>
-![](assets/fit1.png){width=60%}
+![](assets/fit1.png){width=60%} 
 
 ## Plot estimates
 <center>
-![](assets/est1.png){width=45%}
+![](assets/est1.png){width=45%} 
 
 
 ## Convergence diagnostics
 
 
 <center>
-![](assets/fit1_conv.png){width=60%}
+![](assets/fit1_conv.png){width=60%} 
 
 
 ## Convergence diagnostics
@@ -305,13 +326,13 @@ Print summary:
 Traceplots
 
 <center>
-![](assets/traceplots1.png){width=45%}
+![](assets/traceplots1.png){width=45%} 
 
 ## Posterior predictive check
 
 <center>
-![](assets/posterior1.png){width=45%}
+![](assets/posterior1.png){width=45%} 
 
-(add uncertainty bounds)
 
-# References
+
+# Questions?
