@@ -11,7 +11,8 @@ library(here)
 library(tidyverse)
 library(nimble)
 library(posterior)
-library(geojsonsf)
+library(bayesplot)
+library(sf)
 library(hrbrthemes)
 library(colorspace)
 
@@ -21,18 +22,20 @@ theme_set(theme_ipsum())
 set.seed(2)
 ```
 
-This task will involve taking the England or Italy data and fitting a really basic hierarchical model.
-It will follow your basic:
+In this task, we will explore mortality data in Italy using hierarchical modelling.
+We will estimate the standardised mortality ratio (SMR) for populations in different provinces of Italy using three types of models:
 
 - Full pooling
 - No pooling
 - Partial pooling
 
-Aka radon model example. https://www.tensorflow.org/probability/examples/Multilevel_Modeling_Primer
-The difference being our subgroups will be regions of Italy.
+::: aside
+This workflow (fitting full/no/partial pooling models) is adapted from a classic Bayesian modelling example: the radon model. You can read about this model in Gelman and Hill's _Data Analysis Using Regression and Multilevel/Hierarchical Models_ (2006) or on the [tensorflow probability website](https://www.tensorflow.org/probability/examples/Multilevel_Modeling_Primer).
+:::
 
 ## Exploratory data analysis
 
+Let's load in the data.
 ```{r}
 data <- read_rds(here("data", "italy", "italy_mortality.rds"))
 glimpse(data)
@@ -40,21 +43,39 @@ summary(data)
 ```
 
 Let's collapse the time dimension for now and focus on estimating the death rate in the final year and the 9th month.
-
 ```{r}
 data <- data |>
+  # make dummies for each province, useful for modelling
   mutate(provincia_id = data |> group_by(SIGLA) |> group_indices()) |>
   filter(year == 2018) |>
-  filter(month == 9)
+  filter(month == 9) |>
+  arrange(SIGLA)
 ```
 
+Let's look at the distribution the number of deaths in each province.
 ```{r}
 data |>
   ggplot(aes(x = SIGLA, y = deaths)) +
-  geom_jitter()
+  geom_jitter(size = 0.4, alpha = 0.8, colour = "darkcyan")  +
+  coord_flip()
 ```
 
-We have a variable `expected`, which gives a good approximation to the number of deaths
+Let's plot the mean number of deaths in that month in that province.
+```{r}
+shp_italy <- read_rds(here("data", "italy", "italy_shp.rds")) |> arrange(SIGLA)
+
+shp_italy |> left_join(
+  data |>
+  group_by(SIGLA) |>
+  summarise(mean_deaths = mean(deaths))
+) |>
+  ggplot(aes(fill = mean_deaths)) +
+  geom_sf(colour = "white") +
+  scale_fill_continuous_sequential(palette = "Reds") +
+  theme_void()
+```
+
+We have a variable `expected`, which gives a good (if a slight underestimation) approximation to the number of deaths.
 ```{r}
 data |>
   ggplot(aes(x = expected, y = deaths)) +
@@ -68,24 +89,29 @@ data |>
   geom_histogram()
 ```
 
-Estimate the region-specific death rate/relative risk/excess?
-
-ASK GARY WHAT EXPECTED IS. THEN WE CAN KNOW WHAT WE ARE ESTIMATING
-Same as this I think: https://gkonstantinoudis.github.io/nimble/RmarkSLC.html
-<!-- We also have a variable `expected` for the expected number of deaths. We can use this instead of modelling a mean. -->
+We are going to estimate the region-specific SMR.
+This is the ratio of actual deaths to expected deaths in each region.
 
 ## Full pooling model
 
-Treat all regions the same and estimate a single national prevalence.
+First, let's treat all regions the same and estimate a single national prevalence.
 
-## No pooling model
+The model is as follows:
 
-Treat all regions separately and estimate each region separately with fixed effects.
+Priors
+$$
+\alpha \sim N(0,5), \\
+\sigma \sim N^+(1),\\
+\theta \sim N(0, \sigma^2),
+$$
 
-## Partial pooling model
+Likelihood
+$$
+\log(\mu_i) = \log(E_i) + \alpha + \theta, \\
+y_i \sim \text{Pois}(\mu_i)
+$$
 
-Varying intercepts model. Random effect grouping all regions.
-Estimate hyperparamter sigma (explain how this is hierarchical)
+The parameter $\theta$ here is common for all observations $y_i$, regardless of what province the observation belongs to.
 
 ```{r}
 constants <- list(
@@ -96,13 +122,122 @@ constants <- list(
 
 inits <- list(
   alpha = 0,
-  theta = rep(0, constants$Np),
-  sigma_p = 1
+  theta = 0
 )
 
 nimble_data <- list(
   y = as.integer(data$deaths),
   E = data$expected
+)
+```
+```{r}
+full_pooling_model <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, 5)
+  sigma_p ~ T(dnorm(0, 1), 0, Inf) # half-normal
+  theta ~ dnorm(0, sd = sigma_p)
+
+  # likelihood
+  for (i in 1:N) {
+    y[i] ~ dpois(mu[i])
+    log(mu[i]) <- log(E[i]) + alpha + theta
+  }
+})
+```
+
+```{r}
+full_pooling_samples <- nimbleMCMC(
+  code = full_pooling_model,
+  data = nimble_data,
+  constants = constants,
+  inits = inits,
+  monitors = c("alpha", "sigma_p", "theta"),
+  niter = 2000,
+  nburnin = 1000,
+  thin = 1,
+  nchains = 2,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE,
+  progressBar = TRUE
+)
+```
+
+Follow the Bayesian workflow – look at MCMC outputs, r-hat using `posterior`, traceplots using `bayesplot`
+
+```{r}
+summarise_draws(full_pooling_samples, default_summary_measures())
+summarise_draws(full_pooling_samples, default_convergence_measures())
+```
+
+RHAT IS HIGH? IS THIS RIGHT? DO WE ESTIMATE SIGMA?
+
+Let's plot the SMR in each province.
+```{r}
+full_pooling_posterior <- as_draws_array(full_pooling_samples)
+
+SMR_full_pooling <- exp(full_pooling_posterior[, , "alpha"] + full_pooling_posterior[, , "theta"]) |>
+  apply(MARGIN = 3, FUN = median)
+
+shp_italy |>
+  mutate(SMR = SMR_full_pooling) |>
+  ggplot(aes(fill = SMR_full_pooling)) +
+  geom_sf(colour = "white") +
+  scale_fill_continuous_sequential(palette = "Reds") +
+  theme_void()
+```
+
+Pretty boring, eh?
+
+## No pooling model
+
+Here, we treat all regions separately and estimate each region separately with fixed effects.
+
+Priors
+$$
+\alpha \sim N(0,5), \\
+\sigma \sim N^+(1),\\
+\theta_i \sim N(0, \sigma^2),
+$$
+Likelihood:
+$$
+\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta_i,\\
+y_i \sim \text{Pois}(\mu_i)
+$$
+
+IS THIS RIGHT?
+
+## Partial pooling model
+
+Varying intercepts model. Random effect grouping all regions.
+Estimate hyperparamter sigma (explain how this is hierarchical)
+
+Priors
+$$
+\alpha \sim N(0,5), \\
+\sigma_p \sim N^+(1),\\
+\theta_j \sim N(0, \sigma^2_p), \quad j=1,..., N_p
+$$
+
+Likelihood
+$$
+y_i \sim \text{Pois}(\mu_i),\\
+\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta_j\\
+i=1,..., N \quad (observation) \\
+j=1,..., N_p \quad (province)
+$$
+
+```{r}
+inits <- list(
+    list(
+    alpha = 0,
+    theta = rep(0, constants$Np),
+    sigma_p = 1
+  ),
+  list(
+    alpha = 0.1,
+    theta = rep(0, constants$Np),
+    sigma_p = 1
+  )
 )
 ```
 ```{r}
@@ -135,23 +270,40 @@ partial_pooling_samples <- nimbleMCMC(
   thin = 1,
   nchains = 2,
   setSeed = 1,
-  progressBar = TRUE,
-  WAIC = TRUE
+  samplesAsCodaMCMC = TRUE,
+  progressBar = TRUE
 )
 ```
 
-Follow the Bayesian workflow – look at MCMC outputs, r-hat using `posterior`, traceplots using `bayesplot`
+Follow the Bayesian workflow – look at MCMC outputs, r-hat using `posterior`, traceplots using `bayesplot`.
 ```{r}
-partial_pooling_posterior <- c()
-for (chain in partial_pooling_samples$samples) {
-  partial_pooling_posterior <- c(partial_pooling_posterior, list(as.list(as_tibble(chain))))
-}
-partial_pooling_posterior <- as_draws_df(partial_pooling_posterior)
+summarise_draws(partial_pooling_samples, default_summary_measures())
+summarise_draws(partial_pooling_samples, default_convergence_measures())
 ```
 
 ```{r}
-summarise_draws(partial_pooling_posterior, default_summary_measures())
-summarise_draws(partial_pooling_posterior, default_convergence_measures())
+mcmc_trace(partial_pooling_samples, regex_pars = "alpha")
+```
+
+```{r}
+partial_pooling_posterior <- as_draws_array(partial_pooling_samples)
+
+SMR_partial_pooling <- exp(
+    sweep(
+      partial_pooling_posterior[, , 3:109],
+      partial_pooling_posterior[, , 1],
+      MARGIN = c(1, 2),
+      FUN = "+"
+    )
+  ) |>
+  apply(MARGIN = 3, FUN = median)
+
+shp_italy |>
+  mutate(SMR = SMR_partial_pooling) |>
+  ggplot(aes(fill = SMR_partial_pooling)) +
+  geom_sf(colour = "white") +
+  scale_fill_continuous_sequential(palette = "Reds") +
+  theme_void()
 ```
 
 ## A different prior on sigma for Bayesian workflow

@@ -11,7 +11,6 @@ library(here)
 library(tidyverse)
 library(nimble)
 library(INLA)
-library(geojsonsf)
 library(sf)
 library(spdep)
 library(hrbrthemes)
@@ -48,11 +47,12 @@ nimbleCode({
 
 And let's load in the data.
 ```{r}
-data <- read_rds(here("data", "italy", "italy_mortality.rds")) |> arrange(SIGLA)
+data <- read_rds(here("data", "italy", "italy_mortality.rds"))
 
 data <- data |>
   filter(year == 2018) |>
-  filter(month == 9)
+  filter(month == 9) |>
+  arrange(SIGLA)
 ```
 
 ```{r}
