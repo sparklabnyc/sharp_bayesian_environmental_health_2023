@@ -14,6 +14,13 @@ library(INLA)
 library(geojsonsf)
 library(sf)
 library(spdep)
+library(hrbrthemes)
+library(colorspace)
+
+extrafont::loadfonts()
+theme_set(theme_ipsum())
+
+set.seed(2)
 ```
 
 ## Setting the scene
@@ -41,11 +48,20 @@ nimbleCode({
 
 And let's load in the data.
 ```{r}
-data <- read_rds(here("data", "italy", "italy_mortality.rds"))
+data <- read_rds(here("data", "italy", "italy_mortality.rds")) |> arrange(SIGLA)
 
 data <- data |>
   filter(year == 2018) |>
   filter(month == 9)
+```
+
+```{r}
+shp_italy <- read_rds(here("data", "italy", "italy_shp.rds")) |> arrange(SIGLA)
+
+ggplot(aes(fill = mean.pop), data = shp_italy) +
+  geom_sf(colour = "white") +
+  scale_fill_continuous_sequential(palette = "Blues3") +
+  theme_void()
 ```
 
 ## Writing the model in INLA
@@ -59,13 +75,10 @@ formula_iid <- deaths ~ 1 + f(SIGLA, model = "iid")
 This means we have an intercept signified by `1`.
 This is the equivalent of `alpha` in the nimble model.
 
-The formula gives us an IID effect, but no control over the hyperprior for the variance of the effect.
-INLA usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (`1/sigma**2`).
-
 We can run the model by calling the `inla` function.
 ```{r}
 model <- inla(
-  formula_iid_priors,
+  formula_iid,
   data = data,
   E = expected,
   family = "poisson",
@@ -78,21 +91,62 @@ Take a moment to look at each of the arguments and convince yourself that it is 
 
 ## Exploring the model in INLA
 
-INLA has a lot of nice inbuilt functionality to explore how the model has fit.
-```{r}
-plot(model)
-```
-
 INLA often "just works".
 If it runs, it has usually fitted correctly.
 If it doesn't run, or it hangs, there is an issue with the model and it will let you know.
 
+INLA has a lot of nice inbuilt functionality to explore how the model has fit.
+
 Note, as explained in the lecture, INLA does not fit models through sampling.
-It approximates the posterior distribution.
-Once you have the posterior, you are able
+It approximates the posterior distribution using Gaussian distributions (the Laplace approximation).
 ```{r}
 summary(model)
-head(model$summary.random)
+model$summary.fixed
+head(model$summary.random$SIGLA)
+```
+
+Although the model isn't fit using samples, we can use INLA to sample from the posterior.
+```{r}
+posterior_samples <- inla.posterior.sample(1000, model)
+
+SMR <- inla.posterior.sample.eval(\(...) exp(`(Intercept)` + SIGLA), posterior_samples) |>
+  apply(MARGIN = 1, FUN = median)
+```
+
+```{r}
+tibble(precision = inla.hyperpar.sample(100, model)) |>
+  ggplot(aes(x = precision)) +
+  geom_density()
+```
+
+Let's work out the SMR for each province and plot the output.
+```{r}
+shp_italy |>
+  mutate(SMR = SMR) |>
+  ggplot(aes(fill = SMR)) +
+  geom_sf(colour = "white") +
+  scale_fill_continuous_sequential(palette = "Reds") +
+  theme_void()
+```
+
+## Customising the priors
+
+The formula gives us an IID effect, but no control over the hyperprior for the variance of the effect.
+INLA usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (`1/sigma**2`).
+
+```{r}
+formula_iid_priors <- deaths ~ 1 + f(SIGLA, model = "iid", hyper = list(prec = list(prior = "loggamma", param = c(0.01, 0.01))))
+```
+
+```{r}
+model <- inla(
+  formula_iid_priors,
+  data = data,
+  E = expected,
+  family = "poisson",
+  control.predictor = list(link = 1),
+  control.compute = list(config = TRUE)
+)
 ```
 
 ## Fitting a spatial model with INLA
@@ -105,11 +159,6 @@ For more information, see the [examples](https://www.r-inla.org/examples-tutoria
 Here, we're going to fit a BYM model in place of the IID effect.
 
 For this, INLA needs to know the spatial adjacency matrix ("graph" in INLA's language).
-```{r}
-shp_italy <- read_rds(here("data", "italy", "italy_shp.rds"))
-ggplot(data = shp_italy2) + geom_sf(aes(fill = mean.pop)) + theme_void()
-```
-
 The following code extracts the adjacency matrix from the shapefile.
 ```{r}
 data = data |> arrange(SIGLA)
@@ -127,8 +176,11 @@ image(inla.graph2matrix(G), xlab = "", ylab = "") # plot adjacency matrix
 
 Finally, let's use the graph in a BYM model.
 ```{r}
-formula_spatial <- deaths ~ 1 + f(SIGLA, model = "bym", graph = G)
-model <- inla(
+data <- data |>
+  mutate(provincia_id = data |> group_by(SIGLA) |> group_indices())
+
+formula_spatial <- deaths ~ 1 + f(provincia_id, model = "bym", graph = G)
+model_spatial <- inla(
   formula_spatial,
   data = data,
   E = expected,
@@ -138,4 +190,11 @@ model <- inla(
 )
 ```
 
+```{r}
+summary(model_spatial)
+model_spatial$summary.fixed
+head(model_spatial$summary.random$provincia_id)
+```
+
+Compare and contrast the model fits using the plotting code above.
 Try and test out different spatial models, such as `"besag"`.

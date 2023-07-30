@@ -6,7 +6,7 @@ date: "August 2023"
 output: html_document
 ---
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 library(here)
 library(tidyverse)
 library(nimble)
