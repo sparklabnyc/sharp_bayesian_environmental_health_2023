@@ -279,15 +279,13 @@ code_weekly_random_walk_with_temperature <- nimbleCode({
   alpha ~ dnorm(0, sd = 100) # prior for alpha
   beta_week ~ dnorm(0, sd = 100) # prior for beta_week
   beta_temperature ~ dnorm(0, sd = 100) # prior for beta_temperature
-  sigma_week ~ dunif(0, 100) # prior for variance of weekly effects
+  # sigma_week ~ dunif(0, 100) # prior for variance of weekly effects
   sigma_temperature ~ dunif(0, 100) # prior for variance of temperature effects
 
   # regression formula
   for(t in 1:weeks) {
     deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- alpha +
-                  beta_week * t +
-                  log(population[t]) + beta_temperature * weekly_t2m_anomaly[t] #+ rw[t]
+    log(mu[t]) <- log(population[t]) + alpha + beta_week * t + beta_temperature * weekly_t2m_anomaly[t] #+ rw[t]
   }
 
   # random walk over time
@@ -327,7 +325,7 @@ data <- list(deaths = data_national$deaths,
 
 Set initial values for MCMC samples
 ```{r}
-inits <- list(alpha = 0, beta_week = 0)
+inits <- list(alpha = 0, beta_week = 0, beta_temperature = 0)
 parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp','beta_temperature','beta_temperature_exp')
 ```
 
