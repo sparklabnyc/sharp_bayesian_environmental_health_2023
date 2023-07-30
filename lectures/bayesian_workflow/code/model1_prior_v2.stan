@@ -9,6 +9,6 @@ generated quantities {
   real a = normal_rng(0,1);
   real b = normal_rng(0.5,0.5);
   for(i in 1:N) {
-    y_sim[i] = normal_rng(a+b*x[i],sigma);
+    y_sim[i] = normal_rng(a + b*x[i],sigma);
  }
 }
