@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -97,17 +97,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Robbie M. Parks </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 </header>
 
@@ -179,10 +179,10 @@ lgl (8): bank_holiday_early_may, bank_holiday_easter_monday, bank_holiday_go...
 # Groups:   week [6]
   week       week_of_year deaths population   t2m weekly_t2m_anomaly
   &lt;date&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;              &lt;dbl&gt;
-1 2010-01-04            1  35280  263311048  3.60             -1.28 
+1 2010-01-04            1  35280  263311048  3.60             -1.28
 2 2010-01-11            2  37162  263325210  5.32              0.832
-3 2010-01-18            3  35808  263339364  7.49              2.02 
-4 2010-01-25            4  34790  263353516  4.24             -1.26 
+3 2010-01-18            3  35808  263339364  7.49              2.02
+4 2010-01-25            4  34790  263353516  4.24             -1.26
 5 2010-02-01            5  34938  263367674  5.20             -0.964
 6 2010-02-08            6  34210  263381826  3.28             -1.92 </code></pre>
 </div>
@@ -452,16 +452,16 @@ y = max + c
 <pre><code># A tibble: 528 × 7
    variable           mean    median          sd         mad        q5       q95
    &lt;chr&gt;             &lt;num&gt;     &lt;num&gt;       &lt;num&gt;       &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
- 1 alpha         -8.80     -8.80     0.00563     0.00619     -8.81     -8.79    
+ 1 alpha         -8.80     -8.80     0.00563     0.00619     -8.81     -8.79
  2 alpha_exp      0.000151  0.000151 0.000000850 0.000000933  0.000150  0.000152
- 3 beta_week     -0.118    -0.118    0.0000552   0.0000643   -0.118    -0.118   
- 4 beta_week_exp  0.889     0.889    0.0000490   0.0000572    0.889     0.889   
- 5 beta_year      0.00218   0.00218  0.00000626  0.00000731   0.00217   0.00219 
- 6 beta_year_exp  1.00      1.00     0.00000627  0.00000733   1.00      1.00    
- 7 rw[1]          0         0        0           0            0         0       
- 8 rw[2]          0.169     0.169    0.00763     0.00780      0.156     0.181   
- 9 rw[3]          0.249     0.249    0.00774     0.00793      0.236     0.262   
-10 rw[4]          0.338     0.338    0.00767     0.00776      0.326     0.351   
+ 3 beta_week     -0.118    -0.118    0.0000552   0.0000643   -0.118    -0.118
+ 4 beta_week_exp  0.889     0.889    0.0000490   0.0000572    0.889     0.889
+ 5 beta_year      0.00218   0.00218  0.00000626  0.00000731   0.00217   0.00219
+ 6 beta_year_exp  1.00      1.00     0.00000627  0.00000733   1.00      1.00
+ 7 rw[1]          0         0        0           0            0         0
+ 8 rw[2]          0.169     0.169    0.00763     0.00780      0.156     0.181
+ 9 rw[3]          0.249     0.249    0.00774     0.00793      0.236     0.262
+10 rw[4]          0.338     0.338    0.00767     0.00776      0.326     0.351
 # ℹ 518 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -475,10 +475,10 @@ y = max + c
  4 beta_week_exp  1.79     1.55     20.4
  5 beta_year      1.79     1.55     20.4
  6 beta_year_exp  1.79     1.55     20.4
- 7 rw[1]         NA       NA        NA  
- 8 rw[2]          1.02    27.5     137. 
- 9 rw[3]          1.02    28.7     174. 
-10 rw[4]          1.01    30.0     159. 
+ 7 rw[1]         NA       NA        NA
+ 8 rw[2]          1.02    27.5     137.
+ 9 rw[3]          1.02    28.7     174.
+10 rw[4]          1.01    30.0     159.
 # ℹ 518 more rows</code></pre>
 </div>
 </div>
@@ -601,13 +601,13 @@ y = max + c
 <pre><code># A tibble: 8 × 7
   variable                 mean   median        sd       mad       q5      q95
   &lt;chr&gt;                   &lt;num&gt;    &lt;num&gt;     &lt;num&gt;     &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
-1 alpha                -5.79    -5.79    0.0207    0.0222    -5.82    -5.76   
+1 alpha                -5.79    -5.79    0.0207    0.0222    -5.82    -5.76
 2 alpha_exp             0.00306  0.00305 0.0000635 0.0000672  0.00295  0.00317
-3 beta_temperature      2.37     2.37    0.0155    0.0148     2.35     2.40   
-4 beta_temperature_exp 10.7     10.7     0.166     0.157     10.4     11.0    
-5 beta_week            -0.0425  -0.0425  0.0000409 0.0000376 -0.0425  -0.0424 
-6 beta_week_exp         0.958    0.958   0.0000392 0.0000360  0.958    0.958  
-7 beta_year             0.110    0.110   0.000234  0.000215   0.110    0.110  
+3 beta_temperature      2.37     2.37    0.0155    0.0148     2.35     2.40
+4 beta_temperature_exp 10.7     10.7     0.166     0.157     10.4     11.0
+5 beta_week            -0.0425  -0.0425  0.0000409 0.0000376 -0.0425  -0.0424
+6 beta_week_exp         0.958    0.958   0.0000392 0.0000360  0.958    0.958
+7 beta_year             0.110    0.110   0.000234  0.000215   0.110    0.110
 8 beta_year_exp         1.12     1.12    0.000261  0.000240   1.12     1.12   </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -752,7 +752,7 @@ y = max + c
    &lt;chr&gt;                        &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
  1 alpha                     -8.74e+0 -8.74e+0 4.13e-3 4.15e-3 -8.74e+0 -8.73e+0
  2 alpha_exp                  1.60e-4  1.60e-4 6.62e-7 6.67e-7  1.59e-4  1.62e-4
- 3 beta_temperature_month[1]  0        0       0       0        0        0      
+ 3 beta_temperature_month[1]  0        0       0       0        0        0
  4 beta_temperature_month[2] -1.31e+0 -1.30e+0 4.51e-2 6.33e-2 -1.37e+0 -1.25e+0
  5 beta_temperature_month[3]  2.86e-1  2.96e-1 7.09e-2 7.45e-2  1.74e-1  4.02e-1
  6 beta_temperature_month[4] -3.15e+0 -3.15e+0 3.15e-2 3.20e-2 -3.21e+0 -3.11e+0
@@ -775,7 +775,7 @@ y = max + c
    &lt;chr&gt;                      &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
  1 alpha                       1.14     6.77     52.5
  2 alpha_exp                   1.14     6.77     52.5
- 3 beta_temperature_month[1]  NA       NA        NA  
+ 3 beta_temperature_month[1]  NA       NA        NA
  4 beta_temperature_month[2]   2.09     1.32     23.1
  5 beta_temperature_month[3]   1.92     1.41     14.0
  6 beta_temperature_month[4]   1.18     3.88     31.8
@@ -828,7 +828,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();  
+  toggleBodyColorPrimary();
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -838,7 +838,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
+      if (clz.startsWith('code-annotation-')) {
         return true;
       }
     }
@@ -869,11 +869,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();    
+      tooltip.show();
     }
     setTimeout(function() {
       if (tooltip) {
@@ -903,7 +903,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config); 
+    window.tippy(el, config);
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -948,7 +948,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
+            // cook up a div (if necessary) and position it
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");
