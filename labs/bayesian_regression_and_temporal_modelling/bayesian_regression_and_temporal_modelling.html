@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -97,17 +97,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Robbie M. Parks </p>
           </div>
   </div>
-
+    
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-
-
+  
+    
   </div>
-
+  
 
 </header>
 
@@ -179,10 +179,10 @@ lgl (8): bank_holiday_early_may, bank_holiday_easter_monday, bank_holiday_go...
 # Groups:   week [6]
   week       week_of_year deaths population   t2m weekly_t2m_anomaly
   &lt;date&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;              &lt;dbl&gt;
-1 2010-01-04            1  35280  263311048  3.60             -1.28
+1 2010-01-04            1  35280  263311048  3.60             -1.28 
 2 2010-01-11            2  37162  263325210  5.32              0.832
-3 2010-01-18            3  35808  263339364  7.49              2.02
-4 2010-01-25            4  34790  263353516  4.24             -1.26
+3 2010-01-18            3  35808  263339364  7.49              2.02 
+4 2010-01-25            4  34790  263353516  4.24             -1.26 
 5 2010-02-01            5  34938  263367674  5.20             -0.964
 6 2010-02-08            6  34210  263381826  3.28             -1.92 </code></pre>
 </div>
@@ -303,7 +303,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 16.39574 secs</code></pre>
+<pre><code>Time difference of 17.34794 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -394,7 +394,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_week =</span> <span class="dv">0</span>, <span class="at">rw=</span><span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times=</span><span class="fu">nrow</span>(data_national)), <span class="at">sigma_rw=</span><span class="dv">1</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'alpha'</span>,<span class="st">'beta_week'</span>,<span class="st">'alpha_exp'</span>,<span class="st">'beta_week_exp'</span>,<span class="st">'beta_year'</span>,<span class="st">'beta_year_exp'</span>,<span class="st">'rw'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Let’s run the model.</p>
+<p>Let’s run the model. Theo: It’s not quite as converged as I’d like, can you experiment with how many iterations etc it needs please?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
@@ -442,7 +442,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 33.40597 secs</code></pre>
+<pre><code>Time difference of 33.22682 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -452,16 +452,16 @@ y = max + c
 <pre><code># A tibble: 528 × 7
    variable           mean    median          sd         mad        q5       q95
    &lt;chr&gt;             &lt;num&gt;     &lt;num&gt;       &lt;num&gt;       &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
- 1 alpha         -8.80     -8.80     0.00563     0.00619     -8.81     -8.79
+ 1 alpha         -8.80     -8.80     0.00563     0.00619     -8.81     -8.79    
  2 alpha_exp      0.000151  0.000151 0.000000850 0.000000933  0.000150  0.000152
- 3 beta_week     -0.118    -0.118    0.0000552   0.0000643   -0.118    -0.118
- 4 beta_week_exp  0.889     0.889    0.0000490   0.0000572    0.889     0.889
- 5 beta_year      0.00218   0.00218  0.00000626  0.00000731   0.00217   0.00219
- 6 beta_year_exp  1.00      1.00     0.00000627  0.00000733   1.00      1.00
- 7 rw[1]          0         0        0           0            0         0
- 8 rw[2]          0.169     0.169    0.00763     0.00780      0.156     0.181
- 9 rw[3]          0.249     0.249    0.00774     0.00793      0.236     0.262
-10 rw[4]          0.338     0.338    0.00767     0.00776      0.326     0.351
+ 3 beta_week     -0.118    -0.118    0.0000552   0.0000643   -0.118    -0.118   
+ 4 beta_week_exp  0.889     0.889    0.0000490   0.0000572    0.889     0.889   
+ 5 beta_year      0.00218   0.00218  0.00000626  0.00000731   0.00217   0.00219 
+ 6 beta_year_exp  1.00      1.00     0.00000627  0.00000733   1.00      1.00    
+ 7 rw[1]          0         0        0           0            0         0       
+ 8 rw[2]          0.169     0.169    0.00763     0.00780      0.156     0.181   
+ 9 rw[3]          0.249     0.249    0.00774     0.00793      0.236     0.262   
+10 rw[4]          0.338     0.338    0.00767     0.00776      0.326     0.351   
 # ℹ 518 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -475,21 +475,21 @@ y = max + c
  4 beta_week_exp  1.79     1.55     20.4
  5 beta_year      1.79     1.55     20.4
  6 beta_year_exp  1.79     1.55     20.4
- 7 rw[1]         NA       NA        NA
- 8 rw[2]          1.02    27.5     137.
- 9 rw[3]          1.02    28.7     174.
-10 rw[4]          1.01    30.0     159.
+ 7 rw[1]         NA       NA        NA  
+ 8 rw[2]          1.02    27.5     137. 
+ 9 rw[3]          1.02    28.7     174. 
+10 rw[4]          1.01    30.0     159. 
 # ℹ 518 more rows</code></pre>
 </div>
 </div>
-<p>Now the samples look to be very tidily centred.</p>
+<p>Now the samples look to be very tidily centred. (Theo: They’re currently not but can we make sure please)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_week_random_walk, <span class="at">regex_pars =</span> <span class="fu">c</span>(<span class="st">'alpha'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>What do the random weekly terms looks like?</p>
+<p>What do the random weekly terms looks like? Theo I want it to look like a forest plot how to do this?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mcmc_trace(nimbleMCMC_samples_week_random_effect, regex_pars = c('rw'))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -513,7 +513,7 @@ y = max + c
 <span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
 <span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> alpha <span class="sc">+</span> beta_week <span class="sc">*</span> t <span class="sc">+</span> beta_temperature <span class="sc">*</span> weekly_t2m_anomaly[t] <span class="sc">+</span> rw[t]</span>
 <span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># random walk over time</span></span>
 <span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>  rw[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>weeks) {</span>
@@ -543,7 +543,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_week =</span> <span class="dv">0</span>, <span class="at">beta_temperature =</span> <span class="dv">0</span>, <span class="at">rw=</span><span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times=</span><span class="fu">nrow</span>(data_national)), <span class="at">sigma_rw=</span><span class="dv">1</span>)</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'alpha'</span>,<span class="st">'beta_week'</span>,<span class="st">'alpha_exp'</span>,<span class="st">'beta_week_exp'</span>,<span class="st">'beta_year'</span>,<span class="st">'beta_year_exp'</span>,<span class="st">'beta_temperature'</span>,<span class="st">'beta_temperature_exp'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Let’s run the model.</p>
+<p>Let’s run the model. Theo: Again these don’t converge so well please consider what we do as ideally I’d like to make all the iteration numbers the same for each run</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk_with_temperature <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
@@ -591,7 +591,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 38.23556 secs</code></pre>
+<pre><code>Time difference of 37.77971 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -601,13 +601,13 @@ y = max + c
 <pre><code># A tibble: 8 × 7
   variable                 mean   median        sd       mad       q5      q95
   &lt;chr&gt;                   &lt;num&gt;    &lt;num&gt;     &lt;num&gt;     &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
-1 alpha                -5.79    -5.79    0.0207    0.0222    -5.82    -5.76
+1 alpha                -5.79    -5.79    0.0207    0.0222    -5.82    -5.76   
 2 alpha_exp             0.00306  0.00305 0.0000635 0.0000672  0.00295  0.00317
-3 beta_temperature      2.37     2.37    0.0155    0.0148     2.35     2.40
-4 beta_temperature_exp 10.7     10.7     0.166     0.157     10.4     11.0
-5 beta_week            -0.0425  -0.0425  0.0000409 0.0000376 -0.0425  -0.0424
-6 beta_week_exp         0.958    0.958   0.0000392 0.0000360  0.958    0.958
-7 beta_year             0.110    0.110   0.000234  0.000215   0.110    0.110
+3 beta_temperature      2.37     2.37    0.0155    0.0148     2.35     2.40   
+4 beta_temperature_exp 10.7     10.7     0.166     0.157     10.4     11.0    
+5 beta_week            -0.0425  -0.0425  0.0000409 0.0000376 -0.0425  -0.0424 
+6 beta_week_exp         0.958    0.958   0.0000392 0.0000360  0.958    0.958  
+7 beta_year             0.110    0.110   0.000234  0.000215   0.110    0.110  
 8 beta_year_exp         1.12     1.12    0.000261  0.000240   1.12     1.12   </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -651,7 +651,7 @@ y = max + c
 <span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
 <span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>weeks) {</span>
 <span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
-<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> alpha <span class="sc">+</span> beta_week <span class="sc">*</span> t <span class="sc">+</span> rw[t] <span class="sc">+</span> beta_temperature_month[month[t]] <span class="sc">*</span> weekly_t2m_anomaly[t] </span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> alpha <span class="sc">+</span> beta_week <span class="sc">*</span> t <span class="sc">+</span> rw[t] <span class="sc">+</span> beta_temperature_month[month[t]] <span class="sc">*</span> weekly_t2m_anomaly[t]</span>
 <span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># random walk over time</span></span>
@@ -668,13 +668,11 @@ y = max + c
 <span id="cb75-26"><a href="#cb75-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb75-27"><a href="#cb75-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># exponentiate the estimated parameters to reverse the log-link function</span></span>
 <span id="cb75-28"><a href="#cb75-28" aria-hidden="true" tabindex="-1"></a>  alpha_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(alpha)</span>
-<span id="cb75-29"><a href="#cb75-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># beta_week_exp &lt;- exp(beta_week)</span></span>
-<span id="cb75-30"><a href="#cb75-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># beta_temperature_exp &lt;- exp(beta_temperature)</span></span>
-<span id="cb75-31"><a href="#cb75-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-32"><a href="#cb75-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
-<span id="cb75-33"><a href="#cb75-33" aria-hidden="true" tabindex="-1"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
-<span id="cb75-34"><a href="#cb75-34" aria-hidden="true" tabindex="-1"></a>  beta_year_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_year)</span>
-<span id="cb75-35"><a href="#cb75-35" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb75-29"><a href="#cb75-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-30"><a href="#cb75-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
+<span id="cb75-31"><a href="#cb75-31" aria-hidden="true" tabindex="-1"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
+<span id="cb75-32"><a href="#cb75-32" aria-hidden="true" tabindex="-1"></a>  beta_year_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_year)</span>
+<span id="cb75-33"><a href="#cb75-33" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Final preparation of data into lists</p>
 <div class="cell">
@@ -694,7 +692,7 @@ y = max + c
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">sigma_rw=</span><span class="dv">1</span>,<span class="at">sigma_temperature=</span><span class="dv">1</span>)</span>
 <span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'alpha'</span>,<span class="st">'beta_week'</span>,<span class="st">'alpha_exp'</span>,<span class="st">'beta_year'</span>,<span class="st">'beta_year_exp'</span>,<span class="st">'beta_temperature_month'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Let’s run the model.</p>
+<p>Let’s run the model. (Theo: Again how to converge with niter)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk_with_temperature_by_month <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
@@ -742,7 +740,7 @@ y = max + c
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="sc">-</span> t0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 40.37485 secs</code></pre>
+<pre><code>Time difference of 40.42238 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -754,7 +752,7 @@ y = max + c
    &lt;chr&gt;                        &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
  1 alpha                     -8.74e+0 -8.74e+0 4.13e-3 4.15e-3 -8.74e+0 -8.73e+0
  2 alpha_exp                  1.60e-4  1.60e-4 6.62e-7 6.67e-7  1.59e-4  1.62e-4
- 3 beta_temperature_month[1]  0        0       0       0        0        0
+ 3 beta_temperature_month[1]  0        0       0       0        0        0      
  4 beta_temperature_month[2] -1.31e+0 -1.30e+0 4.51e-2 6.33e-2 -1.37e+0 -1.25e+0
  5 beta_temperature_month[3]  2.86e-1  2.96e-1 7.09e-2 7.45e-2  1.74e-1  4.02e-1
  6 beta_temperature_month[4] -3.15e+0 -3.15e+0 3.15e-2 3.20e-2 -3.21e+0 -3.11e+0
@@ -777,7 +775,7 @@ y = max + c
    &lt;chr&gt;                      &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
  1 alpha                       1.14     6.77     52.5
  2 alpha_exp                   1.14     6.77     52.5
- 3 beta_temperature_month[1]  NA       NA        NA
+ 3 beta_temperature_month[1]  NA       NA        NA  
  4 beta_temperature_month[2]   2.09     1.32     23.1
  5 beta_temperature_month[3]   1.92     1.41     14.0
  6 beta_temperature_month[4]   1.18     3.88     31.8
@@ -802,11 +800,11 @@ y = max + c
 </div>
 </div>
 </section>
-<section id="linear-model-with-autoregressive-term-over-time" class="level2">
-<h2 class="anchored" data-anchor-id="linear-model-with-autoregressive-term-over-time">Linear model with autoregressive term over time</h2>
+<section id="linear-model-with-autoregressive-term-over-time-theo-is-this-worth-doing-if-so-can-you-please-adapt-rw1-and-implement" class="level2">
+<h2 class="anchored" data-anchor-id="linear-model-with-autoregressive-term-over-time-theo-is-this-worth-doing-if-so-can-you-please-adapt-rw1-and-implement">Linear model with autoregressive term over time (Theo: Is this worth doing? If so can you please adapt RW1 and implement?)</h2>
 </section>
-<section id="forecasting-what-might-have-happened-in-2020-without-covid" class="level2">
-<h2 class="anchored" data-anchor-id="forecasting-what-might-have-happened-in-2020-without-covid">Forecasting (what might have happened in 2020 without COVID?)</h2>
+<section id="forecasting-what-might-have-happened-in-2020-without-covid-theo-can-you-quickly-implement-this" class="level2">
+<h2 class="anchored" data-anchor-id="forecasting-what-might-have-happened-in-2020-without-covid-theo-can-you-quickly-implement-this">Forecasting (what might have happened in 2020 without COVID?) (Theo: Can you quickly implement this?)</h2>
 </section>
 
 </main>
@@ -830,7 +828,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -840,7 +838,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {
+      if (clz.startsWith('code-annotation-')) {                     
         return true;
       }
     }
@@ -871,11 +869,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button,
-        { trigger: "manual",
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();
+      tooltip.show();    
     }
     setTimeout(function() {
       if (tooltip) {
@@ -905,7 +903,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config);
+    window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -950,7 +948,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it
+            // cook up a div (if necessary) and position it 
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");

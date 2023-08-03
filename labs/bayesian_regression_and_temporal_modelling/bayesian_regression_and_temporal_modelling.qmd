@@ -219,7 +219,7 @@ inits <- list(alpha = 0, beta_week = 0, rw=rep(0, times=nrow(data_national)), si
 parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp','rw')
 ```
 
-Let's run the model.
+Let's run the model. Theo: It's not quite as converged as I'd like, can you experiment with how many iterations etc it needs please?
 ```{r}
 t0 = Sys.time()
 nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
@@ -244,12 +244,12 @@ summarise_draws(nimbleMCMC_samples_week_random_walk, default_summary_measures())
 summarise_draws(nimbleMCMC_samples_week_random_walk, default_convergence_measures())
 ```
 
-Now the samples look to be very tidily centred.
+Now the samples look to be very tidily centred. (Theo: They're currently not but can we make sure please)
 ```{r}
 mcmc_trace(nimbleMCMC_samples_week_random_walk, regex_pars = c('alpha'))
 ```
 
-What do the random weekly terms looks like?
+What do the random weekly terms looks like? Theo I want it to look like a forest plot how to do this?
 ```{r}
 # mcmc_trace(nimbleMCMC_samples_week_random_effect, regex_pars = c('rw'))
 ```
@@ -308,7 +308,7 @@ inits <- list(alpha = 0, beta_week = 0, beta_temperature = 0, rw=rep(0, times=nr
 parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_week_exp','beta_year','beta_year_exp','beta_temperature','beta_temperature_exp')
 ```
 
-Let's run the model.
+Let's run the model. Theo: Again these don't converge so well please consider what we do as ideally I'd like to make all the iteration numbers the same for each run
 ```{r}
 t0 = Sys.time()
 nimbleMCMC_samples_week_random_walk_with_temperature <- nimbleMCMC(
@@ -379,8 +379,6 @@ code_weekly_random_walk_with_temperature_by_month <- nimbleCode({
 
   # exponentiate the estimated parameters to reverse the log-link function
   alpha_exp <- exp(alpha)
-  # beta_week_exp <- exp(beta_week)
-  # beta_temperature_exp <- exp(beta_temperature)
 
   # what's the estimated annual rate of change?
   beta_year <- exp(52 * beta_week)
@@ -408,7 +406,7 @@ inits <- list(alpha = 0, beta_week = 0,
 parameters_to_monitor = c('alpha','beta_week','alpha_exp','beta_year','beta_year_exp','beta_temperature_month')
 ```
 
-Let's run the model.
+Let's run the model. (Theo: Again how to converge with niter)
 ```{r}
 t0 = Sys.time()
 nimbleMCMC_samples_week_random_walk_with_temperature_by_month <- nimbleMCMC(
@@ -438,12 +436,12 @@ Now the samples look to be very tidily centred.
 mcmc_trace(nimbleMCMC_samples_week_random_walk_with_temperature_by_month)
 ```
 
-## Linear model with autoregressive term over time
+## Linear model with autoregressive term over time (Theo: Is this worth doing? If so can you please adapt RW1 and implement?)
 ```{r}
 
 ```
 
-## Forecasting (what might have happened in 2020 without COVID?)
+## Forecasting (what might have happened in 2020 without COVID?) (Theo: Can you quickly implement this?)
 ```{r}
 
 ```
