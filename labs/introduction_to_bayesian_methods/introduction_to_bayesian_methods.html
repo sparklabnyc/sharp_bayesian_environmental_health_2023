@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -97,17 +97,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Robbie M. Parks </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 </header>
 
@@ -154,7 +154,7 @@ y = max + c
  3  0.840  -0.84 -0.91  1.59
  4  0.109   1.6   0.16 -0.33
  5 -0.119   0.33 -0.65 -2.29
- 6  2.23   -0.82  1.77  2.5 
+ 6  2.23   -0.82  1.77  2.5
  7  0.700   0.49  0.72  0.67
  8  1.05    0.74  0.91  0.54
  9 -0.209   0.58  0.38 -0.01
@@ -600,7 +600,7 @@ conjugate sampler (4)
 <div class="cell">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>(nimbleMCMC_samples_burnin[, <span class="st">"beta2"</span>] <span class="sc">-</span> nimbleMCMC_samples_burnin[, <span class="st">"beta1"</span>]) <span class="sc">|&gt;</span> <span class="fu">as.numeric</span>() <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
 0.02013 0.25016 0.30331 0.30303 0.35602 0.60417 </code></pre>
 </div>
 </div>
@@ -790,8 +790,8 @@ RW sampler (4)
   variable   mean median     sd    mad     q5    q95
   &lt;chr&gt;     &lt;num&gt;  &lt;num&gt;  &lt;num&gt;  &lt;num&gt;  &lt;num&gt;  &lt;num&gt;
 1 alpha     0.908  0.909 0.0450 0.0447  0.833  0.982
-2 beta1     2.00   2.00  0.0620 0.0622  1.90   2.11 
-3 beta2     3.07   3.07  0.0836 0.0851  2.94   3.21 
+2 beta1     2.00   2.00  0.0620 0.0622  1.90   2.11
+3 beta2     3.07   3.07  0.0836 0.0851  2.94   3.21
 4 beta3    -5.07  -5.07  0.124  0.131  -5.27  -4.87 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_binomial, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -996,8 +996,8 @@ RW sampler (4)
 <pre><code># A tibble: 4 × 7
   variable    mean  median      sd     mad     q5     q95
   &lt;chr&gt;      &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;  &lt;num&gt;   &lt;num&gt;
-1 alpha     4.00    4.00   0.00145 0.00146  4.00   4.01  
-2 beta1     0.300   0.300  0.00120 0.00120  0.298  0.302 
+1 alpha     4.00    4.00   0.00145 0.00146  4.00   4.01
+2 beta1     0.300   0.300  0.00120 0.00120  0.298  0.302
 3 beta2    -0.0997 -0.0997 0.00123 0.00124 -0.102 -0.0977
 4 beta3     0.601   0.601  0.00124 0.00126  0.599  0.603 </code></pre>
 </div>
@@ -1045,7 +1045,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();  
+  toggleBodyColorPrimary();
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1055,7 +1055,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
+      if (clz.startsWith('code-annotation-')) {
         return true;
       }
     }
@@ -1086,11 +1086,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();    
+      tooltip.show();
     }
     setTimeout(function() {
       if (tooltip) {
@@ -1120,7 +1120,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config); 
+    window.tippy(el, config);
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -1165,7 +1165,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
+            // cook up a div (if necessary) and position it
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");
