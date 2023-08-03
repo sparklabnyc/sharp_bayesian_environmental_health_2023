@@ -36,20 +36,20 @@ format:
 
 - Homoskedasticity
 
-<center>![](assets/dogs1.jpeg){width=40%} 
+<center>![](assets/dogs1.jpeg){width=40%}
 
 ## Assumptions of linear models
 
 - Homoskedasticity
   - equal or similar variances in different groups
   - sometimes it is appropriate
-  - ![](assets/dogs1.jpeg){width=30%} 
-  
-  
+  - ![](assets/dogs1.jpeg){width=30%}
+
+
 ## Assumptions of linear models
 
 - Homoskedasticity?
-  
+
 <center>
 ![](assets/dogs1.jpeg){width=40%}
 ![](assets/dogs4.jpeg){width=40%}
@@ -80,17 +80,17 @@ Exist on the continuum of two extreme cases:
 <center>
 ![](assets/pooled_model.png){width=60%}
 
-- A *pooled* model implies that the data are sampled from the same model. 
-- This ignores all variation  among the units being sampled. 
+- A *pooled* model implies that the data are sampled from the same model.
+- This ignores all variation  among the units being sampled.
 - All observations share common parameter $\theta.$
- 
-<font size="1"> Image: courtesy of Chris Fonnesbeck</font> 
+
+<font size="1"> Image: courtesy of Chris Fonnesbeck</font>
 
 
 ## Excercise
 
 - Complete pooling?
-  
+
 <center>
 ![](assets/dogs1.jpeg){width=30%}
 ![](assets/dogs4.jpeg){width=30%}
@@ -98,7 +98,7 @@ Exist on the continuum of two extreme cases:
 ## Excercise
 
 - Complete pooling:
-  
+
 <center>
 ![](assets/dogs1.jpeg){width=30%}
 ![](assets/dogs4.jpeg){width=30%}
@@ -113,19 +113,19 @@ Exist on the continuum of two extreme cases:
 
 - An *unpooled* model implies that the data are sampled from independent parameters.
 - Parameter $\theta_i$ is different for each observation.
- 
-<font size="1"> Image: courtesy of Chris Fonnesbeck</font> 
+
+<font size="1"> Image: courtesy of Chris Fonnesbeck</font>
 
 ## Excercise
 
 - No pooling?
-  
+
 <center>
 ![](assets/dogs1.jpeg){width=30%}
 ![](assets/dogs4.jpeg){width=30%}
 
 - Captures variability, but not the overall pattern.
-- Assumes that there is no relationship between the models. 
+- Assumes that there is no relationship between the models.
 - Does not provide ways to extrapolate.
 
 
@@ -137,13 +137,13 @@ Exist on the continuum of two extreme cases:
 
 ## Hierarchical models
 
-- Hierarchical models fill in the continuum between the two extremes. 
+- Hierarchical models fill in the continuum between the two extremes.
 - They allow us to estimate models for each measurement block where each dataset is being fit to its own model. - There is a higher level model, a *hierarchical model*, describing variability in parameters of those sub-models.
 
 ## Excercise
 
 - Partial pooling?
-  
+
 <center>
 ![](assets/dogs1.jpeg){width=30%}
 ![](assets/dogs4.jpeg){width=30%}
@@ -183,8 +183,8 @@ $$ \mu \sim N(\mu_0, v_0), \\
 ## Levels of hierarchy
 
 - Data model
-- Process model 
-- Parameter model 
+- Process model
+- Parameter model
 - Hyperparameters
 
 ## Key points about hierarchical models
@@ -204,5 +204,3 @@ $$ \mu \sim N(\mu_0, v_0), \\
 </center>
 
 # Questions?
-
-
