@@ -107,7 +107,7 @@ data <- list(y = y, x1 = x1, x2 = x2, x3 = x3)
 
 Set initial values for MCMC samples
 ```{r}
-inits <- list(beta0 = mean(y), alpha = 0, beta2 = 0, beta3 = 0, sigma = 1)
+inits <- list(alpha = 0, beta1=0, beta2 = 0, beta3 = 0, sigma = 1)
 ```
 
 The following code will establish which samples will be used in the sampling of the posteriors. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), it will be detected here
@@ -167,6 +167,7 @@ t1 - t0
 What is the summary of each estimated parameter from the samples with burn in?
 ```{r}
 summarise_draws(nimbleMCMC_samples_burnin, default_summary_measures())
+summarise_draws(nimbleMCMC_samples_burnin, default_convergence_measures())
 ```
 
 Now the samples look to be very tidily centred around 0.2.
@@ -213,6 +214,7 @@ t1 - t0
 What is the summary of each estimated parameter from the samples with tighter priors?
 ```{r}
 summarise_draws(nimbleMCMC_samples_tighter_priors, default_summary_measures())
+summarise_draws(nimbleMCMC_samples_tighter_priors, default_convergence_measures())
 ```
 
 Say we wanted to establish the estimated difference between two betas? Let's say `beta_1` and `beta_2` in this case
@@ -261,6 +263,7 @@ t1 - t0
 What is the summary of each estimated parameter from the samples when monitoring difference between beta1 and beta2?
 ```{r}
 summarise_draws(nimbleMCMC_samples_beta12_diff, default_summary_measures())
+summarise_draws(nimbleMCMC_samples_tighter_priors, default_convergence_measures())
 ```
 
 Equally, we could do this by operating on the samples themselves from the original model.
@@ -382,7 +385,7 @@ Now the samples look to be very tidily centered around 2.
 mcmc_trace(nimbleMCMC_samples_binomial)
 ```
 
-## Poisson-Gamma example.
+## Poisson example.
 
 First create some example data for our model:
 
@@ -495,4 +498,4 @@ Now the samples look to be very tidily centred around 0.3.
 mcmc_trace(nimbleMCMC_samples_poisson)
 ```
 
-## Negative Binomial example
+## Negative Binomial example (Theo: To do please)
