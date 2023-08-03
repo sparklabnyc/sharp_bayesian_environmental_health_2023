@@ -3,7 +3,7 @@ title: "Temporal modelling"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Robbie M. Parks"
 date: "August 2023"
-output: html_document
+format: html
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}

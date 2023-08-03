@@ -19,6 +19,8 @@ library(colorspace)
 extrafont::loadfonts()
 theme_set(theme_ipsum())
 
+color_scheme_set(scheme = "viridis")
+
 set.seed(2)
 ```
 
