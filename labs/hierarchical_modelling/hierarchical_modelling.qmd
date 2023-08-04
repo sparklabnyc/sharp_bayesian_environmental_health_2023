@@ -3,7 +3,7 @@ title: "Hierarchical modelling"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Theo Rashid, Elizaveta Semenova"
 date: "August 2023"
-output: html_document
+format: html
 ---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
@@ -18,6 +18,8 @@ library(colorspace)
 
 extrafont::loadfonts()
 theme_set(theme_ipsum())
+
+color_scheme_set(scheme = "viridis")
 
 set.seed(2)
 ```
@@ -54,10 +56,16 @@ data <- data |>
 
 Let's look at the distribution the number of deaths in each province.
 ```{r}
+#| label: fig-deaths-province
+#| warning: false
+#| fig-height: 10
+#| fig-cap: Number of deaths at each time point in each province.
+
 data |>
   ggplot(aes(x = SIGLA, y = deaths)) +
   geom_jitter(size = 0.4, alpha = 0.8, colour = "darkcyan")  +
-  coord_flip()
+  coord_flip() +
+  theme(axis.text.y = element_text(size = 7))
 ```
 
 Let's plot the mean number of deaths in that month in that province.
@@ -100,18 +108,18 @@ The model is as follows:
 
 Priors
 $$
-\alpha \sim N(0,5), \\
-\sigma \sim N^+(1),\\
-\theta \sim N(0, \sigma^2),
+\alpha \sim N(0, 5)
 $$
 
 Likelihood
 $$
-\log(\mu_i) = \log(E_i) + \alpha + \theta, \\
-y_i \sim \text{Pois}(\mu_i)
+\begin{split}
+y_i &\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
+\log(\mu_i) &= \log(E_i) + \alpha
+\end{split}
 $$
 
-The parameter $\theta$ here is common for all observations $y_i$, regardless of what province the observation belongs to.
+The parameter $\alpha$ here is common for all observations $y_i$, regardless of what province the observation belongs to.
 
 ```{r}
 constants <- list(
@@ -120,10 +128,7 @@ constants <- list(
   province = data$provincia_id
 )
 
-inits <- list(
-  alpha = 0,
-  theta = 0
-)
+inits <- list(list(alpha = 0), list(alpha = 0.1))
 
 nimble_data <- list(
   y = as.integer(data$deaths),
@@ -134,13 +139,11 @@ nimble_data <- list(
 full_pooling_model <- nimbleCode({
   # priors
   alpha ~ dnorm(0, 5)
-  sigma_p ~ T(dnorm(0, 1), 0, Inf) # half-normal
-  theta ~ dnorm(0, sd = sigma_p)
 
   # likelihood
   for (i in 1:N) {
     y[i] ~ dpois(mu[i])
-    log(mu[i]) <- log(E[i]) + alpha + theta
+    log(mu[i]) <- log(E[i]) + alpha
   }
 })
 ```
@@ -151,7 +154,7 @@ full_pooling_samples <- nimbleMCMC(
   data = nimble_data,
   constants = constants,
   inits = inits,
-  monitors = c("alpha", "sigma_p", "theta"),
+  monitors = c("alpha"),
   niter = 2000,
   nburnin = 1000,
   thin = 1,
@@ -162,68 +165,137 @@ full_pooling_samples <- nimbleMCMC(
 )
 ```
 
-Follow the Bayesian workflow – look at MCMC outputs, r-hat using `posterior`, traceplots using `bayesplot`
+Follow the Bayesian workflow: look at MCMC outputs, check convergence using r-hat.
 
 ```{r}
 summarise_draws(full_pooling_samples, default_summary_measures())
 summarise_draws(full_pooling_samples, default_convergence_measures())
 ```
 
-RHAT IS HIGH? IS THIS RIGHT? DO WE ESTIMATE SIGMA?
-
 Let's plot the SMR in each province.
 ```{r}
 full_pooling_posterior <- as_draws_array(full_pooling_samples)
 
-SMR_full_pooling <- exp(full_pooling_posterior[, , "alpha"] + full_pooling_posterior[, , "theta"]) |>
+SMR_full_pooling <- exp(full_pooling_posterior[, , "alpha"]) |>
   apply(MARGIN = 3, FUN = median)
 
-shp_italy |>
+p_full <- shp_italy |>
   mutate(SMR = SMR_full_pooling) |>
-  ggplot(aes(fill = SMR_full_pooling)) +
+  ggplot(aes(fill = SMR)) +
   geom_sf(colour = "white") +
   scale_fill_continuous_sequential(palette = "Reds") +
   theme_void()
+
+p_full
 ```
 
 Pretty boring, eh?
 
 ## No pooling model
 
-Here, we treat all regions separately and estimate each region separately with fixed effects.
+Here, we treat all regions separately and estimate the SMR in each region separately with fixed effects.
 
 Priors
 $$
-\alpha \sim N(0,5), \\
-\sigma \sim N^+(1),\\
-\theta_i \sim N(0, \sigma^2),
-$$
-Likelihood:
-$$
-\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta_i,\\
-y_i \sim \text{Pois}(\mu_i)
-$$
-
-IS THIS RIGHT?
-
-## Partial pooling model
-
-Varying intercepts model. Random effect grouping all regions.
-Estimate hyperparamter sigma (explain how this is hierarchical)
-
-Priors
-$$
-\alpha \sim N(0,5), \\
-\sigma_p \sim N^+(1),\\
-\theta_j \sim N(0, \sigma^2_p), \quad j=1,..., N_p
+\alpha_j \sim N(0, 1) \quad j = 1,..., N_p
 $$
 
 Likelihood
 $$
-y_i \sim \text{Pois}(\mu_i),\\
-\text{log}(\mu_i) = \text{log}(E_i) + \alpha + \theta_j\\
-i=1,..., N \quad (observation) \\
-j=1,..., N_p \quad (province)
+\begin{split}
+y_i &\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
+\log(\mu_i) &= \log(E_i) + \alpha_{j[i]}
+\end{split}
+$$
+
+There is now an $\alpha$ for each province, so the map will no longer be uniform.
+
+```{r}
+inits <- list(
+  list(
+    alpha = rep(0, constants$Np)
+  ),
+  list(
+    alpha = rep(0.1, constants$Np)
+  )
+)
+```
+```{r}
+no_pooling_model <- nimbleCode({
+  # priors
+  for (j in 1:Np) {
+    alpha[j] ~ dnorm(0, sd = 1)
+  }
+
+  # likelihood
+  for (i in 1:N) {
+    y[i] ~ dpois(mu[i])
+    log(mu[i]) <- log(E[i]) + alpha[province[i]]
+  }
+})
+```
+
+```{r}
+no_pooling_samples <- nimbleMCMC(
+  code = no_pooling_model,
+  data = nimble_data,
+  constants = constants,
+  inits = inits,
+  monitors = c("alpha"),
+  niter = 2000,
+  nburnin = 1000,
+  thin = 1,
+  nchains = 2,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE,
+  progressBar = TRUE
+)
+```
+
+```{r}
+summarise_draws(no_pooling_samples, default_summary_measures())
+summarise_draws(no_pooling_samples, default_convergence_measures())
+```
+
+The SMR in each province
+```{r}
+no_pooling_posterior <- as_draws_array(no_pooling_samples)
+
+SMR_no_pooling <- exp(no_pooling_posterior[, , 1:107]) |>
+  apply(MARGIN = 3, FUN = median)
+
+p_no <- shp_italy |>
+  mutate(SMR = SMR_no_pooling) |>
+  ggplot(aes(fill = SMR)) +
+  geom_sf(colour = "white") +
+  scale_fill_continuous_sequential(palette = "Reds") +
+  theme_void()
+
+p_no
+```
+
+## Partial pooling model
+
+This is also known as a varying intercept model.
+We fit a random effect for each province.
+The size of the random effect is controlled by the hyperparameter $\sigma_p$.
+There is now a hierarchy in the parameters between $\sigma_p$ and the effects for each province $\theta$ – hence, "hierarchical modelling".
+
+Priors
+$$
+\begin{split}
+\alpha &\sim N(0,5), \\
+\sigma_p &\sim N^+(1) \\
+\theta_j &\sim N(0, \sigma^2_p) \quad j = 1,..., N_p
+\end{split}
+$$
+
+Likelihood
+$$
+\begin{split}
+y_i &\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
+\log(\mu_i) &= \log(E_i) + \alpha + \theta_{j[i]}
+\end{split}
 $$
 
 ```{r}
@@ -275,16 +347,17 @@ partial_pooling_samples <- nimbleMCMC(
 )
 ```
 
-Follow the Bayesian workflow – look at MCMC outputs, r-hat using `posterior`, traceplots using `bayesplot`.
 ```{r}
 summarise_draws(partial_pooling_samples, default_summary_measures())
 summarise_draws(partial_pooling_samples, default_convergence_measures())
 ```
 
+With more complicated models, sometimes it's nice to see if the traceplots are working too.
 ```{r}
 mcmc_trace(partial_pooling_samples, regex_pars = "alpha")
 ```
 
+There is a little bit more manipulation required to estimate the SMR for the more complicated model.
 ```{r}
 partial_pooling_posterior <- as_draws_array(partial_pooling_samples)
 
@@ -298,16 +371,24 @@ SMR_partial_pooling <- exp(
   ) |>
   apply(MARGIN = 3, FUN = median)
 
-shp_italy |>
+p_partial <- shp_italy |>
   mutate(SMR = SMR_partial_pooling) |>
-  ggplot(aes(fill = SMR_partial_pooling)) +
+  ggplot(aes(fill = SMR)) +
   geom_sf(colour = "white") +
   scale_fill_continuous_sequential(palette = "Reds") +
   theme_void()
+
+p_partial
 ```
 
-## A different prior on sigma for Bayesian workflow
+## Comparing the models
 
-Maybe try a different prior on sigma, something really weird/informative and wrong.
-Run prior predictive simulation and show how it makes no sense
-Fit the model and look at posterior
+Look at how each of the models alters the fit.
+
+```{r}
+p_full + labs(caption = "Full pooling model")
+p_no + labs(caption = "No pooling model")
+p_partial + labs(caption = "Partial pooling model")
+```
+
+There is clearly more smoothing in the partial pooling model.
