@@ -1,10 +1,14 @@
-# SHARP: Bayesian Modeling for Environmental Health Workshop
+# SHARP: Bayesian  Modeling  for Environmental Health Workshop
 
 ![course logo](assets/bmeh-1200x630.jpg)
 
 ## Introduction
 
-GitHub project through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop.
+GitHub project through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 14th-15th 2023.
+
+## Notes for attendees
+
+To be completed
 
 ## Notes for those working on the repo
 
