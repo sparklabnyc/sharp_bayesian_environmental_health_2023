@@ -51,7 +51,12 @@ We can create basic maps of sf objects using the `plot()` function:
 plot(data_england) # plot all the attributes
 plot(data_england$geometry) # plot only the boundaries
 ```
+<<<<<<< HEAD
+
+We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps. 
+=======
 We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps.
+>>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
 ```{r fig.width=3, fig.align='center'}
 data_england_simpler <- gSimplify(as(data_england, "Spatial"), tol = 500)
 data_england_simpler <- st_as_sf(data_england_simpler)
@@ -135,6 +140,12 @@ UnstrCode <- nimbleCode({
 
   tau.theta ~ dgamma(1, 0.01) # prior for the precision hyperparameter
 })
+```
+
+* The following chunk of code subsets the data to London so the models are quicker to run
+```{r eval=FALSE, warning = FALSE}
+data_england[startsWith(data_england$LTLA, "E09"),] -> data_england_simpler
+ggplot() + geom_sf(data = data_england_simpler, fill = "NA")
 ```
 
 * Create data object as required for NIMBLE
@@ -318,12 +329,20 @@ data_england_simpler$RR <- RR_COVID
 ```
 
 * Using `ggplot2`, we can produce a map of the smoothed RRs
+<<<<<<< HEAD
+```{r eval=TRUE, fig.width=5, fig.align='center'} 
+
+ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() + 
+                     scale_fill_viridis_c(limits = c(0,1.6), name = "SMR") 
+```	
+=======
 ```{r eval=TRUE, fig.width=5, fig.align='center'}
 ggplot() +
   geom_sf(data = data_england_simpler, aes(fill = RR)) +
   theme_bw() +
   scale_fill_viridis_c(limits = c(0, 2), name = "SMR")
 ```
+>>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
 
 
 ## A3. The BYM model
@@ -500,12 +519,17 @@ modelBYM.sim <- readRDS("NIMBLE_BYM_A3")
 modelBYM.sim$WAIC
 ```
 
-* Check convergence of RR
+* Check convergence of resRR
 ```{r echo=TRUE, eval=TRUE}
 ggsamplesbym <- ggs(modelBYM.sim$samples)
+<<<<<<< HEAD
+ggsamplesbym %>% filter(Parameter == c("resRR[1]", "resRR[19]", "resRR[41]", "resRR[72]")) %>% 
+              ggs_traceplot() + theme_bw()
+=======
 ggsamplesbym %>%
   filter(Parameter == c("RR[1]", "RR[19]", "RR[41]", "RR[72]")) %>%
   ggs_traceplot() + theme_bw()
+>>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
 ```
 
 (a) Extract the residual RR (i.e. exp(V + U)) and the posterior probability that resRR is higher than 1 as. Create a `data.frame` for this purpose. Note that for the posterior probability, which is a vector of 0s and 1s we need to calculate the sum of 1s by the total sum, ie the mean.
