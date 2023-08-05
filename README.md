@@ -4,11 +4,31 @@
 
 ## Introduction
 
-GitHub project through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 14th-15th 2023.
+GitHub repo through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 14th-15th 2023.
 
 ## Notes for attendees
 
-To be completed
+The workshop will be a series of lectures and interactive supervised lab sessions.
+
+We will be using Posit (RStudio) Cloud, which assumes knowledge of R and RStudio. We will also ask you to pull the final versions of the GitHub repo to your Cloud account. The basics of doing this are in a previously-created guide found via LINK.
+
+Below is the set of labs to follow throughout the two days:
+
+### Day 1
+
+Introduction to Bayesian Methods
+
+Bayesian Regression and Temporal Modelling
+
+Hierarchical Modelling
+
+### Day 2
+
+Spatial and Spatio-temporal Modelling
+
+Software Options
+
+Bayesian Non-Parametric Ensemble
 
 ## Notes for those working on the repo
 

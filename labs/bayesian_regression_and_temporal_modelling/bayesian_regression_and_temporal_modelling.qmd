@@ -28,9 +28,12 @@ This lab will explore some key temporal modelling concepts, including linear slo
 
 During this lab session, we will:
 
-1. XX
-2. XX
-3. XX
+1. Explore some real time series mortality data; 
+2. Apply a basic linear model;
+3. Apply a non-linear model;
+4. Incorporate basic temperature term into model; 
+5. Modify temperature term to be month-specific; and
+6. Explore how well model convergence and fit performs.
 
 ## Introduction to the mortality data
 

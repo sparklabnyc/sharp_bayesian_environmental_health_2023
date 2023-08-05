@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -98,28 +98,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Robbie M. Parks, Theo Rashid </p>
           </div>
   </div>
-
+    
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-
-
+  
+    
   </div>
-
+  
 
 </header>
 
 <section id="goal-of-this-computing-lab-session" class="level2">
 <h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
-<p>This lab will involve taking some concepts from the Introduction to Bayesian Methods lecture and introduce you to the way NIMBLE works.</p>
+<p>This lab will involve taking some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way NIMBLE works.</p>
 <p>During this lab session, we will:</p>
 <ol type="1">
-<li>XX</li>
-<li>XX</li>
-<li>XX</li>
+<li>Explore how NIMBLE is written and works;</li>
+<li>Write some common regression models (Normal, logistic regression, Poisson);</li>
+<li>Understand how basic model assessment is made; and</li>
+<li>Test out how adjustments of models are made via different priors and more samples.</li>
 </ol>
 </section>
 <section id="introduction-to-nimble" class="level2 page-columns page-full">
@@ -141,8 +142,8 @@ y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">3</span>    <span class="co"># number of explanatory variables</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span>  <span class="co"># number of observations</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co"># number of explanatory variables</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># number of observations</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">round</span>(<span class="fu">rnorm</span>(p <span class="sc">*</span> n), <span class="dv">2</span>), <span class="at">nrow =</span> n, <span class="at">ncol =</span> p) <span class="co"># explanatory variables</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>true_betas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>)) <span class="co"># coefficients for beta1, beta2, beta3</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
@@ -150,7 +151,7 @@ y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 </div>
 <p>What does the dataset look like?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">y =</span> y, <span class="at">x1 =</span> X[,<span class="dv">1</span>], <span class="at">x2 =</span> X[,<span class="dv">2</span>], <span class="at">x3 =</span> X[,<span class="dv">3</span>])</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">y =</span> y, <span class="at">x1 =</span> X[, <span class="dv">1</span>], <span class="at">x2 =</span> X[, <span class="dv">2</span>], <span class="at">x3 =</span> X[, <span class="dv">3</span>])</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
@@ -189,21 +190,20 @@ x3           0.29160573  0.28189340 0.301318063</code></pre>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  beta2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta2</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)      <span class="co"># prior for variance components</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) { <span class="co"># n is the number of observations we have in the data</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) { <span class="co"># n is the number of observations we have in the data</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i] <span class="co"># manual entry of linear predictors</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Before running NIMBLE, extract data for three predictors and center for better MCMC performance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> X[,<span class="dv">1</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[,<span class="dv">1</span>])</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> X[,<span class="dv">2</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[,<span class="dv">2</span>])</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> X[,<span class="dv">3</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[,<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> X[, <span class="dv">1</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">1</span>])</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> X[, <span class="dv">2</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">2</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> X[, <span class="dv">3</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Final preparation of data into lists for input into NIMBLE MCMC running</p>
 <div class="cell">
@@ -249,7 +249,7 @@ conjugate sampler (4)
 </div>
 <p>Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC(). Take a second to look through each of them and make sure you understand where they’re coming from and what they mean as each one is very important.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_initial <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code,</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
@@ -290,10 +290,10 @@ conjugate sampler (4)
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 52.35522 secs</code></pre>
+<pre><code>Time difference of 48.20916 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples? The following operations will help us understand.</p>
@@ -305,9 +305,9 @@ conjugate sampler (4)
   variable     mean   median      sd     mad      q5     q95
   &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;
 1 alpha    -0.00395 -0.00388 0.00500 0.00498 -0.0122 0.00426
-2 beta1     0.202    0.202   0.00492 0.00485  0.194  0.210
-3 beta2     0.493    0.493   0.00506 0.00511  0.484  0.501
-4 beta3     0.292    0.292   0.00499 0.00502  0.283  0.300
+2 beta1     0.202    0.202   0.00492 0.00485  0.194  0.210  
+3 beta2     0.493    0.493   0.00506 0.00511  0.484  0.501  
+4 beta3     0.292    0.292   0.00499 0.00502  0.283  0.300  
 5 sigma     0.499    0.499   0.0122  0.00372  0.493  0.505  </code></pre>
 </div>
 </div>
@@ -334,7 +334,7 @@ conjugate sampler (4)
 </div>
 <p>Let’s now focus on <code>beta1</code> (which we know is 0.2 from setting up initially).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_initial, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">'beta1'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_initial, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"beta1"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="introduction_to_bayesian_methods_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -344,13 +344,13 @@ conjugate sampler (4)
 <p>This period where we throw away samples (defined by the <code>nburnin</code> argument below) is called the ‘burn in’ or ‘warm up’ period.</p>
 <p>Let’s do it again but with a burn in of 1000 samples, i.e., throw away the first 1000 samples because they may not yet be centered around a particular stable value (assuming the model is reasonably parameterized, this will happen at some point).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_burnin <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code,</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">10000</span>,  <span class="co"># collect 10000 samples</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">10000</span>, <span class="co"># collect 10000 samples</span></span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">1000</span>, <span class="co"># burn in for 1000 iterations</span></span>
 <span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
 <span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
@@ -386,10 +386,10 @@ conjugate sampler (4)
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 49.85675 secs</code></pre>
+<pre><code>Time difference of 47.72519 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples with burn in?</p>
@@ -400,9 +400,9 @@ conjugate sampler (4)
   variable     mean   median      sd     mad      q5     q95
   &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;
 1 alpha    -0.00395 -0.00388 0.00500 0.00497 -0.0122 0.00426
-2 beta1     0.202    0.202   0.00493 0.00489  0.194  0.210
-3 beta2     0.493    0.493   0.00505 0.00511  0.485  0.501
-4 beta3     0.292    0.292   0.00498 0.00502  0.283  0.300
+2 beta1     0.202    0.202   0.00493 0.00489  0.194  0.210  
+3 beta2     0.493    0.493   0.00505 0.00511  0.485  0.501  
+4 beta3     0.292    0.292   0.00498 0.00502  0.283  0.300  
 5 sigma     0.499    0.499   0.00353 0.00357  0.493  0.505  </code></pre>
 </div>
 </div>
@@ -429,7 +429,7 @@ conjugate sampler (4)
 </div>
 <p>Let’s focus on the <code>sigma</code> plot</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_burnin, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">'sigma'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_burnin, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"sigma"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="introduction_to_bayesian_methods_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -442,10 +442,10 @@ conjugate sampler (4)
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
 <span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  beta2 <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">100</span>, <span class="dv">100000</span>) <span class="co"># prior for beta2</span></span>
 <span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)    <span class="co"># prior for variance components</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
 <span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
 <span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i] <span class="co"># manual entry of linear predictors</span></span>
 <span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
 <span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  }</span>
@@ -453,7 +453,7 @@ conjugate sampler (4)
 </div>
 <p>Run the MCMC simulations</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_worse_priors <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_worse_priors,</span>
 <span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
@@ -495,10 +495,10 @@ conjugate sampler (4)
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 40.36697 secs</code></pre>
+<pre><code>Time difference of 39.47966 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples with different priors?</p>
@@ -510,7 +510,7 @@ conjugate sampler (4)
   &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;  &lt;num&gt;   &lt;num&gt;  &lt;num&gt;  &lt;num&gt;
 1 alpha     -0.0128  -0.0154  0.974 0.982    -1.60   1.60
 2 beta1     -0.291   -0.282   0.982 0.988    -1.92   1.33
-3 beta2    105.     100.     29.9   0.00748 100.   100.
+3 beta2    105.     100.     29.9   0.00748 100.   100.  
 4 beta3      0.188    0.185   0.991 0.991    -1.44   1.84
 5 sigma     98.7     98.7     0.718 0.748    97.5   99.9 </code></pre>
 </div>
@@ -522,10 +522,10 @@ conjugate sampler (4)
 <pre><code># A tibble: 5 × 4
   variable  rhat ess_bulk ess_tail
   &lt;chr&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
-1 alpha     1.00   8204.    8941.
-2 beta1     1.00   6632.    6190.
+1 alpha     1.00   8204.    8941. 
+2 beta1     1.00   6632.    6190. 
 3 beta2     1.01     73.7     10.8
-4 beta3     1.00   8812.    8829.
+4 beta3     1.00   8812.    8829. 
 5 sigma     1.04     21.9     12.5</code></pre>
 </div>
 </div>
@@ -547,11 +547,11 @@ conjugate sampler (4)
 <span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
 <span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  beta2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta2</span></span>
 <span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
-<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)      <span class="co"># prior for variance components</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
 <span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
-<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1<span class="sc">*</span>x1[i] <span class="sc">+</span> beta2<span class="sc">*</span>x2[i] <span class="sc">+</span> beta3<span class="sc">*</span>x3[i]</span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i]</span>
 <span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
 <span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a></span>
@@ -561,10 +561,10 @@ conjugate sampler (4)
 </div>
 <p>Run the MCMC simulations and specifically only monitor differences between <code>beta1</code> and <code>beta2</code> to get an estimate of the difference between <code>beta1</code> and <code>beta2</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'beta12_diff'</span>)</span>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"beta12_diff"</span>)</span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_beta12_diff <span class="ot">=</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_beta12_diff <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
 <span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_diff_betas,</span>
 <span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
 <span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
@@ -606,10 +606,10 @@ conjugate sampler (4)
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 50.90364 secs</code></pre>
+<pre><code>Time difference of 47.7093 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples when monitoring difference between <code>beta1</code> and <code>beta2</code>?</p>
@@ -634,9 +634,11 @@ conjugate sampler (4)
 </div>
 <p>Equally, we could also do this by operating on the samples themselves from the original model. NIMBLE is quite flexible.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>(nimbleMCMC_samples_burnin[, <span class="st">"beta2"</span>] <span class="sc">-</span> nimbleMCMC_samples_burnin[, <span class="st">"beta1"</span>]) <span class="sc">|&gt;</span> <span class="fu">as.numeric</span>() <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>(nimbleMCMC_samples_burnin[, <span class="st">"beta2"</span>] <span class="sc">-</span> nimbleMCMC_samples_burnin[, <span class="st">"beta1"</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>() <span class="sc">|&gt;</span></span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.2637  0.2863  0.2911  0.2910  0.2957  0.3158 </code></pre>
 </div>
 </div>
@@ -662,9 +664,9 @@ y_i &amp;\sim \text{Bernoulli}(p_i) \quad i = 1,..., N \\
 <span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n), <span class="dv">2</span>)</span>
 <span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n), <span class="dv">2</span>)</span>
 <span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>x1 <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>x2 <span class="sc">-</span> <span class="dv">5</span><span class="sc">*</span>x3 <span class="co"># linear combination with a bias of 1</span></span>
-<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>z))           <span class="co"># pass through an inv-logit function</span></span>
-<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, pr)             <span class="co"># bernoulli response variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> x1 <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> x2 <span class="sc">-</span> <span class="dv">5</span> <span class="sc">*</span> x3 <span class="co"># linear combination with a bias of 1</span></span>
+<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>z)) <span class="co"># pass through an inv-logit function</span></span>
+<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, pr) <span class="co"># bernoulli response variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What does the dataset look like?</p>
 <div class="cell">
@@ -690,14 +692,14 @@ y_i &amp;\sim \text{Bernoulli}(p_i) \quad i = 1,..., N \\
 <p>What does equivalent frequentist model output look like for reference?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now feed it to glm:</span></span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>model_freq <span class="ot">=</span> <span class="fu">glm</span>(</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>model_freq <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
 <span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3,</span>
 <span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>,</span>
 <span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df</span>
 <span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>central_est <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">t</span>(model_freq<span class="sc">$</span>coefficients))</span>
-<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>conf_int <span class="ot">=</span> <span class="fu">confint</span>(model_freq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>central_est <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(model_freq<span class="sc">$</span>coefficients))</span>
+<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>conf_int <span class="ot">&lt;-</span> <span class="fu">confint</span>(model_freq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Waiting for profiling to be done...</code></pre>
 </div>
@@ -720,12 +722,11 @@ x3          -5.0590851 -5.3043405 -4.823787</code></pre>
 <span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
 <span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
-<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
 <span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>    y[i] <span class="sc">~</span> <span class="fu">dbin</span>(p[i], <span class="dv">1</span>)</span>
 <span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">logit</span>(p[i]) <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i]</span>
 <span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb98-14"><a href="#cb98-14" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance.</p>
 <div class="cell">
@@ -775,7 +776,7 @@ RW sampler (4)
 </div>
 <p>Let’s run the model. We’re going to go with the burn in period from the start here to throw away the weird transitionary samples.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_binomial <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
 <span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_binomial,</span>
@@ -818,10 +819,10 @@ RW sampler (4)
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 39.92033 secs</code></pre>
+<pre><code>Time difference of 38.2699 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the binomial model?</p>
@@ -832,8 +833,8 @@ RW sampler (4)
   variable   mean median     sd    mad     q5    q95
   &lt;chr&gt;     &lt;num&gt;  &lt;num&gt;  &lt;num&gt;  &lt;num&gt;  &lt;num&gt;  &lt;num&gt;
 1 alpha     0.908  0.909 0.0450 0.0447  0.833  0.982
-2 beta1     2.00   2.00  0.0620 0.0622  1.90   2.11
-3 beta2     3.07   3.07  0.0836 0.0851  2.94   3.21
+2 beta1     2.00   2.00  0.0620 0.0622  1.90   2.11 
+3 beta2     3.07   3.07  0.0836 0.0851  2.94   3.21 
 4 beta3    -5.07  -5.07  0.124  0.131  -5.27  -4.87 </code></pre>
 </div>
 </div>
@@ -868,16 +869,16 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 \]</span></p>
 <p>Again, let’s make some simulated data but this time for a Poisson model (for count data)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">10000</span></span>
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
 <span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n), <span class="dv">2</span>)</span>
 <span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n), <span class="dv">2</span>)</span>
 <span id="cb127-6"><a href="#cb127-6" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n), <span class="dv">2</span>)</span>
 <span id="cb127-7"><a href="#cb127-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb127-8"><a href="#cb127-8" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> x1 <span class="sc">-</span> <span class="fl">0.1</span> <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fl">0.6</span> <span class="sc">*</span> x3</span>
-<span id="cb127-9"><a href="#cb127-9" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">=</span> <span class="fu">exp</span>(z)</span>
-<span id="cb127-10"><a href="#cb127-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">rpois</span>(n, lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb127-8"><a href="#cb127-8" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> x1 <span class="sc">-</span> <span class="fl">0.1</span> <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fl">0.6</span> <span class="sc">*</span> x3</span>
+<span id="cb127-9"><a href="#cb127-9" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">exp</span>(z)</span>
+<span id="cb127-10"><a href="#cb127-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rpois</span>(n, lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What does the dataset look like?</p>
 <div class="cell">
@@ -903,14 +904,14 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 <p>What does equivalent frequentist model output look like for reference? What’s the interpretation of the 95% CI?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now feed it to glm:</span></span>
-<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>model_freq <span class="ot">=</span> <span class="fu">glm</span>(</span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>model_freq <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
 <span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a>  y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3,</span>
 <span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"poisson"</span>,</span>
 <span id="cb130-5"><a href="#cb130-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df</span>
 <span id="cb130-6"><a href="#cb130-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb130-7"><a href="#cb130-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb130-8"><a href="#cb130-8" aria-hidden="true" tabindex="-1"></a>central_est <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">t</span>(model_freq<span class="sc">$</span>coefficients))</span>
-<span id="cb130-9"><a href="#cb130-9" aria-hidden="true" tabindex="-1"></a>conf_int <span class="ot">=</span> <span class="fu">confint</span>(model_freq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb130-8"><a href="#cb130-8" aria-hidden="true" tabindex="-1"></a>central_est <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(model_freq<span class="sc">$</span>coefficients))</span>
+<span id="cb130-9"><a href="#cb130-9" aria-hidden="true" tabindex="-1"></a>conf_int <span class="ot">&lt;-</span> <span class="fu">confint</span>(model_freq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Waiting for profiling to be done...</code></pre>
 </div>
@@ -933,12 +934,11 @@ x3           0.60080907  0.5984493  0.60316886</code></pre>
 <span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
 <span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb134-8"><a href="#cb134-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regression formula</span></span>
-<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb134-9"><a href="#cb134-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
 <span id="cb134-10"><a href="#cb134-10" aria-hidden="true" tabindex="-1"></a>    y[i] <span class="sc">~</span> <span class="fu">dpois</span>(lambda[i])</span>
 <span id="cb134-11"><a href="#cb134-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(lambda[i]) <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i]</span>
 <span id="cb134-12"><a href="#cb134-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb134-13"><a href="#cb134-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb134-14"><a href="#cb134-14" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb134-13"><a href="#cb134-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance</p>
 <div class="cell">
@@ -988,7 +988,7 @@ RW sampler (4)
 </div>
 <p>Let’s run the model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">=</span> <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_poisson <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
 <span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_poisson,</span>
 <span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
@@ -1030,10 +1030,10 @@ RW sampler (4)
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">=</span>  <span class="fu">Sys.time</span>()</span>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 47.35798 secs</code></pre>
+<pre><code>Time difference of 44.03742 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -1043,8 +1043,8 @@ RW sampler (4)
 <pre><code># A tibble: 4 × 7
   variable    mean  median      sd     mad     q5     q95
   &lt;chr&gt;      &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;  &lt;num&gt;   &lt;num&gt;
-1 alpha     4.00    4.00   0.00145 0.00146  4.00   4.01
-2 beta1     0.300   0.300  0.00120 0.00120  0.298  0.302
+1 alpha     4.00    4.00   0.00145 0.00146  4.00   4.01  
+2 beta1     0.300   0.300  0.00120 0.00120  0.298  0.302 
 3 beta2    -0.0997 -0.0997 0.00123 0.00124 -0.102 -0.0977
 4 beta3     0.601   0.601  0.00124 0.00126  0.599  0.603 </code></pre>
 </div>
@@ -1098,7 +1098,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1108,7 +1108,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {
+      if (clz.startsWith('code-annotation-')) {                     
         return true;
       }
     }
@@ -1139,11 +1139,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button,
-        { trigger: "manual",
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();
+      tooltip.show();    
     }
     setTimeout(function() {
       if (tooltip) {
@@ -1173,7 +1173,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config);
+    window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -1218,7 +1218,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it
+            // cook up a div (if necessary) and position it 
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");

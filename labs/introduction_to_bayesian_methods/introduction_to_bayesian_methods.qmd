@@ -24,13 +24,14 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-This lab will involve taking some concepts from the Introduction to Bayesian Methods lecture and introduce you to the way NIMBLE works.
+This lab will involve taking some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way NIMBLE works.
 
 During this lab session, we will:
 
-1. XX
-2. XX
-3. XX
+1. Explore how NIMBLE is written and works;
+2. Write some common regression models (Normal, logistic regression, Poisson);
+3. Understand how basic model assessment is made; and
+3. Test out how adjustments of models are made via different priors and more samples.
 
 ## Introduction to NIMBLE
 

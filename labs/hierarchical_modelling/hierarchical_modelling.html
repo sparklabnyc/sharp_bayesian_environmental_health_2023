@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.354">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -98,20 +98,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Theo Rashid, Elizaveta Semenova </p>
           </div>
   </div>
-
+    
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-
-
+  
+    
   </div>
-
+  
 
 </header>
 
+<section id="goal-of-this-computing-lab-session" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
+<p>The goals of this lab is to introduce hierarchical modelling using the NIMBLE modelling framework.</p>
 <p>In this task, we will explore mortality data in Italy using hierarchical modelling. We will estimate the standardised mortality ratio (SMR) for populations in different provinces of Italy using three types of models:</p>
 <ul>
 <li>Full pooling</li>
@@ -121,7 +124,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>This workflow (fitting full/no/partial pooling models) is adapted from a classic Bayesian modelling example: the radon model. You can read about this model in Gelman and Hill’s <em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em> (2006) or on the <a href="https://www.tensorflow.org/probability/examples/Multilevel_Modeling_Primer">tensorflow probability website</a>.</p>
-</div></div><section id="exploratory-data-analysis" class="level2">
+</div></div></section>
+<section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h2>
 <p>Let’s load in the data.</p>
 <div class="cell">
@@ -146,33 +150,33 @@ $ week                    &lt;dbl&gt; 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 20
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> NOME_PROVINCIA        SIGLA                date                deaths
- Length:96300       Length:96300       Min.   :2013-05-04   Min.   :  0.00
- Class :character   Class :character   1st Qu.:2014-07-17   1st Qu.:  7.00
- Mode  :character   Mode  :character   Median :2016-01-16   Median : 11.00
-                                       Mean   :2016-01-16   Mean   : 14.93
-                                       3rd Qu.:2017-07-17   3rd Qu.: 17.00
-                                       Max.   :2018-09-30   Max.   :272.00
-      year         expected            hol              month
- Min.   :2013   Min.   :  2.909   Min.   :0.00000   Min.   :5.000
- 1st Qu.:2014   1st Qu.:  8.231   1st Qu.:0.00000   1st Qu.:6.000
- Median :2016   Median : 11.674   Median :0.00000   Median :7.000
- Mean   :2016   Mean   : 16.223   Mean   :0.01333   Mean   :7.033
- 3rd Qu.:2017   3rd Qu.: 18.153   3rd Qu.:0.00000   3rd Qu.:8.000
- Max.   :2018   Max.   :118.261   Max.   :1.00000   Max.   :9.000
- temperature_lag0_3 relativehumidity_lag0_3   o3_lag0_3       pm10_lag0_3
- Min.   :-2.582     Min.   :24.01           Min.   :  1.00   Min.   : 2.917
- 1st Qu.:17.029     1st Qu.:63.92           1st Qu.: 96.06   1st Qu.:14.375
- Median :20.380     Median :71.47           Median :108.38   Median :18.333
- Mean   :19.996     Mean   :70.76           Mean   :111.35   Mean   :19.200
- 3rd Qu.:23.346     3rd Qu.:78.49           3rd Qu.:123.50   3rd Qu.:22.875
- Max.   :32.962     Max.   :96.78           Max.   :257.50   Max.   :92.226
-      week
- Min.   :18.0
- 1st Qu.:23.0
- Median :29.0
- Mean   :28.8
- 3rd Qu.:34.0
+<pre><code> NOME_PROVINCIA        SIGLA                date                deaths      
+ Length:96300       Length:96300       Min.   :2013-05-04   Min.   :  0.00  
+ Class :character   Class :character   1st Qu.:2014-07-17   1st Qu.:  7.00  
+ Mode  :character   Mode  :character   Median :2016-01-16   Median : 11.00  
+                                       Mean   :2016-01-16   Mean   : 14.93  
+                                       3rd Qu.:2017-07-17   3rd Qu.: 17.00  
+                                       Max.   :2018-09-30   Max.   :272.00  
+      year         expected            hol              month      
+ Min.   :2013   Min.   :  2.909   Min.   :0.00000   Min.   :5.000  
+ 1st Qu.:2014   1st Qu.:  8.231   1st Qu.:0.00000   1st Qu.:6.000  
+ Median :2016   Median : 11.674   Median :0.00000   Median :7.000  
+ Mean   :2016   Mean   : 16.223   Mean   :0.01333   Mean   :7.033  
+ 3rd Qu.:2017   3rd Qu.: 18.153   3rd Qu.:0.00000   3rd Qu.:8.000  
+ Max.   :2018   Max.   :118.261   Max.   :1.00000   Max.   :9.000  
+ temperature_lag0_3 relativehumidity_lag0_3   o3_lag0_3       pm10_lag0_3    
+ Min.   :-2.582     Min.   :24.01           Min.   :  1.00   Min.   : 2.917  
+ 1st Qu.:17.029     1st Qu.:63.92           1st Qu.: 96.06   1st Qu.:14.375  
+ Median :20.380     Median :71.47           Median :108.38   Median :18.333  
+ Mean   :19.996     Mean   :70.76           Mean   :111.35   Mean   :19.200  
+ 3rd Qu.:23.346     3rd Qu.:78.49           3rd Qu.:123.50   3rd Qu.:22.875  
+ Max.   :32.962     Max.   :96.78           Max.   :257.50   Max.   :92.226  
+      week     
+ Min.   :18.0  
+ 1st Qu.:23.0  
+ Median :29.0  
+ Mean   :28.8  
+ 3rd Qu.:34.0  
  Max.   :40.0  </code></pre>
 </div>
 </div>
@@ -189,7 +193,7 @@ $ week                    &lt;dbl&gt; 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 20
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> SIGLA, <span class="at">y =</span> deaths)) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"darkcyan"</span>)  <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"darkcyan"</span>) <span class="sc">+</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -205,15 +209,16 @@ $ week                    &lt;dbl&gt; 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 20
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>shp_italy <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"italy"</span>, <span class="st">"italy_shp.rds"</span>)) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(SIGLA)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>shp_italy <span class="sc">|&gt;</span> <span class="fu">left_join</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SIGLA) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_deaths =</span> <span class="fu">mean</span>(deaths))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> mean_deaths)) <span class="sc">+</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continuous_sequential</span>(<span class="at">palette =</span> <span class="st">"Reds"</span>) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>shp_italy <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    data <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(SIGLA) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">mean_deaths =</span> <span class="fu">mean</span>(deaths))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> mean_deaths)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continuous_sequential</span>(<span class="at">palette =</span> <span class="st">"Reds"</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Joining with `by = join_by(SIGLA)`</code></pre>
 </div>
@@ -479,16 +484,16 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 <pre><code># A tibble: 107 × 7
    variable      mean   median     sd    mad      q5      q95
    &lt;chr&gt;        &lt;num&gt;    &lt;num&gt;  &lt;num&gt;  &lt;num&gt;   &lt;num&gt;    &lt;num&gt;
- 1 alpha[1]  -0.00889 -0.00494 0.0552 0.0553 -0.101   0.0793
- 2 alpha[2]  -0.00852 -0.00731 0.0431 0.0442 -0.0817  0.0602
- 3 alpha[3]  -0.169   -0.169   0.0491 0.0490 -0.252  -0.0915
- 4 alpha[4]  -0.134   -0.135   0.0966 0.0976 -0.298   0.0273
- 5 alpha[5]  -0.0901  -0.0896  0.0729 0.0708 -0.207   0.0383
- 6 alpha[6]  -0.0525  -0.0529  0.0616 0.0612 -0.156   0.0473
- 7 alpha[7]  -0.137   -0.136   0.0590 0.0612 -0.234  -0.0459
+ 1 alpha[1]  -0.00889 -0.00494 0.0552 0.0553 -0.101   0.0793 
+ 2 alpha[2]  -0.00852 -0.00731 0.0431 0.0442 -0.0817  0.0602 
+ 3 alpha[3]  -0.169   -0.169   0.0491 0.0490 -0.252  -0.0915 
+ 4 alpha[4]  -0.134   -0.135   0.0966 0.0976 -0.298   0.0273 
+ 5 alpha[5]  -0.0901  -0.0896  0.0729 0.0708 -0.207   0.0383 
+ 6 alpha[6]  -0.0525  -0.0529  0.0616 0.0612 -0.156   0.0473 
+ 7 alpha[7]  -0.137   -0.136   0.0590 0.0612 -0.234  -0.0459 
  8 alpha[8]  -0.119   -0.115   0.0706 0.0695 -0.235  -0.00976
- 9 alpha[9]  -0.138   -0.136   0.0554 0.0579 -0.228  -0.0496
-10 alpha[10] -0.145   -0.145   0.0346 0.0339 -0.199  -0.0862
+ 9 alpha[9]  -0.138   -0.136   0.0554 0.0579 -0.228  -0.0496 
+10 alpha[10] -0.145   -0.145   0.0346 0.0339 -0.199  -0.0862 
 # ℹ 97 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(no_pooling_samples, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -547,7 +552,7 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 \]</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="dv">0</span>,</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">theta =</span> <span class="fu">rep</span>(<span class="dv">0</span>, constants<span class="sc">$</span>Np),</span>
 <span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma_p =</span> <span class="dv">1</span></span>
@@ -638,12 +643,12 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
    &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;     &lt;num&gt;   &lt;num&gt;
  1 alpha    -0.110   -0.110   0.00849 0.00873 -0.124    -0.0958
  2 sigma_p   0.0676   0.0670  0.00726 0.00693  0.0556    0.0802
- 3 theta[1]  0.0614   0.0607  0.0424  0.0400  -0.00735   0.132
- 4 theta[2]  0.0647   0.0640  0.0394  0.0369   0.000999  0.131
+ 3 theta[1]  0.0614   0.0607  0.0424  0.0400  -0.00735   0.132 
+ 4 theta[2]  0.0647   0.0640  0.0394  0.0369   0.000999  0.131 
  5 theta[3] -0.0400  -0.0369  0.0398  0.0378  -0.107     0.0224
  6 theta[4] -0.00912 -0.00536 0.0555  0.0546  -0.0974    0.0780
- 7 theta[5]  0.0137   0.0125  0.0508  0.0489  -0.0682    0.104
- 8 theta[6]  0.0337   0.0305  0.0446  0.0428  -0.0366    0.108
+ 7 theta[5]  0.0137   0.0125  0.0508  0.0489  -0.0682    0.104 
+ 8 theta[6]  0.0337   0.0305  0.0446  0.0428  -0.0366    0.108 
  9 theta[7] -0.0137  -0.0123  0.0450  0.0448  -0.0865    0.0567
 10 theta[8]  0.00298  0.00716 0.0505  0.0486  -0.0783    0.0843
 # ℹ 99 more rows</code></pre>
@@ -678,13 +683,13 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>partial_pooling_posterior <span class="ot">&lt;-</span> <span class="fu">as_draws_array</span>(partial_pooling_samples)</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>SMR_partial_pooling <span class="ot">&lt;-</span> <span class="fu">exp</span>(</span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sweep</span>(</span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>      partial_pooling_posterior[, , <span class="dv">3</span><span class="sc">:</span><span class="dv">109</span>],</span>
-<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>      partial_pooling_posterior[, , <span class="dv">1</span>],</span>
-<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">MARGIN =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">FUN =</span> <span class="st">"+"</span></span>
-<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sweep</span>(</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>    partial_pooling_posterior[, , <span class="dv">3</span><span class="sc">:</span><span class="dv">109</span>],</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>    partial_pooling_posterior[, , <span class="dv">1</span>],</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="st">"+"</span></span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
 <span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(<span class="at">MARGIN =</span> <span class="dv">3</span>, <span class="at">FUN =</span> median)</span>
 <span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a>p_partial <span class="ot">&lt;-</span> shp_italy <span class="sc">|&gt;</span></span>
@@ -741,7 +746,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -751,7 +756,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {
+      if (clz.startsWith('code-annotation-')) {                     
         return true;
       }
     }
@@ -782,11 +787,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button,
-        { trigger: "manual",
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();
+      tooltip.show();    
     }
     setTimeout(function() {
       if (tooltip) {
@@ -816,7 +821,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config);
+    window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -861,7 +866,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it
+            // cook up a div (if necessary) and position it 
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");

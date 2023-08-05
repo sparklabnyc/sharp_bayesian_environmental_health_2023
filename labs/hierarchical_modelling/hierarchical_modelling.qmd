@@ -31,9 +31,9 @@ The goals of this lab is to introduce hierarchical modelling using the NIMBLE mo
 In this task, we will explore mortality data in Italy using hierarchical modelling.
 We will estimate the standardised mortality ratio (SMR) for populations in different provinces of Italy using three types of models:
 
-- Full pooling
-- No pooling
-- Partial pooling
+1. Full pooling
+2. No pooling
+3. Partial pooling
 
 ::: aside
 This workflow (fitting full/no/partial pooling models) is adapted from a classic Bayesian modelling example: the radon model. You can read about this model in Gelman and Hill's _Data Analysis Using Regression and Multilevel/Hierarchical Models_ (2006) or on the [tensorflow probability website](https://www.tensorflow.org/probability/examples/Multilevel_Modeling_Primer).
