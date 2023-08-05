@@ -387,8 +387,6 @@ rw_fit |>
 
 The vast majority of the residuals are now very well normally distributed around 0, so we can likely say that the fit is much better!
 
-NOTE, FOR MODELS BELOW, `weeks` is now `Nw` in `constants`.
-
 ## Linear model over time with random walk term and overall linear temperature term
 Let's see what adding a slope for temperature does to try understand the role in predicting death rates, as per the formulation below (keeping out slope and keeping in random walk over time):
 
