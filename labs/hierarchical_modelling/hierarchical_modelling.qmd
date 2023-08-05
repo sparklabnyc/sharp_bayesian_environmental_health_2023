@@ -24,6 +24,10 @@ color_scheme_set(scheme = "viridis")
 set.seed(2)
 ```
 
+## Goal of this computing lab session
+
+The goals of this lab is to introduce hierarchical modelling using the NIMBLE modelling framework.
+
 In this task, we will explore mortality data in Italy using hierarchical modelling.
 We will estimate the standardised mortality ratio (SMR) for populations in different provinces of Italy using three types of models:
 
@@ -63,7 +67,7 @@ Let's look at the distribution the number of deaths in each province.
 
 data |>
   ggplot(aes(x = SIGLA, y = deaths)) +
-  geom_jitter(size = 0.4, alpha = 0.8, colour = "darkcyan")  +
+  geom_jitter(size = 0.4, alpha = 0.8, colour = "darkcyan") +
   coord_flip() +
   theme(axis.text.y = element_text(size = 7))
 ```
@@ -72,11 +76,12 @@ Let's plot the mean number of deaths in that month in that province.
 ```{r}
 shp_italy <- read_rds(here("data", "italy", "italy_shp.rds")) |> arrange(SIGLA)
 
-shp_italy |> left_join(
-  data |>
-  group_by(SIGLA) |>
-  summarise(mean_deaths = mean(deaths))
-) |>
+shp_italy |>
+  left_join(
+    data |>
+      group_by(SIGLA) |>
+      summarise(mean_deaths = mean(deaths))
+  ) |>
   ggplot(aes(fill = mean_deaths)) +
   geom_sf(colour = "white") +
   scale_fill_continuous_sequential(palette = "Reds") +
@@ -300,7 +305,7 @@ $$
 
 ```{r}
 inits <- list(
-    list(
+  list(
     alpha = 0,
     theta = rep(0, constants$Np),
     sigma_p = 1
@@ -362,13 +367,13 @@ There is a little bit more manipulation required to estimate the SMR for the mor
 partial_pooling_posterior <- as_draws_array(partial_pooling_samples)
 
 SMR_partial_pooling <- exp(
-    sweep(
-      partial_pooling_posterior[, , 3:109],
-      partial_pooling_posterior[, , 1],
-      MARGIN = c(1, 2),
-      FUN = "+"
-    )
-  ) |>
+  sweep(
+    partial_pooling_posterior[, , 3:109],
+    partial_pooling_posterior[, , 1],
+    MARGIN = c(1, 2),
+    FUN = "+"
+  )
+) |>
   apply(MARGIN = 3, FUN = median)
 
 p_partial <- shp_italy |>

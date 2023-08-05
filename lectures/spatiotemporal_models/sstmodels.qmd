@@ -353,13 +353,14 @@ Similar with the BYM model in space $\gamma_t$ is the temporal unstructured and 
 
 ```{r}
 data.frame(
-  Interaction = paste("type" , 1:4),
-  Parameters = c("$\\nu_{it} = \\theta_i \\otimes \\gamma_t$",
-                   "$\\nu_{it} = \\theta_i \\otimes \\xi_t$",
-                   "$\\nu_{it} = \\phi_i \\otimes \\gamma_t$",
-                   "$\\nu_{it} = \\phi_i \\otimes \\xi_t$")
-  ) -> tab
-
+  Interaction = paste("type", 1:4),
+  Parameters = c(
+    "$\\nu_{it} = \\theta_i \\otimes \\gamma_t$",
+    "$\\nu_{it} = \\theta_i \\otimes \\xi_t$",
+    "$\\nu_{it} = \\phi_i \\otimes \\gamma_t$",
+    "$\\nu_{it} = \\phi_i \\otimes \\xi_t$"
+  )
+) -> tab
 ```
 
 ::::: {style="font-size:78%"}
