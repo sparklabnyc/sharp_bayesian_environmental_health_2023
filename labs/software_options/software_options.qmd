@@ -22,9 +22,11 @@ theme_set(theme_ipsum())
 set.seed(2)
 ```
 
-## Setting the scene
+## Goal of this computing lab session
 
-The aim of this practical is to recreate the nimble model in the `hierarchical_modelling` lab using INLA.
+The goals of this lab is to use INLA to run a some hierarchical models.
+
+We will recreate the NIMBLE model in the `hierarchical_modelling` lab using INLA.
 As a reminder, here is the model again.
 
 ```{.R}
@@ -161,10 +163,10 @@ Here, we're going to fit a BYM model in place of the IID effect.
 For this, INLA needs to know the spatial adjacency matrix ("graph" in INLA's language).
 The following code extracts the adjacency matrix from the shapefile.
 ```{r}
-data = data |> arrange(SIGLA)
+data <- data |> arrange(SIGLA)
 shp_italy <- shp_italy |> arrange(SIGLA)
 
-italy_nb <- poly2nb(shp_italy,row.names = data$SIGLA)
+italy_nb <- poly2nb(shp_italy, row.names = data$SIGLA)
 italy_adj <- nb2INLA(file = here("data", "italy", "italy.graph"), nb = italy_nb)
 ```
 
