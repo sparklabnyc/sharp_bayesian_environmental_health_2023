@@ -589,17 +589,17 @@ Again, as before, for simplicity, we'll use the mean of the samples generated fr
 
 Let's plot how the model fits
 ```{r}
-linear_month_temp_fit |>
-  ggplot(aes(x = residuals)) +
-  geom_point(aes(x = week, y = rate), size = 1) +
-  geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+# linear_month_temp_fit |>
+#   ggplot(aes(x = residuals)) +
+#   geom_point(aes(x = week, y = rate), size = 1) +
+#   geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
 Now let's look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.
 ```{r}
-linear_month_temp_fit |>
-  ggplot(aes(x = residuals)) +
-  geom_histogram()
+# linear_month_temp_fit |>
+#   ggplot(aes(x = residuals)) +
+#   geom_histogram()
 ```
 
 What does the summary of the monthly temperature terms look like? 
