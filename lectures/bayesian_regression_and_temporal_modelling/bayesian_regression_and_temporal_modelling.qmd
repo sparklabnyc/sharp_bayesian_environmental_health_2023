@@ -23,10 +23,20 @@ format:
     theme: [default, ../../assets/style.scss]
 ---
 
+```{r}
+library(here)
+library(tidyverse)
+library(nimble)
+library(bayesplot)
+library(posterior)
+library(hrbrthemes)
+```
+
 # Outline
 
 - Introduction
 - Generalized linear models
+- Types of regression modelling
 - Getting ready for the lab
 
 # Overview
@@ -41,9 +51,9 @@ format:
 ## Regression models
 
 - Basic steps to regression models:
-- 1. Estbalish suitable probability distribution for observations.
+- 1. Establish suitable probability distribution for observations.
 - 2. Identify type of relationship between predictor(s) and outcome.
-- <span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.
+- 3. For Bayesian approach, specify prior distributions too.
 
 ## Linear regression
 
@@ -53,7 +63,16 @@ format:
 
 ## Normal distribution
 
-- Description of characteristics of normal distribution.
+::: nonincremental
+- As seen in first lecture.
+:::
+
+$$
+\begin{split}
+y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
+\mu_i &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
+\end{split}
+$$
 
 ## Linear regression
 
@@ -98,32 +117,49 @@ format:
 ## Setting priors
 
 - In absence of information, set priors as vague:
-- [[[beta priors]]]
-- [[[sigma prior]]]
+
+``` R
+alpha ~ dnorm(0, sd = 100) # prior for alpha
+```
 
 ## Linear regression
 
-- In NIMBLE, we can write:
+::: nonincremental
+- As a reminder of last lab, in `NIMBLE`, we can write:
+:::
 
 ``` R
-model(
-  # prior
-  alpha ~ dnorm(0, pow(10, -2))
-  sigma ~ dunif(0, 100)
-  tau <- pow(sigma, -2) # precision
-  for (k in 1:p) beta[k] ~ dnorm(0, 1)
+code <- nimbleCode({
+  # priors for parameters
+  alpha ~ dnorm(0, sd = 100) # prior for alpha
+  beta1 ~ dnorm(0, sd = 100) # prior for beta1
+  beta2 ~ dnorm(0, sd = 100) # prior for beta2
+  beta3 ~ dnorm(0, sd = 100) # prior for beta3
+  sigma ~ dunif(0, 100) # prior for variance components
 
-  # likelihood
-  for (i in 1:n) {
-    y[i] ~ dnorm(mu[i], tau)
-    mu[i] <- alpha + inprod(beta[1:p], x[i, 1:p])
+  # regression formula
+  for (i in 1:n) { # n is the number of observations we have in the data
+    mu[i] <- alpha + beta1 * x1[i] + beta2 * x2[i] + beta3 * x3[i] # manual entry of linear predictors
+    y[i] ~ dnorm(mu[i], sd = sigma)
   }
-)
+})
 ```
 
 ## Linear regression: Real world example
 
-- A preview of lab (something from UK/Italy dataset)
+::: nonincremental
+- Let's load in the data we'll use for lab (Spain mortality).
+:::
+
+``` R
+data <- read_csv(here("data", "Spain", "data_spain.csv"))
+```
+
+```{r}
+data <- read_csv(here("data", "Spain", "data_spain.csv"))
+```
+
+
 
 ## Evaluating model fit
 
@@ -138,10 +174,11 @@ model(
 ## Non-linear regression
 
 - Also, there can be autocorrelation between neighboring time points.
+- Random walk.
 
 ## Non-linear regression: Real world example
 
-- A preview of lab (something from UK/Italy dataset but progression from linear)
+- A preview of lab (Spain but with random walk)
 
 # Genrealized linear models
 
@@ -214,16 +251,22 @@ model(
 
 ## Temporal modelling
 
-- TO DO
+- Regression but with time as a component.
+- Modelled linearly?
+- Modelled non-linearly?
 
 # Getting ready for the lab
 
-## The lab for this session
+## The lab for this session {.smaller}
 
-- In this session, we are going to go through examples usuing NIMBLE with the following:
-- Linear regression.
-- Non-linear regression.
-- Logistic regression.
-- Poisson regression.
+This lab will explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
+
+- During this lab session, we will:
+1. Explore some real time series mortality data;
+2. Apply a basic linear model;
+3. Apply a non-linear model;
+4. Incorporate basic temperature term into model;
+5. Modify temperature term to be month-specific; and
+6. Explore how well model convergence and fit performs.
 
 # Questions?

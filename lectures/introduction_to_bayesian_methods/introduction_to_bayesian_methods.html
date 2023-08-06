@@ -26,7 +26,7 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
@@ -106,11 +106,11 @@
 
   .callout {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1em;  
     border-radius: .25rem;
   }
 
-  .callout.callout-style-simple {
+  .callout.callout-style-simple { 
     padding: 0em 0.5em;
     border-left: solid #acacac .3rem;
     border-right: solid 1px silver;
@@ -161,7 +161,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-
+    
   .callout.callout-titled.callout-style-simple .callout-content  p {
     margin-top: 0;
   }
@@ -212,7 +212,7 @@
   .callout-title {
     display: flex
   }
-
+    
   .callout-icon::before {
     margin-top: 1rem;
     padding-right: .5rem;
@@ -324,12 +324,12 @@
     }
     .reveal .footnotes ol {
       counter-reset: ol;
-      list-style-type: none;
+      list-style-type: none; 
       margin-left: 0;
     }
     .reveal .footnotes ol li:before {
       counter-increment: ol;
-      content: counter(ol) ". ";
+      content: counter(ol) ". "; 
     }
     .reveal .footnotes ol li > p:first-child {
       display: inline-block;
@@ -371,19 +371,19 @@
     .reveal .slide > img.r-stretch.quarto-figure-center {
       display: block;
       margin-left: auto;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-left,
     .reveal .slide > img.r-stretch.quarto-figure-left  {
       display: block;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-right,
     .reveal .slide > img.r-stretch.quarto-figure-right  {
       display: block;
       margin-left: auto;
-      margin-right: 0;
+      margin-right: 0; 
     }
   </style>
 </head>
@@ -398,7 +398,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Robbie M. Parks
+Robbie M. Parks 
 </div>
 <div class="quarto-title-author-email">
 <a href="mailto:robbie.parks@columbia.edu">robbie.parks@columbia.edu</a>
@@ -415,8 +415,8 @@ Robbie M. Parks
 <h1>Outline</h1>
 <ul>
 <li class="fragment">Overview</li>
-<li class="fragment">Introduction to Bayesian methods</li>
-<li class="fragment">Getting ready for this workshop</li>
+<li class="fragment">Introduction to Bayesian methods and concepts</li>
+<li class="fragment">Getting ready for the lab</li>
 </ul>
 </section>
 
@@ -433,36 +433,42 @@ Robbie M. Parks
 <li class="fragment">Have little theoretical or practical experience of Bayesian ideas.</li>
 <li class="fragment">Would like some tools and know-how to get started in an approachable and friendly setting.</li>
 <li class="fragment">People who would like to have some fun while learning!</li>
+<li class="fragment">Some equations will be there but mainly for reference.</li>
 </ul>
 </section>
 <section id="r" class="slide level2">
 <h2>R</h2>
 <ul>
-<li class="fragment">R is an interactive environment developed by statisticians for data analysis.</li>
-<li class="fragment">A more detailed Introduction to R can be found at https://www.r-project.org.</li>
-<li class="fragment">R is the environment we will use throughout the workshop.</li>
+<li class="fragment"><code>R</code> is an interactive environment developed by statisticians for data analysis.</li>
+<li class="fragment">A more detailed Introduction to <code>R</code> can be found at https://www.r-project.org.</li>
+<li class="fragment"><code>R</code> is the environment we will use throughout the workshop.</li>
 <li class="fragment">But this isn’t a course to learn R…</li>
+<li class="fragment">There will lots of code, though we will restrict the equations as much as possible.</li>
 </ul>
 </section>
 <section id="r-code" class="slide level2">
-<h2>R code</h2>
+<h2><code>R</code> code</h2>
 <div>
 <ul>
-<li>Sample R code:</li>
+<li>Sample <code>R</code> code:</li>
 </ul>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rnorm</span>(<span class="dv">100</span>),<span class="at">y=</span><span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a>p <span class="ot">=</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8"></a></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="fu">plot</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Create a dataset</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb1-6"><a href="#cb1-6"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rnorm</span>(<span class="dv">100</span>),<span class="at">y=</span><span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># Plot and rough fit</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="fu">plot</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="r-code-output" class="slide level2">
-<h2>R code output</h2>
+<h2><code>R</code> code output</h2>
 <div>
 <ul>
 <li>Output of code:</li>
@@ -470,42 +476,21 @@ Robbie M. Parks
 </div>
 
 <img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
-<section id="r-with-nimble" class="slide level2">
-<h2>R with NIMBLE</h2>
-<div>
+<section id="rstudio-by-posit" class="slide level2">
+<h2>RStudio by Posit</h2>
 <ul>
-<li>Sample R NIMBLE code:</li>
-</ul>
-</div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">model</span>(</span>
-<span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># prior</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a>  <span class="co"># likelihood</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb2-10"><a href="#cb2-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
-<span id="cb2-11"><a href="#cb2-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
-<span id="cb2-12"><a href="#cb2-12"></a>  }</span>
-<span id="cb2-13"><a href="#cb2-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="rstudio" class="slide level2">
-<h2>RStudio</h2>
-<ul>
-<li class="fragment">RStudio is an integrated development environment (IDE) for R developed by J J Allaire.</li>
+<li class="fragment">RStudio is an integrated development environment (IDE) for <code>R</code> developed by J J Allaire.</li>
 <li class="fragment">RStudio provides a convenient graphical interface to R, making it more user-friendly, and providing many useful features.</li>
 <li class="fragment">Such features include direct code execution, tools for plotting, history, debugging and workspace management.</li>
 <li class="fragment">A more detailed background on to RStudio can be found at https://www.rstudio.com/about/.</li>
 </ul>
 </section>
-<section id="rstudio-1" class="slide level2">
-<h2>RStudio</h2>
+<section id="rstudio-by-posit-1" class="slide level2">
+<h2>RStudio by Posit</h2>
 <img data-src="assets/what_is_rstudio.png" class="r-stretch">
 </section>
-<section id="rstudio-cloud" class="slide level2">
-<h2>RStudio Cloud</h2>
+<section id="posit-rstudio-cloud" class="slide level2">
+<h2>Posit (RStudio) Cloud</h2>
 <ul>
 <li class="fragment">We will assume you have done the preliminary homework.</li>
 <li class="fragment">RStudio Cloud is a cloud-based RStudio which runs projects and code in the cloud.</li>
@@ -515,18 +500,102 @@ Robbie M. Parks
 <li class="fragment">More details are available via https://rstudio.cloud/learn/guide.</li>
 </ul>
 </section>
+<section id="introduction-to-nimble" class="slide level2">
+<h2>Introduction to <code>NIMBLE</code></h2>
+<ul>
+<li class="fragment"><code>NIMBLE</code> code is written in a slightly unusual format if you’re used to just using base <code>R</code>.</li>
+<li class="fragment">Written in the style of a program called <code>BUGS</code>, developed at Imperial College London.</li>
+<li class="fragment">But you don’t really need to know about <code>BUGS</code> to be able to use <code>NIMBLE.</code></li>
+<li class="fragment">In the lab after this, we will start with some straightforward examples for situations you’re likely familiar with to introduce the style of writing models.</li>
+<li class="fragment">These examples will feature basic regression models using linear predictors.</li>
+</ul>
+</section>
+<section id="r-with-nimble-from-lab-after-this" class="slide level2">
+<h2><code>R</code> with <code>NIMBLE</code> (from lab after this)</h2>
+<div>
+<ul>
+<li>Example basic linear multi-predictor regression:</li>
+</ul>
+</div>
+<p><span class="math display">\[
+\begin{split}
+y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
+\mu_i &amp;= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
+\end{split}
+\]</span></p>
+</section>
+<section id="r-with-nimble-from-lab-after-this-1" class="slide level2">
+<h2><code>R</code> with <code>NIMBLE</code> (from lab after this)</h2>
+<div>
+<ul>
+<li>As written in frequentist form:</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>model_freq <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">data =</span> df</span>
+<span id="cb2-4"><a href="#cb2-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="r-with-nimble-from-lab-after-this-2" class="slide level2">
+<h2><code>R</code> with <code>NIMBLE</code> (from lab after this)</h2>
+<div>
+<ul>
+<li>Sample <code>NIMBLE</code> code:</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="co"># priors for parameters</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  beta2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta2</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="co"># regression formula</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) { <span class="co"># n is the number of observations we have in the data</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i] <span class="co"># manual entry of linear predictors</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
+<span id="cb3-13"><a href="#cb3-13"></a>  }</span>
+<span id="cb3-14"><a href="#cb3-14"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="r-with-nimble-from-lab-after-this-3" class="slide level2">
+<h2><code>R</code> with <code>NIMBLE</code> (from lab after this)</h2>
+<div>
+<ul>
+<li>Comparing frequentist (top) with <code>NIMBLE</code> code (bottom):</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>model_freq <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="at">data =</span> df</span>
+<span id="cb4-4"><a href="#cb4-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="co"># priors for parameters</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>  beta2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta2</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a></span>
+<span id="cb5-9"><a href="#cb5-9"></a>  <span class="co"># regression formula</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) { <span class="co"># n is the number of observations we have in the data</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i] <span class="co"># manual entry of linear predictors</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
+<span id="cb5-13"><a href="#cb5-13"></a>  }</span>
+<span id="cb5-14"><a href="#cb5-14"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <section id="github" class="slide level2">
 <h2>GitHub</h2>
 <ul>
-<li class="fragment">Version control to interface with RStudio Cloud.</li>
-<li class="fragment">This is just for information, as you will not be expected to be an expert on GitHub to participate in your SHARP course.</li>
+<li class="fragment">Version control to interface with Post (RStudio) Cloud.</li>
+<li class="fragment">This is just for information, as you will not be expected to be an expert on <code>GitHub</code> to participate in your <code>SHARP</code> course.</li>
 <li class="fragment">But! You should learn it in general as it’s really essential in today’s modern research environment.</li>
 </ul>
 <img data-src="assets/github_banner.png" class="r-stretch">
 </section></section>
 <section>
-<section id="introduction-to-bayesian-methods" class="title-slide slide level1 center">
-<h1>Introduction to Bayesian methods</h1>
+<section id="introduction-to-bayesian-methods-and-concepts" class="title-slide slide level1 center">
+<h1>Introduction to Bayesian methods and concepts</h1>
 
 </section>
 <section id="thomas-bayes-and-simon-pierre-laplace" class="slide level2">
@@ -562,18 +631,22 @@ Robbie M. Parks
 </section>
 <section id="classical-probability-2" class="slide level2">
 <h2>Classical probability</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
-<span id="cb3-4"><a href="#cb3-4"></a>n<span class="ot">=</span><span class="dv">1</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rdunif</span>(n,<span class="dv">6</span>))</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x,<span class="at">y=</span><span class="fu">after_stat</span>(count)<span class="sc">/</span><span class="fu">sum</span>(<span class="fu">after_stat</span>(count)))) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a>  <span class="fu">xlab</span>(<span class="st">'Roll value'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Count'</span>) <span class="sc">+</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">'Rolling n = '</span>,n,<span class="st">' times'</span>)) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Load packages</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># Create dataset</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a>n<span class="ot">=</span><span class="dv">100</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rdunif</span>(n,<span class="dv">6</span>))</span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co"># Plot</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x,<span class="at">y=</span><span class="fu">after_stat</span>(count)<span class="sc">/</span><span class="fu">sum</span>(<span class="fu">after_stat</span>(count)))) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>  <span class="fu">xlab</span>(<span class="st">'Roll value'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'Count'</span>) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">'Rolling n = '</span>,n,<span class="st">' times'</span>)) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="classical-probability-3" class="slide level2">
 <h2>Classical probability</h2>
@@ -688,15 +761,60 @@ P(\theta|y) \propto P(y|\theta) P(\theta)
 <section id="choosing-the-prior-distribution-conjugate-or-not" class="slide level2">
 <h2>Choosing the prior distribution (conjugate or not)</h2>
 <ul>
-<li class="fragment">Prior choice is vital.</li>
+<li class="fragment">Prior choice can be vital.</li>
 <li class="fragment">Type of distribution (we will see in a second).</li>
 <li class="fragment">Hyperparameters/hyperpriors.</li>
 <li class="fragment">Often a ‘natural’ candidate for prior choice.</li>
-<li class="fragment">Mathematically soluable or not.</li>
+<li class="fragment">Mathematically solvable or not.</li>
 <li class="fragment">Some are (conjugate)</li>
 <li class="fragment">Most are not (non-conjugate)…</li>
 </ul>
 </section>
+<section id="types-of-conjugate-pairs-normal-normal" class="slide level2 smaller">
+<h2>Types of conjugate pairs: Normal-Normal</h2>
+<ul>
+<li class="fragment"><p>Likelihood</p></li>
+<li class="fragment"><p>Normal distribution is defined by two parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>.</p></li>
+<li class="fragment"><p>Bell curve.</p></li>
+<li class="fragment"><p><span class="math inline">\(\mu\)</span> is mean.</p></li>
+<li class="fragment"><p><span class="math inline">\(\sigma\)</span> is standard deviation.</p></li>
+<li class="fragment"><p><span class="math display">\[
+y|\mu,\sigma \sim Normal(\mu,\sigma^2)
+\]</span></p></li>
+<li class="fragment"><p>Prior</p></li>
+<li class="fragment"><p>Normal distribution is mathematically the conjugate of itself, with hyperparameters <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\sigma_0\)</span>.</p></li>
+<li class="fragment"><p><span class="math display">\[
+\mu \sim Normal(\mu_0,\sigma_0^2)
+\]</span></p></li>
+</ul>
+</section>
+<section id="normal-normal" class="slide level2">
+<h2>Normal-Normal</h2>
+<ul>
+<li class="fragment">Posterior</li>
+<li class="fragment">Because of conjugacy, there is an analytical solution for the posterior.</li>
+</ul>
+</section>
+<section id="examples-of-normal-distributions" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(1,0)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-normal-distributions-1" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(1,0)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-normal-distributions-2" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(0,5)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
+<section id="examples-of-normal-distributions-3" class="slide level2">
+<h2>Examples of Normal distributions</h2>
+<p><span class="math display">\[Normal(0,20)\]</span></p>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
 <section id="binomial-beta" class="slide level2 smaller">
 <h2>Binomial-Beta</h2>
 <ul>
@@ -728,78 +846,30 @@ p(\pi|y) \sim Beta(y+a,n-y+b)
 <h2>Examples of Beta distributions</h2>
 <p><span class="math display">\[Beta(2,10)\]</span></p>
 
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"></section>
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
 <section id="examples-of-beta-distributions-1" class="slide level2">
 <h2>Examples of Beta distributions</h2>
 <p><span class="math display">\[Beta(0.5,0.5)\]</span></p>
 
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"></section>
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
 <section id="examples-of-beta-distributions-2" class="slide level2">
 <h2>Examples of Beta distributions</h2>
 <p><span class="math display">\[Beta(5,1)\]</span></p>
 
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
 <section id="examples-of-beta-distributions-3" class="slide level2">
 <h2>Examples of Beta distributions</h2>
 <p><span class="math display">\[Beta(5,5)\]</span></p>
 
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
 <section id="examples-of-beta-distributions-4" class="slide level2">
 <h2>Examples of Beta distributions</h2>
 <p><span class="math display">\[Beta(5,20)\]</span></p>
 
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"></section>
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
 <section id="examples-of-beta-distributions-5" class="slide level2">
 <h2>Examples of Beta distributions</h2>
 <p><span class="math display">\[Beta(50,200)\]</span></p>
-
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"></section>
-<section id="types-of-conjugate-pairs-normal-normal" class="slide level2 smaller">
-<h2>Types of conjugate pairs: Normal-Normal</h2>
-<ul>
-<li class="fragment"><p>Likelihood</p></li>
-<li class="fragment"><p>Normal distribution is defined by two parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>.</p></li>
-<li class="fragment"><p>Bell curve.</p></li>
-<li class="fragment"><p><span class="math inline">\(\mu\)</span> is mean.</p></li>
-<li class="fragment"><p><span class="math inline">\(\sigma\)</span> is standard deviation.</p></li>
-<li class="fragment"><p><span class="math display">\[
-y|\mu,\sigma \sim Normal(\mu,\sigma^2)
-\]</span></p></li>
-<li class="fragment"><p>Prior</p></li>
-<li class="fragment"><p>Normal distribution is mathematically the conjugate of itself, with hyperparameters <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\sigma_0\)</span>.</p></li>
-<li class="fragment"><p><span class="math display">\[
-\mu \sim Normal(\mu_0,\sigma_0^2)
-\]</span></p></li>
-</ul>
-</section>
-<section id="normal-normal" class="slide level2">
-<h2>Normal-Normal</h2>
-<ul>
-<li class="fragment"><p>Posterior</p></li>
-<li class="fragment"><p>Because of conjugacy, there is an analytical solution for the posterior.</p></li>
-<li class="fragment"><p><span class="math display">\[
-TO DO
-\]</span></p></li>
-</ul>
-</section>
-<section id="examples-of-normal-distributions" class="slide level2">
-<h2>Examples of Normal distributions</h2>
-<p><span class="math display">\[Normal(1,0)\]</span></p>
-
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
-<section id="examples-of-normal-distributions-1" class="slide level2">
-<h2>Examples of Normal distributions</h2>
-<p><span class="math display">\[Normal(1,0)\]</span></p>
-
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"></section>
-<section id="examples-of-normal-distributions-2" class="slide level2">
-<h2>Examples of Normal distributions</h2>
-<p><span class="math display">\[Normal(0,5)\]</span></p>
-
-<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section>
-<section id="examples-of-normal-distributions-3" class="slide level2">
-<h2>Examples of Normal distributions</h2>
-<p><span class="math display">\[Normal(0,20)\]</span></p>
 
 <img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
 <section id="types-of-conjugate-pairs-poisson-gamma" class="slide level2 smaller">
@@ -868,13 +938,14 @@ y|\lambda \sim Poisson(\lambda)
 </section>
 <section id="why-sample-1" class="slide level2">
 <h2>Why sample?</h2>
-<img data-src="assets/nimble_samples_example.png" class="r-stretch">
+<img data-src="assets/sample_example.png" class="r-stretch">
 </section>
 <section id="mcmc-gibbs-approximations-to-sampling-variational-inference" class="slide level2">
 <h2>MCMC, Gibbs, approximations to sampling (variational inference)</h2>
 <ul>
 <li class="fragment">Many different types.</li>
 <li class="fragment">Theo and others will also discuss this.</li>
+<li class="fragment">For now, let us focus on building a simple model.</li>
 </ul>
 </section>
 <section id="non-conjugate-how-to-get-posterior" class="slide level2">
@@ -883,7 +954,7 @@ y|\lambda \sim Poisson(\lambda)
 <li class="fragment">Some kind of software to help us implement models for inference.</li>
 <li class="fragment">Using R.</li>
 <li class="fragment">Packages.</li>
-<li class="fragment">We will be focusing on using NIMBLE throughout the two days.</li>
+<li class="fragment">We will be focusing on using <code>NIMBLE</code> throughout the two days.</li>
 </ul>
 </section></section>
 <section>
@@ -891,46 +962,296 @@ y|\lambda \sim Poisson(\lambda)
 <h1>Getting ready for this workshop</h1>
 
 </section>
-<section id="nimble" class="slide level2">
-<h2>NIMBLE</h2>
-<ul>
-<li class="fragment">NIMBLE adopts and extends BUGS as a modeling language and lets you program with the models you create.</li>
-<li class="fragment">Looks like below.</li>
-</ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">model</span>(</span>
-<span id="cb4-2"><a href="#cb4-2"></a>  <span class="co"># prior</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
-<span id="cb4-4"><a href="#cb4-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb4-5"><a href="#cb4-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb4-7"><a href="#cb4-7"></a></span>
-<span id="cb4-8"><a href="#cb4-8"></a>  <span class="co"># likelihood</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb4-10"><a href="#cb4-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
-<span id="cb4-11"><a href="#cb4-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
-<span id="cb4-12"><a href="#cb4-12"></a>  }</span>
-<span id="cb4-13"><a href="#cb4-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="why-were-using-nimble-for-almost-everything-over-the-workshop" class="slide level2">
-<h2>Why we’re using NIMBLE for (almost) everything over the workshop</h2>
+<section id="why-were-using-nimble-for-almost-everything-during-the-workshop" class="slide level2">
+<h2>Why we’re using <code>NIMBLE</code> for (almost) everything during the workshop</h2>
 <ul>
 <li class="fragment">Interpretability.</li>
 <li class="fragment">Flexibility.</li>
+<li class="fragment">There are other Bayesian packages, as you will see on Day 2…</li>
 </ul>
 </section>
+<section id="illustrative-example-of-basic-regression-in-nimble" class="slide level2">
+<h2>Illustrative example of basic regression in <code>NIMBLE</code></h2>
+<ul>
+<li class="fragment">Let’s go through an example from the upcoming lab</li>
+</ul>
+</section>
+<section id="linear-regression" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>Example basic linear multi-predictor regression:</li>
+</ul>
+</div>
+<p><span class="math display">\[
+\begin{split}
+y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
+\mu_i &amp;= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 \\
+\alpha &amp;= 0 \\
+\beta_1 &amp;= 0.2 \\
+\beta_2 &amp;= 0.5 \\
+\beta_3 &amp;= 0.3 \\
+\end{split}
+\]</span></p>
+</section>
+<section id="linear-regression-1" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>First create some example data for our model:</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>p <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co"># number of explanatory variables</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># number of observations</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">round</span>(<span class="fu">rnorm</span>(p <span class="sc">*</span> n), <span class="dv">2</span>), <span class="at">nrow =</span> n, <span class="at">ncol =</span> p) <span class="co"># explanatory variables</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>true_betas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>)) <span class="co"># coefficients for beta1, beta2, beta3</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co"># variance of variability around perfect agreement </span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, X <span class="sc">%*%</span> true_betas, sigma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-2" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What does the dataset look like?</li>
+</ul>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+        y    x1    x2    x3
+    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 -0.145  -0.63 -0.8   0.24
+2  0.0248  0.18 -1.06  0.24
+3 -1.09   -0.84 -1.04 -0.64
+4 -1.00    1.6  -1.19 -1.93
+5 -0.138   0.33 -0.5   1.04
+6  0.345  -0.82 -0.52 -0.28</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-regression-3" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What does equivalent frequentist model output look like for reference?</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>model_freq <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">data =</span> df</span>
+<span id="cb9-4"><a href="#cb9-4"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a>central_est <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(model_freq<span class="sc">$</span>coefficients))</span>
+<span id="cb9-6"><a href="#cb9-6"></a>conf_int <span class="ot">&lt;-</span> <span class="fu">confint</span>(model_freq)</span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="fu">cbind</span>(central_est, conf_int)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-4" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What does equivalent frequentist model output look like for reference?</li>
+</ul>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                              2.5 %      97.5 %
+(Intercept) -0.00272699 -0.01251412 0.007060142
+x1           0.20196677  0.19229912 0.211634407
+x2           0.49277663  0.48289869 0.502654568
+x3           0.29160573  0.28189340 0.301318063</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-regression-5" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li><code>NIMBLE</code> adopts and extends BUGS as a modeling language and lets you program with the models you create.</li>
+<li>Looks like below (as seen earlier in lecture and later in lab).</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(nimble)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="co"># priors for parameters</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>  beta2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta2</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a></span>
+<span id="cb11-10"><a href="#cb11-10"></a>  <span class="co"># regression formula</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) { <span class="co"># n is the number of observations we have in the data</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i] <span class="co"># manual entry of linear predictors</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
+<span id="cb11-14"><a href="#cb11-14"></a>  }</span>
+<span id="cb11-15"><a href="#cb11-15"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-6" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>Setting up data (will explain more in lab)</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>x1 <span class="ot">&lt;-</span> X[, <span class="dv">1</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">1</span>])</span>
+<span id="cb12-2"><a href="#cb12-2"></a>x2 <span class="ot">&lt;-</span> X[, <span class="dv">2</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">2</span>])</span>
+<span id="cb12-3"><a href="#cb12-3"></a>x3 <span class="ot">&lt;-</span> X[, <span class="dv">3</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">3</span>])</span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> n)</span>
+<span id="cb12-6"><a href="#cb12-6"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">y =</span> y, <span class="at">x1 =</span> x1, <span class="at">x2 =</span> x2, <span class="at">x3 =</span> x3)</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">0</span>, <span class="at">beta2 =</span> <span class="dv">0</span>, <span class="at">beta3 =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-7" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC().</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb13-2"><a href="#cb13-2"></a>nimbleMCMC_samples_initial <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="at">code =</span> code,</span>
+<span id="cb13-4"><a href="#cb13-4"></a>  <span class="at">data =</span> data,</span>
+<span id="cb13-5"><a href="#cb13-5"></a>  <span class="at">constants =</span> constants,</span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="at">inits =</span> inits,</span>
+<span id="cb13-7"><a href="#cb13-7"></a>  <span class="at">niter =</span> <span class="dv">10000</span>, <span class="co"># run 10000 samples</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
+<span id="cb13-9"><a href="#cb13-9"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a>)</span>
+<span id="cb13-11"><a href="#cb13-11"></a></span>
+<span id="cb13-12"><a href="#cb13-12"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb13-13"><a href="#cb13-13"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-8" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC().</li>
+</ul>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 50.89149 secs</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-regression-9" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What is the summary of each estimated parameter from the samples? The following operations will help us understand.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">library</span>(bayesplot)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">library</span>(posterior)</span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="fu">library</span>(hrbrthemes)</span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_initial, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-10" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What is the summary of each estimated parameter from the samples? The following operations will help us understand.</li>
+</ul>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 7
+  variable     mean   median      sd     mad      q5     q95
+  &lt;chr&gt;       &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;
+1 alpha    -0.00395 -0.00388 0.00500 0.00498 -0.0122 0.00426
+2 beta1     0.202    0.202   0.00492 0.00485  0.194  0.210  
+3 beta2     0.493    0.493   0.00506 0.00511  0.484  0.501  
+4 beta3     0.292    0.292   0.00499 0.00502  0.283  0.300  
+5 sigma     0.499    0.499   0.0122  0.00372  0.493  0.505  </code></pre>
+</div>
+</div>
+</section>
+<section id="linear-regression-11" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>Then examine how well the model has converged, which typically is identified by how close each rhat value is to 1.00.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_initial, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-12" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>Then examine how well the model has converged, which typically is identified by how close each rhat value is to 1.00.</li>
+</ul>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+  variable  rhat ess_bulk ess_tail
+  &lt;chr&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+1 alpha     1.00    9936.    9714.
+2 beta1     1.00   10026.   10110.
+3 beta2     1.00    9990.    9857.
+4 beta3     1.00    9536.    9755.
+5 sigma     1.00     665.     190.</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-regression-13" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What do the samples of one of the unknown parameters actually look like?</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_initial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-14" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<ul>
+<li>What do the samples of one of the unknown parameters actually look like?</li>
+</ul>
+</div>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
+<section id="linear-regression-15" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<p>Let’s now focus on <code>beta1</code> (which we know is 0.2 from setting up initially).</p>
+</div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">mcmc_trace</span>(nimbleMCMC_samples_initial, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"beta1"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="linear-regression-16" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<p>Let’s now focus on <code>beta1</code> (which we know is 0.2 from setting up initially).</p>
+</div>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
+<section id="linear-regression-17" class="slide level2">
+<h2>Linear regression</h2>
+<div>
+<p>Plotting <code>beta1</code> samples (posterior) as a histogram…</p>
+</div>
+
+<img data-src="introduction_to_bayesian_methods_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
 <section id="the-lab-for-this-session" class="slide level2">
 <h2>The lab for this session</h2>
 <ul>
-<li class="fragment">In this session, we are going to go through examples usuing NIMBLE with the following:</li>
-<li class="fragment">Beta distribution.</li>
-<li class="fragment">Binomial-Beta example.</li>
-<li class="fragment">Normal distribution.</li>
-<li class="fragment">Normal-Normal example.</li>
-<li class="fragment">Gamma distribution</li>
-<li class="fragment">Poisson-Gamma example.</li>
-<li class="fragment">Introduction to NIMBLE format.</li>
-<li class="fragment">First basic examples of NIMBLE and how to use it.</li>
+<li class="fragment"><p>This lab will involve taking some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way <code>NIMBLE</code> works.</p></li>
+<li class="fragment"><p>During this lab session, we will:</p></li>
 </ul>
+<ol type="1">
+<li class="fragment">Explore how <code>NIMBLE</code> is written and works;</li>
+<li class="fragment">Write some common regression models (Normal, logistic regression, Poisson);</li>
+<li class="fragment">Understand how basic model assessment is made; and</li>
+<li class="fragment">Test out how adjustments of models are made via different priors and more samples.</li>
+</ol>
 </section></section>
 <section id="questions" class="title-slide slide level1 center">
 <h1>Questions?</h1>
@@ -951,7 +1272,7 @@ y|\lambda \sim Poisson(\lambda)
   <script src="introduction_to_bayesian_methods_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="introduction_to_bayesian_methods_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="introduction_to_bayesian_methods_files/libs/revealjs/plugin/quarto-support/support.js"></script>
-
+  
 
   <script src="introduction_to_bayesian_methods_files/libs/revealjs/plugin/notes/notes.js"></script>
   <script src="introduction_to_bayesian_methods_files/libs/revealjs/plugin/search/search.js"></script>
@@ -974,7 +1295,7 @@ y|\lambda \sim Poisson(\lambda)
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'chalkboard': {"buttons":false,"preview-links":"auto"},
 'smaller': false,
-
+ 
         // Display controls in the bottom right corner
         controls: false,
 
@@ -1152,7 +1473,7 @@ y|\lambda \sim Poisson(\lambda)
         ]
       });
     </script>
-
+    
     <script>
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
@@ -1209,14 +1530,14 @@ y|\lambda \sim Poisson(\lambda)
           toggleBodyColorMode(bsSheetEl);
         }
       }
-      toggleBodyColorPrimary();
+      toggleBodyColorPrimary();  
       const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
       const isCodeAnnotation = (el) => {
         for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {
+          if (clz.startsWith('code-annotation-')) {                     
             return true;
           }
         }
@@ -1247,11 +1568,11 @@ y|\lambda \sim Poisson(\lambda)
           button.setAttribute("data-bs-toggle", "tooltip");
           button.setAttribute("data-bs-placement", "left");
           button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button,
-            { trigger: "manual",
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
               customClass: "code-copy-button-tooltip",
               offset: [0, -8]});
-          tooltip.show();
+          tooltip.show();    
         }
         setTimeout(function() {
           if (tooltip) {
@@ -1283,7 +1604,7 @@ y|\lambda \sim Poisson(\lambda)
         };
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
-        window.tippy(el, config);
+        window.tippy(el, config); 
       }
       const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
       for (var i=0; i<noterefs.length; i++) {
@@ -1336,6 +1657,6 @@ y|\lambda \sim Poisson(\lambda)
       }
     });
     </script>
-
+    
 
 </body></html>

@@ -26,7 +26,7 @@
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
       width: 0.8em;
-      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
@@ -106,11 +106,11 @@
 
   .callout {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1em;  
     border-radius: .25rem;
   }
 
-  .callout.callout-style-simple {
+  .callout.callout-style-simple { 
     padding: 0em 0.5em;
     border-left: solid #acacac .3rem;
     border-right: solid 1px silver;
@@ -161,7 +161,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-
+    
   .callout.callout-titled.callout-style-simple .callout-content  p {
     margin-top: 0;
   }
@@ -212,7 +212,7 @@
   .callout-title {
     display: flex
   }
-
+    
   .callout-icon::before {
     margin-top: 1rem;
     padding-right: .5rem;
@@ -324,12 +324,12 @@
     }
     .reveal .footnotes ol {
       counter-reset: ol;
-      list-style-type: none;
+      list-style-type: none; 
       margin-left: 0;
     }
     .reveal .footnotes ol li:before {
       counter-increment: ol;
-      content: counter(ol) ". ";
+      content: counter(ol) ". "; 
     }
     .reveal .footnotes ol li > p:first-child {
       display: inline-block;
@@ -371,19 +371,19 @@
     .reveal .slide > img.r-stretch.quarto-figure-center {
       display: block;
       margin-left: auto;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-left,
     .reveal .slide > img.r-stretch.quarto-figure-left  {
       display: block;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: auto; 
     }
     .reveal .slide > img.stretch.quarto-figure-right,
     .reveal .slide > img.r-stretch.quarto-figure-right  {
       display: block;
       margin-left: auto;
-      margin-right: 0;
+      margin-right: 0; 
     }
   </style>
 </head>
@@ -398,7 +398,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Robbie M. Parks
+Robbie M. Parks 
 </div>
 <div class="quarto-title-author-email">
 <a href="mailto:robbie.parks@columbia.edu">robbie.parks@columbia.edu</a>
@@ -416,6 +416,7 @@ Robbie M. Parks
 <ul>
 <li class="fragment">Introduction</li>
 <li class="fragment">Generalized linear models</li>
+<li class="fragment">Types of regression modelling</li>
 <li class="fragment">Getting ready for the lab</li>
 </ul>
 </section>
@@ -439,12 +440,14 @@ Robbie M. Parks
 <ul>
 <li class="fragment">Basic steps to regression models:</li>
 <li class="fragment"><ol type="1">
-<li class="fragment">Estbalish suitable probability distribution for observations.</li>
+<li class="fragment">Establish suitable probability distribution for observations.</li>
 </ol></li>
 <li class="fragment"><ol start="2" type="1">
 <li class="fragment">Identify type of relationship between predictor(s) and outcome.</li>
 </ol></li>
-<li class="fragment"><span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.</li>
+<li class="fragment"><ol start="3" type="1">
+<li class="fragment">For Bayesian approach, specify prior distributions too.</li>
+</ol></li>
 </ul>
 </section>
 <section id="linear-regression" class="slide level2">
@@ -457,9 +460,17 @@ Robbie M. Parks
 </section>
 <section id="normal-distribution" class="slide level2">
 <h2>Normal distribution</h2>
+<div>
 <ul>
-<li class="fragment">Description of characteristics of normal distribution.</li>
+<li>As seen in first lecture.</li>
 </ul>
+</div>
+<p><span class="math display">\[
+\begin{split}
+y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
+\mu_i &amp;= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
+\end{split}
+\]</span></p>
 </section>
 <section id="linear-regression-1" class="slide level2">
 <h2>Linear regression</h2>
@@ -525,34 +536,39 @@ Robbie M. Parks
 <h2>Setting priors</h2>
 <ul>
 <li class="fragment">In absence of information, set priors as vague:</li>
-<li class="fragment">[[[beta priors]]]</li>
-<li class="fragment">[[[sigma prior]]]</li>
 </ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="linear-regression-2" class="slide level2">
 <h2>Linear regression</h2>
+<div>
 <ul>
-<li class="fragment">In NIMBLE, we can write:</li>
+<li>As a reminder of last lab, in <code>NIMBLE</code>, we can write:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">model</span>(</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="co"># prior</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fu">pow</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>))</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  tau <span class="ot">&lt;-</span> <span class="fu">pow</span>(sigma, <span class="sc">-</span><span class="dv">2</span>) <span class="co"># precision</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) beta[k] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="co"># likelihood</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb1-10"><a href="#cb1-10"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
-<span id="cb1-11"><a href="#cb1-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> <span class="fu">inprod</span>(beta[<span class="dv">1</span><span class="sc">:</span>p], x[i, <span class="dv">1</span><span class="sc">:</span>p])</span>
-<span id="cb1-12"><a href="#cb1-12"></a>  }</span>
-<span id="cb1-13"><a href="#cb1-13"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># priors for parameters</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>  beta1 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta1</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>  beta2 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta2</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>  beta3 <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>) <span class="co"># prior for beta3</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="co"># prior for variance components</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>  <span class="co"># regression formula</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) { <span class="co"># n is the number of observations we have in the data</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta1 <span class="sc">*</span> x1[i] <span class="sc">+</span> beta2 <span class="sc">*</span> x2[i] <span class="sc">+</span> beta3 <span class="sc">*</span> x3[i] <span class="co"># manual entry of linear predictors</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
+<span id="cb2-13"><a href="#cb2-13"></a>  }</span>
+<span id="cb2-14"><a href="#cb2-14"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="linear-regression-real-world-example" class="slide level2">
 <h2>Linear regression: Real world example</h2>
+<div>
 <ul>
-<li class="fragment">A preview of lab (something from UK/Italy dataset)</li>
+<li>Let’s load in the data we’ll use for lab (Spain mortality).</li>
 </ul>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"Spain"</span>, <span class="st">"data_spain.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="evaluating-model-fit" class="slide level2">
 <h2>Evaluating model fit</h2>
@@ -572,12 +588,13 @@ Robbie M. Parks
 <h2>Non-linear regression</h2>
 <ul>
 <li class="fragment">Also, there can be autocorrelation between neighboring time points.</li>
+<li class="fragment">Random walk.</li>
 </ul>
 </section>
 <section id="non-linear-regression-real-world-example" class="slide level2">
 <h2>Non-linear regression: Real world example</h2>
 <ul>
-<li class="fragment">A preview of lab (something from UK/Italy dataset but progression from linear)</li>
+<li class="fragment">A preview of lab (Spain but with random walk)</li>
 </ul>
 </section></section>
 <section>
@@ -675,21 +692,34 @@ Robbie M. Parks
 <ul>
 <li class="fragment">A preview of lab (something from UK/Italy dataset but progression from linear)</li>
 </ul>
+</section>
+<section id="temporal-modelling" class="slide level2">
+<h2>Temporal modelling</h2>
+<ul>
+<li class="fragment">Regression but with time as a component.</li>
+<li class="fragment">Modelled linearly?</li>
+<li class="fragment">Modelled non-linearly?</li>
+</ul>
 </section></section>
 <section>
 <section id="getting-ready-for-the-lab" class="title-slide slide level1 center">
 <h1>Getting ready for the lab</h1>
 
 </section>
-<section id="the-lab-for-this-session" class="slide level2">
+<section id="the-lab-for-this-session" class="slide level2 smaller">
 <h2>The lab for this session</h2>
+<p>This lab will explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.</p>
 <ul>
-<li class="fragment">In this session, we are going to go through examples usuing NIMBLE with the following:</li>
-<li class="fragment">Linear regression.</li>
-<li class="fragment">Non-linear regression.</li>
-<li class="fragment">Logistic regression.</li>
-<li class="fragment">Poisson regression.</li>
+<li class="fragment">During this lab session, we will:</li>
 </ul>
+<ol type="1">
+<li class="fragment">Explore some real time series mortality data;</li>
+<li class="fragment">Apply a basic linear model;</li>
+<li class="fragment">Apply a non-linear model;</li>
+<li class="fragment">Incorporate basic temperature term into model;</li>
+<li class="fragment">Modify temperature term to be month-specific; and</li>
+<li class="fragment">Explore how well model convergence and fit performs.</li>
+</ol>
 </section></section>
 <section id="questions" class="title-slide slide level1 center">
 <h1>Questions?</h1>
@@ -710,7 +740,7 @@ Robbie M. Parks
   <script src="bayesian_regression_and_temporal_modelling_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="bayesian_regression_and_temporal_modelling_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="bayesian_regression_and_temporal_modelling_files/libs/revealjs/plugin/quarto-support/support.js"></script>
-
+  
 
   <script src="bayesian_regression_and_temporal_modelling_files/libs/revealjs/plugin/notes/notes.js"></script>
   <script src="bayesian_regression_and_temporal_modelling_files/libs/revealjs/plugin/search/search.js"></script>
@@ -733,7 +763,7 @@ Robbie M. Parks
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'chalkboard': {"buttons":false,"preview-links":"auto"},
 'smaller': false,
-
+ 
         // Display controls in the bottom right corner
         controls: false,
 
@@ -911,6 +941,44 @@ Robbie M. Parks
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
@@ -930,14 +998,14 @@ Robbie M. Parks
           toggleBodyColorMode(bsSheetEl);
         }
       }
-      toggleBodyColorPrimary();
+      toggleBodyColorPrimary();  
       const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
       });
       const isCodeAnnotation = (el) => {
         for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {
+          if (clz.startsWith('code-annotation-')) {                     
             return true;
           }
         }
@@ -968,11 +1036,11 @@ Robbie M. Parks
           button.setAttribute("data-bs-toggle", "tooltip");
           button.setAttribute("data-bs-placement", "left");
           button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button,
-            { trigger: "manual",
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
               customClass: "code-copy-button-tooltip",
               offset: [0, -8]});
-          tooltip.show();
+          tooltip.show();    
         }
         setTimeout(function() {
           if (tooltip) {
@@ -1004,7 +1072,7 @@ Robbie M. Parks
         };
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
-        window.tippy(el, config);
+        window.tippy(el, config); 
       }
       const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
       for (var i=0; i<noterefs.length; i++) {
@@ -1057,6 +1125,6 @@ Robbie M. Parks
       }
     });
     </script>
-
+    
 
 </body></html>
