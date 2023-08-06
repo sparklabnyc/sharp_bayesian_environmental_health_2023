@@ -10,23 +10,23 @@ GitHub repo through which we're developing and sharing materials for the SHARP B
 
 The workshop will be a series of lectures and interactive supervised lab sessions.
 
-We will be using Posit (RStudio) Cloud, which assumes knowledge of R and RStudio. We will also ask you to pull the final versions of the GitHub repo to your Cloud account. The basics of doing this are in a previously-created guide found via LINK.
+We will be using Posit (RStudio) Cloud, which assumes knowledge of R and RStudio. We will also ask you to pull the final versions of the GitHub repo to your Cloud account. The basics of doing this are in a previously-created guide found via [another guide repo](https://github.com/rmp15/rstudio_cloud_tutorial/tree/main).
 
 Below is the set of labs to follow throughout the two days:
 
 ### Day 1
 
-Introduction to Bayesian Methods
+[Introduction to Bayesian Methods](/labs/introduction_to_bayesian_methods/introduction_to_bayesian_methods.qmd)
 
-Bayesian Regression and Temporal Modelling
+[Bayesian Regression and Temporal Modelling](/labs/bayesian_regression_and_temporal_modelling/bayesian_regression_and_temporal_modelling.qmd)
 
-Hierarchical Modelling
+[Hierarchical Modelling](/labs/hierarchical_modelling/hierarchical_modelling.qmd)
 
 ### Day 2
 
-Spatial and Spatio-temporal Modelling
+[Spatial and Spatio-temporal Modelling](/labs/spatiotemporal_models/spatiotemporal_models_partA.qmd)
 
-Software Options
+[Software Options](/labs/software_options/software_options.qmd)
 
 Bayesian Non-Parametric Ensemble
 
