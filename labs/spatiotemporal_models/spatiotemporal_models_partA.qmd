@@ -53,7 +53,7 @@ plot(data_england$geometry) # plot only the boundaries
 ```
 <<<<<<< HEAD
 
-We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps. 
+We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps.
 =======
 We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps.
 >>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
@@ -330,11 +330,11 @@ data_england_simpler$RR <- RR_COVID
 
 * Using `ggplot2`, we can produce a map of the smoothed RRs
 <<<<<<< HEAD
-```{r eval=TRUE, fig.width=5, fig.align='center'} 
+```{r eval=TRUE, fig.width=5, fig.align='center'}
 
-ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() + 
-                     scale_fill_viridis_c(limits = c(0,1.6), name = "SMR") 
-```	
+ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() +
+                     scale_fill_viridis_c(limits = c(0,1.6), name = "SMR")
+```
 =======
 ```{r eval=TRUE, fig.width=5, fig.align='center'}
 ggplot() +
@@ -519,17 +519,17 @@ modelBYM.sim <- readRDS("NIMBLE_BYM_A3")
 modelBYM.sim$WAIC
 ```
 
-* Check convergence of resRR
+* Check convergence of resRR (Robbie: something gone wrong here)
 ```{r echo=TRUE, eval=TRUE}
 ggsamplesbym <- ggs(modelBYM.sim$samples)
-<<<<<<< HEAD
-ggsamplesbym %>% filter(Parameter == c("resRR[1]", "resRR[19]", "resRR[41]", "resRR[72]")) %>% 
-              ggs_traceplot() + theme_bw()
-=======
-ggsamplesbym %>%
-  filter(Parameter == c("RR[1]", "RR[19]", "RR[41]", "RR[72]")) %>%
-  ggs_traceplot() + theme_bw()
->>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
+#<<<<<<< HEAD
+#ggsamplesbym %>% filter(Parameter == c("resRR[1]", "resRR[19]", "resRR[41]", "resRR[72]")) %>%
+#              ggs_traceplot() + theme_bw()
+#=======
+#ggsamplesbym %>%
+#  filter(Parameter == c("RR[1]", "RR[19]", "RR[41]", "RR[72]")) %>%
+#  ggs_traceplot() + theme_bw()
+#>>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
 ```
 
 (a) Extract the residual RR (i.e. exp(V + U)) and the posterior probability that resRR is higher than 1 as. Create a `data.frame` for this purpose. Note that for the posterior probability, which is a vector of 0s and 1s we need to calculate the sum of 1s by the total sum, ie the mean.
