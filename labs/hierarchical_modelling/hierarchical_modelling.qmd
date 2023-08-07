@@ -26,7 +26,12 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-The goals of this lab is to introduce hierarchical modelling using the NIMBLE modelling framework.
+The goals of this lab is to introduce hierarchical modelling using the `NIMBLE` modelling framework.
+
+During this lab session, we will:
+
+1. Write a hierarchical model in `NIMBLE; and
+2. Compare the model to more basic models, and discuss the advantages of hierarchical models.
 
 In this task, we will explore mortality data in Italy using hierarchical modelling.
 We will estimate the standardised mortality ratio (SMR) for populations in different provinces of Italy using three types of models:
