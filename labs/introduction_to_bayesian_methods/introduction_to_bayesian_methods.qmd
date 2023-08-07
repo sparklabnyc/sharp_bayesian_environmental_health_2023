@@ -101,7 +101,7 @@ code <- nimbleCode({
 })
 ```
 
-Before running NIMBLE, extract data for three predictors and center for better MCMC performance.
+Before running `NIMBLE`, extract data for three predictors and center for better MCMC performance.
 ```{r}
 x1 <- X[, 1] - mean(X[, 1])
 x2 <- X[, 2] - mean(X[, 2])

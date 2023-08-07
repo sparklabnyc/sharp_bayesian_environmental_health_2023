@@ -516,7 +516,7 @@ $$
 ```{r}
 code_weekly_random_walk_with_temperature_by_month <- nimbleCode({
   # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  alpha ~ dnorm(0, sd = 10) # prior for alpha (Gary: make -inf +inf )
   sigma_rw ~ dunif(0, 10) # prior for variance of random walk over time
   sigma_temperature ~ dunif(0, 10) # prior for variance of temperature effects
 
