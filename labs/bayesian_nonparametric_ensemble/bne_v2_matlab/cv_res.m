@@ -12,7 +12,7 @@ seed = 1234;
 bne_mode = 'cv';   
 sample_n = 1000;
 
-training_full = readtable('./data/training_cvfolds_south_west_cities.csv');
+training_full = readtable('./data/training_cvfolds_south_west.csv');
 
 [rmse, r2, coverage, me, slope] = make_cv(training_full, num_models, ...
         scale_space_w, scale_time_w, scale_space_rp, scale_time_rp, scale_space_wvar, ...
