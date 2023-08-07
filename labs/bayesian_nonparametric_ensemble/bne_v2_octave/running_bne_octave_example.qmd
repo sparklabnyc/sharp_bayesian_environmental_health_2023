@@ -1,0 +1,106 @@
+---
+title: "Bayesian Nonparametric Ensemble - running BNE example"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Jaime Benavides"
+date: "August 2023"
+format: html
+---
+
+## Goal of this exercise within the BNE lab
+
+This script will show you the way BNE works on its Octave version, which is very similar to the MATLAB one. We run BNE over the South West US using the training dataset in the data folder named as training_cvfolds_south_west.csv and the input base model predictions dataset called preds_annual_2011_south_west.csv. 
+
+![Spatial context over the US South West for the BNE example run.](images/south_west_us_sp_context.png)
+
+## Running BNE using Octave version requires installing octave in the machine [octave link](https://octave.org/download) and also installing the statistics package [how to install a package in ubuntu link](https://askubuntu.com/questions/936022/how-to-install-statistics-package-in-octave4-0-0-in-ubuntu-16-04). Also, this script will run only if it is stored in the same folder as the BNE octave scripts.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(OCTAVE_EXECUTABLE = "/usr/bin/octave") # add here the path to octave
+octaveExe <- Sys.getenv("OCTAVE_EXECUTABLE")
+```
+
+## 1) Cross-validate BNE: We perform 10-fold cross validation to assess the predictive performance of BNE given a training dataset and a combination of model hyperparameters. We would typically start with a grid search over different combinations of hyperparameters in order to find the optimal one for this specific case.   
+
+The code chunk below in octave corresponds to cv_res.m in the matlab version.  
+
+```{octave bne-cv}
+% We start by setting the following parameters necessary to run BNE
+scale_space_w = 2; % Weight Radial Basis Function (RBF) spatial kernel parameter 
+scale_time_w = 0.5; % Weight RBF temporal kernel parameter 
+scale_space_rp = 2; % Residual process RBF spatial kernel parameter
+scale_time_rp = 0.5; % Residual process RBF temporal kernel parameter
+scale_space_wvar = 2; % parameter for Gaussian Process variance
+lambda_w = 0.0498; % Gaussian prior parameters for the weights
+lambda_rp = 0.1353; % Gaussian prior parameters for the residual process
+num_models = 7; % number of input base models
+time_var = 'year' % temporal unit
+opt_stage = 1; % optimization stage
+seed = 1234; % random seed
+bne_mode = 'cv';  % bne mode
+sample_n = 1000;  % number of samples for the Gaussian distribution
+
+% load training dataset
+training_full = dataframe('data/training_cvfolds_south_west.csv');
+
+
+% run 10-fold cross-validation
+[rmse, r2, coverage, me, slope] = make_cv(training_full, num_models, ...
+        scale_space_w, scale_time_w, scale_space_rp, scale_time_rp, scale_space_wvar, ...
+        lambda_w, lambda_rp, time_var, opt_stage, seed, sample_n);
+fprintf('cross-validated results: %d is RMSE, %d is R2.\n',rmse,r2);
+```
+
+Cross-validated RMSE was 1.61 µg/m3, R2 was 0.76 for only 50 iterations when training BNE. RMSE captures overall model error and is the square root of the mean of the squared prediction errors; R2 captures the model's ability to explain the variance of the concentrations and is the coefficient of determination from a linear regression between the predicted and observed values. Increasing the number of iterations in train.m (parameter max_iter) from 50 to 2000 increases the model performance but takes more computational time.
+
+The code chunk below in octave corresponds to cv_res.m in the matlab version.  
+
+```{octave predict}
+scale_space_w = 2;
+scale_time_w = 0.5;
+scale_space_rp = 2;
+scale_time_rp = 0.5;
+scale_space_wvar = 2;
+lambda_w = 0.0498;
+lambda_rp = 0.1353;
+num_models = 7;
+time_metric = 'year';
+opt_stage = 1;
+seed = 1234;
+bne_mode = 'cv';  
+sample_n = 1000;
+
+training = dataframe('data/training_cvfolds_south_west.csv');
+
+% Extract components organizes data by creating objects for coordinates, time, predictions and AQS
+[trainSpace, trainTime, trainPreds, trainAqs, ~] =  ...
+    extract_components(training, num_models, time_metric);
+
+%%%% -------------------------------------------- %%%%
+%%%% 2: Generate PPD's
+%%%% --------------------------------------------- %%%%
+    
+    % Generate model
+
+    [W,RP,wvar,sigW,Zs,Zt,piZ,mse] = train(trainAqs, trainSpace, trainTime, trainPreds, ...
+    scale_space_w, scale_time_w, scale_space_rp, scale_time_rp, scale_space_wvar, ...
+    lambda_w, lambda_rp, time_metric, opt_stage, seed, 'cv', sample_n);
+        
+         % Generate results for year 2011 
+        yyyy = 2011;
+        
+        % 2.c bring in the data frame of gridded predictions
+        target = dataframe(strcat('data/preds_annual_', ...
+            num2str(yyyy), '_south_west.csv'));
+        
+        % 2.c. generate and write ppd summary
+        predict(W,RP,sigW,wvar,Zs,Zt,piZ, ...
+          target, 10, 'summarize ppd', num_models, ...
+          scale_space_w, scale_time_w, scale_space_rp, scale_time_rp, scale_space_wvar, time_metric, sample_n);
+% results can be found in results.mat file in the bne_v2_octave folder and can be interpreted in the same way as in the lab main script for the contiguous US.
+    
+```
+
+## Closing remarks of this exercise
+
+In this script, we first assessed the predictive accuracy of BNE by running a 10-fold cross-validation given a training dataset, containing input base model predictions and AQS observations, and a set of hyperparameters. Repeating several times that process using different combinations of hyperparameters would give us the optimal configuration for the specific spatio-temporal context. Secondly, we generated predictions using BNE given an optimal configuration of hyperparameters over the US south west for 2011. 
