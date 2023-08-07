@@ -1,0 +1,2 @@
+version 2.0 created by jbenavides on 08012023
+source is stored at /data0/shr/bne/pm_data_jaime/pm_data_jaime/scripts/f_run_BNE/bne_v2
