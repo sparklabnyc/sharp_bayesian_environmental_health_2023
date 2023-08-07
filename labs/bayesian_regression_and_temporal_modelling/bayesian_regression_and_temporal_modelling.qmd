@@ -308,7 +308,7 @@ And how good do convergence indicators look?
 summarise_draws(nimbleMCMC_samples_week_random_walk, default_convergence_measures())
 ```
 
-The `rhat` values indicate that convergence could be better if we ran for longer. This is a real-world example of trying to find better converging models with more samples. This is part of the Bayesian inference challenge
+The `rhat` values indicate that convergence could be better if we ran for longer. This is a real-world example of trying to find better converging models with more samples. This is part of the Bayesian inference challenge.
 
 ::: aside
 Another possibility is that the model might not be very well specified.
@@ -347,7 +347,7 @@ Now the rhat values are much nearer 1.00, which means that the samples are conve
 
 What do the random weekly terms looks like for the better converged model?
 ```{r}
-mcmc_intervals(nimbleMCMC_samples_week_random_walk_more_samples, regex_pars = c("rw")) +
+mcmc_intervals(nimbleMCMC_samples_week_random_walk_more_samples, regex_pars = c("rw")) + coord_flip() +
   theme(axis.text.y = element_blank())
 ```
 
@@ -373,7 +373,7 @@ Let's plot how the model fits
 ```{r}
 rw_fit |>
   ggplot(aes(x = residuals)) +
-  geom_point(aes(x = week, y = rate), size = 1) +
+  geom_point(aes(x = week, y = rate), size = 2) +
   geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 Looks like it is a much better fit!
@@ -388,6 +388,7 @@ rw_fit |>
 The vast majority of the residuals are now very well normally distributed around 0, so we can likely say that the fit is much better!
 
 ## Linear model over time with random walk term and overall linear temperature term
+
 Let's see what adding a slope for temperature does to try understand the role in predicting death rates, as per the formulation below (keeping out slope and keeping in random walk over time):
 
 $$
@@ -483,7 +484,7 @@ Let's plot how the model fits
 ```{r}
 linear_temp_fit |>
   ggplot(aes(x = residuals)) +
-  geom_point(aes(x = week, y = rate), size = 1) +
+  geom_point(aes(x = week, y = rate), size = 2) +
   geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
@@ -501,7 +502,7 @@ hist(nimbleMCMC_samples_week_random_walk_with_temperature[, "beta_temperature"])
 
 What proportion of draws are greater than 0, which represents the posterior probability that the association between temperature and death rates is positive?
 ```{r}
-# Theo: I can do this but thought there was a better way so can you do it please?
+100 * sum(nimbleMCMC_samples_week_random_walk_with_temperature[, "beta_temperature"]>0)/length(nimbleMCMC_samples_week_random_walk_with_temperature[, "beta_temperature"])
 ```
 
 ## Linear model over time with random walk term and monthly random linear temperature term
@@ -596,27 +597,51 @@ summarise_draws(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, d
 Let's calculate the death rate from the model using the formula.
 Again, as before, for simplicity, we'll use the mean of the samples generated from the model run above.
 ```{r}
-# THEO
+rw_mean_value <- c()
+for (i in seq(nrow(data_national))) {
+  rw_new_mean_value <- mean(nimbleMCMC_samples_week_random_walk_with_temperature_by_month[, paste0("rw[", i, "]")])
+  rw_mean_value <- c(rw_mean_value, rw_new_mean_value)
+}
+
+beta_temperature_mean_value <- c()
+for (i in seq(12)) {
+  beta_temperature_new_mean_value <- mean(nimbleMCMC_samples_week_random_walk_with_temperature_by_month[, paste0("beta_temperature_month[", i, "]")])
+  beta_temperature_mean_value <- c(beta_temperature_mean_value, beta_temperature_new_mean_value)
+}
+beta_temperature_mean_value_df = data.frame(month=c(1:12),beta_temperature_mean_value)
+
+beta_temperature_df = data.frame(month=data_national$month, weekly_t2m_anomaly=data_national$weekly_t2m_anomaly) |>
+  left_join(beta_temperature_mean_value_df) |>
+  mutate(beta_temperature_values = beta_temperature_mean_value * weekly_t2m_anomaly)
+  
+linear_month_temp_fit <- data_national |>
+  mutate(
+    .death_rate_fit = 100000 * exp(
+      mean(nimbleMCMC_samples_week_random_walk_with_temperature_by_month[, "alpha"]) + beta_temperature_df$beta_temperature_values + rw_mean_value
+    )
+  ) |>
+  mutate(residuals = rate - .death_rate_fit)
 ```
 
 Let's plot how the model fits
 ```{r}
-# linear_month_temp_fit |>
-#   ggplot(aes(x = residuals)) +
-#   geom_point(aes(x = week, y = rate), size = 1) +
-#   geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+linear_month_temp_fit |>
+  ggplot(aes(x = residuals)) +
+  geom_point(aes(x = week, y = rate), size = 2) +
+  geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
 Now let's look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.
 ```{r}
-# linear_month_temp_fit |>
-#   ggplot(aes(x = residuals)) +
-#   geom_histogram()
+linear_month_temp_fit |>
+  ggplot(aes(x = residuals)) +
+  geom_histogram()
 ```
 
 What does the summary of the monthly temperature terms look like?
 ```{r}
-# THEO
+mcmc_intervals(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, regex_pars = c("beta_temperature")) + coord_flip() +
+  theme(axis.text.y = element_blank())
 ```
 
 ## Closing remarks
@@ -624,6 +649,4 @@ What does the summary of the monthly temperature terms look like?
 In this lab session, we have explored how to fit some increasingly sophisticated time series models using Bayesian regression in NIMBLE.
 We looked at models which started off with a linear time trend, then a random walk, then including a few kinds of temperature terms.
 
-TO DO
-
-Other topics that will be related to this will be how to include a more general longer-memory autoregressive term, and also how to forecast based on model fit.
+Other topics that will be related to this will be how to include a more general longer-memory autoregressive term, and also how to forecast based on model fit. However, in the limited time that we have, this lab provides a foundation for learning about other methods and techniques, some of which will be elaborated upon in the coming lab sessions.
