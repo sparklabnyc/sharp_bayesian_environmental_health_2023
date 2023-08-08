@@ -613,7 +613,7 @@ beta_temperature_mean_value_df = data.frame(month=c(1:12),beta_temperature_mean_
 beta_temperature_df = data.frame(month=data_national$month, weekly_t2m_anomaly=data_national$weekly_t2m_anomaly) |>
   left_join(beta_temperature_mean_value_df) |>
   mutate(beta_temperature_values = beta_temperature_mean_value * weekly_t2m_anomaly)
-  
+
 linear_month_temp_fit <- data_national |>
   mutate(
     .death_rate_fit = 100000 * exp(
