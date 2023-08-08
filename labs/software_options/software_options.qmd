@@ -22,9 +22,18 @@ theme_set(theme_ipsum())
 set.seed(2)
 ```
 
-## Setting the scene
+## Goal of this computing lab session
 
-The aim of this practical is to recreate the nimble model in the `hierarchical_modelling` lab using INLA.
+The goal of this lab is to use `INLA` to run a some hierarchical models.
+
+During this lab session, we will:
+
+1. Translate a model from `NIMBLE` into `INLA`;
+2. Fit spatial models with `INLA`;
+3. Learn how to work with `INLA` objects; and
+4. See how to write models in different probabilistic programming languages.
+
+We will recreate the `NIMBLE` model in the `hierarchical_modelling` lab using `INLA`.
 As a reminder, here is the model again.
 
 ```{.R}
@@ -73,7 +82,7 @@ formula_iid <- deaths ~ 1 + f(SIGLA, model = "iid")
 ```
 
 This means we have an intercept signified by `1`.
-This is the equivalent of `alpha` in the nimble model.
+This is the equivalent of `alpha` in the `NIMBLE` model.
 
 We can run the model by calling the `inla` function.
 ```{r}
@@ -87,7 +96,7 @@ model <- inla(
 )
 ```
 
-Take a moment to look at each of the arguments and convince yourself that it is the same model as nimble.
+Take a moment to look at each of the arguments and convince yourself that it is the same model as `NIMBLE`.
 
 ## Exploring the model in INLA
 
@@ -105,7 +114,7 @@ model$summary.fixed
 head(model$summary.random$SIGLA)
 ```
 
-Although the model isn't fit using samples, we can use INLA to sample from the posterior.
+Although the model isn't fit using samples, we can use `INLA` to sample from the posterior.
 ```{r}
 posterior_samples <- inla.posterior.sample(1000, model)
 
@@ -132,7 +141,7 @@ shp_italy |>
 ## Customising the priors
 
 The formula gives us an IID effect, but no control over the hyperprior for the variance of the effect.
-INLA usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (`1/sigma**2`).
+`INLA` usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (`1/sigma**2`).
 
 ```{r}
 formula_iid_priors <- deaths ~ 1 + f(SIGLA, model = "iid", hyper = list(prec = list(prior = "loggamma", param = c(0.01, 0.01))))
@@ -151,20 +160,20 @@ model <- inla(
 
 ## Fitting a spatial model with INLA
 
-INLA is used widely amongst spatial statisticians.
+`INLA` is used widely amongst spatial statisticians.
 There are a lot of inbuilt functions which make the task of inference in spatial settings very efficient.
-INLA can deal with both areal data and point processes.
+`INLA` can deal with both areal data and point processes.
 For more information, see the [examples](https://www.r-inla.org/examples-tutorials).
 
 Here, we're going to fit a BYM model in place of the IID effect.
 
-For this, INLA needs to know the spatial adjacency matrix ("graph" in INLA's language).
+For this, `INLA` needs to know the spatial adjacency matrix ("graph" in `INLA`'s language).
 The following code extracts the adjacency matrix from the shapefile.
 ```{r}
-data = data |> arrange(SIGLA)
+data <- data |> arrange(SIGLA)
 shp_italy <- shp_italy |> arrange(SIGLA)
 
-italy_nb <- poly2nb(shp_italy,row.names = data$SIGLA)
+italy_nb <- poly2nb(shp_italy, row.names = data$SIGLA)
 italy_adj <- nb2INLA(file = here("data", "italy", "italy.graph"), nb = italy_nb)
 ```
 
@@ -198,3 +207,72 @@ head(model_spatial$summary.random$provincia_id)
 
 Compare and contrast the model fits using the plotting code above.
 Try and test out different spatial models, such as `"besag"`.
+
+## Some other options
+
+Moving away from `INLA`, let's look back at some of the other options that were introduced in the lecture.
+
+Firstly, `Stan`.
+This is a favourite at Columbia.
+There's a lot of boilerplate that goes with it, but it really is the "Statistician's choice".
+It's been around a long time, the documentation is great, and the samplers are battle-tested.
+
+Here is how we would write the original model in `Stan`.
+```
+data {
+  int<lower=0> N;     // number of data items
+  int<lower=0> Np;    // number of provinces
+  matrix[N] province; // predictor vector
+  vector[N] y;        // outcome vector
+}
+
+parameters {
+  real alpha;
+  vector[Np] theta;
+  real<lower=0> sigma_p;
+}
+
+transformed parameters {
+  vector[N] mu;
+  for (i in 1:N) {
+    latent_rate[i] = alpha + theta[province[i]];
+    mu[i] = exp(latent_rate[i]);
+  }
+}
+
+model {
+  alpha ~ normal(0., 5.);
+  sigma_p ~ normal(0., 1.); # bounded in the parameters block
+  theta ~ normal(0, sigma_p);
+  y ~ poisson(mu);  // likelihood
+}
+```
+
+There are several probabilistic programming languages in `python`.
+`PyMC` is probably the most famous, but another great option is `numpyro`.
+It uses the same backend (`jax`) as some of the main deep learning libraries.
+This means you can do fancy things like put a neural network in a probabilistic model.
+
+Here is how you would write the model in `numpyro`.
+```{.python}
+def model(Np, province, y=None):
+    alpha = numpyro.sample("alpha", dist.Normal(0.0, 5.0))
+    sigma_p = numpyro.sample("sigma", dist.HalfNormal(1.0))
+
+    with numpyro.plate("plate_provinces", Np):
+        theta = numpyro.sample("theta", dist.Normal(0.0, sigma_p))
+
+    with numpyro.plate("data", len(province)):
+        latent_rate = jnp.exp(alpha + theta[province])
+        numpyro.sample("y", dist.Poisson(rate=latent_rate), obs=y)
+```
+
+## Closing remarks
+
+I hope it's becoming clear that the majority of probabilistic programming languages share similar syntax.
+This makes it easy to translate a model when you collaborate with others who prefer different languages and different workflows.
+
+`INLA` is an exception, but the syntax is fairly intuitive and not dissimilar to base `R`'s models.
+And `INLA` is extremely efficient is certain cases, especially spatial applications with environmental exposures.
+
+If you're interested, there are plenty of more complicated examples on the [documentation page](https://www.r-inla.org/), as well as many books with great titles like [_Spatial and Spatio-temporal Bayesian Models with R-INLA_](https://www.wiley.com/en-gb/Spatial+and+Spatio+temporal+Bayesian+Models+with+R+INLA-p-9781118326558), [_Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny_](https://www.paulamoraga.com/book-geospatial/index.html) and [_Bayesian inference with INLA_](https://becarioprecario.bitbucket.io/inla-gitbook/).

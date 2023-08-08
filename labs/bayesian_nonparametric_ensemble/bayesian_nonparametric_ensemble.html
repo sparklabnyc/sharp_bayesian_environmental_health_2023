@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.354">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jaime Benavides">
+<meta name="dcterms.date" content="2023-08-01">
+
+<title>Bayesian Nonparametric Ensemble</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="bayesian_nonparametric_ensemble_files/libs/clipboard/clipboard.min.js"></script>
+<script src="bayesian_nonparametric_ensemble_files/libs/quarto-html/quarto.js"></script>
+<script src="bayesian_nonparametric_ensemble_files/libs/quarto-html/popper.min.js"></script>
+<script src="bayesian_nonparametric_ensemble_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="bayesian_nonparametric_ensemble_files/libs/quarto-html/anchor.min.js"></script>
+<link href="bayesian_nonparametric_ensemble_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="bayesian_nonparametric_ensemble_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="bayesian_nonparametric_ensemble_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="bayesian_nonparametric_ensemble_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="bayesian_nonparametric_ensemble_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Bayesian Nonparametric Ensemble</h1>
+<p class="subtitle lead">SHARP Bayesian Modeling for Environmental Health Workshop</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jaime Benavides </p>
+          </div>
+  </div>
+
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 1, 2023</p>
+    </div>
+  </div>
+
+
+  </div>
+
+
+</header>
+
+<section id="goal-of-this-computing-lab-session" class="level2">
+<h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
+<p>This lab will involve taking some concepts from the Introduction to Bayesian Nonparametric Ensemble (BNE) lecture and introduce you to the way BNE works.</p>
+</section>
+<section id="introduction-to-bne" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-bne">Introduction to BNE</h2>
+<p>BNE code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course. In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM2.5 predictions. Predictions refers to the predicted value at some location and time. Note that for BNE, prediction does not refer to future values, but values within our study period + location.</p>
+<p>We estimate 2015 annual PM2.5 concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with BNE. We trained the model on measurements reported in the US Environmental Protection Agency’s Air Quality System (AQS) database. We estimated model uncertainty as the standard deviations of predictions’ location-specific posterior predictive distribution.</p>
+<p>We will start exploring annual average PM2.5 concentrations from input base models, which are the individual prediction models that are incorporated into BNE to ultimate generate predictions. These models along with AQS monitor data will be used to train BNE.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/table_input_base_models.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Input base prediction models included</figcaption>
+</figure>
+</div>
+<p>Load plotting function</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-2_56f3275c9cf31ed839637977bf3b4dde">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load function plotOneParameterSpatial, which will be used for plotting maps</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"labs"</span>, <span class="st">"bayesian_nonparametric_ensemble"</span>, <span class="st">"functions"</span>, <span class="st">"STR_1_plotOneParameterSpatial.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Load training dataset containing input base models and AQS observations for PM2.5 during the period 2010-2015. To create the training dataset, we spatially joined each model to the EPA AQS dataset, using the prediction that was closest to each monitor (i.e., nearest neighbors).</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-3_0cfd742b45d3075aca442c809bcfc76e">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>aqs_preds <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"us"</span>, <span class="st">"training_cvfolds.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 3808 Columns: 14
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (2): state, ref_id
+dbl (12): lat, lon, yyyy, obs, pred_av, pred_cc, pred_cm, pred_gs, pred_js, ...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aqs_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      lat             lon               yyyy           obs
+ Min.   :25.47   Min.   :-124.20   Min.   :2010   Min.   : 0.000285
+ 1st Qu.:35.25   1st Qu.: -96.93   1st Qu.:2011   1st Qu.: 7.810454
+ Median :39.47   Median : -86.21   Median :2012   Median : 9.095420
+ Mean   :38.54   Mean   : -90.72   Mean   :2012   Mean   : 9.074536
+ 3rd Qu.:41.60   3rd Qu.: -80.34   3rd Qu.:2014   3rd Qu.:10.356421
+ Max.   :48.39   Max.   : -70.75   Max.   :2015   Max.   :22.301695
+    pred_av          pred_cc          pred_cm          pred_gs
+ Min.   : 3.433   Min.   : 2.809   Min.   : 2.642   Min.   : 3.269
+ 1st Qu.: 7.733   1st Qu.: 7.831   1st Qu.: 8.379   1st Qu.: 8.294
+ Median : 9.033   Median : 9.157   Median : 9.715   Median : 9.486
+ Mean   : 8.991   Mean   : 9.071   Mean   : 9.515   Mean   : 9.382
+ 3rd Qu.:10.225   3rd Qu.:10.351   3rd Qu.:10.768   3rd Qu.:10.516
+ Max.   :18.108   Max.   :18.628   Max.   :16.388   Max.   :18.666
+    pred_js           pred_me          pred_rk          state
+ Min.   : 0.6172   Min.   : 4.719   Min.   : 2.323   Length:3808
+ 1st Qu.: 8.0356   1st Qu.:13.206   1st Qu.: 8.857   Class :character
+ Median : 9.3535   Median :15.459   Median :10.815   Mode  :character
+ Mean   : 9.2929   Mean   :15.023   Mean   :10.737
+ 3rd Qu.:10.5713   3rd Qu.:17.377   3rd Qu.:12.691
+ Max.   :22.7427   Max.   :23.831   Max.   :23.959
+    ref_id               fold
+ Length:3808        Min.   : 1.000
+ Class :character   1st Qu.: 3.000
+ Mode  :character   Median : 5.000
+                    Mean   : 5.497
+                    3rd Qu.: 8.000
+                    Max.   :10.000  </code></pre>
+</div>
+</div>
+<p>Load prediction dataset. To create the prediction dataset, we first created a reference grid, and then joined each prediction dataset by nearest neighbor. This dataset also contains BNE results that will be explored in next steps.</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-4_1659669a987b5141cd8692c99850ce8f">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bne2015 <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"us"</span>, <span class="st">"refGrid_pm25_comp_seb_vers_2_2015_2_0-5_2_0-5_2_0-0498_0-1353.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 52385 Columns: 51
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (51): lat, lon, time, ens_mean, ens_sd, rp_mean, rp_sd, y_mean, y_sd, un...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Explore input base models. What does the input base model predictions look like for the year 2015 over the US?</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-5_7ab31da4b1de3e630ff39fb542157e39">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate value range and value breaks for the plot</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, bne2015<span class="sc">$</span>pred_av, bne2015<span class="sc">$</span>pred_cc, bne2015<span class="sc">$</span>pred_cm,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  bne2015<span class="sc">$</span>pred_gs, bne2015<span class="sc">$</span>pred_js, bne2015<span class="sc">$</span>pred_me,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  bne2015<span class="sc">$</span>pred_rk</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.25</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> varRange, <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.75</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">max</span>(varVec), <span class="dv">2</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign coordinate reference system as needed on the plotting function</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>projCRS <span class="ot">&lt;-</span> <span class="st">"epsg:9311"</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># use function plotOneParameterSpatial</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_av"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of AV Model"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_cc"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of CACES"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_cm"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of CMAQ-Fusion"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_gs"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of GBD"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_js"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of JS Model"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_me"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of MERRA"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"pred_rk"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Prediction of RK Model"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-5-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>How do input base model predictions compare with AQS observations?</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-6_33a8b4d6d6e655aebdda70f0316b8818">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>aqs_preds_summ <span class="ot">&lt;-</span> aqs_preds <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_av =</span> (pred_av <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_cc =</span> (pred_cc <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_cm =</span> (pred_cm <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_gs =</span> (pred_gs <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_js =</span> (pred_js <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_me =</span> (pred_me <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_rk =</span> (pred_rk <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>aqs_preds_summ_reg <span class="ot">&lt;-</span> aqs_preds_summ <span class="sc">%&gt;%</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"us"</span>, <span class="st">"key_state_region.csv"</span>)), <span class="at">by =</span> <span class="st">"state"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"us"</span>, <span class="st">"key_region_regionName.csv"</span>)), <span class="at">by =</span> <span class="st">"region"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 52 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): region, state
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 10 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): region, region_name
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>aqs_preds_summ_rmse <span class="ot">&lt;-</span> aqs_preds_summ_reg <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region_name) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_av =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_av)),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_cc =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_cc)),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_cm =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_cm)),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_gs =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_gs)),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_js =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_js)),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_me =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_me)),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse_rk =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(se_rk))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"rmse_"</span>),</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"model"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"rmse_"</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rmse"</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">TRUE</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> aqs_preds_summ_rmse <span class="sc">%&gt;%</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region_name =</span> <span class="fu">fct_relevel</span>(</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    region_name,</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1: New England"</span>, <span class="st">"2: NY Area"</span>, <span class="st">"3: DelMarVa"</span>,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"4: Southeast"</span>, <span class="st">"5: Ohio Valley"</span>, <span class="st">"6: South Central"</span>,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"7: Midwest"</span>, <span class="st">"8: North Midwest"</span>, <span class="st">"9: Pacific Southwest"</span>, <span class="st">"10: Pacific Northwest"</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> region_name, <span class="at">y =</span> rmse, <span class="at">color =</span> model), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Paired"</span>) <span class="sc">+</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Paired"</span>) <span class="sc">+</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"US Region"</span>, <span class="at">y =</span> <span class="st">"RMSE"</span>, <span class="at">color =</span> <span class="st">"Model"</span>, <span class="at">shape =</span> <span class="st">"Model"</span>) <span class="sc">+</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>),</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"white"</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">22</span>),</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(aqs_preds_summ_rmse<span class="sc">$</span>rmse)))</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="running-bne" class="level2">
+<h2 class="anchored" data-anchor-id="running-bne">Running BNE</h2>
+<p>In this lab, we provide you with BNE source code both in MATLAB and Octave, an open source programming language. In this part of the lab, we execute locally running_bne_octave.qmd file running BNE on a subset of the contiguous US constrained to the South West area. You can run either the MATLAB or the Octave code in your computer using the scripts found at bne_v2_matlab and/or bne_v2_octave.</p>
+<p>In order to run BNE, we need to 1) train BNE given input base model predictions and AQS observations; 2) generate BNE predictions and uncertainty levels over an spatio-temporal context of interest.</p>
+<p>BNE is an ensemble approach in which the weights vary smoothly over space and time. In other words, for a particular point in space-time, the weight of an input model is informed by the model’s performance at nearby points. This approach is particularly well-suited for modeling environmental factors that vary smoothly over space, such as temperature and air pollution, as individual models have been have accuracy that varies over time and space. As a Bayesian model, BNE yields a Posterior Predictive Distribution (PPD) for each parameter of interest.</p>
+<p>For example, if a model has relatively high performance in New England, but not in the South East region, BNE will assign high weights to that model in New England, but not in the South East. BNE has adaptive weights that maximize predictive accuracy and, thus, minimize exposure measurement error.</p>
+<p>Training BNE requires times &amp; locations of ground-truth observations, the ground-truth observations, and the predictions at those times and locations of the input models.</p>
+<p>Generating Predictions with BNE requires the PPD of the BNE parameters and a a tidy dataset of all of the input base model predictions. The input base model predictions need to be at the same spatial scale (harmonized), so that the weights can be appropriately estimated.</p>
+</section>
+<section id="explore-bne-results" class="level2">
+<h2 class="anchored" data-anchor-id="explore-bne-results">Explore BNE results</h2>
+<p>In this part of the lab, we explore the results of a BNE model run over the contiguous US for the year 2015 given the seven input base models previously introduced.</p>
+<p>Model weights. In BNE, the weights of the ensemble members smoothly vary over time and space. The model weights are required to sum to one, so the weighted model combination must stay within the range of the original predictions.</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-7_35a28ceee227f18fa7a65b9954fca7eb">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, bne2015<span class="sc">$</span>w_mean_av, bne2015<span class="sc">$</span>w_mean_cc, bne2015<span class="sc">$</span>w_mean_cm,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  bne2015<span class="sc">$</span>w_mean_gs, bne2015<span class="sc">$</span>w_mean_js, bne2015<span class="sc">$</span>w_mean_me,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  bne2015<span class="sc">$</span>w_mean_rk</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.25</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> varRange, <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.75</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">max</span>(varVec), <span class="dv">2</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_av"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of AV Model"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_cc"</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of CACES"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_cm"</span>,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of CMAQ-Fusion"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_gs"</span>,</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of GBD"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_js"</span>,</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of JS Model"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_me"</span>,</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of MERRA"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"w_mean_rk"</span>,</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">mainTitle =</span> <span class="st">"Weight of RK Model"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">4</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-8.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>BNE Predicted concentration. BNE estimates a posterior predictive distribution (PPD) of estimated concentration for each point; we use the mean of the distribution as the point estimate of predicted concentration. Once optimal weights are calculated, a residual process term is then estimated in a second stage to capture any systematic bias in the weighted model combination and capture uncertainty due to lack of measurements in a particular location. The plot below shows the total BNE estimate summing both components: model ensemble and residual process.</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-8_0c72e59e0fe129dad9c273ba67aa548b">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(bne2015<span class="sc">$</span>y_mean)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.25</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> varRange, <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.75</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">max</span>(varVec), <span class="dv">2</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 4.b. make plot</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"y_mean"</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Predicted Concentration 2015"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Predicted uncertainty levels. How wide is the range of plausible values for the concentration at a particular location at a given time? The wider the range, the high the uncertainty, as there are more possible values for the concentration. Here, we measure predictive uncertainty as the standard deviation (SD) of the PPD of the concentration. Note that predictive uncertainty is given our evidence and our model; if we use a different model, then we may have a different amount of uncertainty.</p>
+<p>A larger SD corresponds to a wider predictive distribution and greater uncertainty, i.e., at that point, BNE considers a wider range of concentrations to be plausible, given the base models and model structure.</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-9_31d2de4fd203b1b646a72b6e586a57c9">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(bne2015<span class="sc">$</span>y_sd)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.25</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> varRange, <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.75</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">max</span>(varVec), <span class="dv">2</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(<span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"y_sd"</span>, <span class="at">extraPointObj =</span> <span class="fu">filter</span>(aqs_preds, yyyy <span class="sc">==</span> <span class="dv">2015</span>), <span class="at">mainTitle =</span> <span class="st">"Predictive Uncertainty 2015"</span>, <span class="at">valueScale =</span> varScale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We also examine scaled uncertainty, in which we divided the SD by the predicted concentration. Scaled uncertainty may be more informative in some contexts where, for example, an SD of 1 µg/m3 is more problematic in an area with low concentrations (e.g.&nbsp;annual average of 8 µg/m3) than an area of high concentrations (e.g.&nbsp;annual average of 30 µg/m3).</p>
+<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-10_4846d8f8087161b26d082200c01bb149">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1a function to calculate scaled uncertainty</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>compute_scaled_y_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(bne) {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  bne <span class="ot">&lt;-</span> bne <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">y_sd_scaled =</span> y_sd <span class="sc">/</span> y_mean)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>bne2015 <span class="ot">&lt;-</span> bne2015 <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">compute_scaled_y_sd</span>()</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(bne2015<span class="sc">$</span>y_sd_scaled)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.25</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> varRange, <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">min</span>(varVec) <span class="sc">+</span> <span class="fl">0.75</span> <span class="sc">*</span> varRange, <span class="dv">2</span>),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">max</span>(varVec), <span class="dv">2</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plotOneParameterSpatial</span>(</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">dta =</span> bne2015, <span class="at">parameterName =</span> <span class="st">"y_sd_scaled"</span>,</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">mainTitle =</span> <span class="st">"Scaled Uncertainty 2015"</span>, <span class="at">valueScale =</span> varScale</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="closing-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
+<p>In this lab session, we have explored how to run BNE to estimate PM2.5 predictions and uncertainty given seven input base models and AQS observations. We first explored input base models’ PM2.5 predictions for 2015 and compared them against AQS observations over the contiguous US. We continued by running BNE over south western US cities, a subset of the US initial data. We then analysed BNE output over the contiguous US.</p>
+<p>Obtaining comprehensive uncertainties can be helpful in so many fields, from better inference in health models, to informing monitoring placement, to helping improve individual prediction models, to better understanding environmental justice issues etc. Reporting the weights and/or the uncertainty back to the teams developing these models can create a positive feedback loop where the models are improved, identifying high uncertainty areas can help with future monitoring station placement etc.</p>
+<p>Many of the materials used in this lab have been developed during Sebastian’s Rowland PhD. Sebastian’s publication of this work is under review in a scientific journal. Please, do not distribute or publish works using the data provided in this lab. BNE’s methodology has been recently published and the code can be applied to similar environmental issues. Please, let us know if you are interested in pursuing this avenue.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config);
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

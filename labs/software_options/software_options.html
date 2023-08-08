@@ -109,9 +109,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="setting-the-scene" class="level2">
-<h2 class="anchored" data-anchor-id="setting-the-scene">Setting the scene</h2>
-<p>The aim of this practical is to recreate the nimble model in the <code>hierarchical_modelling</code> lab using INLA. As a reminder, here is the model again.</p>
+<section id="goal-of-this-computing-lab-session" class="level2">
+<h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
+<p>The goals of this lab is to use <code>INLA</code> to run a some hierarchical models.</p>
+<p>During this lab session, we will:</p>
+<ol type="1">
+<li>Translate a model from <code>NIMBLE</code> into <code>INLA</code>;</li>
+<li>Fit spatial models with <code>INLA</code>;</li>
+<li>Learn how to work with <code>INLA</code> objects; and</li>
+<li>See how to write models in different probabilistic programming languages.</li>
+</ol>
+<p>We will recreate the <code>NIMBLE</code> model in the <code>hierarchical_modelling</code> lab using <code>INLA</code>. As a reminder, here is the model again.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nimbleCode</span>({</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
@@ -129,11 +137,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>And let’s load in the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"italy"</span>, <span class="st">"italy_mortality.rds"</span>)) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(SIGLA)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"italy"</span>, <span class="st">"italy_mortality.rds"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(SIGLA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>shp_italy <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"italy"</span>, <span class="st">"italy_shp.rds"</span>)) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(SIGLA)</span>
@@ -153,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>formula_iid <span class="ot">&lt;-</span> deaths <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(SIGLA, <span class="at">model =</span> <span class="st">"iid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This means we have an intercept signified by <code>1</code>. This is the equivalent of <code>alpha</code> in the nimble model.</p>
+<p>This means we have an intercept signified by <code>1</code>. This is the equivalent of <code>alpha</code> in the <code>NIMBLE</code> model.</p>
 <p>We can run the model by calling the <code>inla</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">inla</span>(</span>
@@ -165,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control.compute =</span> <span class="fu">list</span>(<span class="at">config =</span> <span class="cn">TRUE</span>) <span class="co"># so that we can simulate draws of posterior</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Take a moment to look at each of the arguments and convince yourself that it is the same model as nimble.</p>
+<p>Take a moment to look at each of the arguments and convince yourself that it is the same model as <code>NIMBLE</code>.</p>
 </section>
 <section id="exploring-the-model-in-inla" class="level2">
 <h2 class="anchored" data-anchor-id="exploring-the-model-in-inla">Exploring the model in INLA</h2>
@@ -194,7 +203,7 @@ Call:
    silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug =
    debug, .parent.frame = .parent.frame)" )
 Time used:
-    Pre = 0.625, Running = 0.184, Post = 0.0319, Total = 0.841
+    Pre = 0.665, Running = 0.331, Post = 0.0334, Total = 1.03
 Fixed effects:
               mean    sd 0.025quant 0.5quant 0.975quant   mode kld
 (Intercept) -0.111 0.008     -0.127   -0.111     -0.095 -0.111   0
@@ -237,7 +246,7 @@ Posterior summaries for the linear predictor and the fitted values are computed
 6 6.119930e-09</code></pre>
 </div>
 </div>
-<p>Although the model isn’t fit using samples, we can use INLA to sample from the posterior.</p>
+<p>Although the model isn’t fit using samples, we can use <code>INLA</code> to sample from the posterior.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>posterior_samples <span class="ot">&lt;-</span> <span class="fu">inla.posterior.sample</span>(<span class="dv">1000</span>, model)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -267,7 +276,7 @@ Posterior summaries for the linear predictor and the fitted values are computed
 </section>
 <section id="customising-the-priors" class="level2">
 <h2 class="anchored" data-anchor-id="customising-the-priors">Customising the priors</h2>
-<p>The formula gives us an IID effect, but no control over the hyperprior for the variance of the effect. INLA usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (<code>1/sigma**2</code>).</p>
+<p>The formula gives us an IID effect, but no control over the hyperprior for the variance of the effect. <code>INLA</code> usually chooses some good defaults for you, but here, I will put a non-default prior on the precision (<code>1/sigma**2</code>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>formula_iid_priors <span class="ot">&lt;-</span> deaths <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(SIGLA, <span class="at">model =</span> <span class="st">"iid"</span>, <span class="at">hyper =</span> <span class="fu">list</span>(<span class="at">prec =</span> <span class="fu">list</span>(<span class="at">prior =</span> <span class="st">"loggamma"</span>, <span class="at">param =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -284,14 +293,14 @@ Posterior summaries for the linear predictor and the fitted values are computed
 </section>
 <section id="fitting-a-spatial-model-with-inla" class="level2">
 <h2 class="anchored" data-anchor-id="fitting-a-spatial-model-with-inla">Fitting a spatial model with INLA</h2>
-<p>INLA is used widely amongst spatial statisticians. There are a lot of inbuilt functions which make the task of inference in spatial settings very efficient. INLA can deal with both areal data and point processes. For more information, see the <a href="https://www.r-inla.org/examples-tutorials">examples</a>.</p>
+<p><code>INLA</code> is used widely amongst spatial statisticians. There are a lot of inbuilt functions which make the task of inference in spatial settings very efficient. <code>INLA</code> can deal with both areal data and point processes. For more information, see the <a href="https://www.r-inla.org/examples-tutorials">examples</a>.</p>
 <p>Here, we’re going to fit a BYM model in place of the IID effect.</p>
-<p>For this, INLA needs to know the spatial adjacency matrix (“graph” in INLA’s language). The following code extracts the adjacency matrix from the shapefile.</p>
+<p>For this, <code>INLA</code> needs to know the spatial adjacency matrix (“graph” in <code>INLA</code>’s language). The following code extracts the adjacency matrix from the shapefile.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">arrange</span>(SIGLA)</span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">arrange</span>(SIGLA)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>shp_italy <span class="ot">&lt;-</span> shp_italy <span class="sc">|&gt;</span> <span class="fu">arrange</span>(SIGLA)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>italy_nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(shp_italy,<span class="at">row.names =</span> data<span class="sc">$</span>SIGLA)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>italy_nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(shp_italy, <span class="at">row.names =</span> data<span class="sc">$</span>SIGLA)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>italy_adj <span class="ot">&lt;-</span> <span class="fu">nb2INLA</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"italy"</span>, <span class="st">"italy.graph"</span>), <span class="at">nb =</span> italy_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And we can visualise the adjacency matrix.</p>
@@ -339,7 +348,7 @@ Call:
    silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug =
    debug, .parent.frame = .parent.frame)" )
 Time used:
-    Pre = 0.687, Running = 0.226, Post = 0.0649, Total = 0.978
+    Pre = 0.565, Running = 0.218, Post = 0.0615, Total = 0.845
 Fixed effects:
               mean    sd 0.025quant 0.5quant 0.975quant   mode kld
 (Intercept) -0.111 0.008     -0.126   -0.111     -0.096 -0.111   0
@@ -387,6 +396,54 @@ Posterior summaries for the linear predictor and the fitted values are computed
 </div>
 </div>
 <p>Compare and contrast the model fits using the plotting code above. Try and test out different spatial models, such as <code>"besag"</code>.</p>
+</section>
+<section id="some-other-options-and-closing-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="some-other-options-and-closing-remarks">Some other options and closing remarks</h2>
+<p>Moving away from <code>INLA</code>, let’s look back at some of the other options that were introduced in the lecture.</p>
+<p>Firstly, <code>Stan</code>. This is a favourite at Columbia. There’s a lot of boilerplate that goes with it, but it really is the “Statistician’s choice”. It’s been around a long time, the documentation is great, and the samplers are battle-tested.</p>
+<p>Here is how we would write the original model in <code>Stan</code>.</p>
+<pre><code>data {
+  int&lt;lower=0&gt; N;     // number of data items
+  int&lt;lower=0&gt; Np;    // number of provinces
+  matrix[N] province; // predictor vector
+  vector[N] y;        // outcome vector
+}
+
+parameters {
+  real alpha;
+  vector[Np] theta;
+  real&lt;lower=0&gt; sigma_p;
+}
+
+transformed parameters {
+  vector[N] mu;
+  for (i in 1:N) {
+    latent_rate[i] = alpha + theta[province[i]];
+    mu[i] = exp(latent_rate[i]);
+  }
+}
+
+model {
+  alpha ~ normal(0., 5.);
+  sigma_p ~ normal(0., 1.); # bounded in the parameters block
+  theta ~ normal(0, sigma_p);
+  y ~ poisson(mu);  // likelihood
+}</code></pre>
+<p>There are several probabilistic programming languages in <code>python</code>. <code>PyMC</code> is probably the most famous, but another great option is <code>numpyro</code>. It uses the same backend (<code>jax</code>) as some of the main deep learning libraries. This means you can do fancy things like put a neural network in a probabilistic model.</p>
+<p>Here is how you would write the model in <code>numpyro</code>.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(Np, province, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> numpyro.sample(<span class="st">"alpha"</span>, dist.Normal(<span class="fl">0.0</span>, <span class="fl">5.0</span>))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    sigma_p <span class="op">=</span> numpyro.sample(<span class="st">"sigma"</span>, dist.HalfNormal(<span class="fl">1.0</span>))</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> numpyro.plate(<span class="st">"plate_provinces"</span>, Np):</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        theta <span class="op">=</span> numpyro.sample(<span class="st">"theta"</span>, dist.Normal(<span class="fl">0.0</span>, sigma_p))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> numpyro.plate(<span class="st">"data"</span>, <span class="bu">len</span>(province)):</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>        latent_rate <span class="op">=</span> jnp.exp(alpha <span class="op">+</span> theta[province])</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        numpyro.sample(<span class="st">"y"</span>, dist.Poisson(rate<span class="op">=</span>latent_rate), obs<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I hope it’s becoming clear that the majority of probabilistic programming languages share similar syntax. This makes it easy to translate a model when you collaborate with others who prefer different languages and different workflows.</p>
+<p><code>INLA</code> is an exception, but the syntax is fairly intuitive and not dissimilar to base <code>R</code>’s models. And <code>INLA</code> is extremely efficient is certain cases, especially spatial applications with environmental exposures.</p>
+<p>If you’re interested, there are plenty of more complicated examples on the <a href="https://www.r-inla.org/">documentation page</a>, as well as many books with great titles like <a href="https://www.wiley.com/en-gb/Spatial+and+Spatio+temporal+Bayesian+Models+with+R+INLA-p-9781118326558"><em>Spatial and Spatio-temporal Bayesian Models with R-INLA</em></a>, <a href="https://www.paulamoraga.com/book-geospatial/index.html"><em>Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny</em></a> and <a href="https://becarioprecario.bitbucket.io/inla-gitbook/"><em>Bayesian inference with INLA</em></a>.</p>
 </section>
 
 </main>

@@ -1,5 +1,3 @@
-setwd("~/Dropbox/00 Oxford/70_Robbie_workshop_SHARP/GitHub_Liza/sharp_bayesian_environmental_health_2023/lectures/bayesian_workflow/code")
-
 library(rstan)
 library(ggplot2)
 
