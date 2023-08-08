@@ -28,7 +28,7 @@ Below is the set of labs to follow throughout the two days:
 
 [Software Options](/labs/software_options/software_options.qmd)
 
-Bayesian Non-Parametric Ensemble
+[Bayesian Non-Parametric Ensemble](/labs/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.qmd)
 
 ## Notes for those working on the repo
 

@@ -27,10 +27,20 @@ knitr::opts_chunk$set(fig.align = "center")
 set.seed(2)
 ```
 
+## Goal of this computing lab session
+
+The goal of this lab is to XX
+
+During this lab session, we will:
+
+1. XX;
+2. XX;
+3. XX; and
+4. XX.
+
 # Part A: COVID-19 deaths in England
 
 In Part A of this practical you will be using the R software Statistical Package (www.r-project.org), as well as NIMBLE to carry out a disease mapping using study. You will use the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas).
-
 
 ## A1. Visualization of spatial areal data
 
@@ -764,3 +774,8 @@ ggplot() +
       axis.title.y = element_blank() # removes yaxis title
     )
 ```
+
+## Closing remarks
+
+In this lab session, we have XX
+We looked at XX

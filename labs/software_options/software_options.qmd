@@ -24,7 +24,7 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-The goals of this lab is to use `INLA` to run a some hierarchical models.
+The goal of this lab is to use `INLA` to run a some hierarchical models.
 
 During this lab session, we will:
 
@@ -208,7 +208,7 @@ head(model_spatial$summary.random$provincia_id)
 Compare and contrast the model fits using the plotting code above.
 Try and test out different spatial models, such as `"besag"`.
 
-## Some other options and closing remarks
+## Some other options
 
 Moving away from `INLA`, let's look back at some of the other options that were introduced in the lecture.
 
@@ -266,6 +266,8 @@ def model(Np, province, y=None):
         latent_rate = jnp.exp(alpha + theta[province])
         numpyro.sample("y", dist.Poisson(rate=latent_rate), obs=y)
 ```
+
+## Closing remarks
 
 I hope it's becoming clear that the majority of probabilistic programming languages share similar syntax.
 This makes it easy to translate a model when you collaborate with others who prefer different languages and different workflows.

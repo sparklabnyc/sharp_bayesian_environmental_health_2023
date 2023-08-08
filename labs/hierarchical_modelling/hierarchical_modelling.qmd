@@ -402,3 +402,8 @@ p_partial + labs(caption = "Partial pooling model")
 ```
 
 There is clearly more smoothing in the partial pooling model.
+
+## Closing remarks
+
+In this lab session, we have XX
+We looked at XX

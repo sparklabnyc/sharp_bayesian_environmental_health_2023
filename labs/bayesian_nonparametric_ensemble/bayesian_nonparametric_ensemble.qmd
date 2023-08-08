@@ -26,6 +26,13 @@ set.seed(2)
 
 This lab will involve taking some concepts from the Introduction to Bayesian Nonparametric Ensemble (BNE) lecture and introduce you to the way BNE works.
 
+During this lab session, we will:
+
+1. XX;
+2. XX;
+3. XX; and
+4. XX.
+
 ## Introduction to BNE
 
 BNE code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course. In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM2.5 predictions. Predictions refers to the predicted value at some location and time. Note that for BNE, prediction does not refer to future values, but values within our study period + location.
