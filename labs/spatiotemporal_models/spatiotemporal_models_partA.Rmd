@@ -13,12 +13,13 @@ library(nimble)
 library(sf)
 library(rgeos)
 library(patchwork)
-library(coda)
-library(ggmcmc)
+library(posterior)
+library(bayesplot)
 library(spdep)
 library(lubridate)
 library(fastDummies)
 library(INLA)
+library(coda)
 
 extrafont::loadfonts()
 theme_set(hrbrthemes::theme_ipsum())
@@ -30,6 +31,13 @@ set.seed(2)
 # Part A: COVID-19 deaths in England
 
 In Part A of this practical you will be using the R software Statistical Package (www.r-project.org), as well as NIMBLE to carry out a disease mapping using study. You will use the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas).
+
+As part of this practical you will:
+
+- Explore ways of visualizing spatial data
+- Define the neighborhood matrix in R
+- Fit and interpret the BYM model in NIMBLE
+- Perform spatial ecological regression
 
 
 ## A1. Visualization of spatial areal data
@@ -51,12 +59,8 @@ We can create basic maps of sf objects using the `plot()` function:
 plot(data_england) # plot all the attributes
 plot(data_england$geometry) # plot only the boundaries
 ```
-<<<<<<< HEAD
 
 We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps. 
-=======
-We can do nicer plots using the package `ggplot2`. First let's reduce the resolution to get quicker maps.
->>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
 ```{r fig.width=3, fig.align='center'}
 data_england_simpler <- gSimplify(as(data_england, "Spatial"), tol = 500)
 data_england_simpler <- st_as_sf(data_england_simpler)
@@ -73,6 +77,7 @@ ggplot() +
     axis.text = element_text(size = 14)
   )
 ```
+
 
 And for nicer maps for the other columns:
 ```{r fig.width=11}
@@ -276,40 +281,34 @@ The *Rhat* of the overallRR is slightly higher than 1.1. We can think of running
 * *Diagnostic plots*
 The most straightforward approach for assessing convergence is based on simply plotting and inspecting traces, histograms, autocorrelation of the observed MCMC sample. For models with many parameters it is not practical to check the convergence for every parameter, so a choice should be made of the relevant parameters to monitor. In this way the convergence of the NIMBLE output can be assessed with a reasonable degree of confidence.
 
-We can use the `ggmcmc` package for diagnostics plots
+We can use the `bayesplot` package for diagnostics plots. Note that you need to access the samples of the `samples` object. You do this using the dollar sign:
 
-* First, create the `ggs` object and name it `ggsamples`. Note that you need to access the samples of the `samples` object. You do this using the dollar sign:
-```{r eval = TRUE}
-ggsamples <- ggs(modelGS.sim$samples)
-ggsamples
+* Use the function `mcmc_trace()` to get the traceplot of the different chains for `tau.theta`:
+```{r eval = TRUE, warning = FALSE}
+mcmc_trace(modelGS.sim$samples, pars = c("tau.theta"))
 ```
 
-* Use the function `ggs_traceplot()` to get the traceplot of the different chains for `tau.theta`:
-```{r eval = FALSE}
-ggsamples %>%
-  filter(Parameter == "tau.theta") %>%
-  ggs_traceplot() + theme_bw()
+
+* Use the functions `mcmc_acf_bar()` and `mcmc_acf()` to get the autocorrelation plots for the different chains for `tau.theta`:
+```{r eval = FALSE, warning=FALSE}
+mcmc_acf_bar(modelGS.sim$samples, pars = c("tau.theta"))
+mcmc_acf(modelGS.sim$samples, regex_pars = c("tau.theta"))
 ```
 
-* Use the function `ggs_autocorrelation()` to get the autocorrelation plots for the different chains for `tau.theta`:
-```{r eval = FALSE}
-ggsamples %>%
-  filter(Parameter == "tau.theta") %>%
-  ggs_autocorrelation() + theme_bw()
+* Use the functions `mcmc_hist()` and `mcmc_dens()` to get the histogram and the density plots of the posterior `tau.theta` for chain 1:
+```{r eval = TRUE, fig.width=4, fig.height=3, warning = FALSE}
+
+mcmc_hist(modelGS.sim$samples$chain1, pars = c("tau.theta"))
+mcmc_dens(modelGS.sim$samples$chain1, pars = c("tau.theta"))
 ```
 
-* Use the functions `ggs_histogram()` and `ggs_density()` to get the histogram and the density plots of the posterior `tau.theta`
-```{r eval = TRUE, fig.width=4, fig.height=3}
-ggsamples %>%
-  filter(Parameter == "tau.theta") %>%
-  ggs_histogram() + theme_bw() -> p1
-ggsamples %>%
-  filter(Parameter == "tau.theta") %>%
-  ggs_density() + theme_bw() -> p2
+* Use the function `mcmc_dens_overlay()` to get the density plot of the posterior `tau.theta` for both chains:
+```{r eval = TRUE, fig.width=4, fig.height=3, warning = FALSE}
 
-p1
-p2
+mcmc_dens_overlay(modelGS.sim$samples, pars = c("tau.theta"))
+
 ```
+
 
 * To see the WAIC
 ```{r eval=TRUE}
@@ -329,20 +328,12 @@ data_england_simpler$RR <- RR_COVID
 ```
 
 * Using `ggplot2`, we can produce a map of the smoothed RRs
-<<<<<<< HEAD
 ```{r eval=TRUE, fig.width=5, fig.align='center'} 
 
 ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() + 
-                     scale_fill_viridis_c(limits = c(0,1.6), name = "SMR") 
+                     scale_fill_viridis_c(limits = c(0, 2), name = "SMR") 
 ```	
-=======
-```{r eval=TRUE, fig.width=5, fig.align='center'}
-ggplot() +
-  geom_sf(data = data_england_simpler, aes(fill = RR)) +
-  theme_bw() +
-  scale_fill_viridis_c(limits = c(0, 2), name = "SMR")
-```
->>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
+
 
 
 ## A3. The BYM model
@@ -520,16 +511,10 @@ modelBYM.sim$WAIC
 ```
 
 * Check convergence of resRR
-```{r echo=TRUE, eval=TRUE}
-ggsamplesbym <- ggs(modelBYM.sim$samples)
-<<<<<<< HEAD
-ggsamplesbym %>% filter(Parameter == c("resRR[1]", "resRR[19]", "resRR[41]", "resRR[72]")) %>% 
-              ggs_traceplot() + theme_bw()
-=======
-ggsamplesbym %>%
-  filter(Parameter == c("RR[1]", "RR[19]", "RR[41]", "RR[72]")) %>%
-  ggs_traceplot() + theme_bw()
->>>>>>> 82dd4944a258d683173652ad2922a4ffec74ecaf
+```{r echo=TRUE, eval=TRUE, warning = FALSE}
+
+mcmc_trace(modelBYM.sim$samples, pars = c("resRR[1]", "resRR[19]", "resRR[41]", "resRR[72]"))
+
 ```
 
 (a) Extract the residual RR (i.e. exp(V + U)) and the posterior probability that resRR is higher than 1 as. Create a `data.frame` for this purpose. Note that for the posterior probability, which is a vector of 0s and 1s we need to calculate the sum of 1s by the total sum, ie the mean.
@@ -725,17 +710,15 @@ modelBYMeco.sim <- readRDS("NIMBLE_BYM_A4")
 ```
 
 * Retrieve WAIC and compare with previous model. Which model performs best?
-```{r echo=TRUE, eval=TRUE}
+```{r echo=TRUE, eval=TRUE, warning=FALSE}
 modelBYMeco.sim$WAIC
 ```
 
-* Check the convergence of the covariates NO2 and ICU beds. What do you observe?
-```{r echo=TRUE, eval=TRUE}
-ggsamplesbym <- ggs(modelBYMeco.sim$samples)
+* Check the convergence of the intercept and covariates NO2 and ICU beds. What do you observe?
+```{r echo=TRUE, eval=TRUE, warning = FALSE}
 
-ggsamplesbym %>%
-  filter(Parameter %in% c("alpha", "beta1", "beta2")) %>%
-  ggs_traceplot() + theme_bw()
+mcmc_trace(modelBYMeco.sim$samples, pars = c("alpha", "beta1", "beta2"))
+
 ```
 
 * Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
@@ -764,3 +747,17 @@ ggplot() +
       axis.title.y = element_blank() # removes yaxis title
     )
 ```
+
+
+## Closing remarks
+
+In this lab session, we have explored how to fit spatial models using Bayesian regression in NIMBLE.
+We looked at the two most common approaches: iid and the BYM model.
+
+We used real data on COVID-19 deaths in England during March-July 2020 and first performed disease mapping to understand the spatial trends of COVID-19 mortality in the first stages of the pandemic. As part of this analysis, we visualised spatial data, fitted a model with an unstructured spatial random effect, demonstrated how to build a neihgborhood matrix in R and fitted the BYM model. 
+
+Subsequently, we examined the effect of long term exposure to NO$_2$ on COVID-19 mortality. We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds per LTLA. We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.
+
+For more information on the final model see Konstantinoudis et al 2021 (10.1016/j.envint.2020.106316).
+
+
