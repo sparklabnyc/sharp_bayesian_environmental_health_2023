@@ -80,9 +80,9 @@ plot(p)
 #| echo: false
 library(ggplot2)
 set.seed(100)
-data = data.frame(x=rnorm(100),y=rnorm(100))
+data <- data.frame(x = rnorm(100), y = rnorm(100))
 
-p = ggplot(data, aes(x, y)) +
+p <- ggplot(data, aes(x, y)) +
   geom_point() +
   geom_smooth(method = "loess")
 
@@ -261,14 +261,15 @@ ggplot(data) +
 library(ggplot2)
 library(purrr)
 set.seed(100)
-n=100
-data = data.frame(x=rdunif(n,6))
+n <- 100
+data <- data.frame(x = rdunif(n, 6))
 
 ggplot(data) +
-  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
-  geom_hline(yintercept = 1/6, linetype=2) +
-  xlab('Roll value') + ylab('Count') +
-  ggtitle(paste0('Rolling n = ',n,' times')) +
+  geom_histogram(aes(x, y = after_stat(count) / sum(after_stat(count)))) +
+  geom_hline(yintercept = 1 / 6, linetype = 2) +
+  xlab("Roll value") +
+  ylab("Count") +
+  ggtitle(paste0("Rolling n = ", n, " times")) +
   theme_bw()
 ```
 
@@ -278,14 +279,15 @@ ggplot(data) +
 library(ggplot2)
 library(purrr)
 set.seed(100)
-n=1000
-data = data.frame(x=rdunif(n,6))
+n <- 1000
+data <- data.frame(x = rdunif(n, 6))
 
 ggplot(data) +
-  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
-  geom_hline(yintercept = 1/6, linetype=2) +
-  xlab('Roll value') + ylab('Count') +
-  ggtitle(paste0('Rolling n = ',n,' times')) +
+  geom_histogram(aes(x, y = after_stat(count) / sum(after_stat(count)))) +
+  geom_hline(yintercept = 1 / 6, linetype = 2) +
+  xlab("Roll value") +
+  ylab("Count") +
+  ggtitle(paste0("Rolling n = ", n, " times")) +
   theme_bw()
 ```
 
@@ -295,14 +297,15 @@ ggplot(data) +
 library(ggplot2)
 library(purrr)
 set.seed(100)
-n=10000
-data = data.frame(x=rdunif(n,6))
+n <- 10000
+data <- data.frame(x = rdunif(n, 6))
 
 ggplot(data) +
-  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
-  geom_hline(yintercept = 1/6, linetype=2) +
-  xlab('Roll value') + ylab('Count') +
-  ggtitle(paste0('Rolling n = ',n,' times')) +
+  geom_histogram(aes(x, y = after_stat(count) / sum(after_stat(count)))) +
+  geom_hline(yintercept = 1 / 6, linetype = 2) +
+  xlab("Roll value") +
+  ylab("Count") +
+  ggtitle(paste0("Rolling n = ", n, " times")) +
   theme_bw()
 ```
 
@@ -312,14 +315,15 @@ ggplot(data) +
 library(ggplot2)
 library(purrr)
 set.seed(100)
-n=100000
-data = data.frame(x=rdunif(n,6))
+n <- 100000
+data <- data.frame(x = rdunif(n, 6))
 
 ggplot(data) +
-  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
-  geom_hline(yintercept = 1/6, linetype=2) +
-  xlab('Roll value') + ylab('Count') +
-  ggtitle(paste0('Rolling n = ',format(n, scientific=F),' times')) +
+  geom_histogram(aes(x, y = after_stat(count) / sum(after_stat(count)))) +
+  geom_hline(yintercept = 1 / 6, linetype = 2) +
+  xlab("Roll value") +
+  ylab("Count") +
+  ggtitle(paste0("Rolling n = ", format(n, scientific = F), " times")) +
   theme_bw()
 ```
 
@@ -329,14 +333,15 @@ ggplot(data) +
 library(ggplot2)
 library(purrr)
 set.seed(100)
-n=1000000
-data = data.frame(x=rdunif(n,6))
+n <- 1000000
+data <- data.frame(x = rdunif(n, 6))
 
 ggplot(data) +
-  geom_histogram(aes(x,y=after_stat(count)/sum(after_stat(count)))) +
-  geom_hline(yintercept = 1/6, linetype=2) +
-  xlab('Roll value') + ylab('Count') +
-  ggtitle(paste0('Rolling n = ',format(n, scientific=F),' times')) +
+  geom_histogram(aes(x, y = after_stat(count) / sum(after_stat(count)))) +
+  geom_hline(yintercept = 1 / 6, linetype = 2) +
+  xlab("Roll value") +
+  ylab("Count") +
+  ggtitle(paste0("Rolling n = ", format(n, scientific = F), " times")) +
   theme_bw()
 ```
 
@@ -460,10 +465,10 @@ $$Normal(1,0)$$
 
 ```{r}
 #| echo: false
-p = seq(-10,10, length=10000)
+p <- seq(-10, 10, length = 10000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 1), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type = "l")
 ```
 ## Examples of Normal distributions
 
@@ -471,10 +476,10 @@ $$Normal(1,0)$$
 
 ```{r}
 #| echo: false
-p = seq(-100,100, length=10000)
+p <- seq(-100, 100, length = 10000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 1), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type = "l")
 ```
 
 ## Examples of Normal distributions
@@ -483,10 +488,10 @@ $$Normal(0,5)$$
 
 ```{r}
 #| echo: false
-p = seq(-100,100, length=10000)
+p <- seq(-100, 100, length = 10000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 5), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 5), type = "l")
 ```
 
 ## Examples of Normal distributions
@@ -495,10 +500,10 @@ $$Normal(0,20)$$
 
 ```{r}
 #| echo: false
-p = seq(-100,100, length=10000)
+p <- seq(-100, 100, length = 10000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 20), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 20), type = "l")
 ```
 
 ## Binomial-Beta {.smaller}
@@ -533,10 +538,10 @@ $$Beta(2,10)$$
 
 ```{r}
 #| echo: false
-p = seq(0,1, length=100)
+p <- seq(0, 1, length = 100)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 2, 10), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 2, 10), type = "l")
 ```
 
 ## Examples of Beta distributions
@@ -545,10 +550,10 @@ $$Beta(0.5,0.5)$$
 
 ```{r}
 #| echo: false
-p = seq(0,1, length=100)
+p <- seq(0, 1, length = 100)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 0.5, 0.5), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 0.5, 0.5), type = "l")
 ```
 
 ## Examples of Beta distributions
@@ -557,10 +562,10 @@ $$Beta(5,1)$$
 
 ```{r}
 #| echo: false
-p = seq(0,1, length=100)
+p <- seq(0, 1, length = 100)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 5, 1), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 1), type = "l")
 ```
 
 ## Examples of Beta distributions
@@ -569,10 +574,10 @@ $$Beta(5,5)$$
 
 ```{r}
 #| echo: false
-p = seq(0,1, length=100)
+p <- seq(0, 1, length = 100)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 5, 5), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 5), type = "l")
 ```
 
 ## Examples of Beta distributions
@@ -581,10 +586,10 @@ $$Beta(5,20)$$
 
 ```{r}
 #| echo: false
-p = seq(0,1, length=100)
+p <- seq(0, 1, length = 100)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 5, 20), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 20), type = "l")
 ```
 
 ## Examples of Beta distributions
@@ -593,10 +598,10 @@ $$Beta(50,200)$$
 
 ```{r}
 #| echo: false
-p = seq(0,1, length=100)
+p <- seq(0, 1, length = 100)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 50, 200), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 50, 200), type = "l")
 ```
 
 ## Types of conjugate pairs: Poisson-Gamma {.smaller}
@@ -632,10 +637,10 @@ $$Gamma(0.1,0.1)$$
 
 ```{r}
 #| echo: false
-p = seq(0,30, length=1000)
+p <- seq(0, 30, length = 1000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 0.1, 0.1), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 0.1, 0.1), type = "l")
 ```
 
 ## Examples of Gamma distributions
@@ -644,10 +649,10 @@ $$Gamma(1,1)$$
 
 ```{r}
 #| echo: false
-p = seq(0,30, length=1000)
+p <- seq(0, 30, length = 1000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 1, 1), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 1, 1), type = "l")
 ```
 
 ## Examples of Gamma distributions
@@ -656,10 +661,10 @@ $$Gamma(3,3)$$
 
 ```{r}
 #| echo: false
-p = seq(0,30, length=1000)
+p <- seq(0, 30, length = 1000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 3, 3), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 3, 3), type = "l")
 ```
 
 ## Examples of Gamma distributions
@@ -668,10 +673,10 @@ $$Gamma(3,0.5)$$
 
 ```{r}
 #| echo: false
-p = seq(0,30, length=1000)
+p <- seq(0, 30, length = 1000)
 
-#create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 3, 0.5), type='l')
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 3, 0.5), type = "l")
 ```
 
 ## Informative or non-informative priors
@@ -709,7 +714,7 @@ plot(p, dgamma(p, 3, 0.5), type='l')
 
 -  Interpretability.
 -  Flexibility.
--  There are other Bayesian packages, as you will see on Day 2... 
+-  There are other Bayesian packages, as you will see on Day 2...
 
 ## Illustrative example of basic regression in `NIMBLE`
 
@@ -742,7 +747,7 @@ p <- 3 # number of explanatory variables
 n <- 10000 # number of observations
 X <- matrix(round(rnorm(p * n), 2), nrow = n, ncol = p) # explanatory variables
 true_betas <- c(c(0.2, 0.5, 0.3)) # coefficients for beta1, beta2, beta3
-sigma <- 0.5 # variance of variability around perfect agreement 
+sigma <- 0.5 # variance of variability around perfect agreement
 y <- rnorm(n, X %*% true_betas, sigma)
 ```
 
@@ -869,7 +874,7 @@ inits <- list(alpha = 0, beta1 = 0, beta2 = 0, beta3 = 0, sigma = 1)
 ## Linear regression
 
 ::: nonincremental
-- Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC(). 
+- Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC().
 :::
 
 ``` R
@@ -891,7 +896,7 @@ toc - tic
 ## Linear regression
 
 ::: nonincremental
-- Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC(). 
+- Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC().
 :::
 
 ```{r}
