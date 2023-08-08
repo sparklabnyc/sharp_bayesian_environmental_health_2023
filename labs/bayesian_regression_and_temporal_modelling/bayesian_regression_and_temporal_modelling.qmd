@@ -348,7 +348,7 @@ Now the rhat values are much nearer 1.00, which means that the samples are conve
 What do the random weekly terms looks like for the better converged model?
 ```{r}
 mcmc_intervals(nimbleMCMC_samples_week_random_walk_more_samples, regex_pars = c("rw")) + coord_flip() +
-  theme(axis.text.y = element_blank())
+  theme(axis.text.x = element_blank())
 ```
 
 Let's calculate the death rate from the model using the formula.
@@ -640,8 +640,7 @@ linear_month_temp_fit |>
 
 What does the summary of the monthly temperature terms look like?
 ```{r}
-mcmc_intervals(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, regex_pars = c("beta_temperature")) + coord_flip() +
-  theme(axis.text.y = element_blank())
+mcmc_intervals(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, regex_pars = c("beta_temperature")) + coord_flip()
 ```
 
 ## Closing remarks
