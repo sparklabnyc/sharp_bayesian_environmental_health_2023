@@ -6,14 +6,14 @@ date: "August 2023"
 format: html
 ---
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(here)
 library(tidyverse)
 library(nimble)
-library(posterior)
 library(bayesplot)
-library(sf)
+library(posterior)
 library(hrbrthemes)
+library(sf)
 library(colorspace)
 
 extrafont::loadfonts()
@@ -26,14 +26,24 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-The goals of this lab is to introduce hierarchical modelling using the `NIMBLE` modelling framework.
+This goal of this lab is to introduce hierarchical modelling using the `NIMBLE` modelling framework.
+
+## What's going to happen in this lab session?
 
 During this lab session, we will:
 
-1. Write a hierarchical model in `NIMBLE; and
-2. Compare the model to more basic models, and discuss the advantages of hierarchical models.
+1. Write a hierarchical model in `NIMBLE`;
+2. Compare the model to more basic non-hierarchical models; and 
+3. Discuss the advantages of hierarchical models.
 
-In this task, we will explore mortality data in Italy using hierarchical modelling.
+## Introduction
+
+In this task, we will explore mortality data in Italy during XX-XX using hierarchical modelling.
+
+::: aside
+The standardised mortality ratio (SMR) is the ratio of the number of deaths observed in a population over a given period to the number that would be expected over the same period if the study population had the same age-specific rates as the standard population.
+:::
+
 We will estimate the standardised mortality ratio (SMR) for populations in different provinces of Italy using three types of models:
 
 1. Full pooling

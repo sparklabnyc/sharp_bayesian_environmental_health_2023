@@ -10,10 +10,10 @@ format: html
 library(here)
 library(tidyverse)
 library(nimble)
+library(hrbrthemes)
 library(INLA)
 library(sf)
 library(spdep)
-library(hrbrthemes)
 library(colorspace)
 
 extrafont::loadfonts()
@@ -24,7 +24,9 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-The goal of this lab is to use `INLA` to run a some hierarchical models.
+The goal of this lab is to use `INLA` to run some hierarchical models.
+
+## What's going to happen in this lab session?
 
 During this lab session, we will:
 
@@ -33,9 +35,10 @@ During this lab session, we will:
 3. Learn how to work with `INLA` objects; and
 4. See how to write models in different probabilistic programming languages.
 
-We will recreate the `NIMBLE` model in the `hierarchical_modelling` lab using `INLA`.
-As a reminder, here is the model again.
+## Introduction
 
+We will recreate the `NIMBLE` model in the `hierarchical_modelling` lab using `INLA`.
+As a reminder, here is the model from the `hierarchical_modelling` lab again (not as code to run but just for reference).
 ```{.R}
 nimbleCode({
   # priors
@@ -54,7 +57,7 @@ nimbleCode({
 })
 ```
 
-And let's load in the data.
+Let's load in the data.
 ```{r}
 data <- read_rds(here("data", "italy", "italy_mortality.rds"))
 

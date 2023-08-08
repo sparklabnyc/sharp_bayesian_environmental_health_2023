@@ -1,4 +1,4 @@
-# SHARP: Bayesian  Modeling  for Environmental Health Workshop
+# SHARP: Bayesian Modeling for Environmental Health Workshop
 
 ![course logo](assets/bmeh-1200x630.jpg)
 
@@ -8,9 +8,11 @@ GitHub repo through which we're developing and sharing materials for the SHARP B
 
 ## Notes for attendees
 
-The workshop will be a series of lectures and interactive supervised lab sessions.
+The workshop will be a series of lectures and interactive supervised lab sessions. We hope it's informative and fun!
 
-We will be using Posit (RStudio) Cloud, which assumes knowledge of R and RStudio. We will also ask you to pull the final versions of the GitHub repo to your Cloud account. The basics of doing this are in a previously-created guide found via [another guide repo](https://github.com/rmp15/rstudio_cloud_tutorial/tree/main).
+We will be using `Posit (RStudio) Cloud`, which assumes knowledge of `R` and `RStudio`. We will also ask you to pull the final versions of the `GitHub` repo to your Cloud account. The basics of doing this are in a previously-created guide found via [another guide repo](https://github.com/rmp15/rstudio_cloud_tutorial/tree/main).
+
+This workshop is largely written in [`NIMBLE`](https://r-nimble.org/).
 
 Below is the set of labs to follow throughout the two days:
 
@@ -56,7 +58,7 @@ Below is the set of labs to follow throughout the two days:
 
 10:00 -- 10:15: Break / One-on-one questions
 
-10:15 -- 11:00: [Spatial and Spatio-temporal Modelling](/labs/spatiotemporal_models/spatiotemporal_models_partA.qmd) (Hands-on Lab)
+10:15 -- 11:00: [Spatial and Spatio-temporal Modelling](/labs/spatiotemporal_models/spatiotemporal_models.qmd) (Hands-on Lab)
 
 11:00 -- 11:15: Break / One-on-one questions
 
@@ -88,6 +90,6 @@ Run `pre-commit install` to install the hooks. You now won't be able to commit u
 
 `renv` maintains consistency between users' `R` environments. Run `renv::restore()` and the environment will be downloaded into the repository based on the `renv.lock` file. If you want to add a packages to the lockfile, install the package and then run `renv::snapshot()`. For more details, see the [docs](https://rstudio.github.io/renv/articles/renv.html).
 
-### Using Quarto for presentations
+### Using `Quarto` for presentations
 
-Quarto is pretty cool. I won't bore you, but have a look at the [docs](https://quarto.org/docs/guide/). Here, we're using it for [presentations](https://quarto.org/docs/presentations/revealjs/). It's designed by the folks at RStudio, so you `R` folk will be happy. Make a `.qmd` file and run `quarto render *.qmd` to generate the `html`, which you can open in browser. We can get fancy and import our own `css` to have a consistent theme for out presentations.
+Quarto is pretty cool. I won't bore you, but have a look at the [docs](https://quarto.org/docs/guide/). Here, we're using it for [presentations](https://quarto.org/docs/presentations/revealjs/). It's designed by the folks at `RStudio`, so you `R` folk will be happy. Make a `.qmd` file and run `quarto render *.qmd` to generate the `html`, which you can open in browser. We can get fancy and import our own `css` to have a consistent theme for out presentations.
