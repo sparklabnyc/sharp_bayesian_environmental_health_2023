@@ -22,6 +22,7 @@ color_scheme_set(scheme = "viridis")
 set.seed(2)
 ```
 
+
 ## Goal of this computing lab session
 
 This lab will explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
@@ -46,12 +47,15 @@ For that analysis, we applied an Bayesian methods to weekly mortality records in
 We will examine Spain's weekly death count during 2010-2019. We will build simple Bayesian models to try to understand what is happening in the data. Once again we will use NIMBLE as the basis for our Bayesian model writing
 
 Let's load in the data.
+
 ```{r}
 data <- read_csv(here("data", "Spain", "data_spain.csv"))
 head(data)
 ```
 
+
 Now let's summarise the data for Spain by week nationally
+
 ```{r}
 data_national <- data |>
   group_by(week, week_of_year) |>
@@ -66,44 +70,57 @@ data_national <- data |>
   filter(year(week) < 2020) # avoiding COVID for now
 ```
 
+
 What does the national data look like?
+
 ```{r}
 head(data_national)
 ```
 
+
 Let's plot the number of national deaths in Spain by week during our time period (2010-2019)
+
 ```{r}
 ggplot(data = data_national) +
   geom_point(aes(x = week, y = deaths))
 ```
 
+
 Let's calculate crude death rates (per 100,000) over time too.
 ::: aside
 Crude death rates are total deaths divided by total population, without age-adjustment or anything else.
 :::
+
 ```{r}
 data_national <- data_national |>
   mutate(rate = 100000 * deaths / population)
 ```
 
+
 Let's plot the crude death rates over time.
+
 ```{r}
 ggplot(data = data_national) +
   geom_point(aes(x = week, y = rate)) +
   ylab("crude death rates (per 100,000)")
 ```
 
+
 Obtain month information from date.
+
 ```{r}
 data_national <- data_national |>
   ungroup() |>
   mutate(month = month(week))
 ```
 
+
 Let's look at the data one more time now that we've done some more processing.
+
 ```{r}
 head(data_national)
 ```
+
 
 ## Linear model over time
 
@@ -130,6 +147,7 @@ y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 $$
 
 Let's write the NIMBLE code of the above formulation.
+
 ```{r}
 code_linear <- nimbleCode({
   # priors
@@ -148,19 +166,25 @@ code_linear <- nimbleCode({
 })
 ```
 
+
 Final preparation of data we need for NIMBLE model into lists.
+
 ```{r}
 constants <- list(Nw = nrow(data_national))
 data <- list(deaths = data_national$deaths, population = data_national$population)
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(alpha = 0, beta_week = 0)
 parameters_to_monitor <- c("alpha", "beta_week", "beta_year", "beta_year_exp")
 ```
 
+
 Let's run the model.
+
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_linear <- nimbleMCMC(
@@ -179,12 +203,16 @@ toc <- Sys.time()
 toc - tic
 ```
 
+
 What is the summary of each estimated parameter from the Poisson model?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_linear, default_summary_measures())
 ```
 
+
 And how good do convergence indicators look?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_linear, default_convergence_measures())
 ```
@@ -193,8 +221,10 @@ summarise_draws(nimbleMCMC_samples_linear, default_convergence_measures())
 mcmc_trace(nimbleMCMC_samples_linear)
 ```
 
+
 Let's calculate the death rate from the model using the formula.
 For simplicity, we'll use the mean of the samples generated from the model run above.
+
 ```{r}
 linear_fit <- data_national |>
   mutate(
@@ -216,7 +246,9 @@ linear_fit <- data_national |>
   mutate(residuals = rate - .death_rate_fit)
 ```
 
+
 Let's plot how the model fits
+
 ```{r}
 linear_fit |>
   ggplot() +
@@ -224,12 +256,15 @@ linear_fit |>
   geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
+
 Now let's look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.
+
 ```{r}
 linear_fit |>
   ggplot(aes(x = residuals)) +
   geom_histogram()
 ```
+
 The residuals don't look normally distributed.
 There is very likely some more complexity we should add to the model.
 
@@ -258,6 +293,7 @@ $$
 
 It was getting quite complicated to manipulate the samples after the model had fit to calculate the death rate.
 So let's create a variable `lograte[t]` within the model and monitor that.
+
 ```{r}
 code_weekly_random_walk <- nimbleCode({
   # priors
@@ -279,13 +315,17 @@ code_weekly_random_walk <- nimbleCode({
 })
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(alpha = -8.0, rw = rep(0, times = nrow(data_national)), sigma_rw = 1)
 parameters_to_monitor <- c("alpha", "rw", "lograte")
 ```
 
+
 Let's run the model.
+
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
@@ -304,15 +344,20 @@ toc <- Sys.time()
 toc - tic
 ```
 
+
 What is the summary of each estimated parameter from the model with the random walk over time included?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk, default_summary_measures())
 ```
 
+
 And how good do convergence indicators look?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk, default_convergence_measures())
 ```
+
 
 The `rhat` values indicate that convergence could be better if we ran for longer.
 This is a real-world example of trying to find better converging models with more samples.
@@ -323,6 +368,7 @@ Another possibility is that the model might not be very well specified.
 :::
 
 So let's run again with more samples!
+
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_week_random_walk_more_samples <- nimbleMCMC(
@@ -341,19 +387,25 @@ toc <- Sys.time()
 toc - tic
 ```
 
+
 What is the summary of each estimated parameter from the model with the random walk over time included but with more samples?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk_more_samples, default_summary_measures())
 ```
 
+
 And how good do convergence indicators look?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk_more_samples, default_convergence_measures())
 ```
 
+
 Now the rhat values are much nearer 1.00, which means that the samples are converging, and therefore the estimated parameters are reliable.
 
 What do the random weekly terms looks like for the better converged model?
+
 ```{r}
 mcmc_intervals(
   nimbleMCMC_samples_week_random_walk_more_samples[, str_c("rw[", seq(nrow(data_national)), "]")],
@@ -363,8 +415,10 @@ mcmc_intervals(
   theme(axis.text.x = element_blank())
 ```
 
+
 Let's calculate the death rate from the model using the formula.
 This should be easier now we've monitored `lograte`.
+
 ```{r}
 rw_fit <- data_national |>
   mutate(
@@ -379,21 +433,26 @@ rw_fit <- data_national |>
   mutate(residuals = rate - .death_rate_fit)
 ```
 
+
 Let's plot how the model fits
+
 ```{r}
 rw_fit |>
   ggplot() +
   geom_point(aes(x = week, y = rate), size = 2) +
   geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
+
 Looks like it is a much better fit! We will talk later in the workshop about ways of quantifying which candidate models provide better fits
 
 Now let's look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.
+
 ```{r}
 rw_fit |>
   ggplot(aes(x = residuals)) +
   geom_histogram()
 ```
+
 
 The vast majority of the residuals are now very well normally distributed around 0, so we can likely say that the fit is much better!
 
@@ -419,6 +478,7 @@ y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 \end{split}
 $$
 
+
 ```{r}
 code_weekly_random_walk_with_temperature <- nimbleCode({
   # priors
@@ -441,7 +501,9 @@ code_weekly_random_walk_with_temperature <- nimbleCode({
 })
 ```
 
+
 Final preparation of data into lists
+
 ```{r}
 constants <- list(Nw = nrow(data_national))
 
@@ -452,13 +514,17 @@ data <- list(
 )
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(alpha = 0, beta_temperature = 0, rw = rep(0, times = nrow(data_national)), sigma_rw = 1)
 parameters_to_monitor <- c("alpha", "beta_temperature", "rw", "lograte")
 ```
 
+
 Let's run the model with the larger number of samples we empirically found was better at converging before
+
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_week_random_walk_with_temperature <- nimbleMCMC(
@@ -477,18 +543,24 @@ toc <- Sys.time()
 toc - tic
 ```
 
+
 What is the summary of each estimated parameter from the model with the random walk over time and single linear temperature term?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk_with_temperature, default_summary_measures())
 ```
 
+
 And how good do convergence indicators look?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk_with_temperature, default_convergence_measures())
 ```
 
+
 Let's calculate the death rate from the model using the formula.
 As before, for simplicity, we'll use the mean of the samples generated from the model run above.
+
 ```{r}
 linear_temp_fit <- data_national |>
   mutate(
@@ -503,7 +575,9 @@ linear_temp_fit <- data_national |>
   mutate(residuals = rate - .death_rate_fit)
 ```
 
+
 Let's plot how the model fits
+
 ```{r}
 linear_temp_fit |>
   ggplot() +
@@ -511,22 +585,29 @@ linear_temp_fit |>
   geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
+
 Now let's look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.
+
 ```{r}
 linear_temp_fit |>
   ggplot(aes(x = residuals)) +
   geom_histogram()
 ```
 
+
 What does the posterior of the temperature term itself look like?
+
 ```{r}
 mcmc_hist(nimbleMCMC_samples_week_random_walk_with_temperature[, c("beta_temperature", "alpha")], pars = c("beta_temperature"))
 ```
 
+
 What proportion of draws are greater than 0, which represents the posterior probability that the association between temperature and death rates is positive?
+
 ```{r}
 100 * sum(nimbleMCMC_samples_week_random_walk_with_temperature[, "beta_temperature"] > 0) / length(nimbleMCMC_samples_week_random_walk_with_temperature[, "beta_temperature"])
 ```
+
 
 ## Linear model over time with random walk term and monthly random linear temperature term
 
@@ -552,6 +633,7 @@ y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 \beta_m &\sim N(\beta_{m-1}, \sigma_{t})
 \end{split}
 $$
+
 
 ```{r}
 code_weekly_random_walk_with_temperature_by_month <- nimbleCode({
@@ -581,7 +663,9 @@ code_weekly_random_walk_with_temperature_by_month <- nimbleCode({
 })
 ```
 
+
 Final preparation of data into lists
+
 ```{r}
 constants <- list(
   Nw = nrow(data_national),
@@ -596,7 +680,9 @@ data <- list(
 )
 ```
 
+
 Set initial values for MCMC samples
+
 ```{r}
 inits <- list(
   alpha = 0,
@@ -609,7 +695,9 @@ inits <- list(
 parameters_to_monitor <- c("alpha", "beta_temperature_month", "rw", "lograte")
 ```
 
+
 Let's run the model.
+
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_week_random_walk_with_temperature_by_month <- nimbleMCMC(
@@ -628,18 +716,24 @@ toc <- Sys.time()
 toc - tic
 ```
 
+
 What is the summary of each estimated parameter from the model with the random walk over time and month-specific linear temperature term?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, default_summary_measures())
 ```
 
+
 And how good do convergence indicators look?
+
 ```{r}
 summarise_draws(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, default_convergence_measures())
 ```
 
+
 Let's calculate the death rate from the model using the formula.
 Again, as before, for simplicity, we'll use the mean of the samples generated from the model run above.
+
 ```{r}
 linear_month_temp_fit <- data_national |>
   mutate(
@@ -654,7 +748,9 @@ linear_month_temp_fit <- data_national |>
   mutate(residuals = rate - .death_rate_fit)
 ```
 
+
 Let's plot how the model fits
+
 ```{r}
 linear_month_temp_fit |>
   ggplot() +
@@ -662,17 +758,22 @@ linear_month_temp_fit |>
   geom_point(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
+
 Now let's look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.
+
 ```{r}
 linear_month_temp_fit |>
   ggplot(aes(x = residuals)) +
   geom_histogram()
 ```
 
+
 What does the summary of the monthly temperature terms look like?
+
 ```{r}
 mcmc_intervals(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, regex_pars = c("beta_temperature")) + coord_flip()
 ```
+
 
 ## Closing remarks
 
@@ -681,3 +782,4 @@ We looked at models which started off with a linear time trend, then a random wa
 
 Other topics that will be related to this will be how to include a more general longer-memory autoregressive term, and also how to forecast based on model fit.
 However, in the limited time that we have, this lab provides a foundation for learning about other methods and techniques, some of which will be elaborated upon in the coming lab sessions.
+

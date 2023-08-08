@@ -7,10 +7,12 @@ format: html
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(here)
 library(readr)
 library(tidyverse)
 library(ggplot2)
-library(here)
+library(bayesplot)
+library(hrbrthemes)
 
 extrafont::loadfonts()
 theme_set(theme_ipsum())
