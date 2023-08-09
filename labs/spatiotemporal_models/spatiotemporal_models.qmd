@@ -67,20 +67,26 @@ data_england <- data_england_simpler
 
 As with the previous labs, let's use the package `ggplot2` to plot maps of the variables.
 
-And for nicer maps for the other columns, including COVID-19 deaths, the expected number of deaths, and the SMR:
+And for nicer maps for the other columns, including COVID-19 deaths:
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = deaths)) +
   geom_sf(colour = "white", size = 0.1) +
   labs(title = "COVID-19 deaths") +
   theme_void() +
   scale_fill_continuous_sequential(palette = "Reds")
+```
 
+the expected number of deaths, and:
+```{r fig.width=11}
 ggplot(data = data_england, aes(fill = expectd)) +
   geom_sf(colour = "white", size = 0.1) +
   labs("Expected number of deaths") +
   theme_void() +
   scale_fill_continuous_sequential(palette = "Blues")
+```
 
+and the SMR:
+```{r fig.width=11}
 ggplot(data = data_england, aes(fill = deaths / expectd)) +
   geom_sf(colour = "white", size = 0.1) +
   labs("Standardised mortality ratio") +
@@ -88,20 +94,26 @@ ggplot(data = data_england, aes(fill = deaths / expectd)) +
   scale_fill_continuous_divergingx(palette = "RdBu", mid = 1, rev = TRUE)
 ```
 
-And the covariates, including total ICU beds, NO$_2$ and quintile of Index of Multiple Deprivation (IMD):
+And the covariates, including total ICU beds,:
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = TtlICUB)) +
   geom_sf(colour = "white", size = 0.1) +
   labs(title = "Total ICU beds") +
   theme_void() +
   scale_fill_continuous_sequential(palette = "Greens")
+```
 
+NO$_2$,:
+```{r fig.width=11}
 ggplot(data = data_england, aes(fill = NO2)) +
   geom_sf(colour = "white", size = 0.1) +
   labs(title = "NO2") +
   theme_void() +
   scale_fill_continuous_sequential(palette = "Terrain")
+```
 
+and quintile of Index of Multiple Deprivation (IMD):
+```{r fig.width=11}
 ggplot(data = data_england, aes(fill = as.factor(IMD))) +
   geom_sf(colour = "white", size = 0.1) +
   labs(title = "IMD quintile") +
