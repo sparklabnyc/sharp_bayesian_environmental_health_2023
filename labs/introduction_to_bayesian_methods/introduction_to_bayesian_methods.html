@@ -114,22 +114,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="goal-of-this-computing-lab-session" class="level2">
 <h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
-<p>This lab will involve taking some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way NIMBLE works.</p>
+<p>This goal of this lab is to take some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way <code>NIMBLE</code> works.</p>
+</section>
+<section id="whats-going-to-happen-in-this-lab-session" class="level2">
+<h2 class="anchored" data-anchor-id="whats-going-to-happen-in-this-lab-session">What’s going to happen in this lab session?</h2>
 <p>During this lab session, we will:</p>
 <ol type="1">
-<li>Explore how NIMBLE is written and works;</li>
+<li>Explore how <code>NIMBLE</code> is written and works;</li>
 <li>Write some common regression models (Normal, logistic regression, Poisson);</li>
 <li>Understand how basic model assessment is made; and</li>
 <li>Test out how adjustments of models are made via different priors and more samples.</li>
 </ol>
 </section>
-<section id="introduction-to-nimble" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="introduction-to-nimble">Introduction to NIMBLE</h2>
-<p>NIMBLE code is written in a slightly unusual format if you’re used to just using base <code>R</code>. It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London. But you don’t really need to know about BUGS to be able to use NIMBLE.</p>
+<section id="introduction" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p><code>NIMBLE</code> code is written in a slightly unusual format if you’re used to just using base <code>R</code>. It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London. But you don’t really need to know about BUGS to be able to use <code>NIMBLE</code>.</p>
 <p>We will start with some straightforward examples for situations you’re likely familiar with to introduce the style of writing models. These examples will feature basic regression models using linear predictors.</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p>Some of these models have been adapted from <a href="https://r-nimble.org/examples">NIMBLE’s examples</a>.</p>
+<p>Some of these models have been adapted from <a href="https://r-nimble.org/examples"><code>NIMBLE</code>’s examples</a>.</p>
 </div></div><section id="normal-normal-example" class="level3">
 <h3 class="anchored" data-anchor-id="normal-normal-example">Normal-Normal example</h3>
 <p><span class="math display">\[
@@ -138,7 +141,7 @@ y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 \mu_i &amp;= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
 \end{split}
 \]</span></p>
-<p>First create some example data for our model:</p>
+<p>First create some example data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -149,6 +152,10 @@ y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, X <span class="sc">%*%</span> true_betas, sigma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="exploratory-data-analysis" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h2>
 <p>What does the dataset look like?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">y =</span> y, <span class="at">x1 =</span> X[, <span class="dv">1</span>], <span class="at">x2 =</span> X[, <span class="dv">2</span>], <span class="at">x3 =</span> X[, <span class="dv">3</span>])</span>
@@ -182,7 +189,7 @@ x2           0.49277663  0.48289869 0.502654568
 x3           0.29160573  0.28189340 0.301318063</code></pre>
 </div>
 </div>
-<p>Let’s rewrite this model in a Bayesian framework using NIMBLE. It can be written in lots of different ways, but here we’re going to try and stick to defining the priors first, then writing the formula.</p>
+<p>Let’s rewrite this model in a Bayesian framework using <code>NIMBLE</code>. It can be written in lots of different ways, but here we’re going to try and stick to defining the priors first, then writing the formula.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors for parameters</span></span>
@@ -199,13 +206,13 @@ x3           0.29160573  0.28189340 0.301318063</code></pre>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Before running NIMBLE, extract data for three predictors and center for better MCMC performance.</p>
+<p>Before running <code>NIMBLE</code>, extract data for three predictors and center for better MCMC performance.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> X[, <span class="dv">1</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">1</span>])</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> X[, <span class="dv">2</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">2</span>])</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> X[, <span class="dv">3</span>] <span class="sc">-</span> <span class="fu">mean</span>(X[, <span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Final preparation of data into lists for input into NIMBLE MCMC running</p>
+<p>Final preparation of data into lists for input into <code>NIMBLE</code> MCMC running</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> n)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">y =</span> y, <span class="at">x1 =</span> x1, <span class="at">x2 =</span> x2, <span class="at">x3 =</span> x3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -214,7 +221,7 @@ x3           0.29160573  0.28189340 0.301318063</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">0</span>, <span class="at">beta2 =</span> <span class="dv">0</span>, <span class="at">beta3 =</span> <span class="dv">0</span>, <span class="at">sigma =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The following code will establish which samples will be used in the sampling of the posteriors. It is not going to run the model yet. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), NIMBLE will automatically detect it here. This is an example where there is a Normal-Normal conjugate relationship</p>
+<p>The following code will establish which samples will be used in the sampling of the posteriors. It is not going to run the model yet. If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), <code>NIMBLE</code> will automatically detect it here. This is an example where there is a Normal-Normal conjugate relationship</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">nimbleModel</span>(code, <span class="at">constants =</span> constants, <span class="at">data =</span> data, <span class="at">inits =</span> inits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -293,7 +300,7 @@ conjugate sampler (4)
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 48.20916 secs</code></pre>
+<pre><code>Time difference of 50.03137 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples? The following operations will help us understand.</p>
@@ -389,7 +396,7 @@ conjugate sampler (4)
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 47.72519 secs</code></pre>
+<pre><code>Time difference of 49.27769 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples with burn in?</p>
@@ -498,7 +505,7 @@ conjugate sampler (4)
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 39.47966 secs</code></pre>
+<pre><code>Time difference of 40.89684 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples with different priors?</p>
@@ -539,7 +546,7 @@ conjugate sampler (4)
 <p>You can see how the model cannot recover the true value of <code>beta2</code> because of our choice of prior.</p>
 <p>By using a uniform prior without support for the true value of <code>beta2</code>, the model has increased its variance to try and cope with the data.</p>
 <p>This is a warning: even though the mode has converged, it might not be a good model.</p>
-<p>Back to our sensible priors, say we wanted to establish the estimated difference between two betas? Let’s say <code>beta1</code> and <code>beta2</code> in this case. NIMBLE formulas are flexible so you can define this as an output of the model, as seen in last elements of formula code below.</p>
+<p>Back to our sensible priors, say we wanted to establish the estimated difference between two betas? Let’s say <code>beta1</code> and <code>beta2</code> in this case. <code>NIMBLE</code> formulas are flexible so you can define this as an output of the model, as seen in last elements of formula code below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>code_diff_betas <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors for parameters</span></span>
@@ -609,7 +616,7 @@ conjugate sampler (4)
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 47.7093 secs</code></pre>
+<pre><code>Time difference of 49.36824 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the samples when monitoring difference between <code>beta1</code> and <code>beta2</code>?</p>
@@ -632,7 +639,7 @@ conjugate sampler (4)
 1 beta12_diff  1.00    9101.    8954.</code></pre>
 </div>
 </div>
-<p>Equally, we could also do this by operating on the samples themselves from the original model. NIMBLE is quite flexible.</p>
+<p>Equally, we could also do this by operating on the samples themselves from the original model. <code>NIMBLE</code> is quite flexible.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>(nimbleMCMC_samples_burnin[, <span class="st">"beta2"</span>] <span class="sc">-</span> nimbleMCMC_samples_burnin[, <span class="st">"beta1"</span>]) <span class="sc">|&gt;</span></span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>() <span class="sc">|&gt;</span></span>
@@ -642,9 +649,8 @@ conjugate sampler (4)
  0.2637  0.2863  0.2911  0.2910  0.2957  0.3158 </code></pre>
 </div>
 </div>
-</section>
-<section id="logistic-regression-example." class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="logistic-regression-example.">Logistic regression example.</h3>
+<section id="logistic-regression-binomial-example." class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="logistic-regression-binomial-example.">Logistic regression (binomial) example.</h3>
 <p>Logistic regression is used when we want to classify observations into two groups. <span class="math display">\[
 \begin{split}
 y_i &amp;\sim \text{Bernoulli}(p_i) \quad i = 1,..., N \\
@@ -712,7 +718,7 @@ x2           3.0673555  2.9106508  3.230181
 x3          -5.0590851 -5.3043405 -4.823787</code></pre>
 </div>
 </div>
-<p>Create the NIMBLE model for a logistic regression.</p>
+<p>Create the <code>NIMBLE</code> model for a logistic regression.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>code_binomial <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors for parameters</span></span>
@@ -728,7 +734,7 @@ x3          -5.0590851 -5.3043405 -4.823787</code></pre>
 <span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance.</p>
+<p>Before running <code>NIMBLE</code>, extract data for three predictors and center around zero for better MCMC performance.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> x1 <span class="sc">-</span> <span class="fu">mean</span>(x1)</span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> x2 <span class="sc">-</span> <span class="fu">mean</span>(x2)</span>
@@ -743,7 +749,7 @@ x3          -5.0590851 -5.3043405 -4.823787</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">0</span>, <span class="at">beta2 =</span> <span class="dv">0</span>, <span class="at">beta3 =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Let NIMBLE find out if there is a conjugate relationship between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma).</p>
+<p>Let <code>NIMBLE</code> find out if there is a conjugate relationship between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>model_binomial <span class="ot">&lt;-</span> <span class="fu">nimbleModel</span>(code_binomial, <span class="at">constants =</span> constants, <span class="at">data =</span> data, <span class="at">inits =</span> inits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -822,7 +828,7 @@ RW sampler (4)
 <div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 38.2699 secs</code></pre>
+<pre><code>Time difference of 38.7709 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the binomial model?</p>
@@ -924,7 +930,7 @@ x2          -0.09972148 -0.1021164 -0.09732667
 x3           0.60080907  0.5984493  0.60316886</code></pre>
 </div>
 </div>
-<p>Create the NIMBLE model for the Poisson model.</p>
+<p>Create the <code>NIMBLE</code> model for the Poisson model.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>code_poisson <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
 <span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors for parameters</span></span>
@@ -940,7 +946,7 @@ x3           0.60080907  0.5984493  0.60316886</code></pre>
 <span id="cb134-12"><a href="#cb134-12" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb134-13"><a href="#cb134-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance</p>
+<p>Before running <code>NIMBLE</code>, extract data for three predictors and center around zero for better MCMC performance</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> x1 <span class="sc">-</span> <span class="fu">mean</span>(x1)</span>
 <span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> x2 <span class="sc">-</span> <span class="fu">mean</span>(x2)</span>
@@ -1033,7 +1039,7 @@ RW sampler (4)
 <div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 44.03742 secs</code></pre>
+<pre><code>Time difference of 45.64617 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
@@ -1073,7 +1079,7 @@ RW sampler (4)
 </section>
 <section id="closing-remarks" class="level2">
 <h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
-<p>In this lab session, we have explored how to fit some basic models using Bayesian regression in NIMBLE. We looked at the three most common likelihoods: Normal, Binomial, and Poisson.</p>
+<p>In this lab session, we have explored how to fit some basic models using Bayesian regression in <code>NIMBLE</code>. We looked at the three most common likelihoods: Normal, Binomial, and Poisson.</p>
 <p>We used simulated data here, so we had complete control over the complexity in the data. However, in the real world, we would often try many different models if we do not know how the data were generated. Also, not all real life examples fit the any of the three likelihoods perfectly. For example, the data might be “overdispersed”, where there is greater variability in the data than would be expected. Luckily, there are extensions to these likelihoods that can deal with overdispersion, such as the beta-binomial likelhood for overdispersed binomial data, or the negative binomial likelihood (sometimes called the gamma-Poisson) for overdispersed Poisson data. For more information on these likelihoods, see Chapter 12 of <em>Statistical Rethinking</em> by Richard McElreath.</p>
 </section>
 

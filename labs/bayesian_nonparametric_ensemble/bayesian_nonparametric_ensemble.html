@@ -70,6 +70,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="bayesian_nonparametric_ensemble_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="bayesian_nonparametric_ensemble_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -111,26 +113,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="goal-of-this-computing-lab-session" class="level2">
 <h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
-<p>This lab will involve taking some concepts from the Introduction to Bayesian Nonparametric Ensemble (BNE) lecture and introduce you to the way BNE works.</p>
+<p>This goal of this lab is to take some concepts from the Introduction to Bayesian Nonparametric Ensemble (<code>BNE</code>) lecture and introduce you to the way <code>BNE</code> works.</p>
 </section>
-<section id="introduction-to-bne" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-to-bne">Introduction to BNE</h2>
-<p>BNE code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course. In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM2.5 predictions. Predictions refers to the predicted value at some location and time. Note that for BNE, prediction does not refer to future values, but values within our study period + location.</p>
-<p>We estimate 2015 annual PM2.5 concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with BNE. We trained the model on measurements reported in the US Environmental Protection Agency’s Air Quality System (AQS) database. We estimated model uncertainty as the standard deviations of predictions’ location-specific posterior predictive distribution.</p>
-<p>We will start exploring annual average PM2.5 concentrations from input base models, which are the individual prediction models that are incorporated into BNE to ultimate generate predictions. These models along with AQS monitor data will be used to train BNE.</p>
+<section id="whats-going-to-happen-in-this-lab-session" class="level2">
+<h2 class="anchored" data-anchor-id="whats-going-to-happen-in-this-lab-session">What’s going to happen in this lab session?</h2>
+<p>During this lab session, we will:</p>
+<ol type="1">
+<li>Explore several pollution concentration prediction models;</li>
+<li>Understand how pollution concentration models can disagree;</li>
+<li>Understand what <code>BNE</code> does;</li>
+<li>Explore output of <code>BNE</code>; and</li>
+<li>Understand why <code>BNE</code> is useful for estimating uncertainty of exposures.</li>
+</ol>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>As seen in the lecture just now, <code>BNE</code> is XX [[[Summary of BNE]]]</p>
+<p><code>BNE</code> code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course. In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM<span class="math inline">\(_{2.5}\)</span> predictions. Predictions refers to the predicted value at some location and time. Note that for <code>BNE</code>, prediction does not refer to future values, but values within our study period + location.</p>
+<p>We estimate 2015 annual PM<span class="math inline">\(_{2.5}\)</span> concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with <code>BNE</code>. We trained the model on measurements reported in the US Environmental Protection Agency’s Air Quality System (AQS) database. We estimated model uncertainty as the standard deviations of predictions’ location-specific posterior predictive distribution.</p>
+</section>
+<section id="exploring-input-model-data" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-input-model-data">Exploring input model data</h2>
+<p>We will start exploring annual average PM<span class="math inline">\(_{2.5}\)</span> concentrations from input base models, which are the individual prediction models that are incorporated into <code>BNE</code> to ultimate generate predictions. These models along with AQS monitor data will be used to train <code>BNE</code>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/table_input_base_models.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Input base prediction models included</figcaption>
 </figure>
 </div>
-<p>Load plotting function</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-2_56f3275c9cf31ed839637977bf3b4dde">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load function plotOneParameterSpatial, which will be used for plotting maps</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"labs"</span>, <span class="st">"bayesian_nonparametric_ensemble"</span>, <span class="st">"functions"</span>, <span class="st">"STR_1_plotOneParameterSpatial.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Load plotting function <code>plotOneParameterSpatial</code>, which will be used for plotting maps.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"labs"</span>, <span class="st">"bayesian_nonparametric_ensemble"</span>, <span class="st">"functions"</span>, <span class="st">"STR_1_plotOneParameterSpatial.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Load training dataset containing input base models and AQS observations for PM2.5 during the period 2010-2015. To create the training dataset, we spatially joined each model to the EPA AQS dataset, using the prediction that was closest to each monitor (i.e., nearest neighbors).</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-3_0cfd742b45d3075aca442c809bcfc76e">
+<p>Load training dataset containing input base models and AQS observations for PM<span class="math inline">\(_{2.5}\)</span> during the period 2010-2015. To create the training dataset, we spatially joined each model to the EPA AQS dataset, using the prediction that was closest to each monitor (i.e., nearest neighbors).</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>aqs_preds <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"us"</span>, <span class="st">"training_cvfolds.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 3808 Columns: 14
@@ -174,8 +190,8 @@ dbl (12): lat, lon, yyyy, obs, pred_av, pred_cc, pred_cm, pred_gs, pred_js, ...
                     Max.   :10.000  </code></pre>
 </div>
 </div>
-<p>Load prediction dataset. To create the prediction dataset, we first created a reference grid, and then joined each prediction dataset by nearest neighbor. This dataset also contains BNE results that will be explored in next steps.</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-4_1659669a987b5141cd8692c99850ce8f">
+<p>Load prediction dataset. To create the prediction dataset, we first created a reference grid, and then joined each prediction dataset by nearest neighbor. This dataset also contains <code>BNE</code> results that will be explored in next steps.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bne2015 <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"us"</span>, <span class="st">"refGrid_pm25_comp_seb_vers_2_2015_2_0-5_2_0-5_2_0-0498_0-1353.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 52385 Columns: 51
@@ -188,7 +204,7 @@ dbl (51): lat, lon, time, ens_mean, ens_sd, rp_mean, rp_sd, y_mean, y_sd, un...
 </div>
 </div>
 <p>Explore input base models. What does the input base model predictions look like for the year 2015 over the US?</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-5_7ab31da4b1de3e630ff39fb542157e39">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate value range and value breaks for the plot</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, bne2015<span class="sc">$</span>pred_av, bne2015<span class="sc">$</span>pred_cc, bne2015<span class="sc">$</span>pred_cm,</span>
@@ -256,7 +272,7 @@ dbl (51): lat, lon, time, ens_mean, ens_sd, rp_mean, rp_sd, y_mean, y_sd, un...
 </div>
 </div>
 <p>How do input base model predictions compare with AQS observations?</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-6_33a8b4d6d6e655aebdda70f0316b8818">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>aqs_preds_summ <span class="ot">&lt;-</span> aqs_preds <span class="sc">%&gt;%</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_av =</span> (pred_av <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>,</span>
@@ -342,19 +358,19 @@ chr (2): region, region_name
 </div>
 </section>
 <section id="running-bne" class="level2">
-<h2 class="anchored" data-anchor-id="running-bne">Running BNE</h2>
-<p>In this lab, we provide you with BNE source code both in MATLAB and Octave, an open source programming language. In this part of the lab, we execute locally running_bne_octave.qmd file running BNE on a subset of the contiguous US constrained to the South West area. You can run either the MATLAB or the Octave code in your computer using the scripts found at bne_v2_matlab and/or bne_v2_octave.</p>
-<p>In order to run BNE, we need to 1) train BNE given input base model predictions and AQS observations; 2) generate BNE predictions and uncertainty levels over an spatio-temporal context of interest.</p>
-<p>BNE is an ensemble approach in which the weights vary smoothly over space and time. In other words, for a particular point in space-time, the weight of an input model is informed by the model’s performance at nearby points. This approach is particularly well-suited for modeling environmental factors that vary smoothly over space, such as temperature and air pollution, as individual models have been have accuracy that varies over time and space. As a Bayesian model, BNE yields a Posterior Predictive Distribution (PPD) for each parameter of interest.</p>
-<p>For example, if a model has relatively high performance in New England, but not in the South East region, BNE will assign high weights to that model in New England, but not in the South East. BNE has adaptive weights that maximize predictive accuracy and, thus, minimize exposure measurement error.</p>
-<p>Training BNE requires times &amp; locations of ground-truth observations, the ground-truth observations, and the predictions at those times and locations of the input models.</p>
-<p>Generating Predictions with BNE requires the PPD of the BNE parameters and a a tidy dataset of all of the input base model predictions. The input base model predictions need to be at the same spatial scale (harmonized), so that the weights can be appropriately estimated.</p>
+<h2 class="anchored" data-anchor-id="running-bne">Running <code>BNE</code></h2>
+<p>In this lab, we provide you with <code>BNE</code> source code both in MATLAB and Octave, an open source programming language. In this part of the lab, we execute locally running_<code>BNE</code>_octave.qmd file running <code>BNE</code> on a subset of the contiguous US constrained to the South West area. You can run either the MATLAB or the Octave code in your computer using the scripts found at <code>BNE</code>_v2_matlab and/or <code>BNE</code>_v2_octave.</p>
+<p>In order to run <code>BNE</code>, we need to 1) train <code>BNE</code> given input base model predictions and AQS observations; 2) generate <code>BNE</code> predictions and uncertainty levels over an spatio-temporal context of interest.</p>
+<p><code>BNE</code> is an ensemble approach in which the weights vary smoothly over space and time. In other words, for a particular point in space-time, the weight of an input model is informed by the model’s performance at nearby points. This approach is particularly well-suited for modeling environmental factors that vary smoothly over space, such as temperature and air pollution, as individual models have been have accuracy that varies over time and space. As a Bayesian model, <code>BNE</code> yields a Posterior Predictive Distribution (PPD) for each parameter of interest.</p>
+<p>For example, if a model has relatively high performance in New England, but not in the South East region, <code>BNE</code> will assign high weights to that model in New England, but not in the South East. <code>BNE</code> has adaptive weights that maximize predictive accuracy and, thus, minimize exposure measurement error.</p>
+<p>Training <code>BNE</code> requires times &amp; locations of ground-truth observations, the ground-truth observations, and the predictions at those times and locations of the input models.</p>
+<p>Generating Predictions with <code>BNE</code> requires the PPD of the <code>BNE</code> parameters and a a tidy dataset of all of the input base model predictions. The input base model predictions need to be at the same spatial scale (harmonized), so that the weights can be appropriately estimated.</p>
 </section>
 <section id="explore-bne-results" class="level2">
-<h2 class="anchored" data-anchor-id="explore-bne-results">Explore BNE results</h2>
-<p>In this part of the lab, we explore the results of a BNE model run over the contiguous US for the year 2015 given the seven input base models previously introduced.</p>
-<p>Model weights. In BNE, the weights of the ensemble members smoothly vary over time and space. The model weights are required to sum to one, so the weighted model combination must stay within the range of the original predictions.</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-7_35a28ceee227f18fa7a65b9954fca7eb">
+<h2 class="anchored" data-anchor-id="explore-bne-results">Explore <code>BNE</code> results</h2>
+<p>In this part of the lab, we explore the results of a <code>BNE</code> model run over the contiguous US for the year 2015 given the seven input base models previously introduced.</p>
+<p>Model weights. In <code>BNE</code>, the weights of the ensemble members smoothly vary over time and space. The model weights are required to sum to one, so the weighted model combination must stay within the range of the original predictions.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, bne2015<span class="sc">$</span>w_mean_av, bne2015<span class="sc">$</span>w_mean_cc, bne2015<span class="sc">$</span>w_mean_cm,</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  bne2015<span class="sc">$</span>w_mean_gs, bne2015<span class="sc">$</span>w_mean_js, bne2015<span class="sc">$</span>w_mean_me,</span>
@@ -422,8 +438,8 @@ chr (2): region, region_name
 <p><img src="bayesian_nonparametric_ensemble_files/figure-html/unnamed-chunk-7-8.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>BNE Predicted concentration. BNE estimates a posterior predictive distribution (PPD) of estimated concentration for each point; we use the mean of the distribution as the point estimate of predicted concentration. Once optimal weights are calculated, a residual process term is then estimated in a second stage to capture any systematic bias in the weighted model combination and capture uncertainty due to lack of measurements in a particular location. The plot below shows the total BNE estimate summing both components: model ensemble and residual process.</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-8_0c72e59e0fe129dad9c273ba67aa548b">
+<p><code>BNE</code> Predicted concentration. <code>BNE</code> estimates a posterior predictive distribution (PPD) of estimated concentration for each point; we use the mean of the distribution as the point estimate of predicted concentration. Once optimal weights are calculated, a residual process term is then estimated in a second stage to capture any systematic bias in the weighted model combination and capture uncertainty due to lack of measurements in a particular location. The plot below shows the total <code>BNE</code> estimate summing both components: model ensemble and residual process.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(bne2015<span class="sc">$</span>y_mean)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -442,8 +458,8 @@ chr (2): region, region_name
 </div>
 </div>
 <p>Predicted uncertainty levels. How wide is the range of plausible values for the concentration at a particular location at a given time? The wider the range, the high the uncertainty, as there are more possible values for the concentration. Here, we measure predictive uncertainty as the standard deviation (SD) of the PPD of the concentration. Note that predictive uncertainty is given our evidence and our model; if we use a different model, then we may have a different amount of uncertainty.</p>
-<p>A larger SD corresponds to a wider predictive distribution and greater uncertainty, i.e., at that point, BNE considers a wider range of concentrations to be plausible, given the base models and model structure.</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-9_31d2de4fd203b1b646a72b6e586a57c9">
+<p>A larger SD corresponds to a wider predictive distribution and greater uncertainty, i.e., at that point, <code>BNE</code> considers a wider range of concentrations to be plausible, given the base models and model structure.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>varVec <span class="ot">&lt;-</span> <span class="fu">c</span>(bne2015<span class="sc">$</span>y_sd)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>varRange <span class="ot">&lt;-</span> <span class="fu">max</span>(varVec) <span class="sc">-</span> <span class="fu">min</span>(varVec)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>varScale <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -457,7 +473,7 @@ chr (2): region, region_name
 </div>
 </div>
 <p>We also examine scaled uncertainty, in which we divided the SD by the predicted concentration. Scaled uncertainty may be more informative in some contexts where, for example, an SD of 1 µg/m3 is more problematic in an area with low concentrations (e.g.&nbsp;annual average of 8 µg/m3) than an area of high concentrations (e.g.&nbsp;annual average of 30 µg/m3).</p>
-<div class="cell" data-hash="bayesian_nonparametric_ensemble_cache/html/unnamed-chunk-10_4846d8f8087161b26d082200c01bb149">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1a function to calculate scaled uncertainty</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>compute_scaled_y_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(bne) {</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  bne <span class="ot">&lt;-</span> bne <span class="sc">%&gt;%</span></span>
@@ -484,9 +500,9 @@ chr (2): region, region_name
 </section>
 <section id="closing-remarks" class="level2">
 <h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
-<p>In this lab session, we have explored how to run BNE to estimate PM2.5 predictions and uncertainty given seven input base models and AQS observations. We first explored input base models’ PM2.5 predictions for 2015 and compared them against AQS observations over the contiguous US. We continued by running BNE over south western US cities, a subset of the US initial data. We then analysed BNE output over the contiguous US.</p>
+<p>In this lab session, we have explored how to run <code>BNE</code> to estimate PM<span class="math inline">\(_{2.5}\)</span> predictions and uncertainty given seven input base models and AQS observations. We first explored input base models’ PM<span class="math inline">\(_{2.5}\)</span> predictions for 2015 and compared them against AQS observations over the contiguous US. We continued by running <code>BNE</code> over south western US cities, a subset of the US initial data. We then analysed <code>BNE</code> output over the contiguous US.</p>
 <p>Obtaining comprehensive uncertainties can be helpful in so many fields, from better inference in health models, to informing monitoring placement, to helping improve individual prediction models, to better understanding environmental justice issues etc. Reporting the weights and/or the uncertainty back to the teams developing these models can create a positive feedback loop where the models are improved, identifying high uncertainty areas can help with future monitoring station placement etc.</p>
-<p>Many of the materials used in this lab have been developed during Sebastian’s Rowland PhD. Sebastian’s publication of this work is under review in a scientific journal. Please, do not distribute or publish works using the data provided in this lab. BNE’s methodology has been recently published and the code can be applied to similar environmental issues. Please, let us know if you are interested in pursuing this avenue.</p>
+<p>Many of the materials used in this lab have been developed during Sebastian’s Rowland PhD. Sebastian’s publication of this work is under review in a scientific journal. Please, do not distribute or publish works using the data provided in this lab. <code>BNE</code>’s methodology has been recently published and the code can be applied to similar environmental issues. Please, let us know if you are interested in pursuing this avenue.</p>
 </section>
 
 </main>

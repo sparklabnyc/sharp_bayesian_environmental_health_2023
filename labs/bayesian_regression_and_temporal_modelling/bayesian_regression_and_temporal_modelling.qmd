@@ -24,7 +24,9 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-This lab will explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
+This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
+
+## What's going to happen in this lab session?
 
 During this lab session, we will:
 
@@ -35,15 +37,17 @@ During this lab session, we will:
 5. Modify temperature term to be month-specific; and
 6. Explore how well model convergence and fit performs.
 
-## Introduction to the mortality data
+## Introduction
 
-We will be using national death count data for Spain during 2010-2020 as taken from the published paper:
+We will be using national death count data for Spain during 2010-2020, as taken from the published paper:
 
 V. Kontis, J.E. Bennett, __R.M. Parks__, __T. Rashid__, J. Pearson-Stuttard, P. Asaria, B. Zhou, M. Guillot, C.D. Mathers, Y.H. Khang, M. McKee and M. Ezzati. _Lessons learned and lessons missed: impact of the coronavirus disease 2019 (COVID-19) pandemic on all-cause mortality in 40 industrialised countries prior to mass vaccination_. Wellcome Open Research 2021, 6:279
 
 For that analysis, we applied an Bayesian methods to weekly mortality records in 40 industrialised countries around the world. We're choosing Spain because it was one of the records which had a long time series of data, but it could have be another country. There's no particular reason we used Spain other than that. But Spain it is!
 
-We will examine Spain's weekly death count during 2010-2019. We will build simple Bayesian models to try to understand what is happening in the data. Once again we will use NIMBLE as the basis for our Bayesian model writing
+We will examine Spain's weekly death count during 2010-2019. We will build simple Bayesian models to try to understand what is happening in the data. Once again we will use NIMBLE as the basis for our Bayesian model writing.
+
+## Exploratory data analysis
 
 Let's load in the data.
 ```{r}
@@ -124,7 +128,7 @@ $$
 Likelihood:
 $$
 \begin{split}
-y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
+y_t &\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
 \log(\mu_t) &= \log(P_t) + \alpha + \beta_w t
 \end{split}
 $$
@@ -294,8 +298,8 @@ nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 80000,
-  nburnin = 40000,
+  niter = 10000, # 80000,
+  nburnin = 5000, # 40000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -331,8 +335,8 @@ nimbleMCMC_samples_week_random_walk_more_samples <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 200000,
-  nburnin = 100000,
+  niter = 20000, # 200000,
+  nburnin = 10000, # 100000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -467,8 +471,8 @@ nimbleMCMC_samples_week_random_walk_with_temperature <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 400000,
-  nburnin = 200000,
+  niter = 20000, # 400000,
+  nburnin = 10000, # 200000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -618,8 +622,8 @@ nimbleMCMC_samples_week_random_walk_with_temperature_by_month <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 800000,
-  nburnin = 300000,
+  niter = 20000, # 800000,
+  nburnin = 10000, # 300000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )

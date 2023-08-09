@@ -24,24 +24,26 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-This lab will involve taking some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way NIMBLE works.
+This goal of this lab is to take some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way `NIMBLE` works.
+
+## What's going to happen in this lab session?
 
 During this lab session, we will:
 
-1. Explore how NIMBLE is written and works;
+1. Explore how `NIMBLE` is written and works;
 2. Write some common regression models (Normal, logistic regression, Poisson);
 3. Understand how basic model assessment is made; and
 3. Test out how adjustments of models are made via different priors and more samples.
 
-## Introduction to NIMBLE
+## Introduction
 
-NIMBLE code is written in a slightly unusual format if you're used to just using base `R`.
-It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London. But you don't really need to know about BUGS to be able to use NIMBLE.
+`NIMBLE` code is written in a slightly unusual format if you're used to just using base `R`.
+It is written in the style of a program called BUGS, which came out a few decades ago and was developed at Imperial College London. But you don't really need to know about BUGS to be able to use `NIMBLE`.
 
 We will start with some straightforward examples for situations you're likely familiar with to introduce the style of writing models. These examples will feature basic regression models using linear predictors.
 
 ::: aside
-Some of these models have been adapted from [NIMBLE's examples](https://r-nimble.org/examples).
+Some of these models have been adapted from [`NIMBLE`'s examples](https://r-nimble.org/examples).
 :::
 
 ### Normal-Normal example
@@ -52,8 +54,7 @@ y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 \end{split}
 $$
 
-First create some example data for our model:
-
+First create some example data:
 ```{r}
 set.seed(1)
 
@@ -64,6 +65,8 @@ true_betas <- c(c(0.2, 0.5, 0.3)) # coefficients for beta1, beta2, beta3
 sigma <- 0.5
 y <- rnorm(n, X %*% true_betas, sigma)
 ```
+
+## Exploratory data analysis
 
 What does the dataset look like?
 ```{r}
@@ -83,7 +86,7 @@ conf_int <- confint(model_freq)
 cbind(central_est, conf_int)
 ```
 
-Let's rewrite this model in a Bayesian framework using NIMBLE. It can be written in lots of different ways, but here we're going to try and stick to defining the priors first, then writing the formula.
+Let's rewrite this model in a Bayesian framework using `NIMBLE`. It can be written in lots of different ways, but here we're going to try and stick to defining the priors first, then writing the formula.
 ```{r}
 code <- nimbleCode({
   # priors for parameters
@@ -108,7 +111,7 @@ x2 <- X[, 2] - mean(X[, 2])
 x3 <- X[, 3] - mean(X[, 3])
 ```
 
-Final preparation of data into lists for input into NIMBLE MCMC running
+Final preparation of data into lists for input into `NIMBLE` MCMC running
 ```{r}
 constants <- list(n = n)
 data <- list(y = y, x1 = x1, x2 = x2, x3 = x3)
@@ -120,7 +123,7 @@ inits <- list(alpha = 0, beta1 = 0, beta2 = 0, beta3 = 0, sigma = 1)
 ```
 
 The following code will establish which samples will be used in the sampling of the posteriors. It is not going to run the model yet.
-If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), NIMBLE will automatically detect it here. This is an example where there is a Normal-Normal conjugate relationship
+If there is a conjugate relationship apparent between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma), `NIMBLE` will automatically detect it here. This is an example where there is a Normal-Normal conjugate relationship
 ```{r}
 model <- nimbleModel(code, constants = constants, data = data, inits = inits)
 mcmcConf <- configureMCMC(model)
@@ -268,7 +271,7 @@ By using a uniform prior without support for the true value of `beta2`, the mode
 This is a warning: even though the mode has converged, it might not be a good model.
 
 Back to our sensible priors, say we wanted to establish the estimated difference between two betas?
-Let's say `beta1` and `beta2` in this case. NIMBLE formulas are flexible so you can define this as an output of the model, as seen in last elements of formula code below.
+Let's say `beta1` and `beta2` in this case. `NIMBLE` formulas are flexible so you can define this as an output of the model, as seen in last elements of formula code below.
 ```{r}
 code_diff_betas <- nimbleCode({
   # priors for parameters
@@ -320,7 +323,7 @@ And how good do convergence indicators look?
 summarise_draws(nimbleMCMC_samples_beta12_diff, default_convergence_measures())
 ```
 
-Equally, we could also do this by operating on the samples themselves from the original model. NIMBLE is quite flexible.
+Equally, we could also do this by operating on the samples themselves from the original model. `NIMBLE` is quite flexible.
 ```{r}
 (nimbleMCMC_samples_burnin[, "beta2"] - nimbleMCMC_samples_burnin[, "beta1"]) |>
   as.numeric() |>
@@ -376,7 +379,7 @@ conf_int <- confint(model_freq)
 cbind(central_est, conf_int)
 ```
 
-Create the NIMBLE model for a logistic regression.
+Create the `NIMBLE` model for a logistic regression.
 ```{r}
 code_binomial <- nimbleCode({
   # priors for parameters
@@ -393,7 +396,7 @@ code_binomial <- nimbleCode({
 })
 ```
 
-Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance.
+Before running `NIMBLE`, extract data for three predictors and center around zero for better MCMC performance.
 ```{r}
 x1 <- x1 - mean(x1)
 x2 <- x2 - mean(x2)
@@ -411,7 +414,7 @@ Set initial values for MCMC samples.
 inits <- list(alpha = 0, beta1 = 0, beta2 = 0, beta3 = 0)
 ```
 
-Let NIMBLE find out if there is a conjugate relationship between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma).
+Let `NIMBLE` find out if there is a conjugate relationship between prior and posterior (e.g., Normal-Normal, Binomial-Beta, Poisson-Gamma).
 ```{r}
 model_binomial <- nimbleModel(code_binomial, constants = constants, data = data, inits = inits)
 mcmcConf <- configureMCMC(model_binomial)
@@ -494,7 +497,7 @@ conf_int <- confint(model_freq)
 cbind(central_est, conf_int)
 ```
 
-Create the NIMBLE model for the Poisson model.
+Create the `NIMBLE` model for the Poisson model.
 ```{r}
 code_poisson <- nimbleCode({
   # priors for parameters
@@ -511,7 +514,7 @@ code_poisson <- nimbleCode({
 })
 ```
 
-Before running NIMBLE, extract data for three predictors and center around zero for better MCMC performance
+Before running `NIMBLE`, extract data for three predictors and center around zero for better MCMC performance
 ```{r}
 x1 <- x1 - mean(x1)
 x2 <- x2 - mean(x2)
@@ -570,7 +573,7 @@ mcmc_trace(nimbleMCMC_samples_poisson)
 
 ## Closing remarks
 
-In this lab session, we have explored how to fit some basic models using Bayesian regression in NIMBLE.
+In this lab session, we have explored how to fit some basic models using Bayesian regression in `NIMBLE`.
 We looked at the three most common likelihoods: Normal, Binomial, and Poisson.
 
 We used simulated data here, so we had complete control over the complexity in the data.
