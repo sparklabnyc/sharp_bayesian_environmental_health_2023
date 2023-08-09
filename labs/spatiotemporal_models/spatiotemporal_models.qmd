@@ -58,6 +58,11 @@ data_england <- read_sf(here("data", "England", "COVIDecoregression.shp"))
 glimpse(data_england)
 summary(data_england)
 class(data_england)
+
+data_england_simpler <- rgeos::gSimplify(as(data_england, "Spatial"), tol = 500)
+data_england_simpler <- st_as_sf(data_england_simpler)
+data_england_simpler <- cbind(data_england_simpler, data_england %>% mutate(geometry = NULL))
+data_england <- data_england_simpler
 ```
 
 As with the previous labs, let's use the package `ggplot2` to plot maps of the variables.
@@ -144,7 +149,7 @@ unstr_code <- nimbleCode({
 
 The following code subsets the data to London so the models are quicker to run.
 We're going to run the models for London, then load in the samples for England (and pretend we ran for England!).
-```{r}
+```{r eval = FALSE}
 data_england <- data_england[startsWith(data_england$LTLA, "E09"), ]
 ggplot(data = data_england, fill = "NA") +
   geom_sf() +
@@ -180,9 +185,9 @@ inits <- list(
 )
 ```
 
-Set `parameters_to_monitor` a vector to monitor `alpha`, `theta`, `tau.theta`, `overallRR`, `resRR`, `e` and `mu`.
+Set `parameters_to_monitor` a vector to monitor `alpha`, `theta`, `tau.theta`, `overallRR` and `RR`.
 ```{r}
-parameters_to_monitor <- c("alpha", "theta", "tau.theta", "overallRR", "RR", "mu")
+parameters_to_monitor <- c("alpha", "theta", "tau.theta", "overallRR", "RR")
 ```
 Note that the parameters that are not set, will NOT be monitored!
 
@@ -240,7 +245,7 @@ mcmc_trace(modelGS.sim$samples, pars = c("tau.theta"))
 ```
 
 We can use the functions `mcmc_acf_bar()` and `mcmc_acf()` to get the autocorrelation plots for the different chains for `tau.theta` (which should be as near to `0` as possible).
-```{r}
+```{r warning=FALSE}
 # mcmc_acf_bar(modelGS.sim$samples, pars = c("tau.theta"))
 mcmc_acf(modelGS.sim$samples, regex_pars = c("tau.theta"))
 ```
@@ -416,7 +421,7 @@ parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "
 ```
 
 Let's run the model.
-```{r}
+```{r eval=FALSE}
 tic <- Sys.time()
 modelBYM.sim <- nimbleMCMC(
   code = BYM_code,
@@ -451,7 +456,7 @@ modelBYM.sim$WAIC
 
 Check convergence of resRR.
 ```{r echo=TRUE, eval=TRUE, warning = FALSE}
-mcmc_trace(modelBYM.sim$samples, pars = c("resRR[1]", "resRR[19]", "resRR[25]", "resRR[33]")) # Theo. not sure it was resRR[1]", "resRR[19]", "resRR[41]", "resRR[72] before it seems random
+mcmc_trace(modelBYM.sim$samples, pars = c("resRR[1]", "resRR[19]", "resRR[25]", "resRR[33]")) 
 ```
 
 Extract the residual RR (i.e. exp(V + U)) and the posterior probability that resRR is higher than 1 as.
@@ -587,9 +592,12 @@ covid_data <- list(
   X = Xmat
 )
 
+# number of total covariates
+K <- ncol(Xmat)
+
 covid_constants <- list(
   N = n.LTLA, # nb of LTLAs
-  K = ncol(Xmat), # number of covariates
+  K = K, # number of covariates
 
   # adjacency matrix
   L = length(nbWB_A$weights), # the number of neighboring areas
@@ -601,7 +609,7 @@ covid_constants <- list(
 ```
 
 * Create the initial values for ALL the unknown parameters:
-```{r echo=TRUE, eval=TRUE}
+```{r}
 # initialise the unknown parameters, 2 chains
 inits <- list(
   list(
@@ -624,7 +632,7 @@ inits <- list(
 ```
 
 Which model parameters do you want to monitor? Set these before running `NIMBLE`. Call this object `parameters_to_monitor`.
-```{r echo=TRUE, eval=TRUE}
+```{r}
 parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "RR.beta1_1NO2")
 ```
 
@@ -653,19 +661,19 @@ toc - tic
 # saveRDS(modelBYMeco.sim, file = "NIMBLE_BYM_A4")
 ```
 
-```{r echo=TRUE, eval=TRUE}
+```{r}
 modelBYMeco.sim <- readRDS("NIMBLE_BYM_A4")
 ```
 
 Retrieve WAIC and compare with previous model.
 Which model performs best?
-```{r echo=TRUE, eval=TRUE, warning=FALSE}
+```{r warning=FALSE}
 modelBYMeco.sim$WAIC
 ```
 
 Check the convergence of the intercept and covariates NO$_2$ and ICU beds. What do you observe?
-```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=3.5, fig.width=10}
-mcmc_trace(modelBYMeco.sim$samples, pars = c("alpha", "beta"))
+```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
+mcmc_trace(modelBYMeco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
 ```
 
 Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
