@@ -1,4 +1,4 @@
-library(rstan)
+# library(rstan) # commented out to avoid renv installing dependency
 library(ggplot2)
 
 ### generate data ###

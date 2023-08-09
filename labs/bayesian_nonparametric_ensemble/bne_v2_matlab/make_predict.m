@@ -6,7 +6,7 @@
 
 % 1.a make table of hyperparameter combinations
 % 1a set parameter values we will consider
-% 
+%
 scale_space_w_list = [2];
 scale_time_w_list = [0.5];
 scale_space_rp_list = [2];
@@ -40,7 +40,7 @@ grid.opt_stage = grid_mat(:,10);
 
 % set time metric
 time_metric = 'year';
-    
+
 training = readtable('./data/training_cvfolds_south_west.csv');
 
 num_models = 7;
@@ -55,19 +55,19 @@ num_models = 7;
 %%%% --------------------------------------------- %%%%
 
 for i = 1:size(grid,1)
-    
+
     % 2.a. generate model
     [W,RP,wvar,sigW,Zs,Zt,piZ,mse] = train(trainAqs, trainSpace, trainTime, trainPreds, ...
     grid.scale_space_w(i), grid.scale_time_w(i), grid.scale_space_rp(i), grid.scale_time_rp(i), grid.scale_space_wvar(i), ...
     grid.lambda_w(i), grid.lambda_rp(i), time_metric, grid.opt_stage(i), grid.seed(i), 'cv', sample_n);
-        
+
          % 2.b.loop to generate ppd for each year
     yyyy = 2011;
-        
+
         % 2.c bring in the data frame of gridded predictions
         target = readtable(append('./data/preds_annual_', ...
             num2str(yyyy), '_south_west.csv'));
-        
+
         % 2.c. generate and write ppd summary
         predict(W,RP,sigW,wvar,Zs,Zt,piZ, ...
             target, 10, 'summarize ppd', num_models, ...
@@ -84,7 +84,5 @@ for i = 1:size(grid,1)
                 strrep(num2str(grid.lambda_rp(i)), '.', '-')))
 
 
-    
+
 end
-
-

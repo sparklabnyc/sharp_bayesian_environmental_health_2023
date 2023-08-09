@@ -171,8 +171,9 @@ UnstrCode <- nimbleCode({
 
 The following codesubsets the data to London so the models are quicker to run.
 ```{r}
-data_england_simpler <- data_england[startsWith(data_england$LTLA, "E09"),]
-ggplot() + geom_sf(data = data_england_simpler, fill = "NA")
+data_england_simpler <- data_england[startsWith(data_england$LTLA, "E09"), ]
+ggplot() +
+  geom_sf(data = data_england_simpler, fill = "NA")
 ```
 
 How many spatial units in the London map?
@@ -328,9 +329,10 @@ data_england_simpler$RR <- RR
 
 * Using `ggplot2`, we can produce a map of the smoothed RRs
 ```{r eval=TRUE, fig.width=5, fig.align='center'}
-
-ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() +
-                     scale_fill_viridis_c(limits = c(0, 2), name = "SMR")
+ggplot() +
+  geom_sf(data = data_england_simpler, aes(fill = RR)) +
+  theme_bw() +
+  scale_fill_viridis_c(limits = c(0, 2), name = "SMR")
 ```
 
 
@@ -634,7 +636,6 @@ BYMecoCode <- nimbleCode({
 
   # BYM prior
   phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
-
 })
 ```
 
