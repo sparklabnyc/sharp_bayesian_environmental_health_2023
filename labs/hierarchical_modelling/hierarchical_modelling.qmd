@@ -186,7 +186,6 @@ full_pooling_samples <- nimbleMCMC(
 ```
 
 Follow the Bayesian workflow: look at MCMC outputs, check convergence using r-hat.
-
 ```{r}
 summarise_draws(full_pooling_samples, default_summary_measures())
 summarise_draws(full_pooling_samples, default_convergence_measures())

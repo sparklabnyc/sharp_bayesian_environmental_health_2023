@@ -30,34 +30,38 @@ This goal of this lab is to take some concepts from the Introduction to Bayesian
 
 During this lab session, we will:
 
-1. XX;
-2. XX;
-3. XX; and
-4. XX.
+1. Explore several pollution concentration prediction models;
+2. Understand how pollution concentration models can disagree;
+3. Understand what `BNE` does;
+4. Explore output of `BNE`; and
+5. Understand why `BNE` is useful for estimating uncertainty of exposures.
 
 ## Introduction
 
-`BNE` code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course. In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM2.5 predictions. Predictions refers to the predicted value at some location and time. Note that for `BNE`, prediction does not refer to future values, but values within our study period + location.
+As seen in the lecture just now, `BNE` is XX [[[Summary of BNE]]]
 
-We estimate 2015 annual PM2.5 concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with `BNE`. We trained the model on measurements reported in the US Environmental Protection Agency's Air Quality System  (AQS) database. We estimated model uncertainty as the standard deviations of predictions’ location-specific posterior predictive distribution.
+`BNE` code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course. In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM$_{2.5}$ predictions. Predictions refers to the predicted value at some location and time. Note that for `BNE`, prediction does not refer to future values, but values within our study period + location.
 
-We will start exploring annual average PM2.5 concentrations from input base models, which are the individual prediction models that are incorporated into `BNE` to ultimate generate predictions. These models along with AQS monitor data will be used to train `BNE`.
+We estimate 2015 annual PM$_{2.5}$ concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with `BNE`. We trained the model on measurements reported in the US Environmental Protection Agency's Air Quality System  (AQS) database. We estimated model uncertainty as the standard deviations of predictions’ location-specific posterior predictive distribution.
+
+## Exploring input model data
+
+We will start exploring annual average PM$_{2.5}$ concentrations from input base models, which are the individual prediction models that are incorporated into `BNE` to ultimate generate predictions. These models along with AQS monitor data will be used to train `BNE`.
 
 ![Input base prediction models included](images/table_input_base_models.png)
 
-Load plotting function `plotOneParameterSpatial`, which will be used for plotting maps
+Load plotting function `plotOneParameterSpatial`, which will be used for plotting maps.
 ```{r}
 source(here("labs", "bayesian_nonparametric_ensemble", "functions", "STR_1_plotOneParameterSpatial.R"))
 ```
 
-Load training dataset containing input base models and AQS observations for PM2.5 during the period 2010-2015. To create the training dataset, we spatially joined each model to the EPA AQS dataset, using the prediction that was closest to each monitor (i.e., nearest neighbors).
+Load training dataset containing input base models and AQS observations for PM$_{2.5}$ during the period 2010-2015. To create the training dataset, we spatially joined each model to the EPA AQS dataset, using the prediction that was closest to each monitor (i.e., nearest neighbors).
 ```{r}
 aqs_preds <- readr::read_csv(here("data", "us", "training_cvfolds.csv"))
 summary(aqs_preds)
 ```
 
 Load prediction dataset. To create the prediction dataset, we first created a reference grid, and then joined each prediction dataset by nearest neighbor. This dataset also contains `BNE` results that will be explored in next steps.
-
 ```{r}
 bne2015 <- readr::read_csv(here("data", "us", "refGrid_pm25_comp_seb_vers_2_2015_2_0-5_2_0-5_2_0-0498_0-1353.csv"))
 ```
@@ -303,7 +307,7 @@ plotOneParameterSpatial(
 
 ## Closing remarks
 
-In this lab session, we have explored how to run `BNE` to estimate PM2.5 predictions and uncertainty given seven input base models and AQS observations. We first explored input base models' PM2.5 predictions for 2015 and compared them against AQS observations over the contiguous US. We continued by running `BNE` over south western US cities, a subset of the US initial data. We then analysed `BNE` output over the contiguous US.
+In this lab session, we have explored how to run `BNE` to estimate PM$_{2.5}$ predictions and uncertainty given seven input base models and AQS observations. We first explored input base models' PM$_{2.5}$ predictions for 2015 and compared them against AQS observations over the contiguous US. We continued by running `BNE` over south western US cities, a subset of the US initial data. We then analysed `BNE` output over the contiguous US.
 
 Obtaining comprehensive uncertainties can be helpful in so many fields, from better inference in health models, to informing monitoring placement, to helping improve individual prediction models, to better understanding environmental justice issues etc. Reporting the weights and/or the uncertainty back
 to the teams developing these models can create a positive feedback loop where the models are improved, identifying high uncertainty areas can help with future monitoring station placement etc.

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.354">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -95,23 +95,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Theo Rashid </p>
           </div>
   </div>
-
+    
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-
-
+  
+    
   </div>
-
+  
 
 </header>
 
 <section id="goal-of-this-computing-lab-session" class="level2">
 <h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
-<p>The goals of this lab is to use <code>INLA</code> to run a some hierarchical models.</p>
+<p>The goal of this lab is to use <code>INLA</code> to run some hierarchical models.</p>
+</section>
+<section id="whats-going-to-happen-in-this-lab-session" class="level2">
+<h2 class="anchored" data-anchor-id="whats-going-to-happen-in-this-lab-session">What’s going to happen in this lab session?</h2>
 <p>During this lab session, we will:</p>
 <ol type="1">
 <li>Translate a model from <code>NIMBLE</code> into <code>INLA</code>;</li>
@@ -119,7 +122,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Learn how to work with <code>INLA</code> objects; and</li>
 <li>See how to write models in different probabilistic programming languages.</li>
 </ol>
-<p>We will recreate the <code>NIMBLE</code> model in the <code>hierarchical_modelling</code> lab using <code>INLA</code>. As a reminder, here is the model again.</p>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We will recreate the <code>NIMBLE</code> model in the <code>hierarchical_modelling</code> lab using <code>INLA</code>. As a reminder, here is the model from the <code>hierarchical_modelling</code> lab again (not as code to run but just for reference).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nimbleCode</span>({</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
@@ -135,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[i]) <span class="ot">&lt;-</span> <span class="fu">log</span>(E[i]) <span class="sc">+</span> alpha <span class="sc">+</span> theta[province[i]]</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>And let’s load in the data.</p>
+<p>Let’s load in the data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"italy"</span>, <span class="st">"italy_mortality.rds"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -186,64 +192,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-   c("inla.core(formula = formula, family = family, contrasts = contrasts,
-   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", "
-   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata,
-   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose =
-   verbose, ", " lincomb = lincomb, selection = selection, control.compute
-   = control.compute, ", " control.predictor = control.predictor,
-   control.family = control.family, ", " control.inla = control.inla,
-   control.fixed = control.fixed, ", " control.mode = control.mode,
-   control.expert = control.expert, ", " control.hazard = control.hazard,
-   control.lincomb = control.lincomb, ", " control.update =
-   control.update, control.lp.scale = control.lp.scale, ", "
-   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam,
-   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads =
-   num.threads, ", " keep = keep, working.directory = working.directory,
-   silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug =
-   debug, .parent.frame = .parent.frame)" )
+   c("inla.core(formula = formula, family = family, contrasts = contrasts, 
+   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", " 
+   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, 
+   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose = 
+   verbose, ", " lincomb = lincomb, selection = selection, control.compute 
+   = control.compute, ", " control.predictor = control.predictor, 
+   control.family = control.family, ", " control.inla = control.inla, 
+   control.fixed = control.fixed, ", " control.mode = control.mode, 
+   control.expert = control.expert, ", " control.hazard = control.hazard, 
+   control.lincomb = control.lincomb, ", " control.update = 
+   control.update, control.lp.scale = control.lp.scale, ", " 
+   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam, 
+   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = 
+   num.threads, ", " blas.num.threads = blas.num.threads, keep = keep, 
+   working.directory = working.directory, ", " silent = silent, inla.mode 
+   = inla.mode, safe = FALSE, debug = debug, ", " .parent.frame = 
+   .parent.frame)") 
 Time used:
-    Pre = 0.665, Running = 0.331, Post = 0.0334, Total = 1.03
+    Pre = 1.62, Running = 0.269, Post = 0.0286, Total = 1.92 
 Fixed effects:
               mean    sd 0.025quant 0.5quant 0.975quant   mode kld
-(Intercept) -0.111 0.008     -0.127   -0.111     -0.095 -0.111   0
+(Intercept) -0.111 0.008     -0.128   -0.111     -0.095 -0.111   0
 
 Random effects:
   Name    Model
     SIGLA IID model
 
 Model hyperparameters:
-                      mean    sd 0.025quant 0.5quant 0.975quant  mode
-Precision for SIGLA 248.49 57.53     156.78   241.40     380.64 78.30
+                      mean    sd 0.025quant 0.5quant 0.975quant   mode
+Precision for SIGLA 248.49 57.53     156.79   241.40     380.67 228.34
 
-Marginal log-Likelihood:  -8587.67
- is computed
+Marginal log-Likelihood:  -8587.67 
+ is computed 
 Posterior summaries for the linear predictor and the fitted values are computed
 (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model<span class="sc">$</span>summary.fixed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  mean          sd 0.025quant   0.5quant  0.975quant       mode
-(Intercept) -0.1112342 0.008263871 -0.1274977 -0.1112246 -0.09502512 -0.1112246
-                    kld
-(Intercept) 7.64936e-09</code></pre>
+(Intercept) -0.1112354 0.008268289 -0.1275089 -0.1112259 -0.09501582 -0.1112068
+                     kld
+(Intercept) 2.258713e-09</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(model<span class="sc">$</span>summary.random<span class="sc">$</span>SIGLA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ID         mean         sd   0.025quant     0.5quant 0.975quant         mode
-1 AG  0.062246894 0.04198002 -0.019380821  0.061979756 0.14537574  0.061973998
-2 AL  0.067011846 0.03862383 -0.008183094  0.066805599 0.14336757  0.066801393
-3 AN -0.033419516 0.03934399 -0.110965189 -0.033300640 0.04345855 -0.033298051
-4 AO -0.005941846 0.05418960 -0.112690858 -0.005871257 0.10041150 -0.005870260
-5 AP  0.010008252 0.04825750 -0.084563348  0.009928865 0.10502460  0.009927264
-6 AQ  0.031939426 0.04449382 -0.054893641  0.031754658 0.11980875  0.031750648
+1 AG  0.062298660 0.04199473 -0.019375530  0.062032603 0.14545968  0.061488788
+2 AL  0.067059819 0.03863496 -0.008172509  0.066854405 0.14344159  0.066434897
+3 AN -0.033443467 0.03935730 -0.111019720 -0.033325563 0.04347377 -0.033084160
+4 AO -0.005949052 0.05422371 -0.112771454 -0.005878777 0.10048095 -0.005736127
+5 AP  0.010018763 0.04828329 -0.084614390  0.009939846 0.10509225  0.009778417
+6 AQ  0.031969229 0.04451412 -0.054918541  0.031785574 0.11988236  0.031409814
            kld
-1 1.023182e-08
-2 7.096878e-09
-3 3.053874e-09
-4 1.272142e-08
-5 5.643873e-09
-6 6.119930e-09</code></pre>
+1 3.767163e-09
+2 2.634242e-09
+3 1.024003e-09
+4 3.870444e-09
+5 1.708356e-09
+6 2.079593e-09</code></pre>
 </div>
 </div>
 <p>Although the model isn’t fit using samples, we can use <code>INLA</code> to sample from the posterior.</p>
@@ -331,24 +338,25 @@ Posterior summaries for the linear predictor and the fitted values are computed
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-   c("inla.core(formula = formula, family = family, contrasts = contrasts,
-   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", "
-   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata,
-   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose =
-   verbose, ", " lincomb = lincomb, selection = selection, control.compute
-   = control.compute, ", " control.predictor = control.predictor,
-   control.family = control.family, ", " control.inla = control.inla,
-   control.fixed = control.fixed, ", " control.mode = control.mode,
-   control.expert = control.expert, ", " control.hazard = control.hazard,
-   control.lincomb = control.lincomb, ", " control.update =
-   control.update, control.lp.scale = control.lp.scale, ", "
-   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam,
-   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads =
-   num.threads, ", " keep = keep, working.directory = working.directory,
-   silent = silent, ", " inla.mode = inla.mode, safe = FALSE, debug =
-   debug, .parent.frame = .parent.frame)" )
+   c("inla.core(formula = formula, family = family, contrasts = contrasts, 
+   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", " 
+   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, 
+   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose = 
+   verbose, ", " lincomb = lincomb, selection = selection, control.compute 
+   = control.compute, ", " control.predictor = control.predictor, 
+   control.family = control.family, ", " control.inla = control.inla, 
+   control.fixed = control.fixed, ", " control.mode = control.mode, 
+   control.expert = control.expert, ", " control.hazard = control.hazard, 
+   control.lincomb = control.lincomb, ", " control.update = 
+   control.update, control.lp.scale = control.lp.scale, ", " 
+   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam, 
+   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = 
+   num.threads, ", " blas.num.threads = blas.num.threads, keep = keep, 
+   working.directory = working.directory, ", " silent = silent, inla.mode 
+   = inla.mode, safe = FALSE, debug = debug, ", " .parent.frame = 
+   .parent.frame)") 
 Time used:
-    Pre = 0.565, Running = 0.218, Post = 0.0615, Total = 0.845
+    Pre = 1.28, Running = 0.193, Post = 0.0508, Total = 1.52 
 Fixed effects:
               mean    sd 0.025quant 0.5quant 0.975quant   mode kld
 (Intercept) -0.111 0.008     -0.126   -0.111     -0.096 -0.111   0
@@ -359,46 +367,46 @@ Random effects:
 
 Model hyperparameters:
                                                   mean      sd 0.025quant
-Precision for provincia_id (iid component)      324.47   99.66     170.29
-Precision for provincia_id (spatial component) 1631.68 1955.48     218.55
-                                               0.5quant 0.975quant  mode
-Precision for provincia_id (iid component)       310.63     558.76 68.56
-Precision for provincia_id (spatial component)  1055.28    6686.34 14.21
+Precision for provincia_id (iid component)      323.48   96.80     172.44
+Precision for provincia_id (spatial component) 1579.27 1740.92     249.69
+                                               0.5quant 0.975quant   mode
+Precision for provincia_id (iid component)       310.47     550.66 286.14
+Precision for provincia_id (spatial component)  1063.51    6117.69 566.68
 
-Marginal log-Likelihood:  -8550.33
- is computed
+Marginal log-Likelihood:  -8550.33 
+ is computed 
 Posterior summaries for the linear predictor and the fitted values are computed
 (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model_spatial<span class="sc">$</span>summary.fixed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  mean          sd 0.025quant   0.5quant  0.975quant       mode
-(Intercept) -0.1111014 0.007627466 -0.1261205 -0.1110934 -0.09612805 -0.1110935
+(Intercept) -0.1111033 0.007632353 -0.1261339 -0.1110951 -0.09611891 -0.1110793
                      kld
-(Intercept) 1.254992e-08</code></pre>
+(Intercept) 3.781444e-09</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(model_spatial<span class="sc">$</span>summary.random<span class="sc">$</span>provincia_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ID         mean         sd   0.025quant     0.5quant 0.975quant         mode
-1  1  0.054830035 0.04106651 -0.024796422  0.054490455 0.13635411  0.054480613
-2  2  0.069409395 0.03728332 -0.003239953  0.069222249 0.14310055  0.069216128
-3  3 -0.043565804 0.03902063 -0.120255487 -0.043526229 0.03290309 -0.043525062
-4  4  0.008671302 0.05355719 -0.097076530  0.008836831 0.11350040  0.008840978
-5  5 -0.003647778 0.04701202 -0.095277276 -0.003910266 0.08943407 -0.003919437
-6  6  0.028809903 0.04269675 -0.054407666  0.028575407 0.11332071  0.028566005
+1  1  0.054892927 0.04109748 -0.024795049  0.054548584 0.13649368  0.053837239
+2  2  0.069539928 0.03730349 -0.003157074  0.069351004 0.14328097  0.068956347
+3  3 -0.043668907 0.03905439 -0.120427410 -0.043631321 0.03288118 -0.043553119
+4  4  0.008778609 0.05364289 -0.097157171  0.008948571 0.11377690  0.009300400
+5  5 -0.003707957 0.04706388 -0.095439593 -0.003975988 0.08949606 -0.004538381
+6  6  0.028851469 0.04272976 -0.054438949  0.028614621 0.11343926  0.028114407
            kld
-1 1.646600e-08
-2 6.754201e-09
-3 1.185229e-09
-4 1.254112e-08
-5 1.205619e-08
-6 1.074940e-08</code></pre>
+1 6.335821e-09
+2 2.476794e-09
+3 3.137403e-10
+4 3.962434e-09
+5 4.211569e-09
+6 3.761631e-09</code></pre>
 </div>
 </div>
 <p>Compare and contrast the model fits using the plotting code above. Try and test out different spatial models, such as <code>"besag"</code>.</p>
 </section>
-<section id="some-other-options-and-closing-remarks" class="level2">
-<h2 class="anchored" data-anchor-id="some-other-options-and-closing-remarks">Some other options and closing remarks</h2>
+<section id="some-other-options" class="level2">
+<h2 class="anchored" data-anchor-id="some-other-options">Some other options</h2>
 <p>Moving away from <code>INLA</code>, let’s look back at some of the other options that were introduced in the lecture.</p>
 <p>Firstly, <code>Stan</code>. This is a favourite at Columbia. There’s a lot of boilerplate that goes with it, but it really is the “Statistician’s choice”. It’s been around a long time, the documentation is great, and the samplers are battle-tested.</p>
 <p>Here is how we would write the original model in <code>Stan</code>.</p>
@@ -441,6 +449,9 @@ model {
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> numpyro.plate(<span class="st">"data"</span>, <span class="bu">len</span>(province)):</span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>        latent_rate <span class="op">=</span> jnp.exp(alpha <span class="op">+</span> theta[province])</span>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        numpyro.sample(<span class="st">"y"</span>, dist.Poisson(rate<span class="op">=</span>latent_rate), obs<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="closing-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
 <p>I hope it’s becoming clear that the majority of probabilistic programming languages share similar syntax. This makes it easy to translate a model when you collaborate with others who prefer different languages and different workflows.</p>
 <p><code>INLA</code> is an exception, but the syntax is fairly intuitive and not dissimilar to base <code>R</code>’s models. And <code>INLA</code> is extremely efficient is certain cases, especially spatial applications with environmental exposures.</p>
 <p>If you’re interested, there are plenty of more complicated examples on the <a href="https://www.r-inla.org/">documentation page</a>, as well as many books with great titles like <a href="https://www.wiley.com/en-gb/Spatial+and+Spatio+temporal+Bayesian+Models+with+R+INLA-p-9781118326558"><em>Spatial and Spatio-temporal Bayesian Models with R-INLA</em></a>, <a href="https://www.paulamoraga.com/book-geospatial/index.html"><em>Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny</em></a> and <a href="https://becarioprecario.bitbucket.io/inla-gitbook/"><em>Bayesian inference with INLA</em></a>.</p>
@@ -467,7 +478,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -477,7 +488,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {
+      if (clz.startsWith('code-annotation-')) {                     
         return true;
       }
     }
@@ -508,11 +519,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button,
-        { trigger: "manual",
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();
+      tooltip.show();    
     }
     setTimeout(function() {
       if (tooltip) {
@@ -542,7 +553,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config);
+    window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -587,7 +598,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it
+            // cook up a div (if necessary) and position it 
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");
