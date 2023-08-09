@@ -203,7 +203,7 @@ COVIDConsts <- list(
 
 
 What are the parameters to be initialised? Create a list with two elements and call it `inits` (each a list) with different initial values for the parameters:
-```{r eval=TRUE, echo=TRUE}
+```{r eval=TRUE, echo=FALSE}
 # Initialise the unknown parameters, 2 chains
 inits <- list(
   list(alpha = 0.01, tau.theta = 10, theta = rep(0.01, times = n.LTLA)), # chain 1
@@ -303,7 +303,6 @@ With more complicated models, sometimes it's nice to see if the traceplots are w
 ```{r eval = TRUE, warning = FALSE}
 mcmc_trace(modelGS.sim$samples, pars = c("tau.theta"))
 ```
-
 
 We can use the functions `mcmc_acf_bar()` and `mcmc_acf()` to get the autocorrelation plots for the different chains for `tau.theta` (which should be as near to `0` as possible).
 ```{r warning=FALSE}
@@ -830,4 +829,5 @@ ggplot() +
 
 
 ## Further closing remarks for Advanced section
+
 If you got through the advanced portion, we examined the effect of long term exposure to NO$_2$ on COVID-19 mortality. We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA. We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.

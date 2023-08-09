@@ -2,37 +2,37 @@
     cp_95, cp_90, cp_85, cp_80, cp_75, cp_70, preds_partial, obs_partial] = predict(W,RP,sigW,wvar,Zs,Zt,piZ, ...
     target, total_train_obs, predict_goal, num_models, ...
     scale_space_w, scale_time_w, scale_space_rp, scale_time_rp, scale_space_wvar, time_metric, sample_n)
-% % 
+% %
 % % === Inputs ===
-% %  
-% %     window: (string) whether annual or daily 
-% %     num_mods: number of base models included 
-% %     trainfold: (string) describes the locations used for training 
-% %     predFold: (string) describes the locations/times we will predict 
-% %     
+% %
+% %     window: (string) whether annual or daily
+% %     num_mods: number of base models included
+% %     trainfold: (string) describes the locations used for training
+% %     predFold: (string) describes the locations/times we will predict
+% %
 % %     len_scale : (scalar) RBF kernel parameter (we've been using 3.5, but not optimized)
 % %     penalty: (numeric) strength of the prior ; lambda
-% %     bool_periodic: (string) whether julian day or day of year; only for daily data 
-% %     seed: (numeric) the seed 
-% % 
+% %     bool_periodic: (string) whether julian day or day of year; only for daily data
+% %     seed: (numeric) the seed
+% %
 % %  === Outputs ===
-% % 
+% %
 % %     a written matrix of the mean values of the model parameters and
 % %     their standard deviation. For predicted concentration, additional values
-% %     like the 2.5th and 97.5th percentiles are reported. 
+% %     like the 2.5th and 97.5th percentiles are reported.
 
 %%%% ------------------------------ %%%%
 %%%% 0: Set Up Objects for Test Run %%%%
 %%%% ------------------------------ %%%%
 
- % window = 'annual'; num_models = 7; trainFold = 'all'; predFold = 'refGridConus'; 
+ % window = 'annual'; num_models = 7; trainFold = 'all'; predFold = 'refGridConus';
  % len_scale_space = 3.5'; len_scale_time = 1; len_scale_space_rp = 3.5';
  % len_scale_time_rp = 1; penalty = 0.1; time_metric = 'annual'; seed = 1234;
 
- % num_models = 7; 
+ % num_models = 7;
  % scale_space_w = 2'; scale_time_w = 1; scale_space_rp = 2';
  % scale_time_rp = 1; time_metric = 'year'; seed = 1234;
- 
+
 
 % target =testing;
 
@@ -50,18 +50,18 @@
 % 2a Create num_samp samples of W and w0 from a Gaussian distribution used
 % for calculating empirical mean and standard deviations. More samples is
 % slower but more accurate.
-% Basically, we take samples of the parameter values 
+% Basically, we take samples of the parameter values
 num_rand_feat = sample_n;
 
 % 2b muW is a vector of the mean values of the parameters of weights and
-% offset term 
+% offset term
 muW = [W(:) ; RP];
 
-% 2c set the number of samples that we will take 
+% 2c set the number of samples that we will take
 num_samp = 25; % set to 25 for fast computation purposes; recommended value is 250
 
 % 2d take the samples. we generate random numbers based on gaussian
-% distributions, where the means are the mean values and the variances are 
+% distributions, where the means are the mean values and the variances are
 % stored in sigW, which we calculate in the second half of the BNE function
 wsamp1 = mvnrnd(muW,sigW,num_samp)';
 
@@ -96,17 +96,17 @@ y_75CIl = zeros(num_points,1);
 y_75CIu = zeros(num_points,1);
 y_70CIl = zeros(num_points,1);
 y_70CIu = zeros(num_points,1);
-            
+
 %%%% ----------------------- %%%%
 %%%% 3: Generate Predictions %%%%
 %%%% ----------------------- %%%%
 
 % 3a begin loop over the individual points
 for i = 1:num_points
-    
-    
+
+
     % 3b set up the way to translate time to the RFF
-    if strcmp(time_metric, 'dayOfYear') 
+    if strcmp(time_metric, 'dayOfYear')
         phi_w = sqrt(2/num_rand_feat)*cos(Zs*targetSpace(i,:)'/scale_space_w + ...
             Zt*58.0916*[cos(2*pi*targetTime(i,:))' ; sin(2*pi*targetTime(i,:))']/scale_time_w + piZ);
         phi_rp = sqrt(2/num_rand_feat)*cos(Zs*targetSpace(i,:)'/scale_space_rp + ...
@@ -121,7 +121,7 @@ for i = 1:num_points
         phi_wvar = sqrt(2/num_rand_feat)*cos(Zs*targetSpace(i,:)'/scale_space_wvar + ...
             Zt*targetTime(i,:)/scale_time_rp + piZ);
     end
-    
+
     % 3c sample the weights
     softmax = phi_w'*wsamp;
     softmax = reshape(softmax',num_models,num_samp)';
@@ -131,7 +131,7 @@ for i = 1:num_points
     ens = softmax*targetPreds(i,:)';
     rp = phi_rp'*rpsamp;
     y = softmax*targetPreds(i,:)' + rp';
-    noise = exp(.5*phi_wvar'*wvar); 
+    noise = exp(.5*phi_wvar'*wvar);
     % 3d fill in those empty arrays
     softmax_mean(i,:) = mean(softmax,1);
     softmax_sd(i,:) = std(softmax,1);
@@ -141,7 +141,7 @@ for i = 1:num_points
     rp_mean(i) = mean(rp);
     rp_sd(i) = std(rp);
     y_mean(i) = mean(y);
-    y_sd(i) =  std(y);   
+    y_sd(i) =  std(y);
     unc_mon(i) = noise;
     y_95CIl(i) = quantile(y, 0.025);
     y_95CIu(i) = quantile(y, 0.975);
@@ -155,12 +155,12 @@ for i = 1:num_points
     y_75CIu(i) = quantile(y, 0.875);
     y_70CIl(i) = quantile(y, 0.15);
     y_70CIu(i) = quantile(y, 0.85);
-    
+
     % 3e progress message
     if mod(i,1000) == 0
         display(['Point ' num2str(i) ' :::  ' num2str(num_points)]);
     end
-            
+
 % 3f finish loop
 end
 
@@ -192,7 +192,7 @@ if num_models == 7
         w_mean_rk = softmax_mean(:,7);
         w_sd_rk = softmax_sd(:,7);
         contrib_sd_rk = contrib_sd(:,7);
-        
+
 
         results.w_mean_av = w_mean_av;
         results.w_sd_av = w_sd_av;
@@ -208,7 +208,7 @@ if num_models == 7
         results.w_sd_me = w_sd_me;
         results.w_mean_rk = w_mean_rk;
         results.w_sd_rk = w_sd_rk;
-        
+
         results.contrib_sd_av = contrib_sd_av;
         results.contrib_sd_cc = contrib_sd_cc;
         results.contrib_sd_cm = contrib_sd_cm;
@@ -216,7 +216,7 @@ if num_models == 7
         results.contrib_sd_js = contrib_sd_js;
         results.contrib_sd_me = contrib_sd_me;
         results.contrib_sd_rk = contrib_sd_rk;
-         
+
 pred_av = targetPreds(:,1);
 pred_cc = targetPreds(:,2);
 pred_cm = targetPreds(:,3);
@@ -232,7 +232,7 @@ pred_rk = targetPreds(:,7);
         results.pred_js = pred_js;
         results.pred_me = pred_me;
         results.pred_rk = pred_rk;
-    
+
 end
 
 % 5b combine other parameters
@@ -268,7 +268,7 @@ time = targetTime;
 if strcmp(predict_goal, 'compare obs') | strcmp(predict_goal, 'cv')
     obs= targetObs;
    results.obs = obs;
-else 
+else
    obs= repelem(0, size(results,1));
    results.obs = obs;
 end
@@ -311,13 +311,13 @@ if ~strcmp(predict_goal, 'cv')
    cp_80 = cover_80_fold;
    cp_75 = cover_75_fold;
    cp_70 = cover_70_fold;
-   preds_partial = results.y_mean; 
+   preds_partial = results.y_mean;
    obs_partial = results.obs;
-       % 2d determine error 
+       % 2d determine error
 
-    
+
 elseif strcmp(predict_goal, 'cv')
-    % 2d determine error 
+    % 2d determine error
    mse_partial = mse_fold* num_points / total_train_obs;
    r2_partial = r2_fold* num_points / total_train_obs;
    cover_partial = cover_fold* num_points / total_train_obs;
@@ -328,8 +328,8 @@ elseif strcmp(predict_goal, 'cv')
    cp_80 = cover_80_fold* num_points / total_train_obs;
    cp_75 = cover_75_fold* num_points / total_train_obs;
    cp_70 = cover_70_fold* num_points / total_train_obs;
-   preds_partial = results.y_mean; 
-   obs_partial = results.obs; 
+   preds_partial = results.y_mean;
+   obs_partial = results.obs;
 end
 
  % end function

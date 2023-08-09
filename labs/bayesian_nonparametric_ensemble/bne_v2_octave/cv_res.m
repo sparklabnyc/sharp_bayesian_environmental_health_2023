@@ -9,7 +9,7 @@ num_models = 7;
 time_var = 'year'
 opt_stage = 1;
 seed = 1234;
-bne_mode = 'cv';  
+bne_mode = 'cv';
 sample_n = 1000;
 
 training_full = dataframe('data/training_cvfolds_south_west.csv');
