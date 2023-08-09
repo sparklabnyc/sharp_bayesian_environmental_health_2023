@@ -47,7 +47,7 @@ We will use the COVID-19 deaths during March-July 2020, in England, at the LTLA 
 
 __Konstantinoudis G__, Padellini T, Bennett J, Davies B, Ezzati M, Blangiardo M. _Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis_. medRxiv [Preprint]. 2020 Aug 11:2020.08.10.20171421. doi: 10.1101/2020.08.10.20171421. Update in: Environ Int. 2021 Jan;146:106316. PMID: 32817974; PMCID: PMC7430619.
 
-For that analysis, we included 38,573 COVID-19 deaths up to June 30, 2020 at the Lower Layer Super Output Area level in England (n=32 844 small areas). We retrieved averaged NO2 and PM2.5 concentration during 2014-2018 from the Pollution Climate Mapping. We used Bayesian hierarchical models to quantify the effect of air-pollution while adjusting for a series of confounding and spatial autocorrelation.
+For that analysis, we included 38,573 COVID-19 deaths up to June 30, 2020 at the Lower Layer Super Output Area level in England (n=32 844 small areas). We retrieved averaged NO$_2$ concentration during 2014-2018 from the Pollution Climate Mapping. We used Bayesian hierarchical models to quantify the effect of air-pollution while adjusting for a series of confounding and spatial autocorrelation.
 
 We will build simple Bayesian models to try to understand what is happening in the data. Once again we will use `NIMBLE` as the basis for our Bayesian model writing.
 
@@ -304,13 +304,6 @@ With more complicated models, sometimes it's nice to see if the traceplots are w
 mcmc_trace(modelGS.sim$samples, pars = c("tau.theta"))
 ```
 
-Use the functions `mcmc_acf_bar()` and `mcmc_acf()` to get the autocorrelation plots for the different chains for `tau.theta`:
-```{r eval = FALSE, warning=FALSE}
-mcmc_acf_bar(modelGS.sim$samples, pars = c("tau.theta"))
-mcmc_acf(modelGS.sim$samples, regex_pars = c("tau.theta"))
-```
-
-
 We can use the functions `mcmc_acf_bar()` and `mcmc_acf()` to get the autocorrelation plots for the different chains for `tau.theta` (which should be as near to `0` as possible).
 ```{r warning=FALSE}
 mcmc_acf_bar(modelGS.sim$samples, pars = c("tau.theta"))
@@ -369,6 +362,7 @@ where $\sigma_{\phi}$ is a standard deviation term that controls the magnitude o
 Run the MCMC simulations calling `NIMBLE` from R using the function `nimbleMCMC()`
 ```{r}
 BYMCode <- nimbleCode({
+  
   # priors
   alpha ~ dflat() # vague prior (Unif(-inf, +inf))
   overallRR <- exp(alpha) # overall RR across study region
@@ -835,4 +829,5 @@ ggplot() +
 
 
 ## Further closing remarks for Advanced section
+
 If you got through the advanced portion, we examined the effect of long term exposure to NO$_2$ on COVID-19 mortality. We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA. We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.
