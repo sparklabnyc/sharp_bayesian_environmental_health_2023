@@ -414,5 +414,9 @@ There is clearly more smoothing in the partial pooling model.
 
 ## Closing remarks
 
-In this lab session, we have XX
-We looked at XX
+In this lab session, we have explored how to fit a hierarchical model in `NIMBLE`.
+We compared a model where the spatial effects are not pooled, fully pooled, and finally partially pooled.
+
+Hierarchical models are extremely useful in practice.
+We can use the structure of the problem to share information between similar populations.
+For example, as well as neighbouring spatial units, we could borrow strength over similar age groups, adjacent time periods, or even diseases with similar aetiologies.
