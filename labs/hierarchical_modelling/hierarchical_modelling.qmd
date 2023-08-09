@@ -33,7 +33,7 @@ This goal of this lab is to introduce hierarchical modelling using the `NIMBLE` 
 During this lab session, we will:
 
 1. Write a hierarchical model in `NIMBLE`;
-2. Compare the model to more basic non-hierarchical models; and 
+2. Compare the model to more basic non-hierarchical models; and
 3. Discuss the advantages of hierarchical models.
 
 ## Introduction

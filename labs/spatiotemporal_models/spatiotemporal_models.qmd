@@ -75,7 +75,7 @@ The shapefile could be also imported using the function `readOGR` of the package
 <!-- plot(data_england$geometry)  -->
 <!-- ``` -->
 
-We can make nice plots using the package `ggplot2`, which is very flexible and has lots of options for customising the way we want a plot to look. 
+We can make nice plots using the package `ggplot2`, which is very flexible and has lots of options for customising the way we want a plot to look.
 
 First let's reduce the resolution to get quicker maps. Let's look at the full map of England and Wales for now, though we will reduce to just London later.
 ```{r fig.width=3, fig.align='center'}
@@ -140,13 +140,13 @@ The relative risks (RRs) will be smoothed using the Poisson model with a log-lin
 In particular, let each area $i$ be indexed by  the integers $1, 2,...,N$. The model is as follows:
 $$
 \begin{eqnarray}
-O_{i}  & \sim & \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\ 
+O_{i}  & \sim & \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 \log(\lambda_{i}) & = & \alpha + \theta_{i}  \\
 \theta_{i} & \sim & N(0,\sigma_{\theta})
 \end{eqnarray}
 $$
 
-where $\sigma_{\theta}$ is a standard deviation term that controls the magnitude of $\theta_{i}$. 
+where $\sigma_{\theta}$ is a standard deviation term that controls the magnitude of $\theta_{i}$.
 
 As in previous labs, we will write the model in `NIMBLE.` Specify the prior of $\tau_{\theta}$ in the code below (`tau.theta`). We can try a Gamma with parameters 1 and 0.01, which is a sensible option for a Poisson count model as it goes from 0 upwards, so can not be negative, like counts:
 ```{r}
@@ -202,7 +202,7 @@ What are the parameters to be initialised? We have seen this stage many times pr
 inits <- list(
   list(alpha = 0.01, tau.theta = 10, theta = rep(0.01, times = n.LTLA)), # chain 1
   list(alpha = 0.5, tau.theta = 1, theta = rep(-0.01, times = n.LTLA)) # chain 2
-) 
+)
 ```
 
 Set `parameters_to_monitor` a vector to monitor `alpha`, `theta`, `tau.theta`, `overallRR`, `resRR`, `e` and `mu`.
@@ -327,11 +327,11 @@ data_england_simpler$RR <- RR
 ```
 
 * Using `ggplot2`, we can produce a map of the smoothed RRs
-```{r eval=TRUE, fig.width=5, fig.align='center'} 
+```{r eval=TRUE, fig.width=5, fig.align='center'}
 
-ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() + 
-                     scale_fill_viridis_c(limits = c(0, 2), name = "SMR") 
-```	
+ggplot() + geom_sf(data = data_england_simpler, aes(fill = RR)) + theme_bw() +
+                     scale_fill_viridis_c(limits = c(0, 2), name = "SMR")
+```
 
 
 ## The BYM model
@@ -383,7 +383,7 @@ BYMCode <- nimbleCode({
     proba.resRR[i] <- step(resRR[i] - 1) # Posterior probability
   }
 
-  # BYM 
+  # BYM
   phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
 })
 ```
@@ -430,8 +430,8 @@ names(nbWB_A)
 
 A list of three components is created
 
-1. `adj` = `ID` for all the neighbors; 
-2. `weights` = the weight for each neighbour; and 
+1. `adj` = `ID` for all the neighbors;
+2. `weights` = the weight for each neighbour; and
 3. num = total nb of neighbors across the study region
 
 Create data and constants objects as required for `NIMBLE`.
@@ -576,7 +576,7 @@ ggplot() +
 In this lab session, we have explored how to fit spatial models using Bayesian regression in `NIMBLE`.
 We looked at the two most common approaches: iid and the BYM model.
 
-We used real data on COVID-19 deaths in England during March-July 2020 and first performed disease mapping to understand the spatial trends of COVID-19 mortality in the first stages of the pandemic. As part of this analysis, we visualised spatial data, fitted a model with an unstructured spatial random effect, demonstrated how to build a neihgborhood matrix in R and fitted the BYM model. 
+We used real data on COVID-19 deaths in England during March-July 2020 and first performed disease mapping to understand the spatial trends of COVID-19 mortality in the first stages of the pandemic. As part of this analysis, we visualised spatial data, fitted a model with an unstructured spatial random effect, demonstrated how to build a neihgborhood matrix in R and fitted the BYM model.
 
 For more information on the final model see Konstantinoudis et al 2021 (10.1016/j.envint.2020.106316).
 
@@ -620,7 +620,7 @@ BYMecoCode <- nimbleCode({
 
   beta2 ~ dnorm(0, tau = 0.01)
   RR.beta2 <- exp(beta2)
-  
+
   # likelihood
   for (i in 1:N) {
     O[i] ~ dpois(mu[i]) # Poisson likelihood for observed counts

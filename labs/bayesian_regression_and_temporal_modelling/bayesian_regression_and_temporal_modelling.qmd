@@ -298,8 +298,8 @@ nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 10000, #80000,
-  nburnin = 5000, #40000,
+  niter = 10000, # 80000,
+  nburnin = 5000, # 40000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -335,8 +335,8 @@ nimbleMCMC_samples_week_random_walk_more_samples <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 20000, #200000,
-  nburnin = 10000, #100000,
+  niter = 20000, # 200000,
+  nburnin = 10000, # 100000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -471,8 +471,8 @@ nimbleMCMC_samples_week_random_walk_with_temperature <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 20000,#400000,
-  nburnin = 10000,#200000,
+  niter = 20000, # 400000,
+  nburnin = 10000, # 200000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -622,8 +622,8 @@ nimbleMCMC_samples_week_random_walk_with_temperature_by_month <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 20000,#800000,
-  nburnin = 10000,#300000,
+  niter = 20000, # 800000,
+  nburnin = 10000, # 300000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
