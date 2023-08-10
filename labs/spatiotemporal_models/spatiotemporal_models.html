@@ -204,13 +204,13 @@ $ geometry &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((447213.9 53..., MULTIPOLYGON
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_england_simpler <span class="ot">&lt;-</span> rgeos<span class="sc">::</span><span class="fu">gSimplify</span>(<span class="fu">as</span>(data_england, <span class="st">"Spatial"</span>), <span class="at">tol =</span> <span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>rgeos version: 0.6-3, (SVN revision 696)
- GEOS runtime version: 3.11.2-CAPI-1.17.2 
+<pre><code>rgeos version: 0.6-4, (SVN revision 699)
+ GEOS runtime version: 3.11.0-CAPI-1.17.0 
  Please note that rgeos will be retired during October 2023,
 plan transition to sf or terra functions using GEOS at your earliest convenience.
 See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
  GEOS using OverlayNG
- Linking to sp version: 1.6-0 
+ Linking to sp version: 2.0-0 
  Polygon checking: TRUE </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data_england_simpler <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(data_england_simpler)</span>
@@ -218,7 +218,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>data_england <span class="ot">&lt;-</span> data_england_simpler</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As with the previous labs, let’s use the package <code>ggplot2</code> to plot maps of the variables.</p>
-<p>And for nicer maps for the other columns, including COVID-19 deaths, the expected number of deaths, and the SMR:</p>
+<p>And for nicer maps for the other columns, including COVID-19 deaths:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_england, <span class="fu">aes</span>(<span class="at">fill =</span> deaths)) <span class="sc">+</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
@@ -232,6 +232,9 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 </figure>
 </div>
 </div>
+</div>
+<p>the expected number of deaths, and:</p>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_england, <span class="fu">aes</span>(<span class="at">fill =</span> expectd)) <span class="sc">+</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="st">"Expected number of deaths"</span>) <span class="sc">+</span></span>
@@ -240,10 +243,13 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
+</div>
+<p>and the SMR:</p>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_england, <span class="fu">aes</span>(<span class="at">fill =</span> deaths <span class="sc">/</span> expectd)) <span class="sc">+</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="st">"Standardised mortality ratio"</span>) <span class="sc">+</span></span>
@@ -252,12 +258,12 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>And the covariates, including total ICU beds, NO<span class="math inline">\(_2\)</span> and quintile of Index of Multiple Deprivation (IMD):</p>
+<p>And the covariates, including total ICU beds,:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_england, <span class="fu">aes</span>(<span class="at">fill =</span> TtlICUB)) <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
@@ -267,10 +273,13 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
+</div>
+<p>NO<span class="math inline">\(_2\)</span>,:</p>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_england, <span class="fu">aes</span>(<span class="at">fill =</span> NO2)) <span class="sc">+</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"NO2"</span>) <span class="sc">+</span></span>
@@ -279,10 +288,13 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
+</div>
+<p>and quintile of Index of Multiple Deprivation (IMD):</p>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_england, <span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">as.factor</span>(IMD))) <span class="sc">+</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"IMD quintile"</span>) <span class="sc">+</span></span>
@@ -291,7 +303,7 @@ See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -442,7 +454,7 @@ O_{i}  &amp; \sim &amp; \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -454,7 +466,7 @@ O_{i}  &amp; \sim &amp; \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -470,7 +482,7 @@ O_{i}  &amp; \sim &amp; \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -482,7 +494,7 @@ O_{i}  &amp; \sim &amp; \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="384"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="384"></p>
 </figure>
 </div>
 </div>
@@ -519,7 +531,7 @@ Field "pWAIC":
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="480"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="480"></p>
 </figure>
 </div>
 </div>
@@ -700,7 +712,7 @@ Field "pWAIC":
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -724,7 +736,7 @@ Field "pWAIC":
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -744,7 +756,7 @@ Field "pWAIC":
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-37-2.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -922,7 +934,7 @@ Field "pWAIC":
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -970,7 +982,7 @@ RR.beta[6] 0.9140398 0.9142683 0.05849248 0.7988786 1.0307437</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1002,7 +1014,7 @@ RR.beta[6] 0.9140398 0.9142683 0.05849248 0.7988786 1.0307437</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1016,7 +1028,7 @@ RR.beta[6] 0.9140398 0.9142683 0.05849248 0.7988786 1.0307437</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-45-2.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-49-2.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>

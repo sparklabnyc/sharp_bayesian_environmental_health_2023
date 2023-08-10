@@ -1,5 +1,5 @@
 ---
-title: "Bayesian Nonparametric Ensemble"
+title: "Bayesian Nonparametric Ensemble (`BNE`)"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Jaime Benavides"
 date: "August 2023"
@@ -38,43 +38,51 @@ During this lab session, we will:
 
 ## Introduction
 
-As seen in the lecture just now, `BNE` is XX [[[Summary of BNE]]]
+As seen in the lecture just now, `BNE` is a methodology which incorporates multiple exposure models (originally for air pollution) and generates uncertainty estimates by weighting ensemble members dynamically over space and time. As a Bayesian model, `BNE` generates a full posterior predictive distribution for predicted concentrations at each point in space and time, then estimates point-specific uncertainty which reflects, in part, base model disagreement, as well as inherent measurement uncertainty.
 
 `BNE` code is currently written in MATLAB programming language (folder bne_v2_matlab) and translated to Octave open source programming language (folder bne_v2_octave) for this course.
 In this lab, we fit an ensemble model integrating multiple existing prediction models and estimate uncertainty in PM$_{2.5}$ predictions.
 Predictions refers to the predicted value at some location and time. Note that for `BNE`, prediction does not refer to future values, but values within our study period + location.
 
-We estimate 2015 annual PM$_{2.5}$ concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with `BNE`.
+Here we will estimate 2015 annual PM$_{2.5}$ concentrations at 0.125°× 0.125° resolution across the contiguous US by combining seven well-validated prediction models with `BNE`.
 We trained the model on measurements reported in the US Environmental Protection Agency's Air Quality System  (AQS) database.
 We estimated model uncertainty as the standard deviations of predictions’ location-specific posterior predictive distribution.
 
-## Exploring input model data
+## Introducing `BNE` input model data
 
-We will start exploring annual average PM$_{2.5}$ concentrations from input base models, which are the individual prediction models that are incorporated into `BNE` to ultimate generate predictions.
-These models along with AQS monitor data will be used to train `BNE`.
+We will start by exploring annual average PM$_{2.5}$ concentrations from input base models, which are the individual prediction models that are incorporated into `BNE` to ultimately generate predictions.
+These models, along with AQS monitor data, will be used to train `BNE`.
 
-![Input base prediction models included](images/table_input_base_models.png)
+![Table: Input base prediction models included](images/table_input_base_models.png)
 
-Load plotting function `plotOneParameterSpatial`, which will be used for plotting maps.
-```{r}
-source(here("labs", "bayesian_nonparametric_ensemble", "functions", "STR_1_plotOneParameterSpatial.R"))
-```
+## Introducing `BNE` training data
 
 Load training dataset containing input base models and AQS observations for PM$_{2.5}$ during the period 2010-2015.
+
 To create the training dataset, we spatially joined each model to the EPA AQS dataset, using the prediction that was closest to each monitor (i.e., nearest neighbors).
 ```{r}
 aqs_preds <- read_csv(here("data", "us", "training_cvfolds.csv"))
 summary(aqs_preds)
 ```
 
-Load prediction dataset.
+## Load prediction dataset
+
 To create the prediction dataset, we first created a reference grid, and then joined each prediction dataset by nearest neighbour.
 This dataset also contains `BNE` results that will be explored in next steps.
 ```{r}
 bne2015 <- read_csv(here("data", "us", "refGrid_pm25_comp_seb_vers_2_2015_2_0-5_2_0-5_2_0-0498_0-1353.csv"))
 ```
 
-Explore input base models. What does the input base model predictions look like for the year 2015 over the US?
+## Plotting and exploring input base models
+
+Let's now plot each of the base models that feed into `BNE` and compare and contrast what they look like.
+
+First, we need to load plotting function `plotOneParameterSpatial`, which will be used for plotting maps. This is a pre-made function which you can explore in your own time.
+```{r}
+source(here("labs", "bayesian_nonparametric_ensemble", "functions", "STR_1_plotOneParameterSpatial.R"))
+```
+
+What do each of the input base model predictions look like for the year 2015 over the continental United States?
 ```{r}
 # generate value range and value breaks for the plot
 varVec <- c(
@@ -92,37 +100,69 @@ varScale <- c(
 # Assign coordinate reference system as needed on the plotting function
 projCRS <- "epsg:9311"
 # use function plotOneParameterSpatial
+```
+
+:::aside
+See above Table for model descriptions
+:::
+
+Plot AV
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_av",
   mainTitle = "Prediction of AV Model", valueScale = varScale
 )
+```
+
+Plot CACES
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_cc",
   mainTitle = "Prediction of CACES", valueScale = varScale
 )
+```
+
+Plot CMAQ-Fusion
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_cm",
   mainTitle = "Prediction of CMAQ-Fusion", valueScale = varScale
 )
+```
+
+Plot GBD
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_gs",
   mainTitle = "Prediction of GBD", valueScale = varScale
 )
+```
+
+Plot JS
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_js",
   mainTitle = "Prediction of JS Model", valueScale = varScale
 )
+```
+
+Plot MEERA
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_me",
   mainTitle = "Prediction of MERRA", valueScale = varScale
 )
+```
+
+Plot RK
+```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_rk",
   mainTitle = "Prediction of RK Model", valueScale = varScale
 )
 ```
 
-How do input base model predictions compare with AQS observations?
+How do input base model predictions compare with AQS observations? Let's generate the Root Mean Squared Error (RMSE) values by region of the continental United States
 ```{r}
 aqs_preds_summ <- aqs_preds |>
   mutate(
@@ -180,10 +220,11 @@ p <- aqs_preds_summ_rmse |>
   lims(y = c(0, max(aqs_preds_summ_rmse$rmse)))
 p
 ```
+We can see that there is a lot of variation in RMSE, by region and by model.
 
 ## Running `BNE`
 
-In this lab, we provide you with `BNE` source code both in MATLAB and Octave, an open source programming language.
+In this lab, we provide you with `BNE` source code both in `MATLAB` and `Octave`, an open source programming language.
 In this part of the lab, we execute locally running_`BNE`_octave.qmd file running `BNE` on a subset of the contiguous US constrained to the South West area. You can run either the MATLAB or the Octave code in your computer using the scripts found at `BNE`_v2_matlab and/or `BNE`_v2_octave.
 
 In order to run `BNE`, we need to:
@@ -208,8 +249,9 @@ The input base model predictions need to be at the same spatial scale (harmonize
 
 In this part of the lab, we explore the results of a `BNE` model run over the contiguous US for the year 2015 given the seven input base models previously introduced.
 
-Model weights. In `BNE`, the weights of the ensemble members smoothly vary over time and space. The model weights are required to sum to one, so the weighted model combination must stay within the range of the original predictions.
+Model weights. In `BNE`, the weights of the ensemble members smoothly vary over time and space. 
 
+The model weights are required to sum to one, so the weighted model combination must stay within the range of the original predictions.
 ```{r}
 varVec <- c(
   0, bne2015$w_mean_av, bne2015$w_mean_cc, bne2015$w_mean_cm,
@@ -222,44 +264,50 @@ varScale <- c(
   round(min(varVec) + 0.5 * varRange, 2), round(min(varVec) + 0.75 * varRange, 2),
   round(max(varVec), 2)
 )
-plot_grid(
-  plotOneParameterSpatial(
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_av",
     mainTitle = "Weight of AV Model", valueScale = varScale
-  ),
-  plotOneParameterSpatial(
+  )
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_cc",
     mainTitle = "Weight of CACES", valueScale = varScale
-  ),
-  plotOneParameterSpatial(
+  )
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_cm",
     mainTitle = "Weight of CMAQ-Fusion", valueScale = varScale
-  ),
-  plotOneParameterSpatial(
+  )
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_gs",
     mainTitle = "Weight of GBD", valueScale = varScale
-  ),
-  plotOneParameterSpatial(
+  )
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_js",
     mainTitle = "Weight of JS Model", valueScale = varScale
-  ),
-  plotOneParameterSpatial(
+  )
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_me",
     mainTitle = "Weight of MERRA", valueScale = varScale
-  ),
-  plotOneParameterSpatial(
+  )
+
+plotOneParameterSpatial(
     dta = bne2015, parameterName = "w_mean_rk",
     mainTitle = "Weight of RK Model", valueScale = varScale
-  ),
-  ncol = 2, nrow = 4
-)
+  )
 ```
 
-`BNE` Predicted concentration.
-`BNE` estimates a posterior predictive distribution (PPD) of estimated concentration for each point; we use the mean of the distribution as the point estimate of predicted concentration.
-Once optimal weights are calculated, a residual process term is then estimated in a second stage to capture any systematic bias in the weighted model combination and capture uncertainty due to lack of measurements in a particular location.
-The plot below shows the total `BNE` estimate summing both components: model ensemble and residual process.
+## `BNE` Predicted concentration
 
+`BNE` estimates a posterior predictive distribution (PPD) of estimated concentration for each point; we use the mean of the distribution as the point estimate of predicted concentration.
+
+Once optimal weights are calculated, a residual process term is then estimated in a second stage to capture any systematic bias in the weighted model combination and capture uncertainty due to lack of measurements in a particular location.
+
+The plot below shows the total `BNE` estimate summing both components: model ensemble and residual process.
 ```{r}
 varVec <- c(bne2015$y_mean)
 varRange <- max(varVec) - min(varVec)
@@ -269,15 +317,20 @@ varScale <- c(
   round(max(varVec), 2)
 )
 
-# 4.b. make plot
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "y_mean",
   mainTitle = "Predicted Concentration 2015", valueScale = varScale
 )
 ```
 
-Predicted uncertainty levels. How wide is the range of plausible values for the concentration at a particular location at a given time? The wider the range, the high the uncertainty, as there are more possible values for the concentration.
+## Predicted uncertainty levels. 
+
+One of the key outputs of `BNE` is the fact that it produces uncertainty of results. This has countless applications, including planning where to place additional monitors, to incorporating uncertainty into health models (as seen as a preview in the lecture).
+
+How wide is the range of plausible values for the concentration at a particular location at a given time? The wider the range, the high the uncertainty, as there are more possible values for the concentration.
+
 Here, we measure predictive uncertainty as the standard deviation (SD) of the PPD of the concentration.
+
 Note that predictive uncertainty is given our evidence and our model; if we use a different model, then we may have a different amount of uncertainty.
 
 A larger SD corresponds to a wider predictive distribution and greater uncertainty, i.e., at that point, `BNE` considers a wider range of concentrations to be plausible, given the base models and model structure.

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.354">
+<meta name="generator" content="quarto-1.2.475">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,10 +19,9 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -49,13 +48,43 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -95,20 +124,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Theo Rashid </p>
           </div>
   </div>
-
+    
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-
-
+  
+    
   </div>
-
+  
 
 </header>
 
+<div class="cell">
+
+</div>
 <section id="goal-of-this-computing-lab-session" class="level2">
 <h2 class="anchored" data-anchor-id="goal-of-this-computing-lab-session">Goal of this computing lab session</h2>
 <p>The goal of this lab is to use <code>INLA</code> to run some hierarchical models.</p>
@@ -192,25 +224,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-   c("inla.core(formula = formula, family = family, contrasts = contrasts,
-   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", "
-   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata,
-   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose =
-   verbose, ", " lincomb = lincomb, selection = selection, control.compute
-   = control.compute, ", " control.predictor = control.predictor,
-   control.family = control.family, ", " control.inla = control.inla,
-   control.fixed = control.fixed, ", " control.mode = control.mode,
-   control.expert = control.expert, ", " control.hazard = control.hazard,
-   control.lincomb = control.lincomb, ", " control.update =
-   control.update, control.lp.scale = control.lp.scale, ", "
-   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam,
-   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads =
-   num.threads, ", " blas.num.threads = blas.num.threads, keep = keep,
-   working.directory = working.directory, ", " silent = silent, inla.mode
-   = inla.mode, safe = FALSE, debug = debug, ", " .parent.frame =
-   .parent.frame)")
+   c("inla.core(formula = formula, family = family, contrasts = contrasts, 
+   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", " 
+   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, 
+   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose = 
+   verbose, ", " lincomb = lincomb, selection = selection, control.compute 
+   = control.compute, ", " control.predictor = control.predictor, 
+   control.family = control.family, ", " control.inla = control.inla, 
+   control.fixed = control.fixed, ", " control.mode = control.mode, 
+   control.expert = control.expert, ", " control.hazard = control.hazard, 
+   control.lincomb = control.lincomb, ", " control.update = 
+   control.update, control.lp.scale = control.lp.scale, ", " 
+   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam, 
+   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = 
+   num.threads, ", " blas.num.threads = blas.num.threads, keep = keep, 
+   working.directory = working.directory, ", " silent = silent, inla.mode 
+   = inla.mode, safe = FALSE, debug = debug, ", " .parent.frame = 
+   .parent.frame)") 
 Time used:
-    Pre = 1.62, Running = 0.269, Post = 0.0286, Total = 1.92
+    Pre = 1.82, Running = 0.339, Post = 0.194, Total = 2.35 
 Fixed effects:
               mean    sd 0.025quant 0.5quant 0.975quant   mode kld
 (Intercept) -0.111 0.008     -0.128   -0.111     -0.095 -0.111   0
@@ -223,8 +255,8 @@ Model hyperparameters:
                       mean    sd 0.025quant 0.5quant 0.975quant   mode
 Precision for SIGLA 248.49 57.53     156.79   241.40     380.67 228.34
 
-Marginal log-Likelihood:  -8587.67
- is computed
+Marginal log-Likelihood:  -8587.67 
+ is computed 
 Posterior summaries for the linear predictor and the fitted values are computed
 (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</code></pre>
 </div>
@@ -242,13 +274,13 @@ Posterior summaries for the linear predictor and the fitted values are computed
 2 AL  0.067059819 0.03863496 -0.008172509  0.066854405 0.14344159  0.066434897
 3 AN -0.033443467 0.03935730 -0.111019720 -0.033325563 0.04347377 -0.033084160
 4 AO -0.005949052 0.05422371 -0.112771454 -0.005878777 0.10048095 -0.005736127
-5 AP  0.010018763 0.04828329 -0.084614390  0.009939846 0.10509225  0.009778417
+5 AP  0.010018763 0.04828329 -0.084614390  0.009939846 0.10509225  0.009778418
 6 AQ  0.031969229 0.04451412 -0.054918541  0.031785574 0.11988236  0.031409814
            kld
 1 3.767163e-09
 2 2.634242e-09
 3 1.024003e-09
-4 3.870444e-09
+4 3.870445e-09
 5 1.708356e-09
 6 2.079593e-09</code></pre>
 </div>
@@ -338,25 +370,25 @@ Posterior summaries for the linear predictor and the fitted values are computed
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-   c("inla.core(formula = formula, family = family, contrasts = contrasts,
-   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", "
-   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata,
-   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose =
-   verbose, ", " lincomb = lincomb, selection = selection, control.compute
-   = control.compute, ", " control.predictor = control.predictor,
-   control.family = control.family, ", " control.inla = control.inla,
-   control.fixed = control.fixed, ", " control.mode = control.mode,
-   control.expert = control.expert, ", " control.hazard = control.hazard,
-   control.lincomb = control.lincomb, ", " control.update =
-   control.update, control.lp.scale = control.lp.scale, ", "
-   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam,
-   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads =
-   num.threads, ", " blas.num.threads = blas.num.threads, keep = keep,
-   working.directory = working.directory, ", " silent = silent, inla.mode
-   = inla.mode, safe = FALSE, debug = debug, ", " .parent.frame =
-   .parent.frame)")
+   c("inla.core(formula = formula, family = family, contrasts = contrasts, 
+   ", " data = data, quantiles = quantiles, E = E, offset = offset, ", " 
+   scale = scale, weights = weights, Ntrials = Ntrials, strata = strata, 
+   ", " lp.scale = lp.scale, link.covariates = link.covariates, verbose = 
+   verbose, ", " lincomb = lincomb, selection = selection, control.compute 
+   = control.compute, ", " control.predictor = control.predictor, 
+   control.family = control.family, ", " control.inla = control.inla, 
+   control.fixed = control.fixed, ", " control.mode = control.mode, 
+   control.expert = control.expert, ", " control.hazard = control.hazard, 
+   control.lincomb = control.lincomb, ", " control.update = 
+   control.update, control.lp.scale = control.lp.scale, ", " 
+   control.pardiso = control.pardiso, only.hyperparam = only.hyperparam, 
+   ", " inla.call = inla.call, inla.arg = inla.arg, num.threads = 
+   num.threads, ", " blas.num.threads = blas.num.threads, keep = keep, 
+   working.directory = working.directory, ", " silent = silent, inla.mode 
+   = inla.mode, safe = FALSE, debug = debug, ", " .parent.frame = 
+   .parent.frame)") 
 Time used:
-    Pre = 1.28, Running = 0.193, Post = 0.0508, Total = 1.52
+    Pre = 1.94, Running = 0.246, Post = 0.234, Total = 2.42 
 Fixed effects:
               mean    sd 0.025quant 0.5quant 0.975quant   mode kld
 (Intercept) -0.111 0.008     -0.126   -0.111     -0.096 -0.111   0
@@ -368,39 +400,39 @@ Random effects:
 Model hyperparameters:
                                                   mean      sd 0.025quant
 Precision for provincia_id (iid component)      323.48   96.80     172.44
-Precision for provincia_id (spatial component) 1579.27 1740.92     249.69
+Precision for provincia_id (spatial component) 1579.27 1740.93     249.69
                                                0.5quant 0.975quant   mode
 Precision for provincia_id (iid component)       310.47     550.66 286.14
-Precision for provincia_id (spatial component)  1063.51    6117.69 566.68
+Precision for provincia_id (spatial component)  1063.51    6117.70 566.68
 
-Marginal log-Likelihood:  -8550.33
- is computed
+Marginal log-Likelihood:  -8550.33 
+ is computed 
 Posterior summaries for the linear predictor and the fitted values are computed
 (Posterior marginals needs also 'control.compute=list(return.marginals.predictor=TRUE)')</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model_spatial<span class="sc">$</span>summary.fixed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                  mean          sd 0.025quant   0.5quant  0.975quant       mode
-(Intercept) -0.1111033 0.007632353 -0.1261339 -0.1110951 -0.09611891 -0.1110793
+<pre><code>                  mean          sd 0.025quant   0.5quant 0.975quant       mode
+(Intercept) -0.1111033 0.007632355 -0.1261339 -0.1110951 -0.0961189 -0.1110793
                      kld
-(Intercept) 3.781444e-09</code></pre>
+(Intercept) 3.781592e-09</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(model_spatial<span class="sc">$</span>summary.random<span class="sc">$</span>provincia_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  ID         mean         sd   0.025quant     0.5quant 0.975quant         mode
-1  1  0.054892927 0.04109748 -0.024795049  0.054548584 0.13649368  0.053837239
-2  2  0.069539928 0.03730349 -0.003157074  0.069351004 0.14328097  0.068956347
-3  3 -0.043668907 0.03905439 -0.120427410 -0.043631321 0.03288118 -0.043553119
-4  4  0.008778609 0.05364289 -0.097157171  0.008948571 0.11377690  0.009300400
-5  5 -0.003707957 0.04706388 -0.095439593 -0.003975988 0.08949606 -0.004538381
-6  6  0.028851469 0.04272976 -0.054438949  0.028614621 0.11343926  0.028114407
+<pre><code>  ID         mean         sd  0.025quant     0.5quant 0.975quant         mode
+1  1  0.054892905 0.04109787 -0.02479574  0.054548524 0.13649460  0.053837142
+2  2  0.069539846 0.03730354 -0.00315721  0.069350908 0.14328105  0.068956252
+3  3 -0.043668824 0.03905460 -0.12042761 -0.043631281 0.03288179 -0.043553167
+4  4  0.008778497 0.05364251 -0.09715636  0.008948410 0.11377615  0.009300142
+5  5 -0.003707888 0.04706426 -0.09544014 -0.003975968 0.08949703 -0.004538460
+6  6  0.028851451 0.04272995 -0.05443931  0.028614593 0.11343965  0.028114371
            kld
-1 6.335821e-09
-2 2.476794e-09
-3 3.137403e-10
-4 3.962434e-09
-5 4.211569e-09
-6 3.761631e-09</code></pre>
+1 6.337610e-09
+2 2.477403e-09
+3 3.135269e-10
+4 3.961472e-09
+5 4.212704e-09
+6 3.762154e-09</code></pre>
 </div>
 </div>
 <p>Compare and contrast the model fits using the plotting code above. Try and test out different spatial models, such as <code>"besag"</code>.</p>
@@ -478,7 +510,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -486,23 +518,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -519,11 +537,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button,
-        { trigger: "manual",
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();
+      tooltip.show();    
     }
     setTimeout(function() {
       if (tooltip) {
@@ -553,7 +571,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config);
+    window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -567,92 +585,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
