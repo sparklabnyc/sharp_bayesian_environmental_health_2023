@@ -400,7 +400,7 @@ p_partial <- shp_italy |>
 p_partial
 ```
 
-## Comparing the models
+## Comparing each of the models
 
 Look at how each of the models alters the fit.
 
