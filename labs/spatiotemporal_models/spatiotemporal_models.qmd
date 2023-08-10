@@ -303,7 +303,11 @@ In particular, let each area $i$ be indexed by  the integers $1, 2,...,N$.
 The model is as follows.
 
 ::: aside
-DESCRIPTION OF BYM
+A Besag, York, Mollie (BYM) spatial model considers two things:
+
+1. Neighboring Influence: It looks at how connected areas are. If two areas are close to each other, there's a chance that a disease can move from one area to another. So, if a disease is in one area, it might "spill over" into the neighboring area.
+
+2. Background Risk: This is like the natural risk of the disease occurring, even without any special factors. Some areas might naturally have more cases due to other factors. The model takes this into account too. 
 :::
 
 $$

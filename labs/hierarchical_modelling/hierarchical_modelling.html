@@ -752,8 +752,8 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 </div>
 </div>
 </section>
-<section id="comparing-the-models" class="level2">
-<h2 class="anchored" data-anchor-id="comparing-the-models">Comparing the models</h2>
+<section id="comparing-each-of-the-models" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-each-of-the-models">Comparing each of the models</h2>
 <p>Look at how each of the models alters the fit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>p_full <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Full pooling model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -773,7 +773,8 @@ y_i &amp;\sim \text{Pois}(\mu_i) \quad i = 1,..., N \\
 </section>
 <section id="closing-remarks" class="level2">
 <h2 class="anchored" data-anchor-id="closing-remarks">Closing remarks</h2>
-<p>In this lab session, we have XX We looked at XX</p>
+<p>In this lab session, we have explored how to fit a hierarchical model in <code>NIMBLE</code>. We compared a model where the spatial effects are not pooled, fully pooled, and finally partially pooled.</p>
+<p>Hierarchical models are extremely useful in practice. We can use the structure of the problem to share information between similar populations. For example, as well as neighbouring spatial units, we could borrow strength over similar age groups, adjacent time periods, or even diseases with similar aetiologies.</p>
 </section>
 
 </main>

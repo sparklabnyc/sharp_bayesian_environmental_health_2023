@@ -471,9 +471,7 @@ O_{i}  &amp; \sim &amp; \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 </div>
 </div>
 </div>
-<ul>
-<li>Use the functions <code>mcmc_hist()</code> and <code>mcmc_dens()</code> to get the histogram and the density plots of the posterior <code>tau.theta</code> for chain 1.</li>
-</ul>
+<p>Use the functions <code>mcmc_hist()</code> and <code>mcmc_dens()</code> to get the histogram and the density plots of the posterior <code>tau.theta</code> for chain 1.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_hist</span>(modelGS.sim<span class="sc">$</span>samples<span class="sc">$</span>chain1, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"tau.theta"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -542,7 +540,11 @@ Field "pWAIC":
 <p>The RRs will be smoothed using the Poisson model and the BYM model in the log-link function. In particular, let each area <span class="math inline">\(i\)</span> be indexed by the integers <span class="math inline">\(1, 2,...,N\)</span>. The model is as follows.</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p>DESCRIPTION OF BYM</p>
+<p>A Besag, York, Mollie (BYM) spatial model considers two things:</p>
+<ol type="1">
+<li><p>Neighboring Influence: It looks at how connected areas are. If two areas are close to each other, there’s a chance that a disease can move from one area to another. So, if a disease is in one area, it might “spill over” into the neighboring area.</p></li>
+<li><p>Background Risk: This is like the natural risk of the disease occurring, even without any special factors. Some areas might naturally have more cases due to other factors. The model takes this into account too.</p></li>
+</ol>
 </div></div><p><span class="math display">\[
 \begin{equation}
 \begin{aligned}
@@ -861,9 +863,7 @@ Field "pWAIC":
 <span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> nbWB_A<span class="sc">$</span>weights</span>
 <span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ul>
-<li>Create the initial values for ALL the unknown parameters:</li>
-</ul>
+<p>Create the initial values for ALL the unknown parameters:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialise the unknown parameters, 2 chains</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
