@@ -33,7 +33,7 @@ During this lab session, we will:
 1. Explore how `NIMBLE` is written and works;
 2. Write some common regression models (Normal, Additional: logistic regression, Poisson);
 3. Understand how basic model assessment is made; and
-3. Test out how adjustments of models are made via different priors and more samples.
+4. Test out how adjustments of models are made via different priors and more samples.
 
 ## Introduction
 

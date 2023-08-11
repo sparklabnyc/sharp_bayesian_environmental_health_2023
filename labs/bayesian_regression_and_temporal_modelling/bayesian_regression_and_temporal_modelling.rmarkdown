@@ -786,3 +786,4 @@ We looked at models which started off with a linear time trend, then a random wa
 
 Other topics that will be related to this will be how to include a more general longer-memory autoregressive term, and also how to forecast based on model fit.
 However, in the limited time that we have, this lab provides a foundation for learning about other methods and techniques, some of which will be elaborated upon in the coming lab sessions.
+

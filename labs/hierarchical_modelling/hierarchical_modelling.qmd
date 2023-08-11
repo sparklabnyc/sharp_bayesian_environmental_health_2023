@@ -38,7 +38,7 @@ During this lab session, we will:
 
 ## Introduction
 
-In this task, we will explore mortality data in Italy during XX-XX using hierarchical modelling.
+In this task, we will explore mortality data in Italy during September 2018 using hierarchical modelling.
 
 ::: aside
 The standardised mortality ratio (SMR) is the ratio of the number of deaths observed in a population over a given period to the number that would be expected over the same period if the study population had the same age-specific rates as the standard population.

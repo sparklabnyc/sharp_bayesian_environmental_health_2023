@@ -36,7 +36,7 @@ library(hrbrthemes)
 
 - Introduction
 - Regression models
-- Getting ready for the lab
+- Using `NIMBLE` for Bayesian inference
 
 # Overview
 
@@ -193,7 +193,7 @@ data <- list(deaths = data_national$deaths, population = data_national$populatio
 inits <- list(alpha = 0, beta_week = 0)
 parameters_to_monitor <- c("alpha", "beta_week", "beta_year", "beta_year_exp")
 
-nimbleMCMC_samples_linear <- invisible(nimbleMCMC(
+nimbleMCMC_samples_linear <- nimbleMCMC(
   code = code_linear,
   data = data,
   constants = constants,
@@ -203,7 +203,7 @@ nimbleMCMC_samples_linear <- invisible(nimbleMCMC(
   nburnin = 5000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
-))
+)
 
 linear_fit <- data_national |>
   ungroup() |>
@@ -229,6 +229,14 @@ linear_fit |>
   ggplot() +
   geom_point(aes(x = week, y = rate), size = 0.6) +
   geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+```
+
+## But do the residuals look right?
+
+```{r}
+linear_fit |>
+  ggplot(aes(x = residuals)) +
+  geom_histogram()
 ```
 
 ## Regression models
@@ -285,9 +293,8 @@ $$
 ## Logistic regression
 
 ::: nonincremental
-- Logistic regression is used when we want to classify observations into two groups (zero or one).
+- Used when we want to classify observations into two groups (zero or one).
 - If dependent variable represents sets of trails of yes/no:
-- Distributed with Binomial (zero to $n$ successes).
 :::
 
 $$
@@ -300,11 +307,15 @@ $$
 ## Binomial regression
 
 ::: nonincremental
-- As seen in first lecture.
+- Used when we want to know how many successes from a set number of trials
+- Distributed with Binomial distribution (zero to $n$ successes).
 :::
 
 $$
-TO DO
+\begin{split}
+y_i &\sim \text{Bin}(n,p_i) \quad i = 1,..., N \\
+\text{logit}(p_i) &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
+\end{split}
 $$
 
 ## Poisson regression
@@ -325,6 +336,12 @@ $$
 - When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
 - You will see several of the remaining time in the workshop.
 - For example, link function on Poisson regression is usually a log-link function to prevent counts from going negative.
+
+$$
+\begin{split}
+\log(\mu_t) &= \log(P_t) + \alpha + \beta_w t
+\end{split}
+$$
 
 ## Reminder of regression model steps
 
@@ -406,24 +423,108 @@ y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 \gamma_t &\sim N(\gamma_{t-1}, \sigma_{rw})
 \end{split}
 $$
-## Non-linear regression
-
-[[[NIMBLE CODE OF ABOVE]]]
 
 ## Non-linear regression
 
-[[[MODEL FIT PLOT]]]
+``` R
+code_weekly_random_walk <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
+
+  # likelihood
+  for (t in 1:Nw) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- log(population[t]) + lograte[t]
+    lograte[t] <- alpha + rw[t]
+  }
+
+  # random walk over time
+  rw[1] <- 0
+  for (t in 2:Nw) {
+    rw[t] ~ dnorm(rw[t - 1], sigma_rw)
+  }
+})
+```
+
+## Non-linear regression
+
+```{r}
+#| echo: false
+code_weekly_random_walk <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
+
+  # likelihood
+  for (t in 1:Nw) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- log(population[t]) + lograte[t]
+    lograte[t] <- alpha + rw[t]
+  }
+
+  # random walk over time
+  rw[1] <- 0
+  for (t in 2:Nw) {
+    rw[t] ~ dnorm(rw[t - 1], sigma_rw)
+  }
+})
+
+constants <- list(Nw = nrow(data_national))
+data <- list(deaths = data_national$deaths, population = data_national$population)
+
+inits <- list(alpha = -8.0, rw = rep(0, times = nrow(data_national)), sigma_rw = 1)
+parameters_to_monitor <- c("alpha", "rw", "lograte")
+
+nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
+  code = code_weekly_random_walk,
+  data = data,
+  constants = constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 10000, # 80000,
+  nburnin = 5000, # 40000,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE
+)
+
+rw_fit <- data_national |>
+  ungroup() |>
+  mutate(
+    .death_rate_fit = 100000 * exp(
+      nimbleMCMC_samples_week_random_walk[, str_c("lograte[", seq(nrow(data_national)), "]")]
+    ) |>
+      apply(
+        FUN = mean,
+        MARGIN = 2
+      )
+  ) |>
+  mutate(residuals = rate - .death_rate_fit)
+
+rw_fit |>
+  ggplot() +
+  geom_point(aes(x = week, y = rate), size = 2) +
+  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")  
+```
+
+## Reminder of regression model steps
+
+::: nonincremental
+- Basic steps for regression models:
+1. Establish suitable model for observations.
+2. Identify type of relationship between predictor(s) and outcome.
+3. For Bayesian approach, specify prior distributions etc.
+4. Run the model somehow (e.g., `R` with `NIMBLE`).
+5. See how well the model has fit.
+:::
 
 # Prior distributions
 
 ## Setting priors
 
 - Need to do this on:
-- The regression parameters (e.g., the $\Beta$ parameters).
+- The regression parameters (e.g., the $\beta$ parameters).
 - Variance of outcome (e.g., $\sigma^2$).
-
-## Setting priors
-
 - In absence of information, set priors as vague:
 
 ``` R
@@ -432,9 +533,104 @@ beta_temperature ~ dnorm(0, sd = 10) # prior for beta_temperature
 sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
 ```
 
-## Priors focus in `NIMBLE` model:Non-linear regression
+## Priors focus in `NIMBLE` model
 
-[[[NIMBLE CODE OF ABOVE]]]
+```{r}
+#| echo: false
+code_weekly_random_walk <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
+
+  # likelihood
+  for (t in 1:Nw) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- log(population[t]) + lograte[t]
+    lograte[t] <- alpha + rw[t]
+  }
+
+  # random walk over time
+  rw[1] <- 0
+  for (t in 2:Nw) {
+    rw[t] ~ dnorm(rw[t - 1], sigma_rw)
+  }
+})
+```
+
+## Priors focus in `NIMBLE` model
+
+::: nonincremental
+- How does $\alpha$ prior look?
+:::
+
+$$Normal(0,10)$$
+
+```{r}
+#| echo: false
+p <- seq(-10, 10, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 10), type = "l")
+```
+
+## Priors focus in `NIMBLE` model
+
+::: nonincremental
+- Alternative $\alpha$ priors:
+:::
+
+$$Normal(0,1)$$
+
+```{r}
+#| echo: false
+p <- seq(-10, 10, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type = "l")
+```
+
+## Priors focus in `NIMBLE` model
+
+::: nonincremental
+- Alternative $\alpha$ priors:
+:::
+
+$$Normal(1,1)$$
+
+```{r}
+#| echo: false
+p <- seq(-10, 10, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 1, 1), type = "l")
+```
+
+## Priors focus in `NIMBLE` model
+
+::: nonincremental
+- Alternative $\alpha$ priors:
+:::
+
+$$Normal(1,5)$$
+
+```{r}
+#| echo: false
+p <- seq(-10, 10, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 1, 5), type = "l")
+```
+
+## Reminder of regression model steps
+
+::: nonincremental
+- Basic steps for regression models:
+1. Establish suitable model for observations.
+2. Identify type of relationship between predictor(s) and outcome.
+3. For Bayesian approach, specify prior distributions etc.
+4. Run the model somehow (e.g., `R` with `NIMBLE`).
+5. See how well the model has fit.
+:::
 
 # Running models
 
@@ -456,13 +652,136 @@ data <- read_csv(here("data", "Spain", "data_spain.csv"))
 
 ## Linear regression: Real world example
 
-FROM PRACTICAL ADD HERE
+::: nonincremental
+- What does it look like?
 
-## Temporal modelling
+:::
 
-- Regression but with time as a component.
-- Modelled linearly?
-- Modelled non-linearly?
+``` R
+data <- read_csv(here("data", "Spain", "data_spain.csv"))
+head(data)
+
+data_national <- data |>
+  group_by(week, week_of_year) |>
+  summarise(
+    deaths = sum(deaths),
+    population = sum(population),
+    t2m = mean(t2m),
+    weekly_t2m_anomaly = mean(weekly_t2m_anomaly)
+  ) |>
+  mutate(week = dmy(week)) |>
+  arrange(week) |>
+  filter(year(week) < 2020) # avoiding COVID for now
+
+ggplot(data = data_national) +
+  geom_point(aes(x = week, y = deaths))
+```
+
+## Linear regression: Real world example
+
+::: nonincremental
+- Find some kind of association.
+:::
+
+``` R
+code_linear <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  beta_week ~ dnorm(0, sd = 10) # prior for beta_week
+
+  # likelihood
+  for (t in 1:Nw) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- log(population[t]) + alpha + beta_week * t
+  }
+
+  # what's the estimated annual rate of change?
+  beta_year <- exp(52 * beta_week)
+  beta_year_exp <- exp(beta_year)
+})
+```
+
+## Linear regression: Real world example
+
+::: nonincremental
+- Find some kind of association.
+:::
+
+```{r}
+#| echo: false
+data_national <- data_national |>
+  mutate(rate = 100000 * deaths / population)
+
+code_linear <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  beta_week ~ dnorm(0, sd = 10) # prior for beta_week
+
+  # likelihood
+  for (t in 1:Nw) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- log(population[t]) + alpha + beta_week * t
+  }
+
+  # what's the estimated annual rate of change?
+  beta_year <- exp(52 * beta_week)
+  beta_year_exp <- exp(beta_year)
+})
+
+constants <- list(Nw = nrow(data_national))
+data <- list(deaths = data_national$deaths, population = data_national$population)
+
+inits <- list(alpha = 0, beta_week = 0)
+parameters_to_monitor <- c("alpha", "beta_week", "beta_year", "beta_year_exp")
+
+nimbleMCMC_samples_linear <- nimbleMCMC(
+  code = code_linear,
+  data = data,
+  constants = constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 10000,
+  nburnin = 5000,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE
+)
+
+linear_fit <- data_national |>
+  ungroup() |>
+  mutate(
+    .death_rate_fit = 100000 * exp(
+      # add alpha and beta_week * week_number by sample
+      sweep(
+        nimbleMCMC_samples_linear[, "beta_week"] %*% t(1:nrow(data_national)),
+        1,
+        nimbleMCMC_samples_linear[, "alpha"],
+        FUN = "+"
+      )
+    ) |>
+      # then take the mean of the samples
+      apply(
+        FUN = mean,
+        MARGIN = 2
+      )
+  ) |>
+  mutate(residuals = rate - .death_rate_fit)
+
+linear_fit |>
+  ggplot() +
+  geom_point(aes(x = week, y = rate), size = 0.6) +
+  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+```
+## Reminder of regression model steps
+
+::: nonincremental
+- Basic steps for regression models:
+1. Establish suitable model for observations.
+2. Identify type of relationship between predictor(s) and outcome.
+3. For Bayesian approach, specify prior distributions etc.
+4. Run the model somehow (e.g., `R` with `NIMBLE`).
+5. See how well the model has fit.
+:::
+
 
 # Evaluating model fit
 
@@ -470,15 +789,45 @@ FROM PRACTICAL ADD HERE
 
 - Sometimes a seemingly reasonable approach can result in unexpected results.
 - When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.
-- Ideally residuals after model fit are essentially random centered around zero.
+- Ideally residuals after model fit are essentially normally distributed centered around zero.
 
-## FROM PRACTICAL ADD HERE
+## Linear model residuals
 
-XX
+```{r}
+linear_fit |>
+  ggplot(aes(x = residuals)) +
+  geom_histogram()
+```
 
-# Getting ready for the lab
+## Random walk residuals
 
-## The lab for this session
+```{r}
+rw_fit |>
+  ggplot(aes(x = residuals)) +
+  geom_histogram()
+```
+
+## Other ways of evaluating model fit
+
+- Sometimes not just how well model fits data.
+- Also model parameterisation important.
+- Predictability is very important and overfitted models are not going to predict well.
+- Others will go into Bayesian versions of this.
+
+## Reminder of regression model steps
+
+::: nonincremental
+- Basic steps for regression models:
+1. Establish suitable model for observations.
+2. Identify type of relationship between predictor(s) and outcome.
+3. For Bayesian approach, specify prior distributions etc.
+4. Run the model somehow (e.g., `R` with `NIMBLE`).
+5. See how well the model has fit.
+:::
+
+# Getting ready for the lab 
+
+## The lab for this session {.smaller}
 
 - This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
 

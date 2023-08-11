@@ -23,6 +23,15 @@ format:
     theme: [default, ../../assets/style.scss]
 ---
 
+```{r}
+library(here)
+library(tidyverse)
+library(nimble)
+library(bayesplot)
+library(posterior)
+library(hrbrthemes)
+```
+
 # Outline
 
 - Overview
@@ -101,7 +110,7 @@ plot(p)
 
 ![](assets/what_is_rstudio.png){.r-stretch}
 
-## `Posit` (`RStudio`) `Cloud`
+## `Posit` (`RStudio`) `Cloud` {.smaller}
 
 - We will assume you have done the preliminary homework, which includes learning the basics of `RStudio` `Cloud`.
 - `RStudio` `Cloud` is a cloud-based `RStudio` which runs projects and code in the cloud.
@@ -118,7 +127,7 @@ plot(p)
 
 ![](assets/github_banner.png){.r-stretch}
 
-##  `NIMBLE`
+##  `NIMBLE` {.smaller}
 
 - `NIMBLE` is one of several Bayesian inference packages.
 - `NIMBLE` code is written in a slightly unusual format if you're used to just using base `R`.
@@ -176,7 +185,7 @@ code <- nimbleCode({
 })
 ```
 
-## `R` with `NIMBLE` (from lab immediately after this)
+## `R` with `NIMBLE` (from lab immediately after this) {.smaller}
 
 ::: nonincremental
 - Comparing frequentist (top) with `NIMBLE` code (bottom):
@@ -524,9 +533,10 @@ code_worse_priors <- nimbleCode({
 
 ## Why we're using `NIMBLE` for (almost) everything during the workshop
 
--  Interpretability.
--  Flexibility.
--  There are other Bayesian packages, as you will see on Day 2...
+- Interpretability.
+- Flexibility.
+- There are other Bayesian packages.
+- You will see on Day 2...
 
 ## Illustrative example of basic regression in `NIMBLE`
 
@@ -613,10 +623,10 @@ conf_int <- confint(model_freq)
 cbind(central_est, conf_int)
 ```
 
-## Linear regression
+## Linear regression {.smaller}
 
 ::: nonincremental
-- `NIMBLE` adopts and extends BUGS as a modeling language and lets you program with the models you create.
+- `NIMBLE` adopts and extends `BUGS` as a modeling language and lets you program with the models you create.
 - Looks like below (as seen earlier in lecture and later in lab).
 :::
 
@@ -826,7 +836,9 @@ Plotting `beta1` samples (posterior) as a histogram...
 mcmc_hist(nimbleMCMC_samples_initial[, c("alpha", "beta1")], pars = c("beta1"))
 ```
 
-## The lab for this session
+# Getting ready for the lab 
+
+## The lab for this session {.smaller}
 
 - This lab will involve taking some models and concepts from the Introduction to Bayesian Methods lecture and introduce you to the way `NIMBLE` works.
 
@@ -834,7 +846,7 @@ mcmc_hist(nimbleMCMC_samples_initial[, c("alpha", "beta1")], pars = c("beta1"))
 1. Explore how `NIMBLE` is written and works;
 2. Write some common regression models (Normal, logistic regression, Poisson);
 3. Understand how basic model assessment is made; and
-3. Test out how adjustments of models are made via different priors and more samples.
+4. Test out how adjustments of models are made via different priors and more samples.
 
 # Questions?
 
