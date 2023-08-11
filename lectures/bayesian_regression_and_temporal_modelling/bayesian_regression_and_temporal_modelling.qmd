@@ -35,7 +35,7 @@ library(hrbrthemes)
 # Outline
 
 - Introduction
-- Types of regression and temporal modelling
+- Regression models
 - Getting ready for the lab
 
 # Overview
@@ -337,10 +337,27 @@ $$
 5. See how well the model has fit.
 :::
 
+# Relationship between predictor(s) and outcome
+
+## Linear regression
+
+- Simplest regression model.
+- Assuming a linear relationship between predictors and the outcome.
+- Used in countless different applications.
+
+## Linear regression
+
+$$
+\begin{split}
+y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
+\mu_i &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
+\end{split}
+$$
+
 ## Linear regression
 
 ::: nonincremental
-- As a reminder of last lab, in `NIMBLE`, we can write:
+- As a reminder of last lab, in `NIMBLE`, we can write (including priors):
 :::
 
 ``` R
@@ -360,15 +377,27 @@ code <- nimbleCode({
 })
 ```
 
-# Relationship between predictor(s) and outcome
 
-## Linear regression
+## Non-linear regression
 
-- Simplest regression model.
-- Assuming a linear relationship between predictors and the outcome.
-- Used in countless different applications.
+- Seasonality can exist in data, for example, that requires accounting for.
+- Also, there can be autocorrelation between neighboring time points.
 
-## Linear regression
+## Non-linear regression
+
+```{r}
+#| echo: false
+ggplot(data = data_national) +
+  geom_point(aes(x = week, y = deaths))
+```
+
+## Non-linear regression
+
+- Random walk.
+- Can be over time or over other units.
+- Extension is autoregressive structure for longer-term memory.
+
+## Non-linear regression
 
 $$
 \begin{split}
@@ -377,24 +406,13 @@ y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 \gamma_t &\sim N(\gamma_{t-1}, \sigma_{rw})
 \end{split}
 $$
+## Non-linear regression
 
-## Non-linear terms regression
-
-- Seasonality can exist in data, for example, that requires accounting for.
-- Also, there can be autocorrelation between neighboring time points.
-- Random walk.
+[[[NIMBLE CODE OF ABOVE]]]
 
 ## Non-linear regression
 
-$$
-\begin{split}
-y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
-\log(\mu_t) &= \log(P_t) + \alpha + \beta_t \cdot \text{t2m} + \gamma_t \\
-\gamma_t &\sim N(\gamma_{t-1}, \sigma_{rw})
-\end{split}
-$$
-
-
+[[[MODEL FIT PLOT]]]
 
 # Prior distributions
 
@@ -414,6 +432,10 @@ beta_temperature ~ dnorm(0, sd = 10) # prior for beta_temperature
 sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
 ```
 
+## Priors focus in `NIMBLE` model:Non-linear regression
+
+[[[NIMBLE CODE OF ABOVE]]]
+
 # Running models
 
 - Use `NIMBLE` with `R`!
@@ -432,9 +454,9 @@ data <- read_csv(here("data", "Spain", "data_spain.csv"))
 data <- read_csv(here("data", "Spain", "data_spain.csv"))
 ```
 
-## FROM PRACTICAL ADD HERE
+## Linear regression: Real world example
 
-XX
+FROM PRACTICAL ADD HERE
 
 ## Temporal modelling
 
