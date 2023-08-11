@@ -35,25 +35,98 @@ library(hrbrthemes)
 # Outline
 
 - Introduction
-- Generalized linear models
 - Types of regression modelling
+- Generalized linear models
 - Getting ready for the lab
 
 # Overview
+
+## Introduction
+
+::: nonincremental
+- Generate some points:
+:::
+
+``` R
+# Load packages
+library(ggplot2)
+
+# Create a dataset
+set.seed(100)
+data = data.frame(x=rnorm(100),y=rnorm(100))
+
+# Plot and rough fit
+p <- ggplot(data, aes(x, y)) +
+  geom_point()
+
+plot(p)
+```
+
+## Introduction
+
+::: nonincremental
+- Plot the generated points:
+:::
+
+```{r}
+#| echo: false
+library(ggplot2)
+set.seed(100)
+data <- data.frame(x = rnorm(100), y = rnorm(100))
+
+p <- ggplot(data, aes(x, y)) +
+  geom_point()
+
+plot(p)
+```
+
+## Introduction
+
+::: nonincremental
+- Trying to establish some kind of relationship between predictor and outcome:
+:::
+
+```{r}
+#| echo: false
+library(ggplot2)
+set.seed(100)
+data <- data.frame(x = rnorm(100), y = rnorm(100))
+
+p <- ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "loess")
+
+plot(p)
+```
 
 ## Regression models
 
 - Most commonly used to assess presence of a relationship between a dependent variable and one or more independent variables.
 - Bayesian regression originally used in econometrics.
 - Now wide range of fields use regression, including environmental epidemiology.
-- That's why we find ourselves here today!
+- Partly why we find ourselves here today!
 
 ## Regression models
 
 - Basic steps to regression models:
-- 1. Establish suitable probability distribution for observations.
-- 2. Identify type of relationship between predictor(s) and outcome.
-- 3. For Bayesian approach, specify prior distributions too.
+1. Establish suitable model for observations.
+2. Identify type of relationship between predictor(s) and outcome.
+3. For Bayesian approach, specify prior distributions too.
+4. Run the model somehow (`NIMBLE`).
+
+# Suitable models for observations.
+
+## Link function
+
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship.
+- You will see several of the remaining time in the workshop.
+
+## Link function
+
+
+
+
+# Relationship between predictor(s) and outcome
 
 ## Linear regression
 
@@ -74,16 +147,13 @@ y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 \end{split}
 $$
 
-## Linear regression
+<!-- ## Linear regression -->
 
-- Each outcome $y_i$ is normally distributed as follows:
-- $$y_i \sim Normal(\mu_i,\sigma^2)$$
-- Remember what these symbols all mean?
+<!-- - Each outcome $y_i$ is normally distributed as follows: -->
+<!-- - $$y_i \sim Normal(\mu_i,\sigma^2)$$ -->
+<!-- - Remember what these symbols all mean? -->
 
-## Link function
 
-- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
-- You will see several of the remaining time in the workshop.
 
 ## Back to linear regression
 
@@ -94,9 +164,9 @@ $$
 
 ::: nonincremental
 - Basic steps to regression models:
-- 1. Estbalish suitable probability distribution for observations.
-- 2. Identify type of relationship between predictor(s) and outcome.
-- <span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.
+1. Establish suitable probability distribution for observations.
+2. Identify type of relationship between predictor(s) and outcome.
+<span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.
 :::
 
 ## Reminder of regression model steps
@@ -240,7 +310,7 @@ data <- read_csv(here("data", "Spain", "data_spain.csv"))
 - You will see several of the remaining time in the workshop.
 :::
 
-## Link function fo logistic regression
+## Link function for logistic regression
 
 - Poisson formula.
 - Link function on log link (ensures counts don't ever become negative).
@@ -255,13 +325,18 @@ data <- read_csv(here("data", "Spain", "data_spain.csv"))
 - Modelled linearly?
 - Modelled non-linearly?
 
+# Prior distributions
+
 # Getting ready for the lab
 
-## The lab for this session {.smaller}
+## Goal of this computing lab session {.smaller}
 
-This lab will explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
+This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
 
-- During this lab session, we will:
+## What's going to happen in this lab session?
+
+During this lab session, we will:
+
 1. Explore some real time series mortality data;
 2. Apply a basic linear model;
 3. Apply a non-linear model;
@@ -270,3 +345,5 @@ This lab will explore some key temporal modelling concepts, including linear slo
 6. Explore how well model convergence and fit performs.
 
 # Questions?
+
+

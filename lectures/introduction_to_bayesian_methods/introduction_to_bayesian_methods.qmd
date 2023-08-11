@@ -27,7 +27,7 @@ format:
 
 - Overview
 - Introduction to Bayesian methods and concepts
-- Getting ready for the lab
+- Using `NIMBLE` for Bayesian inference
 
 # Overview
 
@@ -39,8 +39,9 @@ format:
 - Would like some tools and know-how to get started in an approachable and friendly setting.
 - People who would like to have some fun while learning!
 - Some equations will be there but mainly for reference.
+- Lots of code though throughout the two days...
 
-## R
+## `R`
 
 - `R` is an interactive environment developed by statisticians for data analysis.
 - A more detailed Introduction to `R` can be found at https://www.r-project.org.
@@ -89,35 +90,44 @@ p <- ggplot(data, aes(x, y)) +
 plot(p)
 ```
 
-## RStudio by Posit
+## `RStudio` by `Posit`
 
-- RStudio is an integrated development environment (IDE) for `R` developed by J J Allaire.
-- RStudio provides a convenient graphical interface to R, making it more user-friendly, and providing many useful features.
+- `RStudio` is an integrated development environment (IDE) for `R`.
+- `RStudio` provides a convenient graphical interface to `R`, making it more user-friendly, and providing many useful features.
 - Such features include direct code execution, tools for plotting, history, debugging and workspace management.
-- A more detailed background on to RStudio can be found at https://www.rstudio.com/about/.
+- A more detailed background on to `RStudio` can be found at [https://www.rstudio.com/about/](https://www.rstudio.com/about/).
 
-## RStudio by Posit
+## `RStudio` by `Posit`
 
 ![](assets/what_is_rstudio.png){.r-stretch}
 
-## Posit (RStudio) Cloud
+## `Posit` (`RStudio`) `Cloud`
 
-- We will assume you have done the preliminary homework.
-- RStudio Cloud is a cloud-based RStudio which runs projects and code in the cloud.
-- RStudio Cloud allows convenient scaling and sharing of code, including for training programs such as SHARP.
-- Registration for free is available via https://rstudio.cloud/.
-- We will go through how to navigate RStudio Cloud in the basics folder a littlle later in the tutorial.
-- More details are available via https://rstudio.cloud/learn/guide.
+- We will assume you have done the preliminary homework, which includes learning the basics of `RStudio` `Cloud`.
+- `RStudio` `Cloud` is a cloud-based `RStudio` which runs projects and code in the cloud.
+- `RStudio` `Cloud` allows convenient scaling and sharing of code, including for training programs such as SHARP.
+- Registration for free is available via [https://rstudio.cloud/](https://rstudio.cloud/).
+- We will go through how to navigate `RStudio` `Cloud` together
+- More details are available via [https://rstudio.cloud/learn/guide](https://rstudio.cloud/learn/guide).
 
-## Introduction to `NIMBLE`
+## `GitHub`
 
+- Version control to interface with `Posit` (`RStudio`) `Cloud.`
+- This is just for information, as you will not be expected to be an expert on `GitHub` to participate in this `SHARP` course.
+- However, you should learn it in general as it's really useful in today's modern research environment.
+
+![](assets/github_banner.png){.r-stretch}
+
+##  `NIMBLE`
+
+- `NIMBLE` is one of several Bayesian inference packages.
 - `NIMBLE` code is written in a slightly unusual format if you're used to just using base `R`.
 - Written in the style of a program called `BUGS`, developed at Imperial College London.
 - But you don't really need to know about `BUGS` to be able to use `NIMBLE.`
 - In the lab after this, we will start with some straightforward examples for situations you're likely familiar with to introduce the style of writing models.
 - These examples will feature basic regression models using linear predictors.
 
-## `R` with `NIMBLE` (from lab after this)
+## `R` with `NIMBLE` (from lab immediately after this)
 
 ::: nonincremental
 - Example basic linear multi-predictor regression:
@@ -130,7 +140,7 @@ y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 \end{split}
 $$
 
-## `R` with `NIMBLE` (from lab after this)
+## `R` with `NIMBLE` (from lab immediately after this)
 
 ::: nonincremental
 - As written in frequentist form:
@@ -143,7 +153,7 @@ model_freq <- lm(
 )
 ```
 
-## `R` with `NIMBLE` (from lab after this)
+## `R` with `NIMBLE` (from lab immediately after this)
 
 ::: nonincremental
 - Sample `NIMBLE` code:
@@ -166,7 +176,7 @@ code <- nimbleCode({
 })
 ```
 
-## `R` with `NIMBLE` (from lab after this)
+## `R` with `NIMBLE` (from lab immediately after this)
 
 ::: nonincremental
 - Comparing frequentist (top) with `NIMBLE` code (bottom):
@@ -195,27 +205,7 @@ code <- nimbleCode({
 })
 ```
 
-## GitHub
-
-- Version control to interface with Post (RStudio) Cloud.
-- This is just for information, as you will not be expected to be an expert on `GitHub` to participate in your `SHARP` course.
-- But! You should learn it in general as it's really essential in today's modern research environment.
-
-![](assets/github_banner.png){.r-stretch}
-
 # Introduction to Bayesian methods and concepts
-
-## Thomas Bayes and Simon Pierre Laplace
-
-- Started with these two.
-- Bayes is why it's called <span style="color:red;">Bayes</span>ian.
-- Sorry Laplace!
-
-![](assets/thomas_bayes_wikipedia.jpg){.absolute top=100 right=50 width="200" height="200"}
-
-![](assets/simon_laplace_wikipedia.jpg){.absolute top=350 right=50 width="200" height="200"}
-
-![](assets/big_red_cross.png){.absolute top=350 right=50 width="200" height="200"}
 
 ## Classical probability
 
@@ -352,49 +342,24 @@ ggplot(data) +
 ## Subjective probability
 
 - What about the probability that it will rain tomorrow?
-- What is the probability that the next president will be a woman?
+- What is the probability that the next president will be a very old man?
 - What is the probability that aliens built the pyramids?
 - Such questions cannot be answered by long-run probability.
 - Degree of belief involved.
 - However, long-run reasoning can inform these estimations.
 - Foundation of Bayesian thinking.
 
-## Conditional probability
+## Thomas Bayes and Simon Pierre Laplace
 
-- Two events $A$ and $B$.
-- Conditional event $A$ given $B$.
-- $$
-  P(A|B) = \frac{P(A \cap B)}{P(B)}
-  $$
+- Started with these two.
+- Bayes is why it's called <span style="color:red;">Bayes</span>ian.
+- Sorry Laplace!
 
-## Conditional probability
+![](assets/thomas_bayes_wikipedia.jpg){.absolute top=100 right=50 width="200" height="200"}
 
-![](assets/venn_diagram.png){.r-stretch}
+![](assets/simon_laplace_wikipedia.jpg){.absolute top=350 right=50 width="200" height="200"}
 
-## Conditional probability
-
-In a group of 100 SHARP workshop attendees, 40 chose to stay in Manhattan, 30 chose to stay for the entire week, and 20 chose to stay in Manhattan and for the entire week. If a car buyer chosen at random chose to stay in Manhattan, what is the probability they chose to stay for the entire week?
-
-$$
-P(A|B) = \frac{P(A \cap B)}{P(B)} = 20 / 40 = 0.5
-$$
-
-## Conditional probability {.smaller}
-- $$
-  P(A|B) = \frac{P(A \cap B)}{P(B)}
-  $$
-- can also be written as...
-- $$
-  P(A \cap B) = P(A|B) P(B)
-  $$
-- Also...
-- $$
-  P(B|A) = \frac{P(A \cap B)}{P(A)}
-  $$
-- Substituting top into bottom gets...
-- $$
-  P(B|A) = \frac{P(A|B) P(B)}{P(A)}
-  $$
+![](assets/big_red_cross.png){.absolute top=350 right=50 width="200" height="200"}
 
 ## Bayes theorem
 
@@ -423,6 +388,7 @@ $$
 
 - Leaving behind Frequentist inference here.
 - Bayesian when prior is unknown and is distribution is specified.
+- Prior + Data -> Posterior.
 
 ![](assets/bmeh_normal.png){.r-stretch}
 
@@ -433,282 +399,127 @@ $$
 - Hyperparameters/hyperpriors.
 - Often a 'natural' candidate for prior choice.
 - Mathematically solvable or not.
-- Some are (conjugate)
+- Some are solvable (conjugate).
 - Most are not (non-conjugate)...
 
-## Types of conjugate pairs: Normal-Normal {.smaller}
-
-- Likelihood
-- Normal distribution is defined by two parameters $\mu$ and $\sigma$.
-- Bell curve.
-- $\mu$ is mean.
-- $\sigma$ is standard deviation.
-
-- $$
-  y|\mu,\sigma \sim Normal(\mu,\sigma^2)
-  $$
-- Prior
-- Normal distribution is mathematically the conjugate of itself, with hyperparameters $\mu_0$ and $\sigma_0$.
-
-- $$
-  \mu \sim Normal(\mu_0,\sigma_0^2)
-  $$
-
-## Normal-Normal
-
-- Posterior
-- Because of conjugacy, there is an analytical solution for the posterior.
-
-## Examples of Normal distributions
-
-$$Normal(1,0)$$
-
-```{r}
-#| echo: false
-p <- seq(-10, 10, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 1), type = "l")
-```
-## Examples of Normal distributions
-
-$$Normal(1,0)$$
-
-```{r}
-#| echo: false
-p <- seq(-100, 100, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 1), type = "l")
-```
-
-## Examples of Normal distributions
-
-$$Normal(0,5)$$
-
-```{r}
-#| echo: false
-p <- seq(-100, 100, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 5), type = "l")
-```
-
-## Examples of Normal distributions
-
-$$Normal(0,20)$$
-
-```{r}
-#| echo: false
-p <- seq(-100, 100, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 20), type = "l")
-```
-
-## Binomial-Beta {.smaller}
-
-- Likelihood
-- Binomial distribution is when there is success (1) or failure (0) with the proportion of success ($\pi$).
-- $n$ trials.
-
-- $$
-  y|\pi \sim Binomial(\pi,n)
-  $$
-- Prior
-- Beta distribution is mathematically the conjugate of binomial defined by two parameters $a$ and $b$.
-- Beta distributuon is 'natural' fit becasue it ranges from 0 to 1.
-
-- $$
-  \pi \sim Beta(a,b)
-  $$
-
-## Binomial-Beta
-
-- Posterior
-- Because of conjugacy, there is an analytical solution for the posterior.
-
-- $$
-  p(\pi|y) \sim Beta(y+a,n-y+b)
-  $$
-
-## Examples of Beta distributions
-
-$$Beta(2,10)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 1, length = 100)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 2, 10), type = "l")
-```
-
-## Examples of Beta distributions
-
-$$Beta(0.5,0.5)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 1, length = 100)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 0.5, 0.5), type = "l")
-```
-
-## Examples of Beta distributions
-
-$$Beta(5,1)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 1, length = 100)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 5, 1), type = "l")
-```
-
-## Examples of Beta distributions
-
-$$Beta(5,5)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 1, length = 100)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 5, 5), type = "l")
-```
-
-## Examples of Beta distributions
-
-$$Beta(5,20)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 1, length = 100)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 5, 20), type = "l")
-```
-
-## Examples of Beta distributions
-
-$$Beta(50,200)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 1, length = 100)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dbeta(p, 50, 200), type = "l")
-```
-
-## Types of conjugate pairs: Poisson-Gamma {.smaller}
-
-- Likelihood
-- Normal distribution is defined by on parameters $\lambda$.
-- Very common for count data.
-- $\lambda$ is rate.
-
-- $$
-  y|\lambda \sim Poisson(\lambda)
-  $$
-- Prior
-- Gamma distribution is mathematically the conjugate of Poisson, with hyperparameters $\mu_0$ and $\sigma_0$.
-- Gamma distributuon is 'natural' fit becasue it ranges from 0 to $\infty$.
-
-- $$
-  \lambda \sim Gamma(a,b)
-  $$
-
-## Poisson-Gamma
-
-- Posterior
-- Because of conjugacy, there is an analytical solution for the posterior.
-
-- $$
-  \rho | y \sim Gamma(a+y,b+E)
-  $$
-
-## Examples of Gamma distributions
-
-$$Gamma(0.1,0.1)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 30, length = 1000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 0.1, 0.1), type = "l")
-```
-
-## Examples of Gamma distributions
-
-$$Gamma(1,1)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 30, length = 1000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 1, 1), type = "l")
-```
-
-## Examples of Gamma distributions
-
-$$Gamma(3,3)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 30, length = 1000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 3, 3), type = "l")
-```
-
-## Examples of Gamma distributions
-
-$$Gamma(3,0.5)$$
-
-```{r}
-#| echo: false
-p <- seq(0, 30, length = 1000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dgamma(p, 3, 0.5), type = "l")
-```
+## Conjugacy
+
+- When the posterior is an analytical solution of the prior and data.
+- Examples include:
+- Normal data and Normal prior (you'll see an example in a minute).
+- Binomial data and Beta prior (logistic regression).
+- Poisson data and Gamma prior (useful for counts).
+
+## Non-conjugacy (most of the time)
+
+- Because most prior-data-posterior relationships are non-conjugate.
+- Need non-analytical solution to infer distributions.
+- This is where 'brute force' sampling of distributions takes place.
+
+## Sampling posterior
+::: nonincremental
+- Example basic linear multi-predictor regression:
+:::
+
+$$
+\begin{split}
+y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
+\mu_i &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 \\
+\alpha &= 0 \\
+\beta_1 &= 0.2 \\
+\beta_2 &= 0.5 \\
+\beta_3 &= 0.3 \\
+\sigma &= 0.5\\
+\end{split}
+$$
+
+## Sampling posterior
+
+![](assets/sample_example.png){.r-stretch}
 
 ## Informative or non-informative priors
 
-- Main source of criticism from non-Bayesians is how priors are chosen.
+- Main source of intrigue from non-Bayesians is how priors are chosen.
 - Priors should be informed by existing knowledge.
 - But what if we don't know anything really prior to inference?
+- Most of the time we will not have analytical solutions (more on that later).
 - Non-informative/informative priors outside scope of this but something to pay attention to.
 
-## Why sample?
+## Example of influence of priors on sampling
 
-- Because most are non-conjugate.
-- Need non-analytical solution to infer distributions.
+::: nonincremental
+- Wide priors
+:::
 
-## Why sample?
+``` R
+code <- nimbleCode({
+  # priors for parameters
+  alpha ~ dnorm(0, sd = 100) # prior for alpha
+  beta1 ~ dnorm(0, sd = 100) # prior for beta1
+  beta2 ~ dnorm(0, sd = 100) # prior for beta2
+  beta3 ~ dnorm(0, sd = 100) # prior for beta3
+  sigma ~ dunif(0, 100) # prior for variance components
 
-![](assets/sample_example.png){.r-stretch}
+  # regression formula
+  for (i in 1:n) { # n is the number of observations we have in the data
+    mu[i] <- alpha + beta1 * x1[i] + beta2 * x2[i] + beta3 * x3[i] # manual entry of linear predictors
+    y[i] ~ dnorm(mu[i], sd = sigma)
+  }
+})
+```
+
+## Example of influence of priors on sampling
+
+::: nonincremental
+- Wide priors
+:::
+
+![](assets/wide_priors.png)
+## Example of influence of priors on sampling
+
+::: nonincremental
+- Worse priors
+:::
+
+``` R
+code_worse_priors <- nimbleCode({
+  # priors for parameters
+  alpha ~ dnorm(0, sd = 100) # prior for alpha
+  beta1 ~ dnorm(0, sd = 100) # prior for beta1
+  beta2 ~ dunif(100, 100000) # prior for beta2
+  beta3 ~ dnorm(0, sd = 100) # prior for beta3
+  sigma ~ dunif(0, 100) # prior for variance components
+
+  # regression formula
+  for (i in 1:n) {
+    mu[i] <- alpha + beta1 * x1[i] + beta2 * x2[i] + beta3 * x3[i] # manual entry of linear predictors
+    y[i] ~ dnorm(mu[i], sd = sigma)
+  } 
+})
+```
+
+## Example of influence of priors on sampling
+
+::: nonincremental
+- Worse priors
+:::
+
+![](assets/worse_priors.png)
 
 ## MCMC, Gibbs, approximations to sampling (variational inference)
 
 - Many different types.
-- Theo and others will also discuss this.
+- Others in the workshop will discuss these briefly
 - For now, let us focus on building a simple model.
 
 ## Non-conjugate how to get posterior?
 
 - Some kind of software to help us implement models for inference.
-- Using R.
-- Packages.
+- Using `R`.
+- Packages (`BUGS`,`STAN`,`INLA` etc.).
 - We will be focusing on using `NIMBLE` throughout the two days.
 
-# Getting ready for this workshop
+# Using `NIMBLE` for Bayesian inference
 
 ## Why we're using `NIMBLE` for (almost) everything during the workshop
 
@@ -1009,7 +820,8 @@ Plotting `beta1` samples (posterior) as a histogram...
 :::
 
 ```{r}
-hist(nimbleMCMC_samples_initial[, "beta1"])
+# hist(nimbleMCMC_samples_initial[, "beta1"])
+mcmc_hist(nimbleMCMC_samples_initial[, c("alpha", "beta1")], pars = c("beta1"))
 ```
 
 ## The lab for this session
@@ -1023,3 +835,294 @@ hist(nimbleMCMC_samples_initial[, "beta1"])
 3. Test out how adjustments of models are made via different priors and more samples.
 
 # Questions?
+
+# Extra
+
+## Conditional probability
+
+- Two events $A$ and $B$.
+- Conditional event $A$ given $B$.
+- $$
+  P(A|B) = \frac{P(A \cap B)}{P(B)}
+  $$
+
+## Conditional probability
+
+![](assets/venn_diagram.png){.r-stretch}
+
+## Conditional probability
+
+In a group of 100 SHARP workshop attendees, 40 chose to stay in Manhattan, 30 chose to stay for the entire week, and 20 chose to stay in Manhattan and for the entire week. If a car buyer chosen at random chose to stay in Manhattan, what is the probability they chose to stay for the entire week?
+
+$$
+P(A|B) = \frac{P(A \cap B)}{P(B)} = 20 / 40 = 0.5
+$$
+
+## Conditional probability {.smaller}
+- $$
+  P(A|B) = \frac{P(A \cap B)}{P(B)}
+  $$
+- can also be written as...
+- $$
+  P(A \cap B) = P(A|B) P(B)
+  $$
+- Also...
+- $$
+  P(B|A) = \frac{P(A \cap B)}{P(A)}
+  $$
+- Substituting top into bottom gets...
+- $$
+  P(B|A) = \frac{P(A|B) P(B)}{P(A)}
+  $$
+
+
+## Example of a conjugate pair: Normal-Normal {.smaller}
+
+- Likelihood
+- Normal distribution is defined by two parameters $\mu$ and $\sigma$.
+- Bell curve.
+- $\mu$ is mean.
+- $\sigma$ is standard deviation.
+
+- $$
+  y|\mu,\sigma \sim Normal(\mu,\sigma^2)
+  $$
+- Prior
+- Normal distribution is mathematically the conjugate of itself, with hyperparameters $\mu_0$ and $\sigma_0$.
+
+- $$
+  \mu \sim Normal(\mu_0,\sigma_0^2)
+  $$
+
+## Normal-Normal
+
+- Posterior
+- Because of conjugacy, there is an analytical solution for the posterior which is also normally distributed.
+- But this is usually not that useful when models get very complicated.
+
+## Examples of Normal distributions
+
+$$Normal(1,0)$$
+
+```{r}
+#| echo: false
+p <- seq(-10, 10, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type = "l")
+```
+## Examples of Normal distributions
+
+$$Normal(1,0)$$
+
+```{r}
+#| echo: false
+p <- seq(-100, 100, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 1), type = "l")
+```
+
+## Examples of Normal distributions
+
+$$Normal(0,5)$$
+
+```{r}
+#| echo: false
+p <- seq(-100, 100, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 5), type = "l")
+```
+
+## Examples of Normal distributions
+
+$$Normal(0,20)$$
+
+```{r}
+#| echo: false
+p <- seq(-100, 100, length = 10000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dnorm(p, 0, 20), type = "l")
+```
+
+
+
+
+
+
+
+## Binomial-Beta {.smaller}
+
+- Likelihood
+- Binomial distribution is when there is success (1) or failure (0) with the proportion of success ($\pi$).
+- $n$ trials.
+
+- $$
+  y|\pi \sim Binomial(\pi,n)
+  $$
+- Prior
+- Beta distribution is mathematically the conjugate of binomial defined by two parameters $a$ and $b$.
+- Beta distributuon is 'natural' fit becasue it ranges from 0 to 1.
+
+- $$
+  \pi \sim Beta(a,b)
+  $$
+
+## Binomial-Beta
+
+- Posterior
+- Because of conjugacy, there is an analytical solution for the posterior.
+
+- $$
+  p(\pi|y) \sim Beta(y+a,n-y+b)
+  $$
+
+## Examples of Beta distributions
+
+$$Beta(2,10)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 1, length = 100)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 2, 10), type = "l")
+```
+
+## Examples of Beta distributions
+
+$$Beta(0.5,0.5)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 1, length = 100)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 0.5, 0.5), type = "l")
+```
+
+## Examples of Beta distributions
+
+$$Beta(5,1)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 1, length = 100)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 1), type = "l")
+```
+
+## Examples of Beta distributions
+
+$$Beta(5,5)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 1, length = 100)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 5), type = "l")
+```
+
+## Examples of Beta distributions
+
+$$Beta(5,20)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 1, length = 100)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 5, 20), type = "l")
+```
+
+## Examples of Beta distributions
+
+$$Beta(50,200)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 1, length = 100)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dbeta(p, 50, 200), type = "l")
+```
+
+## Types of conjugate pairs: Poisson-Gamma {.smaller}
+
+- Likelihood
+- Normal distribution is defined by on parameters $\lambda$.
+- Very common for count data.
+- $\lambda$ is rate.
+
+- $$
+  y|\lambda \sim Poisson(\lambda)
+  $$
+- Prior
+- Gamma distribution is mathematically the conjugate of Poisson, with hyperparameters $\mu_0$ and $\sigma_0$.
+- Gamma distributuon is 'natural' fit becasue it ranges from 0 to $\infty$.
+
+- $$
+  \lambda \sim Gamma(a,b)
+  $$
+
+## Poisson-Gamma
+
+- Posterior
+- Because of conjugacy, there is an analytical solution for the posterior.
+
+- $$
+  \rho | y \sim Gamma(a+y,b+E)
+  $$
+
+## Examples of Gamma distributions
+
+$$Gamma(0.1,0.1)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 30, length = 1000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 0.1, 0.1), type = "l")
+```
+
+## Examples of Gamma distributions
+
+$$Gamma(1,1)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 30, length = 1000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 1, 1), type = "l")
+```
+
+## Examples of Gamma distributions
+
+$$Gamma(3,3)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 30, length = 1000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 3, 3), type = "l")
+```
+
+## Examples of Gamma distributions
+
+$$Gamma(3,0.5)$$
+
+```{r}
+#| echo: false
+p <- seq(0, 30, length = 1000)
+
+# create plot of Beta distribution with shape parameters 2 and 10
+plot(p, dgamma(p, 3, 0.5), type = "l")
+```
+
