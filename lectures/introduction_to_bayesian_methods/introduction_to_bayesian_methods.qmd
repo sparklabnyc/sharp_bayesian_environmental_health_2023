@@ -475,6 +475,7 @@ code <- nimbleCode({
 :::
 
 ![](assets/wide_priors.png)
+
 ## Example of influence of priors on sampling
 
 ::: nonincremental

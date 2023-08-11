@@ -23,7 +23,7 @@ set.seed(2)
 ```
 
 
-## Goal of this computing lab session
+## The lab for this session
 
 This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
 
@@ -40,7 +40,7 @@ During this lab session, we will:
 
 ## Introduction
 
-We will be using national death count data for Spain during 2010-2020, as taken from the published paper:
+We will be using national death count data for Spain during 2010-2019, as taken from the published paper:
 
 V. Kontis, J.E. Bennett, __R.M. Parks__, __T. Rashid__, J. Pearson-Stuttard, P. Asaria, B. Zhou, M. Guillot, C.D. Mathers, Y.H. Khang, M. McKee and M. Ezzati. _Lessons learned and lessons missed: impact of the coronavirus disease 2019 (COVID-19) pandemic on all-cause mortality in 40 industrialised countries prior to mass vaccination_. Wellcome Open Research 2021, 6:279
 

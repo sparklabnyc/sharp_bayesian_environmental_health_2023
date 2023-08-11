@@ -35,13 +35,12 @@ library(hrbrthemes)
 # Outline
 
 - Introduction
-- Types of regression modelling
-- Generalized linear models
+- Types of regression and temporal modelling
 - Getting ready for the lab
 
 # Overview
 
-## Introduction
+## Finding associations from data
 
 ::: nonincremental
 - Generate some points:
@@ -62,7 +61,7 @@ p <- ggplot(data, aes(x, y)) +
 plot(p)
 ```
 
-## Introduction
+## Finding associations from data
 
 ::: nonincremental
 - Plot the generated points:
@@ -80,10 +79,10 @@ p <- ggplot(data, aes(x, y)) +
 plot(p)
 ```
 
-## Introduction
+## Finding associations from data
 
 ::: nonincremental
-- Trying to establish some kind of relationship between predictor and outcome:
+- Establish some kind of association:
 :::
 
 ```{r}
@@ -99,6 +98,139 @@ p <- ggplot(data, aes(x, y)) +
 plot(p)
 ```
 
+## Finding associations from data
+
+::: nonincremental
+- Better still, use some real data.
+
+:::
+
+``` R
+data <- read_csv(here("data", "Spain", "data_spain.csv"))
+head(data)
+
+data_national <- data |>
+  group_by(week, week_of_year) |>
+  summarise(
+    deaths = sum(deaths),
+    population = sum(population),
+    t2m = mean(t2m),
+    weekly_t2m_anomaly = mean(weekly_t2m_anomaly)
+  ) |>
+  mutate(week = dmy(week)) |>
+  arrange(week) |>
+  filter(year(week) < 2020) # avoiding COVID for now
+  
+ggplot(data = data_national) +
+  geom_point(aes(x = week, y = deaths))
+```
+
+## Finding associations from data
+
+::: nonincremental
+- Better still, use some real data.
+:::
+
+```{r}
+data <- read_csv(here("data", "Spain", "data_spain.csv"))
+head(data)
+
+data_national <- data |>
+  group_by(week, week_of_year) |>
+  summarise(
+    deaths = sum(deaths),
+    population = sum(population),
+    t2m = mean(t2m),
+    weekly_t2m_anomaly = mean(weekly_t2m_anomaly)
+  ) |>
+  mutate(week = dmy(week)) |>
+  arrange(week) |>
+  filter(year(week) < 2020) # avoiding COVID for now
+```
+
+## Finding associations from data
+
+::: nonincremental
+- Better still, use some real data.
+:::
+
+```{r}
+#| echo: false
+ggplot(data = data_national) +
+  geom_point(aes(x = week, y = deaths))
+```
+
+## Finding associations from data
+
+::: nonincremental
+- Find some kind of association.
+:::
+
+```{r}
+#| echo: false
+data_national <- data_national |>
+  mutate(rate = 100000 * deaths / population)
+
+code_linear <- nimbleCode({
+  # priors
+  alpha ~ dnorm(0, sd = 10) # prior for alpha
+  beta_week ~ dnorm(0, sd = 10) # prior for beta_week
+
+  # likelihood
+  for (t in 1:Nw) {
+    deaths[t] ~ dpois(mu[t])
+    log(mu[t]) <- log(population[t]) + alpha + beta_week * t
+  }
+
+  # what's the estimated annual rate of change?
+  beta_year <- exp(52 * beta_week)
+  beta_year_exp <- exp(beta_year)
+})
+
+constants <- list(Nw = nrow(data_national))
+data <- list(deaths = data_national$deaths, population = data_national$population)
+
+inits <- list(alpha = 0, beta_week = 0)
+parameters_to_monitor <- c("alpha", "beta_week", "beta_year", "beta_year_exp")
+
+nimbleMCMC_samples_linear <- invisible(nimbleMCMC(
+  code = code_linear,
+  data = data,
+  constants = constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 10000,
+  nburnin = 5000,
+  setSeed = 1,
+  samplesAsCodaMCMC = TRUE
+))
+
+linear_fit <- data_national |>
+  ungroup() |>
+  mutate(
+    .death_rate_fit = 100000 * exp(
+      # add alpha and beta_week * week_number by sample
+      sweep(
+        nimbleMCMC_samples_linear[, "beta_week"] %*% t(1:nrow(data_national)),
+        1,
+        nimbleMCMC_samples_linear[, "alpha"],
+        FUN = "+"
+      )
+    ) |>
+      # then take the mean of the samples
+      apply(
+        FUN = mean,
+        MARGIN = 2
+      )
+  ) |>
+  mutate(residuals = rate - .death_rate_fit)
+
+linear_fit |>
+  ggplot() +
+  geom_point(aes(x = week, y = rate), size = 0.6) +
+  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+```
+
 ## Regression models
 
 - Most commonly used to assess presence of a relationship between a dependent variable and one or more independent variables.
@@ -108,31 +240,34 @@ plot(p)
 
 ## Regression models
 
-- Basic steps to regression models:
+- Basic steps for regression models:
 1. Establish suitable model for observations.
 2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions too.
-4. Run the model somehow (`NIMBLE`).
+3. For Bayesian approach, specify prior distributions etc.
+4. Run the model somehow (e.g., `R` with `NIMBLE`).
+5. See how well the model has fit.
 
-# Suitable models for observations.
+# Suitable models for observations
 
-## Link function
+## Generalized linear models
 
-- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship.
-- You will see several of the remaining time in the workshop.
+- Extension of linear regression to when distribution not necessarily normally distributed.
+- Distributions which are part of the exponential family can describe all sort of non-normally distributed variables.
+- Many examples commonly encountered in environmental health.
+- We'll go through a few now...
 
-## Link function
+## Exponential family of models
 
+- Sometimes dependent variable is not normally distributed.
+- Exponential family is family of models described in a certain way (won't get into it in this workshop).
+- All of the models we'll look at are exponential family models.
 
+## Some types of models to know about
 
-
-# Relationship between predictor(s) and outcome
-
-## Linear regression
-
-- Simplest regression model.
-- Assuming a linear relationship between predictors and the outcome.
-- Used in countless different applications.
+- Normal (we've seen last lecture)
+- Logistic regression (yes/no)
+- Binomial (set number of trials)
+- Poisson (counts)
 
 ## Normal distribution
 
@@ -147,50 +282,60 @@ y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 \end{split}
 $$
 
-<!-- ## Linear regression -->
+## Logistic regression
 
-<!-- - Each outcome $y_i$ is normally distributed as follows: -->
-<!-- - $$y_i \sim Normal(\mu_i,\sigma^2)$$ -->
-<!-- - Remember what these symbols all mean? -->
+::: nonincremental
+- Logistic regression is used when we want to classify observations into two groups (zero or one).
+- If dependent variable represents sets of trails of yes/no:
+- Distributed with Binomial (zero to $n$ successes).
+:::
 
+$$
+\begin{split}
+y_i &\sim \text{Bernoulli}(p_i) \quad i = 1,..., N \\
+\text{logit}(p_i) &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
+\end{split}
+$$
 
+## Binomial regression
 
-## Back to linear regression
+::: nonincremental
+- As seen in first lecture.
+:::
 
-- Assuming we just express $\mu_i$ as a linear function of parameters of interest
-- $$\mu_i = ...$$
+$$
+TO DO
+$$
+
+## Poisson regression
+
+::: nonincremental
+- Used typically with count data (number of events happening within a discrete space and time).
+:::
+
+$$
+\begin{split}
+y_t &\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
+\log(\mu_t) &= \log(P_t) + \alpha + \beta_w t
+\end{split}
+$$
+
+## Link function
+
+- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
+- You will see several of the remaining time in the workshop.
+- For example, link function on Poisson regression is usually a log-link function to prevent counts from going negative.
 
 ## Reminder of regression model steps
 
 ::: nonincremental
-- Basic steps to regression models:
-1. Establish suitable probability distribution for observations.
+- Basic steps for regression models:
+1. Establish suitable model for observations.
 2. Identify type of relationship between predictor(s) and outcome.
-<span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>.
+3. For Bayesian approach, specify prior distributions etc.
+4. Run the model somehow (e.g., `R` with `NIMBLE`).
+5. See how well the model has fit.
 :::
-
-## Reminder of regression model steps
-
-::: nonincremental
-- Basic steps to regression models:
-- 1. Estbalish suitable probability distribution for observations. (done)
-- 2. Identify type of relationship between predictor(s) and outcome. (done)
-- <span style="color:red;">3. For Bayesian approach, specify prior distributions too</span>. (need to specify)
-:::
-
-## Setting priors
-
-- Need to do this on:
-- The regression parameters (i.e., the $\Beta$ parameters).
-- Variance of outcome ($\sigma^2$).
-
-## Setting priors
-
-- In absence of information, set priors as vague:
-
-``` R
-alpha ~ dnorm(0, sd = 100) # prior for alpha
-```
 
 ## Linear regression
 
@@ -215,6 +360,64 @@ code <- nimbleCode({
 })
 ```
 
+# Relationship between predictor(s) and outcome
+
+## Linear regression
+
+- Simplest regression model.
+- Assuming a linear relationship between predictors and the outcome.
+- Used in countless different applications.
+
+## Linear regression
+
+$$
+\begin{split}
+y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
+\log(\mu_t) &= \log(P_t) + \alpha + \gamma_t \\
+\gamma_t &\sim N(\gamma_{t-1}, \sigma_{rw})
+\end{split}
+$$
+
+## Non-linear terms regression
+
+- Seasonality can exist in data, for example, that requires accounting for.
+- Also, there can be autocorrelation between neighboring time points.
+- Random walk.
+
+## Non-linear regression
+
+$$
+\begin{split}
+y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
+\log(\mu_t) &= \log(P_t) + \alpha + \beta_t \cdot \text{t2m} + \gamma_t \\
+\gamma_t &\sim N(\gamma_{t-1}, \sigma_{rw})
+\end{split}
+$$
+
+
+
+# Prior distributions
+
+## Setting priors
+
+- Need to do this on:
+- The regression parameters (e.g., the $\Beta$ parameters).
+- Variance of outcome (e.g., $\sigma^2$).
+
+## Setting priors
+
+- In absence of information, set priors as vague:
+
+``` R
+alpha ~ dnorm(0, sd = 10) # prior for alpha
+beta_temperature ~ dnorm(0, sd = 10) # prior for beta_temperature
+sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
+```
+
+# Running models
+
+- Use `NIMBLE` with `R`!
+
 ## Linear regression: Real world example
 
 ::: nonincremental
@@ -229,95 +432,9 @@ data <- read_csv(here("data", "Spain", "data_spain.csv"))
 data <- read_csv(here("data", "Spain", "data_spain.csv"))
 ```
 
+## FROM PRACTICAL ADD HERE
 
-
-## Evaluating model fit
-
-- Sometimes a seemingly reasonable approach can result in unexpected results.
-- When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.
-- Ideally residuals after model fit are essentially random centered around zero.
-
-## Non-linear regression
-
-- Seasonality can exist in data, for example, that requires accounting for.
-
-## Non-linear regression
-
-- Also, there can be autocorrelation between neighboring time points.
-- Random walk.
-
-## Non-linear regression: Real world example
-
-- A preview of lab (Spain but with random walk)
-
-# Genrealized linear models
-
-## Exponential family of models
-
-- Sometimes dependent variable is not normally distributed.
-- Exponential family is family of models described in a certain way (won't get into it in this workshop):
-- $$ XX $$
-
-## Generalized linear models
-
-- Extension of linear regression to when distribution not necessarily normally distributed.
-- Distributions which are part of the exponential family can describe all sort of non-normally distributed variables.
-- Many examples commonly encountered in environmental health.
-- We'll go through a few now...
-
-## Logistic regression
-
-- Part of exponential family.
-- Standard for binary outcomes (yes/no).
-- Many examples in environmental health, such as whether a person died.
-
-## Logistic regression
-
-- If dependent variable represents individual units:
-- Distributed with Bernoulli (only zero or one).
-
-## Logistic regression
-
-- If dependent variable represents sets of trails of yes/no:
-- Distributed with Binomial (zero to $n$ successes).
-
-## Link function
-
-::: nonincremental
-- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
-- You will see several of the remaining time in the workshop.
-:::
-
-## Link function fo logistic regression
-
-- Binomial formula.
-- Link function on $pi$ is $logit$ (ln(p/1-p)). (log odds).
-
-## Logistic regression: Real world example
-
-- A preview of lab (something from UK/Italy dataset but progression from linear (mortality?))
-
-## Poisson regression
-
-- Part of exponential family.
-- Used typically with count data (number of events happening within a discrete space and time).
-- Can approximate to Binomial for high n and low p.
-
-## Link function
-
-::: nonincremental
-- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
-- You will see several of the remaining time in the workshop.
-:::
-
-## Link function for logistic regression
-
-- Poisson formula.
-- Link function on log link (ensures counts don't ever become negative).
-
-## Poisson regression: Real world example
-
-- A preview of lab (something from UK/Italy dataset but progression from linear)
+XX
 
 ## Temporal modelling
 
@@ -325,18 +442,25 @@ data <- read_csv(here("data", "Spain", "data_spain.csv"))
 - Modelled linearly?
 - Modelled non-linearly?
 
-# Prior distributions
+# Evaluating model fit
+
+## Evaluating model fit
+
+- Sometimes a seemingly reasonable approach can result in unexpected results.
+- When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.
+- Ideally residuals after model fit are essentially random centered around zero.
+
+## FROM PRACTICAL ADD HERE
+
+XX
 
 # Getting ready for the lab
 
-## Goal of this computing lab session {.smaller}
+## The lab for this session
 
-This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
+- This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
 
-## What's going to happen in this lab session?
-
-During this lab session, we will:
-
+- During this lab session, we will:
 1. Explore some real time series mortality data;
 2. Apply a basic linear model;
 3. Apply a non-linear model;
