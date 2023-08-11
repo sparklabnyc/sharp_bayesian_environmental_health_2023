@@ -495,7 +495,7 @@ code_worse_priors <- nimbleCode({
   for (i in 1:n) {
     mu[i] <- alpha + beta1 * x1[i] + beta2 * x2[i] + beta3 * x3[i] # manual entry of linear predictors
     y[i] ~ dnorm(mu[i], sd = sigma)
-  } 
+  }
 })
 ```
 
@@ -648,7 +648,8 @@ code <- nimbleCode({
   sigma ~ dunif(0, 100) # prior for variance components
 
   # regression formula
-  for (i in 1:n) { # n is the number of observations we have in the data
+  for (i in 1:n) {
+    # n is the number of observations we have in the data
     mu[i] <- alpha + beta1 * x1[i] + beta2 * x2[i] + beta3 * x3[i] # manual entry of linear predictors
     y[i] ~ dnorm(mu[i], sd = sigma)
   }
@@ -1126,4 +1127,3 @@ p <- seq(0, 30, length = 1000)
 # create plot of Beta distribution with shape parameters 2 and 10
 plot(p, dgamma(p, 3, 0.5), type = "l")
 ```
-

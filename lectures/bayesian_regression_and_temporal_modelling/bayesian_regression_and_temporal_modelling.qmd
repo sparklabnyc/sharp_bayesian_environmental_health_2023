@@ -120,7 +120,7 @@ data_national <- data |>
   mutate(week = dmy(week)) |>
   arrange(week) |>
   filter(year(week) < 2020) # avoiding COVID for now
-  
+
 ggplot(data = data_national) +
   geom_point(aes(x = week, y = deaths))
 ```
@@ -469,5 +469,3 @@ XX
 6. Explore how well model convergence and fit performs.
 
 # Questions?
-
-
