@@ -263,7 +263,7 @@ Extensibility:
 
 ![](assets/stan.png){.fragment .absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.fragment .absolute top="82%" left="10%" width="6%"}
-![](assets/NIMBLE.jpeg){.fragment .absolute top="55%" left="65%" width="6%"}
+![](assets/nimble.jpeg){.fragment .absolute top="55%" left="65%" width="6%"}
 
 # Decoupled
 
@@ -301,7 +301,7 @@ Don't use it.
 
 ![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.fragment .absolute top="55%" left="35%" width="6%"}
 
 ## PyMC
@@ -347,7 +347,7 @@ with pm.Model() as model:
 
 ![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
 ![](assets/pymc.png){.fragment .absolute top="25%" left="75%" width="8%"}
 
@@ -399,7 +399,7 @@ There is a related package called Pyro with a PyTorch backend, but numpyro's `ja
 
 ![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
 ![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
 ![](assets/numpyro.png){.fragment .absolute top="22%" left="78%" width="10%"}
@@ -414,7 +414,7 @@ There is a related package called Pyro with a PyTorch backend, but numpyro's `ja
 
 ![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
+![](assets/nimble.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
 ![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
 ![](assets/numpyro.png){.absolute top="22%" left="78%" width="10%"}
