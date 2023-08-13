@@ -2,7 +2,7 @@
 title: "Bayesian Nonparametric Ensemble (`BNE`)"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Jaime Benavides"
-date: "August 2023"
+date: "August 15 2023"
 format: html
 ---
 

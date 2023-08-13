@@ -2,7 +2,7 @@
 title: "Spatial and Spatio-temporal Modelling"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Garyfallos Konstantinoudis"
-date: "August 2023"
+date: "August 15 2023"
 format: html
 ---
 
