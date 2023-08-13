@@ -389,3 +389,19 @@ knitr::kable(tab, escape = FALSE, align = "c")
 ::::: {style="color: #58b364"}
 Next : Coding these models in NIMBLE.
 :::::
+
+# Getting ready for the lab
+
+## The lab for this session {.smaller}
+
+::: incremental
+- This goal of this lab is to use `NIMBLE` to carry out a disease mapping study.
+
+- During this lab session, we will:
+1. Explore ways of visualizing spatial data;
+2. Define the neighborhood matrix in `R`;
+3. Fit and interpret the BYM model in `NIMBLE`; and
+4. Perform spatial ecological regression
+:::
+
+# Questions?
