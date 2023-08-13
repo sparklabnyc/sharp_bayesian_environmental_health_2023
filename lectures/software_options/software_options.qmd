@@ -291,7 +291,7 @@ def model(np, x):
     return tfd.JointDistributionCoroutineAutoBatched(joint_dist)
 ```
 
-This is trash.
+This is terrible.
 
 Don't use it.
 
