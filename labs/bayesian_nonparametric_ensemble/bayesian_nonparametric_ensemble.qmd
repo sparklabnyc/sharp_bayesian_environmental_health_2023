@@ -24,14 +24,14 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-This goal of this lab is to take some concepts from the Introduction to Bayesian Nonparametric Ensemble (`BNE`) lecture and introduce you to the way `BNE` works.
+The goal of this lab is to take some concepts from the Introduction to Bayesian Nonparametric Ensemble (`BNE`) lecture and introduce you to the way `BNE` works.
 
 ## What's going to happen in this lab session?
 
 During this lab session, we will:
 
-1. Explore several pollution concentration prediction models;
-2. Understand how pollution concentration models can disagree;
+1. Explore several air pollution concentration prediction models;
+2. Understand how air pollution concentration models can disagree;
 3. Understand what `BNE` does;
 4. Explore output of `BNE`; and
 5. Understand why `BNE` is useful for estimating uncertainty of exposures.
@@ -146,7 +146,7 @@ plotOneParameterSpatial(
 )
 ```
 
-Plot MEERA
+Plot MERRA
 ```{r}
 plotOneParameterSpatial(
   dta = bne2015, parameterName = "pred_me",
