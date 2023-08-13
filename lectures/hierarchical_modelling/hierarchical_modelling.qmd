@@ -203,16 +203,24 @@ $$ \mu \sim N(\mu_0, v_0), \\
 ![](assets/cats1.jpeg){width=28%}
 </center>
 
-# Getting ready for the lab
+## Model comparison
+- Frequentist way: 
+  - optimise different models on the <ins>training set</ins>, 
+  - and compare them on the <ins>test set</ins>. 
+- Bayesian way: 
+  - use <ins>model evidence</ins> $$p(Data | Model_i)$$. 
+  - It tends to choose models which are just complex enough to model the data, but not overly complex (by which it avoids <ins>overfitting</ins>).
+  
+## Information criteria
+*Information criteria* are popular tools for model selection that provide a quantitative measure of the trade-off between model fit and complexity. The *lower* the value of IC, the better.
 
-## The lab for this session {.smaller}
-
-This goal of this lab is to introduce hierarchical modelling using the `NIMBLE` modelling framework.
-
-During this lab session, we will:
-
-1. Write a hierarchical model in `NIMBLE`;
-2. Compare the model to more basic non-hierarchical models; and
-3. Discuss the advantages of hierarchical models.
+## Examples of Information Criteria:
+- AIC (Akaike Information Criterion): 
+$$\text{AIC} = -2* \ln(L) + 2k,\\
+L - \text{maximum value of likelihood},\\
+k - \text{number of parameters}$$
+- BIC (Bayesian Information Criterion): 
+$$\text{BIC} = -2 \ln(L) + k \ln(n)$$
+- Widely Applicable Information Criterion (WAIC)
 
 # Questions?
