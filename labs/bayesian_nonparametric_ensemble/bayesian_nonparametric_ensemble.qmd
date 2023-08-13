@@ -98,7 +98,7 @@ varScale <- c(
 )
 
 # Assign coordinate reference system as needed on the plotting function
-projCRS <- "epsg:9311"
+projCRS <- "+init=epsg:4326" # alternative epsg:9311 not currently working
 # use function plotOneParameterSpatial
 ```
 
