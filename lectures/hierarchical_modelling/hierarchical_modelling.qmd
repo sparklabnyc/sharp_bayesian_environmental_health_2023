@@ -204,22 +204,22 @@ $$ \mu \sim N(\mu_0, v_0), \\
 </center>
 
 ## Model comparison
-- Frequentist way: 
-  - optimise different models on the <ins>training set</ins>, 
-  - and compare them on the <ins>test set</ins>. 
-- Bayesian way: 
-  - use <ins>model evidence</ins> $$p(Data | Model_i)$$. 
+- Frequentist way:
+  - optimise different models on the <ins>training set</ins>,
+  - and compare them on the <ins>test set</ins>.
+- Bayesian way:
+  - use <ins>model evidence</ins> $$p(Data | Model_i)$$.
   - It tends to choose models which are just complex enough to model the data, but not overly complex (by which it avoids <ins>overfitting</ins>).
-  
+
 ## Information criteria
 *Information criteria* are popular tools for model selection that provide a quantitative measure of the trade-off between model fit and complexity. The *lower* the value of IC, the better.
 
 ## Examples of Information Criteria:
-- AIC (Akaike Information Criterion): 
+- AIC (Akaike Information Criterion):
 $$\text{AIC} = -2* \ln(L) + 2k,\\
 L - \text{maximum value of likelihood},\\
 k - \text{number of parameters}$$
-- BIC (Bayesian Information Criterion): 
+- BIC (Bayesian Information Criterion):
 $$\text{BIC} = -2 \ln(L) + k \ln(n)$$
 - Widely Applicable Information Criterion (WAIC)
 

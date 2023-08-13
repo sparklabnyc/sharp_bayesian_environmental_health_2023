@@ -8,9 +8,9 @@
 <link href="welcome_and_introduction_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="welcome_and_introduction_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="welcome_and_introduction_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.433">
+  <meta name="generator" content="quarto-1.3.354">
 
-  <title>Bayesian Modelling for Environmental Health</title>
+  <title>Bayesian Model(l)ing for Environmental Health</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -326,13 +326,56 @@
     <div class="slides">
 
 <section id="title-slide" data-background-color="#f3f4f4" data-background-image="../../assets/bmeh_normal.png" data-background-position="60% 120%" data-background-size="80%" subparagraph="yes" class="quarto-title-block center">
-  <h1 class="title">Bayesian Modelling for Environmental Health</h1>
+  <h1 class="title">Bayesian Model(l)ing for Environmental Health</h1>
   <p class="subtitle">Welcome and Introduction</p>
 
 <div class="quarto-title-authors">
 </div>
 
   <p class="date">Aug 14, 2023</p>
+</section>
+<section>
+<section id="welcome" class="title-slide slide level1 center">
+<h1>Welcome!</h1>
+
+</section>
+<section id="logistics" class="slide level2 smaller">
+<h2>Logistics</h2>
+<ul>
+<li><strong>Wi-Fi</strong> Network: guest-net (no password). Open any webpage (i.e.&nbsp;BBC News, Amazon, etc.) on your browser, a pop-up will appear to connect to guest Wi-Fi. Accept terms to gain access.</li>
+<li><strong>Restrooms</strong>. Directly outside the classroom (women on the left, men on the right)</li>
+<li><strong>Course materials</strong>. All Material (lectures/labs) is located on Posit Cloud. You were invited to the ‘sharp_bayesian_environmental_health_2023’ Workspace via email on Sunday 8/12.</li>
+<li><strong>Name tags</strong>. Please wear during workshop to make connecting with others easier! Please return after the Workshop to help us be greener.</li>
+<li>Contact Meaghan Doherty <strong>914-522-8114</strong> for assistance</li>
+</ul>
+</section>
+<section id="overview-of-workshop" class="slide level2 bigger">
+<h2>Overview of workshop</h2>
+<div style="font-size: 130%;">
+<p>The <strong>Bayesian Modeling for Environmental Health Workshop</strong> is a two-day intensive course of seminars and hands-on analytical sessions to provide an <em>approachable</em> and <em>practical</em> overview of <strong>concepts</strong>, <strong>techniques</strong>, and <strong>data analysis methods</strong> used in Bayesian modeling with applications in Environmental Health.</p>
+</div>
+</section>
+<section id="overview-of-workshop-1" class="slide level2 smaller">
+<h2>Overview of workshop</h2>
+<div>
+<ul>
+<li class="fragment"><p>By the end of the workshop, participants should be familiar with the following topics:</p>
+<ul>
+<li class="fragment">Principles of Bayesian inference</li>
+<li class="fragment">Practicalities of Bayesian inference</li>
+<li class="fragment">Choosing priors</li>
+<li class="fragment">Different data structures (spatial, point, continuous, categorical)</li>
+<li class="fragment">Advantages and drawbacks of Bayesian approaches</li>
+<li class="fragment">Temporal modeling</li>
+<li class="fragment">Spatial modeling</li>
+<li class="fragment">Spatio-temporal modeling</li>
+<li class="fragment">Hierarchical modeling</li>
+<li class="fragment">Software options</li>
+<li class="fragment">Examples of use</li>
+<li class="fragment">Examples of current and future research</li>
+</ul></li>
+</ul>
+</div>
 </section>
 <section id="bayesian-modelling-workshop-team" class="slide level2">
 <h2>Bayesian Modelling Workshop Team</h2>
@@ -500,7 +543,105 @@
 </table>
 </div>
 </section>
-<section id="logistics" class="slide level2 smaller">
+<section id="what-is-your-experience-level-with-r" class="slide level2 smaller">
+<h2>What is your experience level with R?</h2>
+
+<img data-src="welcome_and_introduction_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
+<section id="what-does-a-50-chance-of-rain-mean-to-you" class="slide level2 smaller">
+<h2>What does a 50% chance of rain mean to you?</h2>
+<ul>
+<li>it generally means that weather forecasters believe that there is an equal probability of rain occurring or not occurring at a particular location or during a specified time period.</li>
+<li>That there is a 50% chance that rain will occur and a 50% chance that rain will not occur 80%</li>
+<li>Among all times someone says this sentence to me, he/she will be correct half of the times.</li>
+<li>I will 100% not bring an umbrella.</li>
+<li>Pr(rain) == 0.5 (i.e.&nbsp;the probability that it will rain at all is 50%, rain/no rain equally likely)</li>
+<li>50% of the area will have rain</li>
+<li>One-half chance of precipitation occurring in a particular area during a specific time?</li>
+</ul>
+</section>
+<section id="what-does-a-50-chance-of-rain-mean-to-you-1" class="slide level2 smaller">
+<h2>What does a 50% chance of rain mean to you?</h2>
+<ul>
+<li>I would assume that it means there is a 50% chance that at least some part of the predicted/forecasted area will experience rain at all.</li>
+<li>That 50% of the area will get rain.</li>
+<li>It means based on prior knowledge and the collected other information, we believe it will rain at 50% chances.</li>
+<li>Half the area will experience rain</li>
+<li>50% of the area will have rain</li>
+<li>There is a 50% probability (or 1 in 2 chance/odds) that it will rain today.</li>
+<li>In probability, no prior knowledge about whether or not it will rain. In practice, it’d be worth packing an umbrella.</li>
+<li>Likelihood of rainfall occurring is 50%</li>
+</ul>
+</section>
+<section id="what-does-a-50-chance-of-rain-mean-to-you-2" class="slide level2 smaller">
+<h2>What does a 50% chance of rain mean to you?</h2>
+<ul>
+<li>The probability of it raining at a given time and place is 50%.</li>
+<li>50% probability of getting wed in any one spot in the area during the period</li>
+<li>In a given area, 50% of landmass is expected to see rainfall</li>
+<li>Equal probability for a dry or wet day</li>
+<li>There is a 50% chance it will rain somewhere within a geographic area over the course of a defined period of time.</li>
+<li>The probability of experiencing rain, given this weather pattern is 50 out of 100.</li>
+<li>It is the probability that a space in a given geographical area will receive rain.</li>
+</ul>
+</section>
+<section id="what-does-a-50-chance-of-rain-mean-to-you-3" class="slide level2 smaller">
+<h2>What does a 50% chance of rain mean to you?</h2>
+<ul>
+<li>Met Office (UK): A 50% chance of rain represents a 5 in 10 chance that rain will fall at some point during that period.</li>
+</ul>
+</section>
+<section id="what-do-you-understand-from-a-95-confidence-interval-ci" class="slide level2 smaller">
+<h2>What do you understand from a 95% Confidence Interval (CI)?</h2>
+<ul>
+<li>a 95% confidence interval means that if we were to repeat the same sampling procedure many times and calculate the confidence interval each time, approximately 95% of those intervals would contain the true population parameter</li>
+<li>That we are 95% confident that the true value of the mean is present within a certain range of values along a certain distribution</li>
+<li>95%</li>
+<li>The 95% confidence interval represents the range of values within my estimate is expected to fall with level of confidence of 95%. However, giving it another thought, I realize I should also define what exactly a 95% level of confidence means, but I think I will wait for the course to find out :)</li>
+<li>They are better than a p-value.</li>
+</ul>
+</section>
+<section id="what-do-you-understand-from-a-95-confidence-interval-ci-1" class="slide level2 smaller">
+<h2>What do you understand from a 95% Confidence Interval (CI)?</h2>
+<ul>
+<li>*confidence interval = in repeated sampling, 95/100 CIs will include true value // credible interval = probability that estimated value falls within this range, given observed data</li>
+<li>95% of the time the value estimated will be within the range</li>
+<li>A range of values that is likely to contain the true value of a population parameter with a 95% level of confidence</li>
+<li>It essentially tells us the degree of uncertainty in the data sampling process, i.e.&nbsp;how many times we’d expect our parameter estimate to be within our 95% CI if we repeated the same experiment that generated the 95% CI several times, and not about the probability we’d expect to see the true parameter’s value fall within the CI.</li>
+<li>That 95% of the data will fall within the true value.</li>
+<li>It means the estimate of a parameter has 95% chances to cover the true value of the parameter within the range.</li>
+</ul>
+</section>
+<section id="what-do-you-understand-from-a-95-confidence-interval-ci-2" class="slide level2 smaller">
+<h2>What do you understand from a 95% Confidence Interval (CI)?</h2>
+<ul>
+<li>The probability our effect falls within this range</li>
+<li>95% of the time the estimate will fall within the given CI</li>
+<li>The 95% CI tells us the range of possible effect estimate spanning from the 2.5th to 97.5th percentiles.</li>
+<li>I receive a rough approximation of the uncertainty around an estimate and the range of possible values if an infinite number of trials were repeated.</li>
+<li>It implies that at 95% confidence the value lies within the calculated interval</li>
+<li>A range of likely values for a parameter estimate based on the variability and assumed distribution of the underlying data used to make the estimate.</li>
+<li>Were I to conduct the study repeatedly, 95% of the results would lie between the endpoints of the CI that I obtained in my data.</li>
+</ul>
+</section>
+<section id="what-do-you-understand-from-a-95-confidence-interval-ci-3" class="slide level2 smaller">
+<h2>What do you understand from a 95% Confidence Interval (CI)?</h2>
+<ul>
+<li>Given necessary data generation and modeling assumptions are met, 95 of 100 confidence intervals will contain the true value over repeated sampling and evaluation</li>
+<li>The test statistic is contained 95 % of the time in the CI when the same experiment is repeated multiple times on independent samples.<br>
+</li>
+<li>We are 95% confident that the true population mean will fall within this interval.</li>
+<li>95 out of 100 CIs (from 100 random samples) will contain the true value of the parameter of interest.</li>
+<li>We are confident that the true parameter estimate lies between the lower and upper confidence limits 95% of the time. A 95% confidence interval provides us with a range of plausible estimates of the parameter of interest in the target population, based on our parameter estimate obtained in the sample cohort.</li>
+</ul>
+</section>
+<section id="what-do-you-understand-from-a-95-confidence-interval-ci-4" class="slide level2 smaller">
+<h2>What do you understand from a 95% Confidence Interval (CI)?</h2>
+<ul>
+<li>A 95% CI is an interval which will contain the true value 95% of the time, i.e., if you got to repeat the experiment 100 times, 95 of the 95% CIs would contain the true value, while 5 of them would not.</li>
+</ul>
+
+<img data-src="assets/Confidence%20Intervals.png" class="r-stretch"></section>
+<section id="logistics-1" class="slide level2 smaller">
 <h2>Logistics</h2>
 <ul>
 <li><strong>Wi-Fi</strong> Network: guest-net (no password). Open any webpage (i.e.&nbsp;BBC News, Amazon, etc.) on your browser, a pop-up will appear to connect to guest Wi-Fi. Accept terms to gain access.</li>
@@ -513,7 +654,7 @@
 <img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
@@ -727,6 +868,44 @@
         ]
       });
     </script>
+
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
