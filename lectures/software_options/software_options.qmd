@@ -515,7 +515,7 @@ Most things in the real world are Gaussian, so this works well.
 
 ## Do I fit models like all the PPLs above?
 
-No, actually, the syntax is more like base `R`.
+No, actually, the syntax is really similar to base `R`.
 
 For example, this is how to specify a model with an intercept and a random effect.
 
