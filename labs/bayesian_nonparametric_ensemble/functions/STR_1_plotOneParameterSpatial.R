@@ -47,18 +47,17 @@
 #' @export
 #' @importFrom magrittr %>%
 
-plotOneParameterSpatial <- function(
-    dta,
-    parameterName,
-    valueScale = "unique scale",
-    legYN = "legY",
-    legTitle = "default legendTitle",
-    mainTitle = "default mainTitle",
-    extraPointObj = "noExtraPoints",
-    borderObj = "noBorder",
-    pointSize = 0.9,
-    pointShape = 21,
-    titleSize = 10) {
+plotOneParameterSpatial <- function(dta,
+                                    parameterName,
+                                    valueScale = "unique scale",
+                                    legYN = "legY",
+                                    legTitle = "default legendTitle",
+                                    mainTitle = "default mainTitle",
+                                    extraPointObj = "noExtraPoints",
+                                    borderObj = "noBorder",
+                                    pointSize = 0.9,
+                                    pointShape = 21,
+                                    titleSize = 10) {
   #--------------------------#
   #### 0. example values: ####
   #--------------------------#

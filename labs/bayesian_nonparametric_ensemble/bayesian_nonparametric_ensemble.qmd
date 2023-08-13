@@ -249,7 +249,7 @@ The input base model predictions need to be at the same spatial scale (harmonize
 
 In this part of the lab, we explore the results of a `BNE` model run over the contiguous US for the year 2015 given the seven input base models previously introduced.
 
-Model weights. In `BNE`, the weights of the ensemble members smoothly vary over time and space. 
+Model weights. In `BNE`, the weights of the ensemble members smoothly vary over time and space.
 
 The model weights are required to sum to one, so the weighted model combination must stay within the range of the original predictions.
 ```{r}
@@ -266,39 +266,39 @@ varScale <- c(
 )
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_av",
-    mainTitle = "Weight of AV Model", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_av",
+  mainTitle = "Weight of AV Model", valueScale = varScale
+)
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_cc",
-    mainTitle = "Weight of CACES", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_cc",
+  mainTitle = "Weight of CACES", valueScale = varScale
+)
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_cm",
-    mainTitle = "Weight of CMAQ-Fusion", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_cm",
+  mainTitle = "Weight of CMAQ-Fusion", valueScale = varScale
+)
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_gs",
-    mainTitle = "Weight of GBD", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_gs",
+  mainTitle = "Weight of GBD", valueScale = varScale
+)
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_js",
-    mainTitle = "Weight of JS Model", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_js",
+  mainTitle = "Weight of JS Model", valueScale = varScale
+)
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_me",
-    mainTitle = "Weight of MERRA", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_me",
+  mainTitle = "Weight of MERRA", valueScale = varScale
+)
 
 plotOneParameterSpatial(
-    dta = bne2015, parameterName = "w_mean_rk",
-    mainTitle = "Weight of RK Model", valueScale = varScale
-  )
+  dta = bne2015, parameterName = "w_mean_rk",
+  mainTitle = "Weight of RK Model", valueScale = varScale
+)
 ```
 
 ## `BNE` Predicted concentration
@@ -323,7 +323,7 @@ plotOneParameterSpatial(
 )
 ```
 
-## Predicted uncertainty levels. 
+## Predicted uncertainty levels.
 
 One of the key outputs of `BNE` is the fact that it produces uncertainty of results. This has countless applications, including planning where to place additional monitors, to incorporating uncertainty into health models (as seen as a preview in the lecture).
 

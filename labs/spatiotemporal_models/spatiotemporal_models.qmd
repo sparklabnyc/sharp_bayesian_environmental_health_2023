@@ -307,7 +307,7 @@ A Besag, York, Mollie (BYM) spatial model considers two things:
 
 1. Neighboring Influence: It looks at how connected areas are. If two areas are close to each other, there's a chance that a disease can move from one area to another. So, if a disease is in one area, it might "spill over" into the neighboring area.
 
-2. Background Risk: This is like the natural risk of the disease occurring, even without any special factors. Some areas might naturally have more cases due to other factors. The model takes this into account too. 
+2. Background Risk: This is like the natural risk of the disease occurring, even without any special factors. Some areas might naturally have more cases due to other factors. The model takes this into account too.
 :::
 
 $$
@@ -472,7 +472,7 @@ modelBYM.sim$WAIC
 
 Check convergence of resRR.
 ```{r echo=TRUE, eval=TRUE, warning = FALSE}
-mcmc_trace(modelBYM.sim$samples, pars = c("resRR[1]", "resRR[19]", "resRR[25]", "resRR[33]")) 
+mcmc_trace(modelBYM.sim$samples, pars = c("resRR[1]", "resRR[19]", "resRR[25]", "resRR[33]"))
 ```
 
 Extract the residual RR (i.e. exp(V + U)) and the posterior probability that resRR is higher than 1 as.

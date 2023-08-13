@@ -202,6 +202,7 @@ nimbleMCMC_samples_linear <- nimbleMCMC(
   niter = 10000,
   nburnin = 5000,
   setSeed = 1,
+  progressBar = FALSE,
   samplesAsCodaMCMC = TRUE
 )
 
@@ -504,7 +505,7 @@ rw_fit <- data_national |>
 rw_fit |>
   ggplot() +
   geom_point(aes(x = week, y = rate), size = 2) +
-  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")  
+  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
 ```
 
 ## Reminder of regression model steps
@@ -825,7 +826,7 @@ rw_fit |>
 5. See how well the model has fit.
 :::
 
-# Getting ready for the lab 
+# Getting ready for the lab
 
 ## The lab for this session {.smaller}
 

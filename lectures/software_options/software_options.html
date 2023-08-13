@@ -8,7 +8,7 @@
 <link href="software_options_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="software_options_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="software_options_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.433">
+  <meta name="generator" content="quarto-1.3.354">
 
   <meta name="author" content="Theo Rashid">
   <title>Software Options for Bayesian Modelling</title>
@@ -419,11 +419,13 @@ Theo Rashid
 <section id="they-wrote-their-posterior-probability-density" class="slide level2">
 <h2>They wrote their posterior probability density</h2>
 <p><span class="math display">\[
-y_i \sim \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
-\epsilon_i \sim \text{Normal}(0, \sigma) \\
-\alpha \sim \text{Normal}(0, 10) \\
-\mathbf{\beta} \sim \text{Normal}(0, 1) \\
-\sigma \sim \text{Uniform}(0, 100)
+\begin{align}
+y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i &amp;= \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
+\alpha &amp;\sim \text{Normal}(0, 10) \\
+\mathbf{\beta} &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Uniform}(0, 100)
+\end{align}
 \]</span></p>
 </section>
 <section id="they-wrote-their-posterior-probability-density-1" class="slide level2">
@@ -623,11 +625,11 @@ model {
 </section></section>
 <section>
 <section id="nimble" class="title-slide slide level1 center">
-<h1>nimble</h1>
+<h1>NIMBLE</h1>
 
 </section>
 <section id="nimble-model-is-like-winbugs-but-more-flexible" class="slide level2">
-<h2>nimble model is like WinBUGS, but more flexible</h2>
+<h2>NIMBLE model is like WinBUGS, but more flexible</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">model</span>(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>  <span class="co"># prior</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
@@ -642,7 +644,7 @@ model {
 <span id="cb5-12"><a href="#cb5-12"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="i-like-nimble-but" class="slide level2">
-<h2>I like nimble, but</h2>
+<h2>I like NIMBLE, but</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div style="color: #58b364">
@@ -683,7 +685,7 @@ model {
 <section id="ranking-these-ppls-2" class="slide level2">
 <h2>Ranking these PPLs</h2>
 <p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="fragment absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="fragment absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="fragment absolute" style="top: 63%; left: 55%; width: 6%; "></p>
+<p><img data-src="assets/stan.png" class="fragment absolute" style="top: 72%; left: 74%; width: 6%; "> <img data-src="assets/winbugs.png" class="fragment absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/NIMBLE.jpeg" class="fragment absolute" style="top: 55%; left: 65%; width: 6%; "></p>
 </section></section>
 <section>
 <section id="decoupled" class="title-slide slide level1 center">
@@ -718,7 +720,7 @@ model {
 <section id="ranking-these-ppls-3" class="slide level2">
 <h2>Ranking these PPLs</h2>
 <p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="fragment absolute" style="top: 55%; left: 35%; width: 6%; "></p>
+<p><img data-src="assets/stan.png" class="absolute" style="top: 72%; left: 74%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/NIMBLE.jpeg" class="absolute" style="top: 55%; left: 65%; width: 6%; "> <img data-src="assets/tensorflow.png" class="fragment absolute" style="top: 55%; left: 35%; width: 6%; "></p>
 </section>
 <section id="pymc" class="slide level2">
 <h2>PyMC</h2>
@@ -758,7 +760,7 @@ model {
 <section id="ranking-these-ppls-4" class="slide level2">
 <h2>Ranking these PPLs</h2>
 <p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="fragment absolute" style="top: 25%; left: 75%; width: 8%; "></p>
+<p><img data-src="assets/stan.png" class="absolute" style="top: 72%; left: 74%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/NIMBLE.jpeg" class="absolute" style="top: 55%; left: 65%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="fragment absolute" style="top: 25%; left: 75%; width: 8%; "></p>
 </section>
 <section id="numpyro" class="slide level2">
 <h2>numpyro</h2>
@@ -802,7 +804,7 @@ model {
 <section id="ranking-these-ppls-5" class="slide level2">
 <h2>Ranking these PPLs</h2>
 <p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="absolute" style="top: 25%; left: 75%; width: 8%; "> <img data-src="assets/numpyro.png" class="fragment absolute" style="top: 22%; left: 78%; width: 10%; "></p>
+<p><img data-src="assets/stan.png" class="absolute" style="top: 72%; left: 74%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/NIMBLE.jpeg" class="absolute" style="top: 55%; left: 65%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="absolute" style="top: 25%; left: 75%; width: 8%; "> <img data-src="assets/numpyro.png" class="fragment absolute" style="top: 22%; left: 78%; width: 10%; "></p>
 </section>
 <section id="other-packages" class="slide level2">
 <h2>Other packages</h2>
@@ -811,7 +813,7 @@ model {
 <section id="ranking-these-ppls-6" class="slide level2">
 <h2>Ranking these PPLs</h2>
 <p><img data-src="assets/usability-extensibility.png"></p>
-<p><img data-src="assets/stan.png" class="absolute" style="top: 75%; left: 72%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/nimble.jpeg" class="absolute" style="top: 63%; left: 55%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="absolute" style="top: 25%; left: 75%; width: 8%; "> <img data-src="assets/numpyro.png" class="absolute" style="top: 22%; left: 78%; width: 10%; "> <img data-src="assets/jags.png" class="fragment absolute" style="top: 81%; left: 30%; width: 8%; "> <img data-src="assets/greta.png" class="fragment absolute" style="top: 68%; left: 34%; width: 8%; "> <img data-src="assets/beanmachine.png" class="fragment absolute" style="top: 65%; left: 25%; width: 6%; "> <img data-src="assets/turing.png" class="fragment absolute" style="top: 40%; left: 62%; width: 6%; "></p>
+<p><img data-src="assets/stan.png" class="absolute" style="top: 72%; left: 74%; width: 6%; "> <img data-src="assets/winbugs.png" class="absolute" style="top: 82%; left: 10%; width: 6%; "> <img data-src="assets/NIMBLE.jpeg" class="absolute" style="top: 55%; left: 65%; width: 6%; "> <img data-src="assets/tensorflow.png" class="absolute" style="top: 55%; left: 35%; width: 6%; "> <img data-src="assets/pymc.png" class="absolute" style="top: 25%; left: 75%; width: 8%; "> <img data-src="assets/numpyro.png" class="absolute" style="top: 22%; left: 78%; width: 10%; "> <img data-src="assets/jags.png" class="fragment absolute" style="top: 81%; left: 30%; width: 8%; "> <img data-src="assets/greta.png" class="fragment absolute" style="top: 68%; left: 34%; width: 8%; "> <img data-src="assets/beanmachine.png" class="fragment absolute" style="top: 65%; left: 25%; width: 6%; "> <img data-src="assets/turing.png" class="fragment absolute" style="top: 40%; left: 62%; width: 6%; "></p>
 </section>
 <section id="a-note-on-blackjax" class="slide level2">
 <h2>A note on blackjax</h2>
@@ -923,12 +925,34 @@ model {
 </section>
 <section class="slide level2">
 
-<p><img data-src="assets/probabilistic-programming.png"></p>
-<p><img src="../../assets/bmeh_normal.png" class="slide-logo"></p>
-<div class="footer footer-default">
+
+<img data-src="assets/probabilistic-programming.png" class="r-stretch"></section></section>
+<section>
+<section id="getting-ready-for-the-lab" class="title-slide slide level1 center">
+<h1>Getting ready for the lab</h1>
+
+</section>
+<section id="the-lab-for-this-session" class="slide level2 smaller">
+<h2>The lab for this session</h2>
+<ul>
+<li class="fragment"><p>The goal of this lab is to use <code>INLA</code> to run some hierarchical models.</p></li>
+<li class="fragment"><p>During this lab session, we will:</p></li>
+</ul>
+<ol type="1">
+<li class="fragment">Translate a model from <code>NIMBLE</code> into <code>INLA</code>;</li>
+<li class="fragment">Fit spatial models with <code>INLA</code>;</li>
+<li class="fragment">Learn how to work with <code>INLA</code> objects; and</li>
+<li class="fragment">See how to write models in different probabilistic programming languages.</li>
+</ol>
+</section></section>
+<section id="questions" class="title-slide slide level1 center">
+<h1>Questions?</h1>
+
+<img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
 </div>
-</section></section>
+</section>
+
 
     </div>
   </div>

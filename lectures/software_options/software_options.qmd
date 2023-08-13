@@ -28,11 +28,13 @@ format:
 ## They wrote their posterior probability density
 
 $$
-y_i \sim \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
-\epsilon_i \sim \text{Normal}(0, \sigma) \\
-\alpha \sim \text{Normal}(0, 10) \\
-\mathbf{\beta} \sim \text{Normal}(0, 1) \\
-\sigma \sim \text{Uniform}(0, 100)
+\begin{align}
+y_i &\sim \text{Normal}(\mu_i, \sigma) \\
+\mu_i &= \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
+\alpha &\sim \text{Normal}(0, 10) \\
+\mathbf{\beta} &\sim \text{Normal}(0, 1) \\
+\sigma &\sim \text{Uniform}(0, 100)
+\end{align}
 $$
 
 ## They wrote their posterior probability density
@@ -199,9 +201,9 @@ Stanislaw Ulam is probably best known for realising that electronic computers ma
 
 - Using `brms` or `rstanarm`, you can write models like base `R` (like `y ~ 1 + x`) and the inference is done in Stan.
 
-# nimble
+# NIMBLE
 
-## nimble model is like WinBUGS, but more flexible
+## NIMBLE model is like WinBUGS, but more flexible
 
 ```{.R}
 model(
@@ -218,7 +220,7 @@ model(
 )
 ```
 
-## I like nimble, but
+## I like NIMBLE, but
 
 :::: {.columns}
 
@@ -259,9 +261,9 @@ Extensibility:
 
 ![](assets/usability-extensibility.png)
 
-![](assets/stan.png){.fragment .absolute top="75%" left="72%" width="6%"}
+![](assets/stan.png){.fragment .absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.fragment .absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.fragment .absolute top="63%" left="55%" width="6%"}
+![](assets/NIMBLE.jpeg){.fragment .absolute top="55%" left="65%" width="6%"}
 
 # Decoupled
 
@@ -297,9 +299,9 @@ Don't use it.
 
 ![](assets/usability-extensibility.png)
 
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.fragment .absolute top="55%" left="35%" width="6%"}
 
 ## PyMC
@@ -343,9 +345,9 @@ with pm.Model() as model:
 
 ![](assets/usability-extensibility.png)
 
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
 ![](assets/pymc.png){.fragment .absolute top="25%" left="75%" width="8%"}
 
@@ -395,9 +397,9 @@ There is a related package called Pyro with a PyTorch backend, but numpyro's `ja
 
 ![](assets/usability-extensibility.png)
 
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
 ![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
 ![](assets/numpyro.png){.fragment .absolute top="22%" left="78%" width="10%"}
@@ -410,9 +412,9 @@ There is a related package called Pyro with a PyTorch backend, but numpyro's `ja
 
 ![](assets/usability-extensibility.png)
 
-![](assets/stan.png){.absolute top="75%" left="72%" width="6%"}
+![](assets/stan.png){.absolute top="72%" left="74%" width="6%"}
 ![](assets/winbugs.png){.absolute top="82%" left="10%" width="6%"}
-![](assets/nimble.jpeg){.absolute top="63%" left="55%" width="6%"}
+![](assets/NIMBLE.jpeg){.absolute top="55%" left="65%" width="6%"}
 ![](assets/tensorflow.png){.absolute top="55%" left="35%" width="6%"}
 ![](assets/pymc.png){.absolute top="25%" left="75%" width="8%"}
 ![](assets/numpyro.png){.absolute top="22%" left="78%" width="10%"}
@@ -532,3 +534,17 @@ Good, we'll cover more in the practical.
 ---
 
 ![](assets/probabilistic-programming.png)
+
+# Getting ready for the lab
+
+## The lab for this session {.smaller}
+
+- The goal of this lab is to use `INLA` to run some hierarchical models.
+
+- During this lab session, we will:
+1. Translate a model from `NIMBLE` into `INLA`;
+2. Fit spatial models with `INLA`;
+3. Learn how to work with `INLA` objects; and
+4. See how to write models in different probabilistic programming languages.
+
+# Questions?

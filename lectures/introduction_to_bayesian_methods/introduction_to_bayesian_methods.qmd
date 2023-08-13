@@ -836,7 +836,7 @@ Plotting `beta1` samples (posterior) as a histogram...
 mcmc_hist(nimbleMCMC_samples_initial[, c("alpha", "beta1")], pars = c("beta1"))
 ```
 
-# Getting ready for the lab 
+# Getting ready for the lab
 
 ## The lab for this session {.smaller}
 

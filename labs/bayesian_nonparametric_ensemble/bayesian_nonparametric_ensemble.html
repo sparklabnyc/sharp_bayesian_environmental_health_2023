@@ -126,17 +126,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
              <p>Jaime Benavides </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 1, 2023</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 </header>
 
@@ -192,33 +192,33 @@ dbl (12): lat, lon, yyyy, obs, pred_av, pred_cc, pred_cm, pred_gs, pred_js, ...
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aqs_preds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      lat             lon               yyyy           obs           
- Min.   :25.47   Min.   :-124.20   Min.   :2010   Min.   : 0.000285  
- 1st Qu.:35.25   1st Qu.: -96.93   1st Qu.:2011   1st Qu.: 7.810454  
- Median :39.47   Median : -86.21   Median :2012   Median : 9.095420  
- Mean   :38.54   Mean   : -90.72   Mean   :2012   Mean   : 9.074536  
- 3rd Qu.:41.60   3rd Qu.: -80.34   3rd Qu.:2014   3rd Qu.:10.356421  
- Max.   :48.39   Max.   : -70.75   Max.   :2015   Max.   :22.301695  
-    pred_av          pred_cc          pred_cm          pred_gs      
- Min.   : 3.433   Min.   : 2.809   Min.   : 2.642   Min.   : 3.269  
- 1st Qu.: 7.733   1st Qu.: 7.831   1st Qu.: 8.379   1st Qu.: 8.294  
- Median : 9.033   Median : 9.157   Median : 9.715   Median : 9.486  
- Mean   : 8.991   Mean   : 9.071   Mean   : 9.515   Mean   : 9.382  
- 3rd Qu.:10.225   3rd Qu.:10.351   3rd Qu.:10.768   3rd Qu.:10.516  
- Max.   :18.108   Max.   :18.628   Max.   :16.388   Max.   :18.666  
-    pred_js           pred_me          pred_rk          state          
- Min.   : 0.6172   Min.   : 4.719   Min.   : 2.323   Length:3808       
- 1st Qu.: 8.0356   1st Qu.:13.206   1st Qu.: 8.857   Class :character  
- Median : 9.3535   Median :15.459   Median :10.815   Mode  :character  
- Mean   : 9.2929   Mean   :15.023   Mean   :10.737                     
- 3rd Qu.:10.5713   3rd Qu.:17.377   3rd Qu.:12.691                     
- Max.   :22.7427   Max.   :23.831   Max.   :23.959                     
-    ref_id               fold       
- Length:3808        Min.   : 1.000  
- Class :character   1st Qu.: 3.000  
- Mode  :character   Median : 5.000  
-                    Mean   : 5.497  
-                    3rd Qu.: 8.000  
+<pre><code>      lat             lon               yyyy           obs
+ Min.   :25.47   Min.   :-124.20   Min.   :2010   Min.   : 0.000285
+ 1st Qu.:35.25   1st Qu.: -96.93   1st Qu.:2011   1st Qu.: 7.810454
+ Median :39.47   Median : -86.21   Median :2012   Median : 9.095420
+ Mean   :38.54   Mean   : -90.72   Mean   :2012   Mean   : 9.074536
+ 3rd Qu.:41.60   3rd Qu.: -80.34   3rd Qu.:2014   3rd Qu.:10.356421
+ Max.   :48.39   Max.   : -70.75   Max.   :2015   Max.   :22.301695
+    pred_av          pred_cc          pred_cm          pred_gs
+ Min.   : 3.433   Min.   : 2.809   Min.   : 2.642   Min.   : 3.269
+ 1st Qu.: 7.733   1st Qu.: 7.831   1st Qu.: 8.379   1st Qu.: 8.294
+ Median : 9.033   Median : 9.157   Median : 9.715   Median : 9.486
+ Mean   : 8.991   Mean   : 9.071   Mean   : 9.515   Mean   : 9.382
+ 3rd Qu.:10.225   3rd Qu.:10.351   3rd Qu.:10.768   3rd Qu.:10.516
+ Max.   :18.108   Max.   :18.628   Max.   :16.388   Max.   :18.666
+    pred_js           pred_me          pred_rk          state
+ Min.   : 0.6172   Min.   : 4.719   Min.   : 2.323   Length:3808
+ 1st Qu.: 8.0356   1st Qu.:13.206   1st Qu.: 8.857   Class :character
+ Median : 9.3535   Median :15.459   Median :10.815   Mode  :character
+ Mean   : 9.2929   Mean   :15.023   Mean   :10.737
+ 3rd Qu.:10.5713   3rd Qu.:17.377   3rd Qu.:12.691
+ Max.   :22.7427   Max.   :23.831   Max.   :23.959
+    ref_id               fold
+ Length:3808        Min.   : 1.000
+ Class :character   1st Qu.: 3.000
+ Mode  :character   Median : 5.000
+                    Mean   : 5.497
+                    3rd Qu.: 8.000
                     Max.   :10.000  </code></pre>
 </div>
 </div>
@@ -595,7 +595,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();  
+  toggleBodyColorPrimary();
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -622,11 +622,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();    
+      tooltip.show();
     }
     setTimeout(function() {
       if (tooltip) {
@@ -656,7 +656,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config); 
+    window.tippy(el, config);
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
