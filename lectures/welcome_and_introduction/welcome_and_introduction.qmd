@@ -1,0 +1,97 @@
+---
+title: "Bayesian Modelling for Environmental Health"
+subtitle: "Welcome and Introduction"
+author:
+ - name: ""
+   email: ""
+institute: ""
+date: 2023-08-14
+date-format: medium
+title-slide-attributes:
+  data-background-color: "#f3f4f4"
+  data-background-image: "../../assets/bmeh_normal.png"
+  data-background-size: 80%
+  data-background-position: 60% 120%
+  subparagraph: yes
+format:
+  revealjs:
+    slide-number: true
+    incremental: false
+    chalkboard:
+      buttons: false
+      preview-links: auto
+    logo: "../../assets/bmeh_normal.png"
+    theme: [default, ../../assets/style.scss]
+---
+
+## Bayesian Modelling Workshop Team
+
+![](assets/instructor.png)
+
+## Bayesian Modelling Workshop Team
+
+![](assets/admin.png)
+
+## 9 US States + 1 country
+
+![](assets/attendee_map.png)
+
+## 10 US States + 5 countries
+
+![](assets/attendee_instructor_map.png)
+
+## Day 1
+
+::: {style="font-size: 50%;"}
+
+| Time         | Activity                 |
+| ------------ | ------------------------ |
+| 8:30 - 9:00  | Check in and Breakfast   |
+| 9:00 - 9:15  | Welcome and Introduction |
+| 9:15 - 10:00 | Introduction to Bayesian Methods (Lecture) |
+| 10:00  - 10:15 | Break / One-on-one questions
+| 10:15  - 11:00 | [Introduction to Bayesian Methods](/labs/introduction_to_bayesian_methods/introduction_to_bayesian_methods.qmd) (Hands-on Lab) |
+| 11:00 - 11:15 | Break / One-on-one questions |
+| 11:15 - 12:00 | Bayesian Workflow (Lecture) |
+| 12:00 - 1:00 | Networking Lunch |
+| 1:00  - 1:45 | Bayesian Regression and Temporal Modeling (Lecture) |
+| 1:45  - 2:00 | Break / One-on-one questions |
+| 2:00  - 2:45 | [Bayesian Regression and Temporal Modelling](/labs/bayesian_regression_and_temporal_modelling/bayesian_regression_and_temporal_modelling.qmd) (Hands-on Lab) |
+| 2:45  - 3:00 | Break / One-on-one questions |
+| 3:00  - 3:45 | Hierarchical Modeling (Lecture) |
+| 3:45  - 4:00 | Break / One-on-one questions |
+| 4:00  - 4:45 | [Hierarchical Modelling](/labs/hierarchical_modelling/hierarchical_modelling.qmd) (Hands-on Lab) |
+| 4:45  - 5:00 | Questions and Wrap-up |
+
+:::
+
+## Day 2
+
+::: {style="font-size: 50%;"}
+
+| Time         | Activity                 |
+| ------------ | ------------------------ |
+| 8:30 - 9:00 | Check in and Breakfast |
+| 9:00 - 10:00 | Spatial and Spatio-temporal Modeling (Lecture) |
+| 10:00 - 10:15 | Break / One-on-one questions |
+| 10:15 - 11:00 | [Spatial and Spatio-temporal Modelling](/labs/spatiotemporal_models/spatiotemporal_models.qmd) (Hands-on Lab) |
+| 11:00 - 11:15 | Break / One-on-one questions |
+| 11:15 - 12:00 | Software Options (Lecture) |
+| 12:00 - 1:00 | Networking Lunch |
+| 1:00 - 2:00 | [Software Options](/labs/software_options/software_options.qmd) |
+| 2:00 - 2:15 | Break / One-on-one questions |
+| 2:15 - 3:00 | Bayesian Non-Parametric Ensemble (Lecture) |
+| 3:00 - 3:15 | Break / One-on-one questions |
+| 3:15 - 4:15 | [Bayesian Non-Parametric Ensemble](/labs/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.qmd) (Hands-on Lab) |
+| 4:15 - 5:00 | Workshop Summary, Interactive Panel Discussion & Course Wrap-up |
+| 5:00 - 5:15 | Questions and Wrap-up |
+
+:::
+
+## Logistics {.smaller}
+
+- __Wi-Fi__ Network: guest-net (no password). Open any webpage (i.e. BBC News, Amazon, etc.) on your browser, a pop-up will appear to connect to guest Wi-Fi. Accept terms to gain access.
+- __Restrooms__. Directly outside the classroom (women on the left, men on the right)
+- __Course materials__. All Material (lectures/labs) is located on Posit Cloud. You were invited to the ‘sharp_bayesian_environmental_health_2023’ Workspace via email on Sunday 8/12.
+- __Name tags__. Please wear during workshop to make connecting with others easier! Please return after the Workshop to help us be greener.
+- Contact Meaghan Doherty __914-522-8114__ for assistance
