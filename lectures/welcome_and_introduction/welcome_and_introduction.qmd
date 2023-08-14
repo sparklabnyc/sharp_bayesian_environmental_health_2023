@@ -217,9 +217,12 @@ plot(p)
 
 ## What do you understand from a 95% Confidence Interval (CI)? {.smaller}
 
+::: incremental
 - A 95% CI is an interval which will contain the true value 95% of the time, i.e., if you got to repeat the experiment 100 times, 95 of the 95% CIs would contain the true value, while 5 of them would not.
-
+- Is this what you expected?
+- There a more intuitive way?
 ![](assets/Confidence Intervals.png)
+:::
 
 ## Logistics {.smaller}
 
@@ -228,3 +231,5 @@ plot(p)
 - __Course materials__. All Material (lectures/labs) is located on Posit Cloud. You were invited to the ‘sharp_bayesian_environmental_health_2023’ Workspace via email on Sunday 8/12.
 - __Name tags__. Please wear during workshop to make connecting with others easier! Please return after the Workshop to help us be greener.
 - Contact Meaghan Doherty __914-522-8114__ for assistance
+
+# Questions?

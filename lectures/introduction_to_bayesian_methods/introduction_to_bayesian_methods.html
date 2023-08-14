@@ -679,26 +679,22 @@ y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 <h2>Thomas Bayes and Simon Pierre Laplace</h2>
 <ul>
 <li class="fragment">Started with these two.</li>
-<li class="fragment">Bayes is why it’s called <span style="color:red;">Bayes</span>ian.</li>
-<li class="fragment">Sorry Laplace!</li>
+<li class="fragment">Bayes (1701-1761) is why it’s called <span style="color:red;">Bayes</span>ian.</li>
+<li class="fragment">Sorry Laplace (1749-1825)!</li>
 </ul>
 <p><img data-src="assets/thomas_bayes_wikipedia.jpg" class="absolute" style="top: 100px; right: 50px; width: 200px; height: 200px; "></p>
 <p><img data-src="assets/simon_laplace_wikipedia.jpg" class="absolute" style="top: 350px; right: 50px; width: 200px; height: 200px; "></p>
 <p><img data-src="assets/big_red_cross.png" class="absolute" style="top: 350px; right: 50px; width: 200px; height: 200px; "></p>
+<!-- ## Bayes theorem -->
+<!-- - Conditional probability is the axis on which Bayesian statistics turns. -->
+<!-- - Same equation... -->
+<!-- - ...but different interpretation. -->
+<!-- - $$ -->
+<!--   P(B|A) = \frac{P(A|B) P(B)}{P(A)} -->
+<!--   $$ -->
 </section>
-<section id="bayes-theorem" class="slide level2">
-<h2>Bayes theorem</h2>
-<ul>
-<li class="fragment"><p>Conditional probability is the axis on which Bayesian statistics turns.</p></li>
-<li class="fragment"><p>Same equation…</p></li>
-<li class="fragment"><p>…but different interpretation.</p></li>
-<li class="fragment"><p><span class="math display">\[
-P(B|A) = \frac{P(A|B) P(B)}{P(A)}
-\]</span></p></li>
-</ul>
-</section>
-<section id="prior-likelihood-and-posterior" class="slide level2">
-<h2>Prior, likelihood and posterior</h2>
+<section id="bayes-theorem-prior-likelihood-and-posterior" class="slide level2">
+<h2>Bayes theorem, prior, likelihood and posterior</h2>
 <ul>
 <li class="fragment"><p><span class="math display">\[
 P(\theta|y) \propto P(y|\theta) P(\theta)
@@ -706,9 +702,9 @@ P(\theta|y) \propto P(y|\theta) P(\theta)
 <li class="fragment"><p><span class="math inline">\(P(\theta)\)</span> is the prior</p></li>
 <li class="fragment"><p><span class="math inline">\(P(y|\theta)\)</span> is the likelihood</p></li>
 <li class="fragment"><p><span class="math inline">\(P(\theta|y)\)</span> is the posterior</p></li>
-<li class="fragment"><p>Prior is what is known or estimated a priori</p></li>
-<li class="fragment"><p>Likelihood is probability of data given parameters of interest</p></li>
-<li class="fragment"><p>Posterior is probability of parameters of interest given data</p></li>
+<li class="fragment"><p>Prior is what is known or estimated a priori.</p></li>
+<li class="fragment"><p>Likelihood is probability of data given parameters of interest.</p></li>
+<li class="fragment"><p>Posterior is probability of parameters of interest given data.</p></li>
 </ul>
 </section>
 <section id="bayesian-inference" class="slide level2">
@@ -716,6 +712,7 @@ P(\theta|y) \propto P(y|\theta) P(\theta)
 <ul>
 <li class="fragment">Leaving behind Frequentist inference here.</li>
 <li class="fragment">Bayesian when prior is unknown and is distribution is specified.</li>
+<li class="fragment">Bayes theorem exists in frequentist world, but here prior is a distribution.</li>
 <li class="fragment">Prior + Data -&gt; Posterior.</li>
 </ul>
 <img data-src="assets/bmeh_normal.png" class="r-stretch">
@@ -1042,7 +1039,7 @@ x3           0.29160573  0.28189340 0.301318063</code></pre>
 |-------------------------------------------------------|</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 50.21733 secs</code></pre>
+<pre><code>Time difference of 51.01255 secs</code></pre>
 </div>
 </div>
 </section>

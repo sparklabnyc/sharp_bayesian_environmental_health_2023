@@ -361,8 +361,8 @@ ggplot(data) +
 ## Thomas Bayes and Simon Pierre Laplace
 
 - Started with these two.
-- Bayes is why it's called <span style="color:red;">Bayes</span>ian.
-- Sorry Laplace!
+- Bayes (1701-1761) is why it's called <span style="color:red;">Bayes</span>ian.
+- Sorry Laplace (1749-1825)!
 
 ![](assets/thomas_bayes_wikipedia.jpg){.absolute top=100 right=50 width="200" height="200"}
 
@@ -370,17 +370,17 @@ ggplot(data) +
 
 ![](assets/big_red_cross.png){.absolute top=350 right=50 width="200" height="200"}
 
-## Bayes theorem
+<!-- ## Bayes theorem -->
 
-- Conditional probability is the axis on which Bayesian statistics turns.
-- Same equation...
-- ...but different interpretation.
+<!-- - Conditional probability is the axis on which Bayesian statistics turns. -->
+<!-- - Same equation... -->
+<!-- - ...but different interpretation. -->
 
-- $$
-  P(B|A) = \frac{P(A|B) P(B)}{P(A)}
-  $$
+<!-- - $$ -->
+<!--   P(B|A) = \frac{P(A|B) P(B)}{P(A)} -->
+<!--   $$ -->
 
-## Prior, likelihood and posterior
+## Bayes theorem, prior, likelihood and posterior
 
 - $$
   P(\theta|y) \propto P(y|\theta) P(\theta)
@@ -389,14 +389,15 @@ ggplot(data) +
 - $P(y|\theta)$ is the likelihood
 - $P(\theta|y)$ is the posterior
 
-- Prior is what is known or estimated a priori
-- Likelihood is probability of data given parameters of interest
-- Posterior is probability of parameters of interest given data
+- Prior is what is known or estimated a priori.
+- Likelihood is probability of data given parameters of interest.
+- Posterior is probability of parameters of interest given data.
 
 ## Bayesian inference
 
 - Leaving behind Frequentist inference here.
 - Bayesian when prior is unknown and is distribution is specified.
+- Bayes theorem exists in frequentist world, but here prior is a distribution.
 - Prior + Data -> Posterior.
 
 ![](assets/bmeh_normal.png){.r-stretch}

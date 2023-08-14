@@ -421,7 +421,7 @@ Theo Rashid
 <p><span class="math display">\[
 \begin{align}
 y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \\
-\mu_i &amp;= \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
+\mu_i &amp;= \alpha + \mathbf{x_i^\top} \mathbf{\beta} \\
 \alpha &amp;\sim \text{Normal}(0, 10) \\
 \mathbf{\beta} &amp;\sim \text{Normal}(0, 1) \\
 \sigma &amp;\sim \text{Uniform}(0, 100)
@@ -638,7 +638,7 @@ model {
 <span id="cb5-6"><a href="#cb5-6"></a></span>
 <span id="cb5-7"><a href="#cb5-7"></a>  <span class="co"># likelihood</span></span>
 <span id="cb5-8"><a href="#cb5-8"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb5-9"><a href="#cb5-9"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], tau)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(mu[i], <span class="at">sd =</span> sigma)</span>
 <span id="cb5-10"><a href="#cb5-10"></a>    mu[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> (beta[<span class="dv">1</span><span class="sc">:</span>p] <span class="sc">%*%</span> x[i, <span class="dv">1</span><span class="sc">:</span>p])[<span class="dv">1</span>,<span class="dv">1</span>]</span>
 <span id="cb5-11"><a href="#cb5-11"></a>  }</span>
 <span id="cb5-12"><a href="#cb5-12"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -915,7 +915,7 @@ model {
 <h2>Do I fit models like all the PPLs above?</h2>
 <p>No, actually, the syntax is really similar to base <code>R</code>.</p>
 <p>For example, this is how to specify a model with an intercept and a random effect.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>formula_iid <span class="ot">&lt;-</span> y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(SIGLA, <span class="at">model =</span> <span class="st">"iid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>formula_iid <span class="ot">&lt;-</span> y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">f</span>(x, <span class="at">model =</span> <span class="st">"iid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>So it’s easier to specify models, and there’s a lot of inbuilt functionality.</p>
 <p><strong>But</strong> it’s much more difficult to <em>customise</em>.</p>
 </section>
