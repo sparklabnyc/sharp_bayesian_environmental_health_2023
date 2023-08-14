@@ -30,7 +30,7 @@ format:
 $$
 \begin{align}
 y_i &\sim \text{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \mathbf{x_i^\top} \mathbf{\beta} + \epsilon_i \\
+\mu_i &= \alpha + \mathbf{x_i^\top} \mathbf{\beta} \\
 \alpha &\sim \text{Normal}(0, 10) \\
 \mathbf{\beta} &\sim \text{Normal}(0, 1) \\
 \sigma &\sim \text{Uniform}(0, 100)
@@ -214,7 +214,7 @@ model(
 
   # likelihood
   for (i in 1:n) {
-    y[i] ~ dnorm(mu[i], tau)
+    y[i] ~ dnorm(mu[i], sd = sigma)
     mu[i] <- alpha + (beta[1:p] %*% x[i, 1:p])[1,1]
   }
 )
@@ -520,7 +520,7 @@ No, actually, the syntax is really similar to base `R`.
 For example, this is how to specify a model with an intercept and a random effect.
 
 ```{.R}
-formula_iid <- y ~ 1 + f(SIGLA, model = "iid")
+formula_iid <- y ~ 1 + f(x, model = "iid")
 ```
 
 So it's easier to specify models, and there's a lot of inbuilt functionality.
