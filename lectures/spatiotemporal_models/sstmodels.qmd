@@ -152,7 +152,7 @@ $$
 
 ::: {.column width="30%"}
 $$
-E(\phi_i|\phi_j) = \sum_{j \in \partial_i \phi_j}/n_i \\
+E(\phi_i|\phi_j) = \sum_{j \in \partial_i \phi_j} \phi_j/n_i \\
 Var(\phi_i|\phi_j) = \sigma_{\phi}^2/n_i
 $$
 :::
@@ -205,7 +205,7 @@ b_i|b_j \sim \text{Normal}(\rho \sum_{j \in \partial_i}b_j/n_i, \sigma_b^2/n_i)
 $$
 - Leroux CAR prior
 $$
-b_i|b_j \sim \text{Normal}\Bigg(\frac{\rho \sum_{j \in \partial_i}b_j}{\rho n_i + (1 - rho)}, \frac{\sigma_b^2}{{\rho n_i + (1 - \rho)}}\Bigg)
+b_i|b_j \sim \text{Normal}\Bigg(\frac{\rho \sum_{j \in \partial_i}b_j}{\rho n_i + (1 - \rho)}, \frac{\sigma_b^2}{{\rho n_i + (1 - \rho)}}\Bigg)
 $$
 
 ## Other CAR models
