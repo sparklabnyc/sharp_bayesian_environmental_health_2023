@@ -184,14 +184,13 @@ code_linear <- nimbleCode({
 
   # what's the estimated annual rate of change?
   beta_year <- exp(52 * beta_week)
-  beta_year_exp <- exp(beta_year)
 })
 
 constants <- list(Nw = nrow(data_national))
 data <- list(deaths = data_national$deaths, population = data_national$population)
 
 inits <- list(alpha = 0, beta_week = 0)
-parameters_to_monitor <- c("alpha", "beta_week", "beta_year", "beta_year_exp")
+parameters_to_monitor <- c("alpha", "beta_week", "beta_year")
 
 nimbleMCMC_samples_linear <- nimbleMCMC(
   code = code_linear,
@@ -399,7 +398,7 @@ code <- nimbleCode({
 ## Non-linear regression
 
 - Seasonality can exist in data, for example, that requires accounting for.
-- Also, there can be autocorrelation between neighboring time points.
+- Also, there can be autocorrelation between neighbouring time points.
 
 ## Non-linear regression
 
@@ -486,6 +485,7 @@ nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
   niter = 10000, # 80000,
   nburnin = 5000, # 40000,
   setSeed = 1,
+  progressBar = FALSE,
   samplesAsCodaMCMC = TRUE
 )
 
@@ -698,7 +698,6 @@ code_linear <- nimbleCode({
 
   # what's the estimated annual rate of change?
   beta_year <- exp(52 * beta_week)
-  beta_year_exp <- exp(beta_year)
 })
 ```
 
@@ -726,14 +725,13 @@ code_linear <- nimbleCode({
 
   # what's the estimated annual rate of change?
   beta_year <- exp(52 * beta_week)
-  beta_year_exp <- exp(beta_year)
 })
 
 constants <- list(Nw = nrow(data_national))
 data <- list(deaths = data_national$deaths, population = data_national$population)
 
 inits <- list(alpha = 0, beta_week = 0)
-parameters_to_monitor <- c("alpha", "beta_week", "beta_year", "beta_year_exp")
+parameters_to_monitor <- c("alpha", "beta_week", "beta_year")
 
 nimbleMCMC_samples_linear <- nimbleMCMC(
   code = code_linear,
