@@ -230,7 +230,7 @@ $$
   + a reference threshold $\text{RR}_0$
 - Area $i$ is classified as having an elevated risk according to $D(c, \text{RR}_0) : Prob(\text{RR}_i > \text{RR}_0) > c$
 - Recommended values $c = 0.8$ and $\text{RR}_0 = 1$ (Richardson et al. 2004)
--  Posterior probability of interest: $\text{Prob}(\exp(\theta_i+ \phi_i > 1)$
+-  Posterior probability of interest: $\text{Prob}(\exp(\theta_i+ \phi_i) > 1)$
 
 ## Example with childhood cancers in Switzerland
 <center>
