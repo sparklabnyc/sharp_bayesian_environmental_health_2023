@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.354">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -269,8 +269,8 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>code_linear <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  beta_week <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for beta_week</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dflat</span>() <span class="co"># prior for alpha</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  beta_week <span class="sc">~</span> <span class="fu">dflat</span>() <span class="co"># prior for beta_week</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
@@ -280,8 +280,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  beta_year_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_year)</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Final preparation of data we need for NIMBLE model into lists.</p>
 <div class="cell">
@@ -291,7 +290,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
 <p>Set initial values for MCMC samples</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_week =</span> <span class="dv">0</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta_week"</span>, <span class="st">"beta_year"</span>, <span class="st">"beta_year_exp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta_week"</span>, <span class="st">"beta_year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s run the model.</p>
 <div class="cell">
@@ -341,33 +340,31 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 8.528737 secs</code></pre>
+<pre><code>Time difference of 8.573883 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the Poisson model?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_linear, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 7
-  variable           mean    median         sd        mad        q5       q95
-  &lt;chr&gt;             &lt;num&gt;     &lt;num&gt;      &lt;num&gt;      &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
-1 alpha         -9.02     -9.02     0.000472   0.000451   -9.02     -9.02
-2 beta_week      0.000175  0.000175 0.00000156 0.00000152  0.000172  0.000177
-3 beta_year      1.01      1.01     0.0000819  0.0000796   1.01      1.01
-4 beta_year_exp  2.74      2.74     0.000225   0.000218    2.74      2.74    </code></pre>
+<pre><code># A tibble: 3 × 7
+  variable       mean    median         sd        mad        q5       q95
+  &lt;chr&gt;         &lt;num&gt;     &lt;num&gt;      &lt;num&gt;      &lt;num&gt;     &lt;num&gt;     &lt;num&gt;
+1 alpha     -9.02     -9.02     0.000472   0.000451   -9.02     -9.02
+2 beta_week  0.000175  0.000175 0.00000156 0.00000152  0.000172  0.000177
+3 beta_year  1.01      1.01     0.0000819  0.0000796   1.01      1.01    </code></pre>
 </div>
 </div>
 <p>And how good do convergence indicators look?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_linear, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 4
-  variable       rhat ess_bulk ess_tail
-  &lt;chr&gt;         &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
-1 alpha          1.00     179.     262.
-2 beta_week      1.00     157.     318.
-3 beta_year      1.00     157.     318.
-4 beta_year_exp  1.00     157.     318.</code></pre>
+<pre><code># A tibble: 3 × 4
+  variable   rhat ess_bulk ess_tail
+  &lt;chr&gt;     &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+1 alpha      1.00     179.     262.
+2 beta_week  1.00     157.     318.
+3 beta_year  1.00     157.     318.</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -378,31 +375,38 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
 </div>
 <p>Let’s calculate the death rate from the model using the formula. For simplicity, we’ll use the mean of the samples generated from the model run above.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>linear_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_fit =</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add alpha and beta_week * week_number by sample</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sweep</span>(</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>        nimbleMCMC_samples_linear[, <span class="st">"beta_week"</span>] <span class="sc">%*%</span> <span class="fu">t</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_national)),</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span>,</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>        nimbleMCMC_samples_linear[, <span class="st">"alpha"</span>],</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN =</span> <span class="st">"+"</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># then take the mean of the samples</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN =</span> mean,</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">MARGIN =</span> <span class="dv">2</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>pred_death_rate <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add alpha and beta_week * week_number by sample</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sweep</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    nimbleMCMC_samples_linear[, <span class="st">"beta_week"</span>] <span class="sc">%*%</span> <span class="fu">t</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data_national)),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    nimbleMCMC_samples_linear[, <span class="st">"alpha"</span>],</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> <span class="st">"+"</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># take the median and 2.5, 97.5 quantiles</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> quantile,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">2</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>linear_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_median =</span> pred_death_rate[<span class="dv">2</span>,],</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_lower =</span> pred_death_rate[<span class="dv">1</span>,],</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_upper =</span> pred_death_rate[<span class="dv">3</span>,],</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_median)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s plot how the model fits</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>linear_fit <span class="sc">|&gt;</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> rate), <span class="at">size =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> .death_rate_fit), <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> week)) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> rate), <span class="at">size =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot the uncertainty estimates</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> .death_rate_lower, <span class="at">ymax =</span> .death_rate_upper), <span class="at">fill =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> .death_rate_median), <span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ℹ Please use `linewidth` instead.</code></pre>
@@ -446,7 +450,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>code_weekly_random_walk <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dflat</span>() <span class="co"># prior for alpha</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  sigma_rw <span class="sc">~</span> <span class="fu">T</span>(<span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">0</span>, <span class="cn">Inf</span>) <span class="co"># half-normal prior for variance of weekly effects</span></span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
@@ -516,7 +520,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 10.92897 secs</code></pre>
+<pre><code>Time difference of 10.64579 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the model with the random walk over time included?</p>
@@ -526,16 +530,16 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <pre><code># A tibble: 1,045 × 7
    variable    mean median      sd     mad    q5   q95
    &lt;chr&gt;      &lt;num&gt;  &lt;num&gt;   &lt;num&gt;   &lt;num&gt; &lt;num&gt; &lt;num&gt;
- 1 alpha      -8.91  -8.91 0.00358 0.00281 -8.92 -8.91
- 2 lograte[1] -8.91  -8.91 0.00358 0.00281 -8.92 -8.91
- 3 lograte[2] -8.87  -8.87 0.00536 0.00539 -8.87 -8.86
- 4 lograte[3] -8.90  -8.90 0.00532 0.00507 -8.91 -8.89
- 5 lograte[4] -8.93  -8.93 0.00531 0.00539 -8.94 -8.92
- 6 lograte[5] -8.93  -8.93 0.00542 0.00550 -8.94 -8.92
- 7 lograte[6] -8.95  -8.95 0.00548 0.00550 -8.96 -8.94
- 8 lograte[7] -8.91  -8.91 0.00528 0.00535 -8.92 -8.90
- 9 lograte[8] -8.94  -8.94 0.00537 0.00513 -8.95 -8.93
-10 lograte[9] -9.01  -9.01 0.00550 0.00570 -9.02 -9.00
+ 1 alpha      -8.91  -8.91 0.00286 0.00282 -8.92 -8.91
+ 2 lograte[1] -8.91  -8.91 0.00286 0.00282 -8.92 -8.91
+ 3 lograte[2] -8.87  -8.87 0.00520 0.00524 -8.87 -8.86
+ 4 lograte[3] -8.90  -8.90 0.00506 0.00502 -8.91 -8.89
+ 5 lograte[4] -8.93  -8.93 0.00542 0.00531 -8.94 -8.92
+ 6 lograte[5] -8.93  -8.93 0.00544 0.00538 -8.94 -8.92
+ 7 lograte[6] -8.95  -8.95 0.00545 0.00533 -8.96 -8.94
+ 8 lograte[7] -8.91  -8.91 0.00524 0.00535 -8.92 -8.90
+ 9 lograte[8] -8.94  -8.94 0.00535 0.00513 -8.95 -8.93
+10 lograte[9] -9.01  -9.01 0.00544 0.00555 -9.02 -9.00
 # ℹ 1,035 more rows</code></pre>
 </div>
 </div>
@@ -546,16 +550,16 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <pre><code># A tibble: 1,045 × 4
    variable    rhat ess_bulk ess_tail
    &lt;chr&gt;      &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
- 1 alpha       1.49     2.78     27.6
- 2 lograte[1]  1.49     2.78     27.6
- 3 lograte[2]  1.00  1208.     1407.
- 4 lograte[3]  1.00  1114.     1287.
- 5 lograte[4]  1.00  1370.     1441.
- 6 lograte[5]  1.00   911.      691.
- 7 lograte[6]  1.00  1183.     1080.
- 8 lograte[7]  1.00  1098.     1070.
- 9 lograte[8]  1.00  1086.     1258.
-10 lograte[9]  1.00  1248.     1124.
+ 1 alpha       1.09     9.21     20.9
+ 2 lograte[1]  1.09     9.21     20.9
+ 3 lograte[2]  1.00  1013.     1055.
+ 4 lograte[3]  1.00  1234.     1133.
+ 5 lograte[4]  1.00  1189.     1090.
+ 6 lograte[5]  1.00  1125.     1032.
+ 7 lograte[6]  1.00  1156.     1173.
+ 8 lograte[7]  1.00  1254.     1337.
+ 9 lograte[8]  1.00  1182.     1187.
+10 lograte[9]  1.00  1159.     1069.
 # ℹ 1,035 more rows</code></pre>
 </div>
 </div>
@@ -611,7 +615,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 13.03108 secs</code></pre>
+<pre><code>Time difference of 12.8634 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the model with the random walk over time included but with more samples?</p>
@@ -621,16 +625,16 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <pre><code># A tibble: 1,045 × 7
    variable    mean median      sd     mad    q5   q95
    &lt;chr&gt;      &lt;num&gt;  &lt;num&gt;   &lt;num&gt;   &lt;num&gt; &lt;num&gt; &lt;num&gt;
- 1 alpha      -8.91  -8.91 0.00429 0.00365 -8.92 -8.90
- 2 lograte[1] -8.91  -8.91 0.00429 0.00365 -8.92 -8.90
- 3 lograte[2] -8.87  -8.87 0.00512 0.00521 -8.87 -8.86
- 4 lograte[3] -8.90  -8.90 0.00531 0.00537 -8.91 -8.89
- 5 lograte[4] -8.93  -8.93 0.00537 0.00518 -8.94 -8.92
- 6 lograte[5] -8.93  -8.93 0.00514 0.00510 -8.94 -8.92
- 7 lograte[6] -8.95  -8.95 0.00535 0.00524 -8.96 -8.94
- 8 lograte[7] -8.91  -8.91 0.00536 0.00559 -8.92 -8.90
- 9 lograte[8] -8.94  -8.94 0.00529 0.00513 -8.95 -8.93
-10 lograte[9] -9.01  -9.01 0.00570 0.00577 -9.02 -9.00
+ 1 alpha      -8.92  -8.92 0.00556 0.00667 -8.93 -8.91
+ 2 lograte[1] -8.92  -8.92 0.00556 0.00667 -8.93 -8.91
+ 3 lograte[2] -8.87  -8.87 0.00518 0.00517 -8.87 -8.86
+ 4 lograte[3] -8.90  -8.90 0.00528 0.00539 -8.91 -8.89
+ 5 lograte[4] -8.93  -8.93 0.00542 0.00552 -8.94 -8.92
+ 6 lograte[5] -8.93  -8.93 0.00529 0.00530 -8.94 -8.92
+ 7 lograte[6] -8.95  -8.95 0.00535 0.00534 -8.96 -8.94
+ 8 lograte[7] -8.91  -8.91 0.00521 0.00537 -8.92 -8.90
+ 9 lograte[8] -8.94  -8.94 0.00541 0.00547 -8.95 -8.93
+10 lograte[9] -9.01  -9.01 0.00565 0.00559 -9.02 -9.00
 # ℹ 1,035 more rows</code></pre>
 </div>
 </div>
@@ -641,16 +645,16 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <pre><code># A tibble: 1,045 × 4
    variable    rhat ess_bulk ess_tail
    &lt;chr&gt;      &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
- 1 alpha       1.28     2.80     20.5
- 2 lograte[1]  1.28     2.80     20.5
- 3 lograte[2]  1.00  2598.     2753.
- 4 lograte[3]  1.00  2425.     2597.
- 5 lograte[4]  1.00  2315.     2540.
- 6 lograte[5]  1.00  2489.     2919.
- 7 lograte[6]  1.00  2343.     2520.
- 8 lograte[7]  1.00  2306.     2651.
- 9 lograte[8]  1.00  2251.     2672.
-10 lograte[9]  1.00  2208.     2193.
+ 1 alpha       1.25     3.79     21.6
+ 2 lograte[1]  1.25     3.79     21.6
+ 3 lograte[2]  1.00  2314.     2454.
+ 4 lograte[3]  1.00  2222.     2848.
+ 5 lograte[4]  1.00  2103.     2739.
+ 6 lograte[5]  1.00  2569.     2941.
+ 7 lograte[6]  1.00  2451.     2849.
+ 8 lograte[7]  1.00  2107.     2563.
+ 9 lograte[8]  1.00  2322.     2677.
+10 lograte[9]  1.00  2245.     2543.
 # ℹ 1,035 more rows</code></pre>
 </div>
 </div>
@@ -662,31 +666,43 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">regex_pars =</span> <span class="fu">c</span>(<span class="st">"rw"</span>)</span>
 <span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>() <span class="sc">+</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Let’s calculate the death rate from the model using the formula. This should be easier now we’ve monitored <code>lograte</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>rw_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_fit =</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>      nimbleMCMC_samples_week_random_walk_more_samples[, <span class="fu">str_c</span>(<span class="st">"lograte["</span>, <span class="fu">seq</span>(<span class="fu">nrow</span>(data_national)), <span class="st">"]"</span>)]</span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(</span>
-<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN =</span> mean,</span>
-<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">MARGIN =</span> <span class="dv">2</span></span>
-<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>pred_death_rate <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  nimbleMCMC_samples_week_random_walk_more_samples[, <span class="fu">str_c</span>(<span class="st">"lograte["</span>, <span class="fu">seq</span>(<span class="fu">nrow</span>(data_national)), <span class="st">"]"</span>)]</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># take the median and 2.5, 97.5 quantiles</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> quantile,</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">2</span>,</span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>rw_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_median =</span> pred_death_rate[<span class="dv">2</span>,],</span>
+<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_lower =</span> pred_death_rate[<span class="dv">1</span>,],</span>
+<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_upper =</span> pred_death_rate[<span class="dv">3</span>,],</span>
+<span id="cb76-16"><a href="#cb76-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb76-17"><a href="#cb76-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_median)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s plot how the model fits</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>rw_fit <span class="sc">|&gt;</span></span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> rate), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> .death_rate_fit), <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>rw_fit <span class="sc">|&gt;</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> week)) <span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> rate), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> .death_rate_lower, <span class="at">ymax =</span> .death_rate_upper), <span class="at">fill =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> .death_rate_median), <span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -694,9 +710,9 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <p>Looks like it is a much better fit! We will talk later in the workshop about ways of quantifying which candidate models provide better fits</p>
 <p>Now let’s look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>rw_fit <span class="sc">|&gt;</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>rw_fit <span class="sc">|&gt;</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -724,55 +740,55 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 \end{split}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>code_weekly_random_walk_with_temperature <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  beta_temperature <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for beta_temperature</span></span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>  sigma_rw <span class="sc">~</span> <span class="fu">T</span>(<span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">0</span>, <span class="cn">Inf</span>) <span class="co"># half-normal prior for variance of weekly effects</span></span>
-<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
-<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
-<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
-<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> lograte[t]</span>
-<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>    lograte[t] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta_temperature <span class="sc">*</span> weekly_t2m_anomaly[t] <span class="sc">+</span> rw[t]</span>
-<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># random walk over time</span></span>
-<span id="cb79-15"><a href="#cb79-15" aria-hidden="true" tabindex="-1"></a>  rw[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb79-16"><a href="#cb79-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Nw) {</span>
-<span id="cb79-17"><a href="#cb79-17" aria-hidden="true" tabindex="-1"></a>    rw[t] <span class="sc">~</span> <span class="fu">dnorm</span>(rw[t <span class="sc">-</span> <span class="dv">1</span>], sigma_rw)</span>
-<span id="cb79-18"><a href="#cb79-18" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb79-19"><a href="#cb79-19" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>code_weekly_random_walk_with_temperature <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dflat</span>() <span class="co"># prior for alpha</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  beta_temperature <span class="sc">~</span> <span class="fu">dflat</span>() <span class="co"># prior for beta_temperature</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  sigma_rw <span class="sc">~</span> <span class="fu">T</span>(<span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">0</span>, <span class="cn">Inf</span>) <span class="co"># half-normal prior for variance of weekly effects</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
+<span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> lograte[t]</span>
+<span id="cb80-11"><a href="#cb80-11" aria-hidden="true" tabindex="-1"></a>    lograte[t] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta_temperature <span class="sc">*</span> weekly_t2m_anomaly[t] <span class="sc">+</span> rw[t]</span>
+<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb80-13"><a href="#cb80-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-14"><a href="#cb80-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># random walk over time</span></span>
+<span id="cb80-15"><a href="#cb80-15" aria-hidden="true" tabindex="-1"></a>  rw[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb80-16"><a href="#cb80-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Nw) {</span>
+<span id="cb80-17"><a href="#cb80-17" aria-hidden="true" tabindex="-1"></a>    rw[t] <span class="sc">~</span> <span class="fu">dnorm</span>(rw[t <span class="sc">-</span> <span class="dv">1</span>], sigma_rw)</span>
+<span id="cb80-18"><a href="#cb80-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb80-19"><a href="#cb80-19" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Final preparation of data into lists</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">Nw =</span> <span class="fu">nrow</span>(data_national))</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">deaths =</span> data_national<span class="sc">$</span>deaths,</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">population =</span> data_national<span class="sc">$</span>population,</span>
-<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">weekly_t2m_anomaly =</span> <span class="fu">round</span>(data_national<span class="sc">$</span>weekly_t2m_anomaly, <span class="dv">1</span>)</span>
-<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">Nw =</span> <span class="fu">nrow</span>(data_national))</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">deaths =</span> data_national<span class="sc">$</span>deaths,</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">population =</span> data_national<span class="sc">$</span>population,</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">weekly_t2m_anomaly =</span> <span class="fu">round</span>(data_national<span class="sc">$</span>weekly_t2m_anomaly, <span class="dv">1</span>)</span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Set initial values for MCMC samples</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_temperature =</span> <span class="dv">0</span>, <span class="at">rw =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(data_national)), <span class="at">sigma_rw =</span> <span class="dv">1</span>)</span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta_temperature"</span>, <span class="st">"rw"</span>, <span class="st">"lograte"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">beta_temperature =</span> <span class="dv">0</span>, <span class="at">rw =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(data_national)), <span class="at">sigma_rw =</span> <span class="dv">1</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta_temperature"</span>, <span class="st">"rw"</span>, <span class="st">"lograte"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s run the model with the larger number of samples we empirically found was better at converging before</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk_with_temperature <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
-<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_weekly_random_walk_with_temperature,</span>
-<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
-<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
-<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
-<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
-<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">20000</span>, <span class="co"># 400000,</span></span>
-<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">10000</span>, <span class="co"># 200000,</span></span>
-<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
-<span id="cb82-11"><a href="#cb82-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
-<span id="cb82-12"><a href="#cb82-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk_with_temperature <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_weekly_random_walk_with_temperature,</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">20000</span>, <span class="co"># 400000,</span></span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">10000</span>, <span class="co"># 200000,</span></span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Defining model</code></pre>
 </div>
@@ -804,81 +820,87 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 15.10474 secs</code></pre>
+<pre><code>Time difference of 14.97616 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the model with the random walk over time and single linear temperature term?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,046 × 7
    variable           mean median      sd     mad     q5    q95
    &lt;chr&gt;             &lt;num&gt;  &lt;num&gt;   &lt;num&gt;   &lt;num&gt;  &lt;num&gt;  &lt;num&gt;
- 1 alpha            -8.08  -8.08  0.0117  0.0134  -8.10  -8.06
- 2 beta_temperature  0.639  0.638 0.00736 0.00996  0.627  0.649
- 3 lograte[1]       -8.91  -8.91  0.00350 0.00393 -8.91  -8.90
- 4 lograte[2]       -8.87  -8.87  0.00513 0.00503 -8.87  -8.86
- 5 lograte[3]       -8.90  -8.90  0.00505 0.00511 -8.91  -8.89
- 6 lograte[4]       -8.93  -8.93  0.00544 0.00548 -8.94  -8.92
- 7 lograte[5]       -8.93  -8.93  0.00549 0.00546 -8.94  -8.92
- 8 lograte[6]       -8.95  -8.95  0.00538 0.00538 -8.96  -8.94
- 9 lograte[7]       -8.91  -8.91  0.00538 0.00549 -8.92  -8.90
-10 lograte[8]       -8.94  -8.94  0.00541 0.00546 -8.95  -8.93
+ 1 alpha            -8.08  -8.08  0.0146  0.0142  -8.10  -8.06
+ 2 beta_temperature  0.637  0.638 0.00934 0.0114   0.622  0.649
+ 3 lograte[1]       -8.91  -8.91  0.00386 0.00372 -8.91  -8.90
+ 4 lograte[2]       -8.87  -8.87  0.00517 0.00518 -8.87  -8.86
+ 5 lograte[3]       -8.90  -8.90  0.00519 0.00527 -8.91  -8.89
+ 6 lograte[4]       -8.93  -8.93  0.00547 0.00554 -8.94  -8.92
+ 7 lograte[5]       -8.93  -8.93  0.00544 0.00535 -8.94  -8.92
+ 8 lograte[6]       -8.95  -8.95  0.00547 0.00547 -8.96  -8.94
+ 9 lograte[7]       -8.91  -8.91  0.00523 0.00530 -8.92  -8.90
+10 lograte[8]       -8.94  -8.94  0.00546 0.00555 -8.95  -8.93
 # ℹ 1,036 more rows</code></pre>
 </div>
 </div>
 <p>And how good do convergence indicators look?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,046 × 4
    variable          rhat ess_bulk ess_tail
    &lt;chr&gt;            &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
  1 alpha             2.12     1.30     10.5
  2 beta_temperature  2.11     1.30     11.7
- 3 lograte[1]        1.21     3.83     18.4
- 4 lograte[2]        1.00  2314.     2472.
- 5 lograte[3]        1.00  2661.     3165.
- 6 lograte[4]        1.00  2179.     2660.
- 7 lograte[5]        1.00  1939.     2243.
- 8 lograte[6]        1.00  2340.     2547.
- 9 lograte[7]        1.00  1938.     2189.
-10 lograte[8]        1.00  2197.     2655.
+ 3 lograte[1]        1.16     5.44     29.0
+ 4 lograte[2]        1.00  2350.     2582.
+ 5 lograte[3]        1.00  2359.     2535.
+ 6 lograte[4]        1.00  2269.     2662.
+ 7 lograte[5]        1.00  2042.     2500.
+ 8 lograte[6]        1.00  2389.     2094.
+ 9 lograte[7]        1.00  2219.     2522.
+10 lograte[8]        1.00  2116.     2422.
 # ℹ 1,036 more rows</code></pre>
 </div>
 </div>
 <p>Let’s calculate the death rate from the model using the formula. As before, for simplicity, we’ll use the mean of the samples generated from the model run above.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>linear_temp_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_fit =</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
-<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>      nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="fu">str_c</span>(<span class="st">"lograte["</span>, <span class="fu">seq</span>(<span class="fu">nrow</span>(data_national)), <span class="st">"]"</span>)]</span>
-<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(</span>
-<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN =</span> mean,</span>
-<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">MARGIN =</span> <span class="dv">2</span></span>
-<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>pred_death_rate <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="fu">str_c</span>(<span class="st">"lograte["</span>, <span class="fu">seq</span>(<span class="fu">nrow</span>(data_national)), <span class="st">"]"</span>)]</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(</span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> quantile,</span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">2</span>,</span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)</span>
+<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a>linear_temp_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
+<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb99-12"><a href="#cb99-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_median =</span> pred_death_rate[<span class="dv">2</span>,],</span>
+<span id="cb99-13"><a href="#cb99-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_lower =</span> pred_death_rate[<span class="dv">1</span>,],</span>
+<span id="cb99-14"><a href="#cb99-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_upper =</span> pred_death_rate[<span class="dv">3</span>,],</span>
+<span id="cb99-15"><a href="#cb99-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb99-16"><a href="#cb99-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_median)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s plot how the model fits</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>linear_temp_fit <span class="sc">|&gt;</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> rate), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> .death_rate_fit), <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>linear_temp_fit <span class="sc">|&gt;</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> week)) <span class="sc">+</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> rate), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> .death_rate_lower, <span class="at">ymax =</span> .death_rate_upper), <span class="at">fill =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> .death_rate_median), <span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Now let’s look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>linear_temp_fit <span class="sc">|&gt;</span></span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>linear_temp_fit <span class="sc">|&gt;</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -888,7 +910,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 </div>
 <p>What does the posterior of the temperature term itself look like?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_hist</span>(nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="fu">c</span>(<span class="st">"beta_temperature"</span>, <span class="st">"alpha"</span>)], <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"beta_temperature"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_hist</span>(nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="fu">c</span>(<span class="st">"beta_temperature"</span>, <span class="st">"alpha"</span>)], <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"beta_temperature"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -898,7 +920,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 </div>
 <p>What proportion of draws are greater than 0, which represents the posterior probability that the association between temperature and death rates is positive?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> <span class="fu">sum</span>(nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="st">"beta_temperature"</span>] <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">length</span>(nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="st">"beta_temperature"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> <span class="fu">sum</span>(nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="st">"beta_temperature"</span>] <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">length</span>(nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="st">"beta_temperature"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 100</code></pre>
 </div>
@@ -924,72 +946,71 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 \end{split}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>code_weekly_random_walk_with_temperature_by_month <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
-<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha (Gary: make -inf +inf )</span></span>
-<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>  sigma_rw <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>) <span class="co"># prior for variance of random walk over time</span></span>
-<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>  sigma_temperature <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>) <span class="co"># prior for variance of temperature effects</span></span>
-<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
-<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
-<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
-<span id="cb106-10"><a href="#cb106-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> lograte[t]</span>
-<span id="cb106-11"><a href="#cb106-11" aria-hidden="true" tabindex="-1"></a>    lograte[t] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> rw[t] <span class="sc">+</span> beta_temperature_month[month[t]] <span class="sc">*</span> weekly_t2m_anomaly[t]</span>
-<span id="cb106-12"><a href="#cb106-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb106-13"><a href="#cb106-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-14"><a href="#cb106-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># random walk over time</span></span>
-<span id="cb106-15"><a href="#cb106-15" aria-hidden="true" tabindex="-1"></a>  rw[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb106-16"><a href="#cb106-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Nw) {</span>
-<span id="cb106-17"><a href="#cb106-17" aria-hidden="true" tabindex="-1"></a>    rw[t] <span class="sc">~</span> <span class="fu">dnorm</span>(rw[t <span class="sc">-</span> <span class="dv">1</span>], sigma_rw)</span>
-<span id="cb106-18"><a href="#cb106-18" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb106-19"><a href="#cb106-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-20"><a href="#cb106-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># monthly temperature random effect</span></span>
-<span id="cb106-21"><a href="#cb106-21" aria-hidden="true" tabindex="-1"></a>  beta_temperature_month[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb106-22"><a href="#cb106-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (m <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n_months) {</span>
-<span id="cb106-23"><a href="#cb106-23" aria-hidden="true" tabindex="-1"></a>    beta_temperature_month[m] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, sigma_temperature)</span>
-<span id="cb106-24"><a href="#cb106-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb106-25"><a href="#cb106-25" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>code_weekly_random_walk_with_temperature_by_month <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dflat</span>()</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>  sigma_rw <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>) <span class="co"># prior for variance of random walk over time</span></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>  sigma_temperature <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>) <span class="co"># prior for variance of temperature effects</span></span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
+<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
+<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
+<span id="cb107-10"><a href="#cb107-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> lograte[t]</span>
+<span id="cb107-11"><a href="#cb107-11" aria-hidden="true" tabindex="-1"></a>    lograte[t] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> rw[t] <span class="sc">+</span> beta_temperature_month[month[t]] <span class="sc">*</span> weekly_t2m_anomaly[t]</span>
+<span id="cb107-12"><a href="#cb107-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb107-13"><a href="#cb107-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-14"><a href="#cb107-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># random walk over time</span></span>
+<span id="cb107-15"><a href="#cb107-15" aria-hidden="true" tabindex="-1"></a>  rw[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb107-16"><a href="#cb107-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Nw) {</span>
+<span id="cb107-17"><a href="#cb107-17" aria-hidden="true" tabindex="-1"></a>    rw[t] <span class="sc">~</span> <span class="fu">dnorm</span>(rw[t <span class="sc">-</span> <span class="dv">1</span>], sigma_rw)</span>
+<span id="cb107-18"><a href="#cb107-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb107-19"><a href="#cb107-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-20"><a href="#cb107-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># monthly temperature random effect</span></span>
+<span id="cb107-21"><a href="#cb107-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (m <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_months) {</span>
+<span id="cb107-22"><a href="#cb107-22" aria-hidden="true" tabindex="-1"></a>    beta_temperature_month[m] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, sigma_temperature)</span>
+<span id="cb107-23"><a href="#cb107-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb107-24"><a href="#cb107-24" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Final preparation of data into lists</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nw =</span> <span class="fu">nrow</span>(data_national),</span>
-<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_months =</span> <span class="fu">max</span>(data_national<span class="sc">$</span>month),</span>
-<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">month =</span> data_national<span class="sc">$</span>month</span>
-<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">deaths =</span> data_national<span class="sc">$</span>deaths,</span>
-<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">population =</span> data_national<span class="sc">$</span>population,</span>
-<span id="cb107-10"><a href="#cb107-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">weekly_t2m_anomaly =</span> <span class="fu">round</span>(data_national<span class="sc">$</span>weekly_t2m_anomaly, <span class="dv">1</span>)</span>
-<span id="cb107-11"><a href="#cb107-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>constants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nw =</span> <span class="fu">nrow</span>(data_national),</span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_months =</span> <span class="fu">max</span>(data_national<span class="sc">$</span>month),</span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">month =</span> data_national<span class="sc">$</span>month</span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">deaths =</span> data_national<span class="sc">$</span>deaths,</span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">population =</span> data_national<span class="sc">$</span>population,</span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">weekly_t2m_anomaly =</span> <span class="fu">round</span>(data_national<span class="sc">$</span>weekly_t2m_anomaly, <span class="dv">1</span>)</span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Set initial values for MCMC samples</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="dv">0</span>,</span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">rw =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(data_national)),</span>
-<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">beta_temperature_month =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">max</span>(data_national<span class="sc">$</span>month)),</span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma_rw =</span> <span class="dv">1</span>,</span>
-<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma_temperature =</span> <span class="dv">1</span></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta_temperature_month"</span>, <span class="st">"rw"</span>, <span class="st">"lograte"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="dv">0</span>,</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">rw =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(data_national)),</span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">beta_temperature_month =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">max</span>(data_national<span class="sc">$</span>month)),</span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma_rw =</span> <span class="dv">1</span>,</span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma_temperature =</span> <span class="dv">1</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-9"><a href="#cb109-9" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="st">"beta_temperature_month"</span>, <span class="st">"rw"</span>, <span class="st">"lograte"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s run the model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk_with_temperature_by_month <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_weekly_random_walk_with_temperature_by_month,</span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
-<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
-<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">20000</span>, <span class="co"># 800000,</span></span>
-<span id="cb109-9"><a href="#cb109-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">10000</span>, <span class="co"># 300000,</span></span>
-<span id="cb109-10"><a href="#cb109-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
-<span id="cb109-11"><a href="#cb109-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
-<span id="cb109-12"><a href="#cb109-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>nimbleMCMC_samples_week_random_walk_with_temperature_by_month <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> code_weekly_random_walk_with_temperature_by_month,</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> constants,</span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
+<span id="cb110-8"><a href="#cb110-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">20000</span>, <span class="co"># 800000,</span></span>
+<span id="cb110-9"><a href="#cb110-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">10000</span>, <span class="co"># 300000,</span></span>
+<span id="cb110-10"><a href="#cb110-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">1</span>,</span>
+<span id="cb110-11"><a href="#cb110-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
+<span id="cb110-12"><a href="#cb110-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Defining model</code></pre>
 </div>
@@ -1021,81 +1042,87 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <pre><code>|-------------|-------------|-------------|-------------|
 |-------------------------------------------------------|</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 14.6618 secs</code></pre>
+<pre><code>Time difference of 14.60001 secs</code></pre>
 </div>
 </div>
 <p>What is the summary of each estimated parameter from the model with the random walk over time and month-specific linear temperature term?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, <span class="fu">default_summary_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,057 × 7
-   variable                       mean   median      sd     mad       q5     q95
-   &lt;chr&gt;                         &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;    &lt;num&gt;   &lt;num&gt;
- 1 alpha                     -8.92     -8.92    0.00437 0.00448 -8.92e+0 -8.91
- 2 beta_temperature_month[1]  0         0       0       0        0        0
- 3 beta_temperature_month[2] -0.119    -0.117   0.0295  0.0374  -1.63e-1 -0.0671
- 4 beta_temperature_month[3] -0.00398  -0.00121 0.0219  0.0307  -3.57e-2  0.0263
- 5 beta_temperature_month[4] -0.000218  0.00820 0.0215  0.0148  -4.34e-2  0.0231
- 6 beta_temperature_month[5]  0.0263    0.0265  0.00538 0.00503  1.72e-2  0.0365
- 7 beta_temperature_month[6]  0.0563    0.0534  0.0164  0.0245   2.96e-2  0.0788
- 8 beta_temperature_month[7]  0.0347    0.0289  0.0213  0.0190   8.15e-3  0.0823
- 9 beta_temperature_month[8]  0.0428    0.0456  0.0242  0.0219  -7.45e-4  0.0814
-10 beta_temperature_month[9] -0.00760  -0.0130  0.0201  0.0156  -3.07e-2  0.0336
+   variable                      mean   median      sd     mad      q5     q95
+   &lt;chr&gt;                        &lt;num&gt;    &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;   &lt;num&gt;
+ 1 alpha                     -6.20    -6.19    0.00713 0.00511 -6.21   -6.19
+ 2 beta_temperature_month[1]  2.09     2.09    0.00528 0.00477  2.08    2.10
+ 3 beta_temperature_month[2]  0.0440   0.0444  0.0119  0.0157   0.0271  0.0633
+ 4 beta_temperature_month[3]  0.00679  0.00772 0.0184  0.0181  -0.0249  0.0391
+ 5 beta_temperature_month[4] -0.0465  -0.0482  0.00918 0.00883 -0.0595 -0.0303
+ 6 beta_temperature_month[5]  0.175    0.175   0.00832 0.00969  0.162   0.188
+ 7 beta_temperature_month[6] -0.215   -0.214   0.00496 0.00507 -0.224  -0.208
+ 8 beta_temperature_month[7] -0.0192  -0.0370  0.0338  0.0290  -0.0581  0.0393
+ 9 beta_temperature_month[8]  0.116    0.117   0.00654 0.00681  0.104   0.126
+10 beta_temperature_month[9] -0.371   -0.368   0.0120  0.0106  -0.397  -0.355
 # ℹ 1,047 more rows</code></pre>
 </div>
 </div>
 <p>And how good do convergence indicators look?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise_draws</span>(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, <span class="fu">default_convergence_measures</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,057 × 4
    variable                   rhat ess_bulk ess_tail
    &lt;chr&gt;                     &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
- 1 alpha                      1.07     8.86     11.9
- 2 beta_temperature_month[1] NA       NA        NA
- 3 beta_temperature_month[2]  2.12     1.30     10.6
- 4 beta_temperature_month[3]  2.12     1.38     18.8
- 5 beta_temperature_month[4]  1.53     1.83     10.5
- 6 beta_temperature_month[5]  1.09    17.9      11.3
- 7 beta_temperature_month[6]  2.06     1.37     11.2
- 8 beta_temperature_month[7]  1.93     1.40     15.2
- 9 beta_temperature_month[8]  1.32     2.87     17.8
-10 beta_temperature_month[9]  1.20     3.68     14.5
+ 1 alpha                      1.43     2.09     13.7
+ 2 beta_temperature_month[1]  1.20     4.06     21.3
+ 3 beta_temperature_month[2]  2.09     1.33     16.3
+ 4 beta_temperature_month[3]  2.09     1.34     10.5
+ 5 beta_temperature_month[4]  1.08     6.16     43.2
+ 6 beta_temperature_month[5]  1.22     3.84     29.4
+ 7 beta_temperature_month[6]  1.01    19.1      24.7
+ 8 beta_temperature_month[7]  1.71     1.64     19.9
+ 9 beta_temperature_month[8]  1.01    29.5      41.0
+10 beta_temperature_month[9]  1.18     5.17     21.2
 # ℹ 1,047 more rows</code></pre>
 </div>
 </div>
 <p>Let’s calculate the death rate from the model using the formula. Again, as before, for simplicity, we’ll use the mean of the samples generated from the model run above.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>linear_month_temp_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
-<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_fit =</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
-<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a>      nimbleMCMC_samples_week_random_walk_with_temperature[, <span class="fu">str_c</span>(<span class="st">"lograte["</span>, <span class="fu">seq</span>(<span class="fu">nrow</span>(data_national)), <span class="st">"]"</span>)]</span>
-<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">apply</span>(</span>
-<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">FUN =</span> mean,</span>
-<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">MARGIN =</span> <span class="dv">2</span></span>
-<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb125-10"><a href="#cb125-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb125-11"><a href="#cb125-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>pred_death_rate <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="sc">*</span> <span class="fu">exp</span>(</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>  nimbleMCMC_samples_week_random_walk_with_temperature_by_month[, <span class="fu">str_c</span>(<span class="st">"lograte["</span>, <span class="fu">seq</span>(<span class="fu">nrow</span>(data_national)), <span class="st">"]"</span>)]</span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(</span>
+<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> quantile,</span>
+<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">MARGIN =</span> <span class="dv">2</span>,</span>
+<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)</span>
+<span id="cb126-8"><a href="#cb126-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb126-9"><a href="#cb126-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-10"><a href="#cb126-10" aria-hidden="true" tabindex="-1"></a>linear_month_temp_fit <span class="ot">&lt;-</span> data_national <span class="sc">|&gt;</span></span>
+<span id="cb126-11"><a href="#cb126-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb126-12"><a href="#cb126-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_median =</span> pred_death_rate[<span class="dv">2</span>,],</span>
+<span id="cb126-13"><a href="#cb126-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_lower =</span> pred_death_rate[<span class="dv">1</span>,],</span>
+<span id="cb126-14"><a href="#cb126-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">.death_rate_upper =</span> pred_death_rate[<span class="dv">3</span>,],</span>
+<span id="cb126-15"><a href="#cb126-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb126-16"><a href="#cb126-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">residuals =</span> rate <span class="sc">-</span> .death_rate_median)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s plot how the model fits</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>linear_month_temp_fit <span class="sc">|&gt;</span></span>
-<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> rate), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> .death_rate_fit), <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>linear_month_temp_fit <span class="sc">|&gt;</span></span>
+<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> week)) <span class="sc">+</span></span>
+<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> rate), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> .death_rate_lower, <span class="at">ymax =</span> .death_rate_upper), <span class="at">fill =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> .death_rate_median), <span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">colour =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Now let’s look at the residuals of the fit, which, if the model fits well, should be randomly distributed around zero without any obvious pattern.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>linear_month_temp_fit <span class="sc">|&gt;</span></span>
-<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
-<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>linear_month_temp_fit <span class="sc">|&gt;</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals)) <span class="sc">+</span></span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
@@ -1105,7 +1132,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 </div>
 <p>What does the summary of the monthly temperature terms look like?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_intervals</span>(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, <span class="at">regex_pars =</span> <span class="fu">c</span>(<span class="st">"beta_temperature"</span>)) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_intervals</span>(nimbleMCMC_samples_week_random_walk_with_temperature_by_month, <span class="at">regex_pars =</span> <span class="fu">c</span>(<span class="st">"beta_temperature"</span>)) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="bayesian_regression_and_temporal_modelling_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="672"></p>
 </div>
