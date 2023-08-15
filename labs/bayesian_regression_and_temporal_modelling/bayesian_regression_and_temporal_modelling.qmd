@@ -366,11 +366,10 @@ Now the rhat values are much nearer 1.00, which means that the samples are conve
 What do the random weekly terms looks like for the better converged model?
 ```{r}
 mcmc_intervals(
-  nimbleMCMC_samples_week_random_walk_more_samples[, str_c("rw[", seq(nrow(data_national)), "]")],
+  nimbleMCMC_samples_week_random_walk_more_samples[, str_c("rw[", rev(seq(nrow(data_national))), "]")],
   regex_pars = c("rw")
 ) +
   coord_flip() +
-  scale_x_reverse() +
   theme(axis.text.x = element_blank())
 ```
 
