@@ -394,9 +394,16 @@ Garyfallos Konstantinoudis
 <ul>
 <li>To summarise spatial and spatio-temporal variation in disease risk</li>
 <li>Rare disease and/or small areas: Poisson framework <span class="math display">\[O_i \sim \text{Poisson}(\lambda_i E_i)\]</span> where <span class="math inline">\(E_i\)</span> is the expected nb of cases and <span class="math inline">\(\lambda_i=\text{SMR}\)</span> in area <span class="math inline">\(i\)</span>.</li>
-<li>Non smoothed estimates of the SMR: <span class="math display">\[\text{SMR}_i = \frac{O_i}{E_i},\;\text{and} \;\text{Var(SMR)}_i = \frac{O_i}{E_i^2}\]</span> ## Issues with crude RR estimates</li>
+<li>Non smoothed estimates of the SMR: <span class="math display">\[\text{SMR}_i = \frac{O_i}{E_i},\;\text{and} \;\text{Var(SMR)}_i = \frac{O_i}{E_i^2}\]</span></li>
 </ul>
-<p>Calculating crude (non-smoothed) estimates of the SMR can be problematic: - SMR is estimated independently: does not account for spatial correlation, ie makes no use of SMR estimates in other areas of the map, even though these are likely to be similar. - They are very imprecise: areas with small <span class="math inline">\(E_i\)</span> have high associated variance.</p>
+</section>
+<section id="issues-with-crude-rr-estimates" class="slide level2">
+<h2>Issues with crude RR estimates</h2>
+<p>Calculating crude (non-smoothed) estimates of the SMR can be problematic:</p>
+<ul>
+<li>SMR is estimated independently: does not account for spatial correlation, ie makes no use of SMR estimates in other areas of the map, even though these are likely to be similar.</li>
+<li>They are very imprecise: areas with small <span class="math inline">\(E_i\)</span> have high associated variance.</li>
+</ul>
 </section>
 <section id="example-with-childhood-cancers-in-switzerland" class="slide level2">
 <h2>Example with childhood cancers in Switzerland</h2>
