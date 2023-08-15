@@ -214,7 +214,7 @@ $$
 
 - BYM2
 $$
-b = \sigma_b*(\sqrt{1 - \rho \theta} + \sqrt{\rho}\phi) \\
+b = \sigma_b*(\sqrt{1 - \rho}\theta + \sqrt{\rho}\phi) \\
 \theta \sim \text{Normal}(\sigma_{\theta}^2)\\
 \phi \sim \text{ICAR}(W^*, \sigma_{\phi}^2)
 $$
@@ -368,7 +368,7 @@ data.frame(
 ::::: {style="font-size:78%"}
 $$
 O_{it} \sim \text{Poisson}(\lambda_{it} E_{it}) \\
-\log \lambda_{it} = \alpha + \theta_i + \phi_i + \gamma_t + \xi_t + \color{red}{\nu{it}} \\
+\log \lambda_{it} = \alpha + \theta_i + \phi_i + \gamma_t + \xi_t + \color{red}{\nu_{it}} \\
 \theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
 \phi \sim \text{ICAR}(W, \sigma^2_{\phi})\\
 \gamma_t \sim \text{Normal}(0,\sigma_{\gamma}^2)\\
