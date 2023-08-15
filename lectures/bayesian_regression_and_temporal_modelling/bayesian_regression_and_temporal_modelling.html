@@ -8,7 +8,7 @@
 <link href="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="bayesian_regression_and_temporal_modelling_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.354">
+  <meta name="generator" content="quarto-1.3.433">
 
   <meta name="author" content="Robbie M. Parks">
   <title>Bayesian Regression and Temporal Modelling</title>
@@ -724,7 +724,7 @@ y_i &amp;\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
 <h2>Non-linear regression</h2>
 <ul>
 <li class="fragment">Seasonality can exist in data, for example, that requires accounting for.</li>
-<li class="fragment">Also, there can be autocorrelation between neighboring time points.</li>
+<li class="fragment">Also, there can be autocorrelation between neighbouring time points.</li>
 </ul>
 </section>
 <section id="non-linear-regression-1" class="slide level2">
@@ -772,13 +772,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 </section>
 <section id="non-linear-regression-5" class="slide level2">
 <h2>Non-linear regression</h2>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|</code></pre>
-</div>
 
-</div>
 <img data-src="bayesian_regression_and_temporal_modelling_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section>
 <section id="reminder-of-regression-model-steps-1" class="slide level2">
 <h2>Reminder of regression model steps</h2>
@@ -808,9 +802,9 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <li class="fragment">Variance of outcome (e.g., <span class="math inline">\(\sigma^2\)</span>).</li>
 <li class="fragment">In absence of information, set priors as vague:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>beta_temperature <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for beta_temperature</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a>sigma_rw <span class="sc">~</span> <span class="fu">T</span>(<span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">0</span>, <span class="cn">Inf</span>) <span class="co"># half-normal prior for variance of weekly effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>beta_temperature <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for beta_temperature</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>sigma_rw <span class="sc">~</span> <span class="fu">T</span>(<span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">0</span>, <span class="cn">Inf</span>) <span class="co"># half-normal prior for variance of weekly effects</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="priors-focus-in-nimble-model" class="slide level2">
 <h2>Priors focus in <code>NIMBLE</code> model</h2>
@@ -884,7 +878,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <li>Let’s load in the data we’ll use for lab (Spain mortality).</li>
 </ul>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"Spain"</span>, <span class="st">"data_spain.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"Spain"</span>, <span class="st">"data_spain.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="linear-regression-real-world-example-1" class="slide level2">
 <h2>Linear regression: Real world example</h2>
@@ -893,23 +887,23 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <li>What does it look like?</li>
 </ul>
 </div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"Spain"</span>, <span class="st">"data_spain.csv"</span>))</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">head</span>(data)</span>
-<span id="cb9-3"><a href="#cb9-3"></a></span>
-<span id="cb9-4"><a href="#cb9-4"></a>data_national <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="fu">group_by</span>(week, week_of_year) <span class="sc">|&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb9-7"><a href="#cb9-7"></a>    <span class="at">deaths =</span> <span class="fu">sum</span>(deaths),</span>
-<span id="cb9-8"><a href="#cb9-8"></a>    <span class="at">population =</span> <span class="fu">sum</span>(population),</span>
-<span id="cb9-9"><a href="#cb9-9"></a>    <span class="at">t2m =</span> <span class="fu">mean</span>(t2m),</span>
-<span id="cb9-10"><a href="#cb9-10"></a>    <span class="at">weekly_t2m_anomaly =</span> <span class="fu">mean</span>(weekly_t2m_anomaly)</span>
-<span id="cb9-11"><a href="#cb9-11"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a>  <span class="fu">mutate</span>(<span class="at">week =</span> <span class="fu">dmy</span>(week)) <span class="sc">|&gt;</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a>  <span class="fu">arrange</span>(week) <span class="sc">|&gt;</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(week) <span class="sc">&lt;</span> <span class="dv">2020</span>) <span class="co"># avoiding COVID for now</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_national) <span class="sc">+</span></span>
-<span id="cb9-17"><a href="#cb9-17"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> deaths))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"Spain"</span>, <span class="st">"data_spain.csv"</span>))</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">head</span>(data)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a>data_national <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="fu">group_by</span>(week, week_of_year) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="at">deaths =</span> <span class="fu">sum</span>(deaths),</span>
+<span id="cb8-8"><a href="#cb8-8"></a>    <span class="at">population =</span> <span class="fu">sum</span>(population),</span>
+<span id="cb8-9"><a href="#cb8-9"></a>    <span class="at">t2m =</span> <span class="fu">mean</span>(t2m),</span>
+<span id="cb8-10"><a href="#cb8-10"></a>    <span class="at">weekly_t2m_anomaly =</span> <span class="fu">mean</span>(weekly_t2m_anomaly)</span>
+<span id="cb8-11"><a href="#cb8-11"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>  <span class="fu">mutate</span>(<span class="at">week =</span> <span class="fu">dmy</span>(week)) <span class="sc">|&gt;</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a>  <span class="fu">arrange</span>(week) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(week) <span class="sc">&lt;</span> <span class="dv">2020</span>) <span class="co"># avoiding COVID for now</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data_national) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> deaths))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="linear-regression-real-world-example-2" class="slide level2">
 <h2>Linear regression: Real world example</h2>
@@ -918,21 +912,20 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <li>Find some kind of association.</li>
 </ul>
 </div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>code_linear <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
-<span id="cb10-2"><a href="#cb10-2"></a>  <span class="co"># priors</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a>  beta_week <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for beta_week</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a></span>
-<span id="cb10-6"><a href="#cb10-6"></a>  <span class="co"># likelihood</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
-<span id="cb10-8"><a href="#cb10-8"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
-<span id="cb10-9"><a href="#cb10-9"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> alpha <span class="sc">+</span> beta_week <span class="sc">*</span> t</span>
-<span id="cb10-10"><a href="#cb10-10"></a>  }</span>
-<span id="cb10-11"><a href="#cb10-11"></a></span>
-<span id="cb10-12"><a href="#cb10-12"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
-<span id="cb10-14"><a href="#cb10-14"></a>  beta_year_exp <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta_year)</span>
-<span id="cb10-15"><a href="#cb10-15"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>code_linear <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="co"># priors</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>  alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for alpha</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>  beta_week <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># prior for beta_week</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="co"># likelihood</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>Nw) {</span>
+<span id="cb9-8"><a href="#cb9-8"></a>    deaths[t] <span class="sc">~</span> <span class="fu">dpois</span>(mu[t])</span>
+<span id="cb9-9"><a href="#cb9-9"></a>    <span class="fu">log</span>(mu[t]) <span class="ot">&lt;-</span> <span class="fu">log</span>(population[t]) <span class="sc">+</span> alpha <span class="sc">+</span> beta_week <span class="sc">*</span> t</span>
+<span id="cb9-10"><a href="#cb9-10"></a>  }</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a>  <span class="co"># what's the estimated annual rate of change?</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a>  beta_year <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="dv">52</span> <span class="sc">*</span> beta_week)</span>
+<span id="cb9-14"><a href="#cb9-14"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="linear-regression-real-world-example-3" class="slide level2">
 <h2>Linear regression: Real world example</h2>
@@ -941,13 +934,7 @@ y_t &amp;\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
 <li>Find some kind of association.</li>
 </ul>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|</code></pre>
-</div>
 
-</div>
 <img data-src="bayesian_regression_and_temporal_modelling_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
 <section id="reminder-of-regression-model-steps-3" class="slide level2">
 <h2>Reminder of regression model steps</h2>

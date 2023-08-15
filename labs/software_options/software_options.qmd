@@ -209,7 +209,9 @@ head(model_spatial$summary.random$provincia_id)
 ```
 
 Compare and contrast the model fits using the plotting code above.
-Try and test out different spatial models, such as `"besag"`.
+Try and test out different spatial models, such as `"besag"` or `"bym2"`.
+Observe how the hyperparameter results change.
+Try and explore the WAIC of the models by adding `waic = TRUE` to `control.compute`.
 
 ## Some other options
 
@@ -225,7 +227,7 @@ Here is how we would write the original model in `Stan`.
 data {
   int<lower=0> N;     // number of data items
   int<lower=0> Np;    // number of provinces
-  matrix[N] province; // predictor vector
+  vector[N] province; // predictor vector
   vector[N] y;        // outcome vector
 }
 

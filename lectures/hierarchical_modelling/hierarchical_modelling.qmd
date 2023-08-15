@@ -27,8 +27,8 @@ format:
 
 - Assumptions of linear models
 - Why are linear models not enough?
-- Two extremes of hierarchy: <ins>partial pooling</ins> and <ins>no pooling</ins>
-- The golden middle: <ins>complete pooling</ins>
+- Two extremes of hierarchy: <ins>complete pooling</ins> and <ins>no pooling</ins>
+- The golden middle: <ins>partial pooling</ins>
 - Random effects
 - Types of nestedness
 

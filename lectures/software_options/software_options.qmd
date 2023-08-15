@@ -464,7 +464,7 @@ summarise_draws(eight_schools_df)
 
 ## And what about the samples
 
-And ArviZ for `python` or `Julia`
+And `ArviZ` for `python` or `Julia`
 
 ```{.python}
 data = az.from_pystan(posterior=fit)
