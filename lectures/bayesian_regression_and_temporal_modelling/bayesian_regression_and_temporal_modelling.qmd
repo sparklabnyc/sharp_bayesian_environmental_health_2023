@@ -489,23 +489,29 @@ nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
   samplesAsCodaMCMC = TRUE
 )
 
+pred_death_rate <- 100000 * exp(
+  nimbleMCMC_samples_week_random_walk[, str_c("lograte[", seq(nrow(data_national)), "]")]
+) |>
+  apply(
+    FUN = quantile,
+    MARGIN = 2,
+    p = c(0.025, 0.5, 0.975)
+  )
+
 rw_fit <- data_national |>
   ungroup() |>
   mutate(
-    .death_rate_fit = 100000 * exp(
-      nimbleMCMC_samples_week_random_walk[, str_c("lograte[", seq(nrow(data_national)), "]")]
-    ) |>
-      apply(
-        FUN = mean,
-        MARGIN = 2
-      )
+    .death_rate_median = pred_death_rate[2, ],
+    .death_rate_lower = pred_death_rate[1, ],
+    .death_rate_upper = pred_death_rate[3, ],
   ) |>
-  mutate(residuals = rate - .death_rate_fit)
+  mutate(residuals = rate - .death_rate_median)
 
 rw_fit |>
-  ggplot() +
-  geom_point(aes(x = week, y = rate), size = 2) +
-  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+  ggplot(aes(x = week)) +
+  geom_point(aes(y = rate), size = 2) +
+  geom_ribbon(aes(ymin = .death_rate_lower, ymax = .death_rate_upper), fill = "red", alpha = 0.1) +
+  geom_line(aes(y = .death_rate_median), size = 0.4, colour = "red")
 ```
 
 ## Reminder of regression model steps
@@ -742,33 +748,40 @@ nimbleMCMC_samples_linear <- nimbleMCMC(
   niter = 10000,
   nburnin = 5000,
   setSeed = 1,
+  progressBar = FALSE,
   samplesAsCodaMCMC = TRUE
 )
+
+pred_death_rate <- 100000 * exp(
+  # add alpha and beta_week * week_number by sample
+  sweep(
+    nimbleMCMC_samples_linear[, "beta_week"] %*% t(1:nrow(data_national)),
+    1,
+    nimbleMCMC_samples_linear[, "alpha"],
+    FUN = "+"
+  )
+) |>
+  # take the median and 2.5, 97.5 quantiles
+  apply(
+    FUN = quantile,
+    MARGIN = 2,
+    p = c(0.025, 0.5, 0.975)
+  )
 
 linear_fit <- data_national |>
   ungroup() |>
   mutate(
-    .death_rate_fit = 100000 * exp(
-      # add alpha and beta_week * week_number by sample
-      sweep(
-        nimbleMCMC_samples_linear[, "beta_week"] %*% t(1:nrow(data_national)),
-        1,
-        nimbleMCMC_samples_linear[, "alpha"],
-        FUN = "+"
-      )
-    ) |>
-      # then take the mean of the samples
-      apply(
-        FUN = mean,
-        MARGIN = 2
-      )
+    .death_rate_median = pred_death_rate[2, ],
+    .death_rate_lower = pred_death_rate[1, ],
+    .death_rate_upper = pred_death_rate[3, ],
   ) |>
-  mutate(residuals = rate - .death_rate_fit)
+  mutate(residuals = rate - .death_rate_median)
 
 linear_fit |>
-  ggplot() +
-  geom_point(aes(x = week, y = rate), size = 0.6) +
-  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
+  ggplot(aes(x = week)) +
+  geom_point(aes(y = rate), size = 0.6) +
+  geom_ribbon(aes(ymin = .death_rate_lower, ymax = .death_rate_upper), fill = "red", alpha = 0.1) +
+  geom_line(aes(y = .death_rate_median), size = 0.4, colour = "red")
 ```
 ## Reminder of regression model steps
 
