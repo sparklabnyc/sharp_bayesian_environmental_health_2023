@@ -61,9 +61,11 @@ $$O_i \sim \text{Poisson}(\lambda_i E_i)$$
 where $E_i$ is the expected nb of cases and $\lambda_i=\text{SMR}$ in area $i$.
 - Non smoothed estimates of the SMR:
 $$\text{SMR}_i = \frac{O_i}{E_i},\;\text{and} \;\text{Var(SMR)}_i = \frac{O_i}{E_i^2}$$
+
 ## Issues with crude RR estimates
 
 Calculating crude (non-smoothed) estimates of the SMR can be problematic:
+
 - SMR is estimated independently: does not account for spatial correlation, ie makes no use of SMR estimates in other areas of the map, even though these are likely to be similar.
 -  They are very imprecise: areas with small $E_i$ have high associated variance.
 
