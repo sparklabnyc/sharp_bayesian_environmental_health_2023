@@ -58,6 +58,8 @@ head(data)
 Now let's summarise the data for Spain by week nationally
 ```{r}
 data_national <- data |>
+  filter(sex == "both_sexes") |>
+  filter(age == "all_ages") |>
   group_by(week, week_of_year) |>
   summarise(
     deaths = sum(deaths),
@@ -252,7 +254,7 @@ Let's remove the slope for now so we can just look at the random walk.
 Priors
 $$
 \begin{split}
-\alpha &\sim N(0, 10), \\
+\alpha &\sim flat(), \\
 \sigma_{rw} &\sim N^+(1)
 \end{split}
 $$
@@ -278,11 +280,11 @@ code_weekly_random_walk <- nimbleCode({
   for (t in 1:Nw) {
     deaths[t] ~ dpois(mu[t])
     log(mu[t]) <- log(population[t]) + lograte[t]
-    lograte[t] <- alpha + rw[t]
+    lograte[t] <- rw[t]
   }
 
   # random walk over time
-  rw[1] <- 0
+  rw[1] <- alpha
   for (t in 2:Nw) {
     rw[t] ~ dnorm(rw[t - 1], sigma_rw)
   }
@@ -304,8 +306,8 @@ nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 10000, # 80000,
-  nburnin = 5000, # 40000,
+  niter = 10000,
+  nburnin = 5000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -324,15 +326,15 @@ And how good do convergence indicators look?
 summarise_draws(nimbleMCMC_samples_week_random_walk, default_convergence_measures())
 ```
 
-The `rhat` values indicate that convergence could be better if we ran for longer.
-This is a real-world example of trying to find better converging models with more samples.
-This is part of the Bayesian inference challenge.
+The `rhat` values indicate that convergence look good.
+
+If `rhat` values weren't great (>>>1.05), we could run for longer.
 
 ::: aside
-Another possibility is that the model might not be very well specified.
+Another possibility can be that the model might not be very well specified.
 :::
 
-So let's run again with more samples!
+So let's run again with more samples to see if there are any improvements!
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_week_random_walk_more_samples <- nimbleMCMC(
@@ -341,8 +343,8 @@ nimbleMCMC_samples_week_random_walk_more_samples <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 20000, # 200000,
-  nburnin = 10000, # 100000,
+  niter = 20000,
+  nburnin = 10000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -361,7 +363,7 @@ And how good do convergence indicators look?
 summarise_draws(nimbleMCMC_samples_week_random_walk_more_samples, default_convergence_measures())
 ```
 
-Now the rhat values are much nearer 1.00, which means that the samples are converging, and therefore the estimated parameters are reliable.
+Now the rhat values remain much near 1.00, which means that the samples are already converging.
 
 What do the random weekly terms looks like for the better converged model?
 ```{r}
@@ -412,7 +414,7 @@ rw_fit |>
   geom_histogram()
 ```
 
-The vast majority of the residuals are now very well normally distributed around 0, so we can likely say that the fit is much better!
+The residuals are now very well normally distributed around 0, so we can likely say that the fit is much better!
 
 ## Linear model over time with random walk term and overall linear temperature term
 
@@ -447,11 +449,11 @@ code_weekly_random_walk_with_temperature <- nimbleCode({
   for (t in 1:Nw) {
     deaths[t] ~ dpois(mu[t])
     log(mu[t]) <- log(population[t]) + lograte[t]
-    lograte[t] <- alpha + beta_temperature * weekly_t2m_anomaly[t] + rw[t]
+    lograte[t] <- beta_temperature * weekly_t2m_anomaly[t] + rw[t]
   }
 
   # random walk over time
-  rw[1] <- 0
+  rw[1] <- alpha
   for (t in 2:Nw) {
     rw[t] ~ dnorm(rw[t - 1], sigma_rw)
   }
@@ -484,8 +486,8 @@ nimbleMCMC_samples_week_random_walk_with_temperature <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 20000, # 400000,
-  nburnin = 10000, # 200000,
+  niter = 20000,
+  nburnin = 10000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )
@@ -587,11 +589,11 @@ code_weekly_random_walk_with_temperature_by_month <- nimbleCode({
   for (t in 1:Nw) {
     deaths[t] ~ dpois(mu[t])
     log(mu[t]) <- log(population[t]) + lograte[t]
-    lograte[t] <- alpha + rw[t] + beta_temperature_month[month[t]] * weekly_t2m_anomaly[t]
+    lograte[t] <- rw[t] + beta_temperature_month[month[t]] * weekly_t2m_anomaly[t]
   }
 
   # random walk over time
-  rw[1] <- 0
+  rw[1] <- alpha
   for (t in 2:Nw) {
     rw[t] ~ dnorm(rw[t - 1], sigma_rw)
   }
@@ -640,8 +642,8 @@ nimbleMCMC_samples_week_random_walk_with_temperature_by_month <- nimbleMCMC(
   constants = constants,
   inits = inits,
   monitors = parameters_to_monitor,
-  niter = 20000, # 800000,
-  nburnin = 10000, # 300000,
+  niter = 200000,
+  nburnin = 100000,
   setSeed = 1,
   samplesAsCodaMCMC = TRUE
 )

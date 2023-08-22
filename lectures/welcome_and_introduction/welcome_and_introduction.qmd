@@ -227,7 +227,7 @@ plot(p)
 ## What do you understand from a 95% Confidence Interval (CI)? {.smaller}
 
 ::: incremental
-- Frequentist framework: If we were to repeat the data collection process 100 times and construct condfidence intervals for each sample, 95 of those would contain the true parameter (i.e., the target parameter is fixed but unknown, and the interval is random).
+- Frequentist framework: If we were to repeat the data collection process 100 times and construct confidence intervals for each sample, 95 of those would contain the true parameter (i.e., the target parameter is fixed but unknown, and the interval is random).
 - Bayesian framework: Given the observed data and our prior beliefs, there is a 95% probability that the true parameter value falls within the credible interval (i.e., target parameter is random but interval is fixed).
 - Philosophical difference.
 :::
