@@ -21,18 +21,18 @@ Below is the set of labs to follow throughout the two days:
 | Time         | Activity                 |
 | ------------ | ------------------------ |
 | 8:30 - 9:00  | Check in and Breakfast   |
-| 9:00 - 9:15  | Welcome and Introduction |
-| 9:15 - 10:00 | Introduction to Bayesian Methods (Lecture) |
+| 9:00 - 9:15  | [Welcome and Introduction](/lectures/welcome_and_introduction/welcome_and_introduction.qmd) |
+| 9:15 - 10:00 | [Introduction to Bayesian Methods](/lectures/introduction_to_bayesian_methods/introduction_to_bayesian_methods.qmd) (Lecture) |
 | 10:00  - 10:15 | Break / One-on-one questions
 | 10:15  - 11:00 | [Introduction to Bayesian Methods](/labs/introduction_to_bayesian_methods/introduction_to_bayesian_methods.qmd) (Hands-on Lab) |
 | 11:00 - 11:15 | Break / One-on-one questions |
-| 11:15 - 12:00 | Bayesian Workflow (Lecture) |
+| 11:15 - 12:00 | [Bayesian Workflow](/lectures/bayesian_workflow/bayesian_workflow.qmd) (Lecture) |
 | 12:00 - 1:00 | Networking Lunch |
-| 1:00  - 1:45 | Bayesian Regression and Temporal Modeling (Lecture) |
+| 1:00  - 1:45 | [Bayesian Regression and Temporal Modeling](/lectures/bayesian_regression_and_temporal_modelling/bayesian_regression_and_temporal_modelling.qmd) (Lecture) |
 | 1:45  - 2:00 | Break / One-on-one questions |
 | 2:00  - 2:45 | [Bayesian Regression and Temporal Modelling](/labs/bayesian_regression_and_temporal_modelling/bayesian_regression_and_temporal_modelling.qmd) (Hands-on Lab) |
 | 2:45  - 3:00 | Break / One-on-one questions |
-| 3:00  - 3:45 | Hierarchical Modeling (Lecture) |
+| 3:00  - 3:45 | [Hierarchical Modeling](/lectures/hierarchical_modelling/hierarchical_modelling.qmd) (Lecture) |
 | 3:45  - 4:00 | Break / One-on-one questions |
 | 4:00  - 4:45 | [Hierarchical Modelling](/labs/hierarchical_modelling/hierarchical_modelling.qmd) (Hands-on Lab) |
 | 4:45  - 5:00 | Questions and Wrap-up |
@@ -42,15 +42,15 @@ Below is the set of labs to follow throughout the two days:
 | Time         | Activity                 |
 | ------------ | ------------------------ |
 | 8:30 - 9:00 | Check in and Breakfast |
-| 9:00 - 10:00 | Spatial and Spatio-temporal Modeling (Lecture) |
+| 9:00 - 10:00 | [Spatial and Spatio-temporal Modeling](/lectures/spatiotemporal_models/sstmodels.qmd) (Lecture) |
 | 10:00 - 10:15 | Break / One-on-one questions |
 | 10:15 - 11:00 | [Spatial and Spatio-temporal Modelling](/labs/spatiotemporal_models/spatiotemporal_models.qmd) (Hands-on Lab) |
 | 11:00 - 11:15 | Break / One-on-one questions |
-| 11:15 - 12:00 | Software Options (Lecture) |
+| 11:15 - 12:00 | [Software Options](lectures/software_options/software_options.qmd) (Lecture) |
 | 12:00 - 1:00 | Networking Lunch |
 | 1:00 - 2:00 | [Software Options](/labs/software_options/software_options.qmd) |
 | 2:00 - 2:15 | Break / One-on-one questions |
-| 2:15 - 3:00 | Bayesian Non-Parametric Ensemble (Lecture) |
+| 2:15 - 3:00 | [Bayesian Non-Parametric Ensemble](/lectures/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.pdf) (Lecture) |
 | 3:00 - 3:15 | Break / One-on-one questions |
 | 3:15 - 4:15 | [Bayesian Non-Parametric Ensemble](/labs/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.qmd) (Hands-on Lab) |
 | 4:15 - 5:00 | Workshop Summary, Interactive Panel Discussion & Course Wrap-up |
