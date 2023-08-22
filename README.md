@@ -48,7 +48,7 @@ Below is the set of labs to follow throughout the two days:
 | 11:00 - 11:15 | Break / One-on-one questions |
 | 11:15 - 12:00 | [Software Options](lectures/software_options/software_options.qmd) (Lecture) |
 | 12:00 - 1:00 | Networking Lunch |
-| 1:00 - 2:00 | [Software Options](/labs/software_options/software_options.qmd) |
+| 1:00 - 2:00 | [Software Options](/labs/software_options/software_options.qmd) (Hands-on Lab) |
 | 2:00 - 2:15 | Break / One-on-one questions |
 | 2:15 - 3:00 | [Bayesian Non-Parametric Ensemble](/lectures/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.pdf) (Lecture) |
 | 3:00 - 3:15 | Break / One-on-one questions |
