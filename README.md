@@ -4,7 +4,7 @@
 
 ## Introduction
 
-GitHub repo through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 14th-15th 2023.
+GitHub repo through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 21st-22nd 2024.
 
 ## Notes for attendees
 
@@ -16,7 +16,7 @@ This workshop is largely written in [`NIMBLE`](https://r-nimble.org/).
 
 Below is the set of labs to follow throughout the two days:
 
-### Day 1
+### Day 1 (August 21st 2024)
 
 | Time         | Activity                 |
 | ------------ | ------------------------ |
@@ -37,7 +37,7 @@ Below is the set of labs to follow throughout the two days:
 | 4:00  - 4:45 | [Hierarchical Modelling](/labs/hierarchical_modelling/hierarchical_modelling.qmd) (Hands-on Lab) |
 | 4:45  - 5:00 | Questions and Wrap-up |
 
-### Day 2
+### Day 2 (August 22nd 2024)
 
 | Time         | Activity                 |
 | ------------ | ------------------------ |
