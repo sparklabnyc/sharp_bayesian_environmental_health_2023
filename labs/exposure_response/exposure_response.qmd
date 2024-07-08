@@ -1,9 +1,12 @@
 ---
-title: "Spatial and Spatio-temporal Modelling"
+title: "Exposure Response Modelling"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
-author: "Garyfallos Konstantinoudis"
+author: "Robbie M. Parks, Garyfallos Konstantinoudis"
 date: "August 22 2024"
 format: html
+editor: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -26,22 +29,28 @@ set.seed(2)
 
 ## Goal of this computing lab session
 
-This goal of this lab is to use `NIMBLE` to carry out a disease mapping study.
+This goal of this lab is to use `NIMBLE` to carry out an exposure-response regression in a variety of ways.
 
 ## What's going to happen in this lab session?
 
 During this lab session, we will:
 
-1. Explore ways of visualizing spatial data;
-2. Define the neighborhood matrix in `R`;
-3. Fit and interpret the BYM model in `NIMBLE`; and
-4. Perform spatial ecological regression
+1.  Carry out linear exposure-response regression for a single location;
+2.  Carry out non-linear exposure-response regression for a single location;
+3.  Carry out linear exposure-response regression for multiple locations; and
+4.  Carry out non-linear exposure-response regression for multiple locations.
 
 ## Introduction
 
 We will use the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas), as taken from the published paper:
 
-__Konstantinoudis G__, Padellini T, Bennett JE, Davies B, Ezzati M, Blangiardo M. _Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis_. medRxiv [Preprint]. 2020 Aug 11:2020.08.10.20171421. doi: 10.1101/2020.08.10.20171421. Update in: Environ Int. 2021 Jan;146:106316. PMID: 32817974; PMCID: PMC7430619.
+**Konstantinoudis G**, Padellini T, Bennett JE, Davies B, Ezzati M, Blangiardo M. *Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis*.
+medRxiv \[Preprint\].
+2020 Aug 11:2020.08.10.20171421.
+doi: 10.1101/2020.08.10.20171421.
+Update in: Environ Int.
+2021 Jan;146:106316.
+PMID: 32817974; PMCID: PMC7430619.
 
 For that analysis, we included 38,573 COVID-19 deaths up to June 30, 2020 at the Lower Layer Super Output Area level in England ($n = 32844$ small areas).
 We retrieved averaged NO$_2$ concentration during 2014-2018 from the Pollution Climate Mapping.
@@ -53,6 +62,7 @@ Once again we will use `NIMBLE` as the basis for our Bayesian model writing.
 ## Visualization of spatial areal data
 
 Let's load in the data
+
 ```{r}
 data_england <- read_sf(here("data", "England", "COVIDecoregression.shp"))
 glimpse(data_england)
@@ -68,6 +78,7 @@ data_england <- data_england_simpler
 As with the previous labs, let's use the package `ggplot2` to plot maps of the variables.
 
 And for nicer maps for the other columns, including COVID-19 deaths:
+
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = deaths)) +
   geom_sf(colour = "white", size = 0.1) +
@@ -77,6 +88,7 @@ ggplot(data = data_england, aes(fill = deaths)) +
 ```
 
 the expected number of deaths, and:
+
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = expectd)) +
   geom_sf(colour = "white", size = 0.1) +
@@ -86,6 +98,7 @@ ggplot(data = data_england, aes(fill = expectd)) +
 ```
 
 and the SMR:
+
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = deaths / expectd)) +
   geom_sf(colour = "white", size = 0.1) +
@@ -95,6 +108,7 @@ ggplot(data = data_england, aes(fill = deaths / expectd)) +
 ```
 
 And the covariates, including total ICU beds,:
+
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = TtlICUB)) +
   geom_sf(colour = "white", size = 0.1) +
@@ -104,6 +118,7 @@ ggplot(data = data_england, aes(fill = TtlICUB)) +
 ```
 
 NO$_2$,:
+
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = NO2)) +
   geom_sf(colour = "white", size = 0.1) +
@@ -113,6 +128,7 @@ ggplot(data = data_england, aes(fill = NO2)) +
 ```
 
 and quintile of Index of Multiple Deprivation (IMD):
+
 ```{r fig.width=11}
 ggplot(data = data_england, aes(fill = as.factor(IMD))) +
   geom_sf(colour = "white", size = 0.1) +
@@ -126,19 +142,18 @@ ggplot(data = data_england, aes(fill = as.factor(IMD))) +
 The relative risks (RRs) will be smoothed using the Poisson model with a log-link function, as we have seen in previous lectures and labs.
 As usual in this workshop, the inference is done with `NIMBLE` called through `R`.
 
-In particular, let each area $i$ be indexed by the integers $1, 2,...,N$. The model is as follows:
-$$
+In particular, let each area $i$ be indexed by the integers $1, 2,...,N$.
+The model is as follows: $$
 \begin{eqnarray}
 O_{i}  & \sim & \text{Pois}(\lambda_{i}E_{i} ) \quad i = 1, 2,...,N \\
 \log(\lambda_{i}) & = & \alpha + \theta_{i}  \\
 \theta_{i} & \sim & N(0,\sigma_{\theta})
 \end{eqnarray}
-$$
-where $\sigma_{\theta}$ is a standard deviation term that controls the magnitude of $\theta_{i}$.
+$$ where $\sigma_{\theta}$ is a standard deviation term that controls the magnitude of $\theta_{i}$.
 
-As in previous labs, we will write the model in `NIMBLE.`
-Specify the prior of $\tau_{\theta}$ in the code below (`tau.theta`).
+As in previous labs, we will write the model in `NIMBLE.` Specify the prior of $\tau_{\theta}$ in the code below (`tau.theta`).
 We can try a Gamma with parameters 1 and 0.01, which is a sensible option for a Poisson count model as it goes from 0 upwards, so can not be negative, like counts:
+
 ```{r}
 unstr_code <- nimbleCode({
   # priors
@@ -161,6 +176,7 @@ unstr_code <- nimbleCode({
 
 The following code subsets the data to London so the models are quicker to run.
 We're going to run the models for London, then load in the samples for England (and pretend we ran for England!).
+
 ```{r eval = FALSE}
 data_england <- data_england[startsWith(data_england$LTLA, "E09"), ]
 ggplot(data = data_england, fill = "NA") +
@@ -169,6 +185,7 @@ ggplot(data = data_england, fill = "NA") +
 ```
 
 How many spatial units are in the map?
+
 ```{r}
 # Obtain the number of LTLAs
 n.LTLA <- nrow(data_england)
@@ -176,6 +193,7 @@ n.LTLA
 ```
 
 Create data object as required for `NIMBLE`.
+
 ```{r}
 # Format the data for NIMBLE in a list
 covid_data <- list(
@@ -190,6 +208,7 @@ covid_constants <- list(
 
 What are the parameters to be initialised?
 Create a list with two elements and call it `inits` (each a list) with different initial values for the parameters:
+
 ```{r}
 inits <- list(
   list(alpha = 0.01, tau.theta = 10, theta = rep(0.01, times = n.LTLA)), # chain 1
@@ -198,13 +217,16 @@ inits <- list(
 ```
 
 Set `parameters_to_monitor` a vector to monitor `alpha`, `theta`, `tau.theta`, `overallRR` and `RR`.
+
 ```{r}
 parameters_to_monitor <- c("alpha", "theta", "tau.theta", "overallRR", "RR")
 ```
+
 Note that the parameters that are not set, will NOT be monitored!
 
 Run the MCMC simulations calling Nimble from R using the function `nimbleMCMC()`.
 The burn-in should be long enough to discard the initial part of the Markov chains that have not yet converged to the stationary distribution.
+
 ```{r eval=FALSE, message=FALSE, warning=FALSE}
 tic <- Sys.time()
 modelGS.sim <- nimbleMCMC(
@@ -231,49 +253,57 @@ toc - tic # ~ 2minutes
 
 It's good practice to save samples, especially if model runtimes get long.
 Let's load the samples back up.
+
 ```{r echo = FALSE}
 modelGS.sim <- readRDS("NIMBLE_IDD_A1")
 ```
 
 What is the summary of each estimated parameter?
+
 ```{r}
 summarise_draws(modelGS.sim$samples, default_summary_measures())
 ```
 
-_The Gelman-Rubin diagnostic ($\widehat{R}$)_
-The Gelman-Rubin diagnostic evaluates MCMC convergence by analyzing the difference between multiple Markov chains.
+*The Gelman-Rubin diagnostic (*$\widehat{R}$) The Gelman-Rubin diagnostic evaluates MCMC convergence by analyzing the difference between multiple Markov chains.
 The convergence is assessed by comparing the estimated between-chains and within-chain variances for each model parameter.
 Large differences between these variances indicate nonconvergence.
 When the scale reduction factor is high (perhaps greater than 1.1), then we should run our chains out longer to improve convergence to the stationary distribution.
+
 ```{r}
 summarise_draws(modelGS.sim$samples, default_convergence_measures())
 ```
+
 The $\widehat{R}$ of the overallRR is always lower than 1.1.
 
 With more complicated models, sometimes it's nice to see if the traceplots are working too.
 Remember there are two chains of samples this time, which should look like they broadly have the same distribution if they have converged.
+
 ```{r eval = TRUE, warning = FALSE}
 mcmc_trace(modelGS.sim$samples, pars = c("tau.theta"))
 ```
 
 We can use the functions `mcmc_acf_bar()` and `mcmc_acf()` to get the autocorrelation plots for the different chains for `tau.theta` (which should be as near to `0` as possible).
+
 ```{r warning=FALSE}
 # mcmc_acf_bar(modelGS.sim$samples, pars = c("tau.theta"))
 mcmc_acf(modelGS.sim$samples, regex_pars = c("tau.theta"))
 ```
 
 Use the functions `mcmc_hist()` and `mcmc_dens()` to get the histogram and the density plots of the posterior `tau.theta` for chain 1.
+
 ```{r eval = TRUE, fig.width=4, fig.height=3, warning = FALSE}
 mcmc_hist(modelGS.sim$samples$chain1, pars = c("tau.theta"))
 # mcmc_dens(modelGS.sim$samples$chain1, pars = c("tau.theta"))
 ```
 
 Use the function `mcmc_dens_overlay()` to get the density plot of the posterior `tau.theta` for both chains.
+
 ```{r eval = TRUE, fig.width=4, fig.height=3, warning = FALSE}
 mcmc_dens_overlay(modelGS.sim$samples, pars = c("tau.theta"))
 ```
 
 To see the WAIC, which can be used to compare to other models to evaluate how well parameterised a model was.
+
 ```{r eval=TRUE}
 modelGS.sim$WAIC
 ```
@@ -281,11 +311,13 @@ modelGS.sim$WAIC
 ## Map of the (globally) smoothed RRs
 
 Let's map the smoothed RRs in R we extract the posterior median of the relative risks
+
 ```{r eval=TRUE}
 RR <- modelGS.sim$summary$all.chains[str_c("RR[", seq(n.LTLA), "]"), "Median"] # posterior median
 ```
 
 Let's look at a map of the smoothed RRs
+
 ```{r eval=TRUE, fig.width=5, fig.align='center'}
 data_england |>
   mutate(RR = RR) |>
@@ -299,15 +331,19 @@ data_england |>
 ## The BYM model
 
 The RRs will be smoothed using the Poisson model and the BYM model in the log-link function.
-In particular, let each area $i$ be indexed by  the integers $1, 2,...,N$.
+In particular, let each area $i$ be indexed by the integers $1, 2,...,N$.
 The model is as follows.
 
 ::: aside
 A Besag, York, Mollie (BYM) spatial model considers two things:
 
-1. Neighboring Influence: It looks at how connected areas are. If two areas are close to each other, there's a chance that a disease can move from one area to another. So, if a disease is in one area, it might "spill over" into the neighboring area.
+1.  Neighboring Influence: It looks at how connected areas are.
+    If two areas are close to each other, there's a chance that a disease can move from one area to another.
+    So, if a disease is in one area, it might "spill over" into the neighboring area.
 
-2. Background Risk: This is like the natural risk of the disease occurring, even without any special factors. Some areas might naturally have more cases due to other factors. The model takes this into account too.
+2.  Background Risk: This is like the natural risk of the disease occurring, even without any special factors.
+    Some areas might naturally have more cases due to other factors.
+    The model takes this into account too.
 :::
 
 $$
@@ -327,6 +363,7 @@ $$
 where $\sigma_{\phi}$ is a standard deviation term that controls the magnitude of $\phi_{i}$, i.e. the spatial structured term.
 
 Let's set up the BYM model.
+
 ```{r}
 BYM_code <- nimbleCode({
   # priors
@@ -363,8 +400,8 @@ The equation is below, but essentially if the units neighbour, they are given `1
 Most of the elements in a matrix will be `0` for a real-world situation with lots of spatial units.
 
 To run the BYM model, the adjacency matrix needs to be provided.
-Recall that there are many ways of defining an adjacency matrix ${\bf W}$. Here we will use queen contiguity which is defined as
-$$
+Recall that there are many ways of defining an adjacency matrix ${\bf W}$.
+Here we will use queen contiguity which is defined as $$
 \begin{equation}
 w_{ij} =
 \begin{cases}
@@ -379,12 +416,14 @@ where $\partial_i$ is the set of area adjacent to $i$, and $w_{ij}$ is the $ij$ 
 # Adjacency matrix in R
 
 Convert the polygons to a list of neighbors using the function `poly2nb()`
+
 ```{r}
 LTLA_nb <- poly2nb(pl = data_england)
 LTLA_nb
 ```
 
 Convert the list you defined previously to `NIMBLE` format (i.e. a list of 3 components adj, num and weights) using the function `nb2WB()` and print a summary of the object.
+
 ```{r}
 nbWB_A <- nb2WB(nb = LTLA_nb)
 names(nbWB_A)
@@ -392,11 +431,12 @@ names(nbWB_A)
 
 A list of three components is created:
 
-1. `adj` = `ID` for all the neighbors;
-2. `weights` = the weight for each neighbour; and
-3. num = total nb of neighbors across the study region
+1.  `adj` = `ID` for all the neighbors;
+2.  `weights` = the weight for each neighbour; and
+3.  num = total nb of neighbors across the study region
 
 Let's update the constants to include the adjacency matrix information
+
 ```{r eval=TRUE}
 covid_constants <- list(
   N = n.LTLA, # nb of LTLAs
@@ -409,8 +449,8 @@ covid_constants <- list(
 )
 ```
 
+Define the initial values for **all** the unknown parameters.
 
-Define the initial values for __all__ the unknown parameters.
 ```{r echo=TRUE, eval=TRUE}
 # initialise the unknown parameters, 2 chains
 inits <- list(
@@ -431,12 +471,15 @@ inits <- list(
 )
 ```
 
-Which model parameters do you want to monitor? Set these before running `NIMBLE` Call this object `parameters_to_monitor`.
+Which model parameters do you want to monitor?
+Set these before running `NIMBLE` Call this object `parameters_to_monitor`.
+
 ```{r echo=TRUE, eval=TRUE}
 parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "SMR", "resRR", "proba.resRR", "alpha")
 ```
 
 Let's run the model.
+
 ```{r eval=FALSE}
 tic <- Sys.time()
 modelBYM.sim <- nimbleMCMC(
@@ -466,17 +509,20 @@ modelBYM.sim <- readRDS("NIMBLE_BYM_A3")
 
 Retrieve WAIC and compare with previous model.
 Which model performs best?
+
 ```{r echo=TRUE, eval=TRUE}
 modelBYM.sim$WAIC
 ```
 
 Check convergence of resRR.
+
 ```{r echo=TRUE, eval=TRUE, warning = FALSE}
 mcmc_trace(modelBYM.sim$samples, pars = c("resRR[1]", "resRR[19]", "resRR[25]", "resRR[33]"))
 ```
 
 Extract the residual RR (i.e. exp(V + U)) and the posterior probability that resRR is higher than 1 as.
 Note that for the posterior probability, which is a vector of 0s and 1s we need to calculate the sum of 1s by the total sum, ie the mean.
+
 ```{r echo=TRUE, eval=TRUE}
 RR_BYM <- tibble(
   RR_BYM = modelBYM.sim$summary$all.chains[paste0("resRR[", 1:n.LTLA, "]"), "Median"],
@@ -485,6 +531,7 @@ RR_BYM <- tibble(
 ```
 
 Map the smoothed residual RR (`resRR`).
+
 ```{r echo=TRUE, eval=TRUE, fig.width=10, warning=FALSE}
 data_england |>
   mutate(RR_BYM = RR_BYM$RR_BYM) |>
@@ -514,7 +561,8 @@ data_england |>
 In this lab session, we have explored how to fit spatial models using Bayesian regression in `NIMBLE`.
 We looked at the two most common approaches: iid and the BYM model.
 
-We used real data on COVID-19 deaths in England during March-July 2020 and first performed disease mapping to understand the spatial trends of COVID-19 mortality in the first stages of the pandemic. As part of this analysis, we visualised spatial data, fitted a model with an unstructured spatial random effect, demonstrated how to build a neihgborhood matrix in R and fitted the BYM model.
+We used real data on COVID-19 deaths in England during March-July 2020 and first performed disease mapping to understand the spatial trends of COVID-19 mortality in the first stages of the pandemic.
+As part of this analysis, we visualised spatial data, fitted a model with an unstructured spatial random effect, demonstrated how to build a neihgborhood matrix in R and fitted the BYM model.
 
 For more information on the final model see Konstantinoudis et al 2021 (10.1016/j.envint.2020.106316).
 
@@ -525,8 +573,7 @@ The section below is very relevant for environmental health, but if we run out o
 Let $\mathcal{D}$ be the observation window of England and $A_1, A_2, \dots, A_N$ a partition denoting the LTLAs in England with $\cup_{i=1}^NA_i = \mathcal{D}$ and $A_i\cap A_j$ for every $i\neq j$.
 Let $O_1, O_2, \dots, O_N$ be the observed number of COVID-19 deaths occurred during March-July 2020 in England, $E_1, E_2, \dots, E_N$ is the expected number of COVID-19 deaths and $\lambda_1, \lambda_2, \dots, \lambda_N$ the standardized mortality ratio (recall $\lambda_i = \frac{O_i}{E_i}$).
 A standardized mortality ratio of $1.5$ implies that the COVID-19 deaths we observed in the $i$-th area are $1.5$ times higher to what we expected.
-Under the Poisson assumption we have:
-$$
+Under the Poisson assumption we have: $$
 \begin{equation}
 \begin{aligned}
 \hbox{O}_i & \sim \hbox{Poisson}(E_i \lambda_i); \;\;\; i=1,...,N\\
@@ -539,9 +586,9 @@ $$
 1/\sigma_{\phi}^2 & \sim \hbox{Gamma}(0.5, 0.0005) \\
 \end{aligned}
 \end{equation}
-$$
-the terms $\beta_1 X_{1i} + \beta_2 X_{2i} + \sum_{j=2}^5\beta_{3j} X_{3i}$, where $X_{1i}, X_{2i}, X_{3i}$ are the ICU beds, NO$_2$ and IMD in the $i$-th LTLA, $\beta_1, \beta_2, \sum_{j=2}^5\beta_{3j}$ the corresponding effects and $exp(\beta_1), exp(\beta_2)$ the relative risk of ICU beds or NO$_2$ for every unit increase and of the ICU beds or NO$_2$.
-For instance $exp(\beta_2) = 1.8$ means that for every unit increase of long term exposure to $NO_2$, the risk (read standardized mortality ratio) of COVID-19 deaths cancer increases by $80\%$. $exp(\beta_{32}), \beta_{33}, \beta_{34}, \beta_{35}$ are the relative risks compared to the baseline IMD category, ie the most deprived areas.
+$$ the terms $\beta_1 X_{1i} + \beta_2 X_{2i} + \sum_{j=2}^5\beta_{3j} X_{3i}$, where $X_{1i}, X_{2i}, X_{3i}$ are the ICU beds, NO$_2$ and IMD in the $i$-th LTLA, $\beta_1, \beta_2, \sum_{j=2}^5\beta_{3j}$ the corresponding effects and $exp(\beta_1), exp(\beta_2)$ the relative risk of ICU beds or NO$_2$ for every unit increase and of the ICU beds or NO$_2$.
+For instance $exp(\beta_2) = 1.8$ means that for every unit increase of long term exposure to $NO_2$, the risk (read standardized mortality ratio) of COVID-19 deaths cancer increases by $80\%$.
+$exp(\beta_{32}), \beta_{33}, \beta_{34}, \beta_{35}$ are the relative risks compared to the baseline IMD category, ie the most deprived areas.
 An $exp(\beta_{35}) = 0.5$ means that the risk of COVID-19 deaths in most affluent areas decreases by $50%$ compared to the most deprived areas.$\tau_{\theta}$ is a precision (reciprocal of the variance) term that controls the magnitude of $\theta_{i}$.
 We will first write the model in `NIMBLE`.
 
@@ -582,6 +629,7 @@ BYMecoCode <- nimbleCode({
 ```
 
 Create data object as required for `NIMBLE`.
+
 ```{r eval=TRUE}
 n.LTLA <- dim(data_england)[1]
 
@@ -625,6 +673,7 @@ covid_constants <- list(
 ```
 
 Create the initial values for ALL the unknown parameters:
+
 ```{r}
 # initialise the unknown parameters, 2 chains
 inits <- list(
@@ -647,13 +696,17 @@ inits <- list(
 )
 ```
 
-Which model parameters do you want to monitor? Set these before running `NIMBLE`. Call this object `parameters_to_monitor`.
+Which model parameters do you want to monitor?
+Set these before running `NIMBLE`.
+Call this object `parameters_to_monitor`.
+
 ```{r}
 parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "RR.beta1_1NO2")
 ```
 
 Run the MCMC simulations using the function `nimbleMCMC()`.
 If everything is specified reasonably, this needs approximately 5 minutes.
+
 ```{r echo=TRUE, eval=FALSE}
 tic <- Sys.time()
 modelBYMeco.sim <- nimbleMCMC(
@@ -683,21 +736,26 @@ modelBYMeco.sim <- readRDS("NIMBLE_BYM_A4")
 
 Retrieve WAIC and compare with previous model.
 Which model performs best?
+
 ```{r warning=FALSE}
 modelBYMeco.sim$WAIC
 ```
 
-Check the convergence of the intercept and covariates NO$_2$ and ICU beds. What do you observe?
+Check the convergence of the intercept and covariates NO$_2$ and ICU beds.
+What do you observe?
+
 ```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
 mcmc_trace(modelBYMeco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
 ```
 
 Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
+
 ```{r echo=TRUE, eval=TRUE}
 modelBYMeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ]
 ```
 
 We can get a nice credible intervals plot as well:
+
 ```{r warning=FALSE}
 modelBYMeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ] |>
   as_tibble() |>
@@ -717,6 +775,7 @@ cov.eff |>
 ```
 
 The effect by unit increase in the long term exposure to NO$_2$ is `RR.beta1_1NO2`:
+
 ```{r}
 # as relative risk per 1 unit increase in the long term NO2 exposure
 modelBYMeco.sim$summary$all.chains[paste0("RR.beta1_1NO2"), c("Median", "95%CI_low", "95%CI_upp")]
@@ -726,6 +785,7 @@ modelBYMeco.sim$summary$all.chains[paste0("RR.beta1_1NO2"), c("Median", "95%CI_l
 ```
 
 Compare the BYM-related spatial field before and after adjusting for covariates:
+
 ```{r fig.width=10, warning=FALSE}
 data_england |>
   mutate(RR_BYM = RR_BYM$RR_BYM) |>
@@ -745,6 +805,7 @@ data_england |>
 ```
 
 ## Further closing remarks for Advanced section
+
 If you got through the advanced portion, we examined the effect of long term exposure to NO$_2$ on COVID-19 mortality.
 We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA.
 We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.

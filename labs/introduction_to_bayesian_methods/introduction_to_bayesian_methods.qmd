@@ -2,7 +2,7 @@
 title: "Introduction to Bayesian Methods"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Robbie M. Parks, Theo Rashid"
-date: "August 14 2023"
+date: "August 21 2024"
 format: html
 ---
 

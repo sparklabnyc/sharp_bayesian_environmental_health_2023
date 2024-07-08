@@ -1,11 +1,11 @@
 ---
-title: "Bayesian Regression and Temporal Modelling"
+title: "Exposure Response Modelling"
 subtitle: "Key ideas and concepts"
 author:
  - name: "Robbie M. Parks"
    email: "robbie.parks@columbia.edu"
 institute: "Environmental Health Sciences, Columbia University"
-date: 2024-08-21
+date: 2024-08-22
 date-format: medium
 title-slide-attributes:
   data-background-color: "#f3f4f4"
