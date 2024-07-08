@@ -71,7 +71,7 @@ The __Bayesian Modeling for Environmental Health Workshop__ is a two-day intensi
 
 ![](assets/attendee_map.png)
 
-## 10 US States + 5 countries (to update) 
+## 10 US States + 5 countries (to update)
 
 ![](assets/attendee_instructor_map.png)
 
@@ -215,7 +215,7 @@ plot(p)
 - 95 out of 100 CIs (from 100 random samples) will contain the true value of the parameter of interest.
 - We are confident that the true parameter estimate lies between the lower and upper confidence limits 95% of the time. A 95% confidence interval provides us with a range of plausible estimates of the parameter of interest in the target population, based on our parameter estimate obtained in the sample cohort.
 
-## What do you understand from a 95% Confidence Interval (CI)? (to update) 
+## What do you understand from a 95% Confidence Interval (CI)? (to update)
 
 ::: incremental
 - A 95% CI is an interval which will contain the true value 95% of the time, i.e., if you got to repeat the experiment 100 times, 95 of the 95% CIs would contain the true value, while 5 of them would not.

@@ -4,8 +4,8 @@ subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Robbie M. Parks, Garyfallos Konstantinoudis"
 date: "August 22 2024"
 format: html
-editor: 
-  markdown: 
+editor:
+  markdown:
     wrap: sentence
 ---
 
