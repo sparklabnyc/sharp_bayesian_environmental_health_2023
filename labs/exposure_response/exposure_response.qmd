@@ -36,8 +36,8 @@ This goal of this lab is to use `NIMBLE` to carry out an exposure-response regre
 During this lab session, we will build:
 
 1.  Linear exposure-response regression;
-2.  Piecewise exposure-response regressions;
-3.  Linear exposure-response regression; and
+2.  Piecewise linear exposure-response regression;
+3.  Linear exposure-response regression by region; and
 4.  Non-linear exposure-response regression.
 
 ## Introduction
@@ -69,7 +69,7 @@ glimpse(data_england)
 summary(data_england)
 class(data_england)
 
-data_england_simpler <- rgeos::gSimplify(as(data_england, "Spatial"), tol = 500)
+data_england_simpler <- data_england #rgeos::gSimplify(as(data_england, "Spatial"), tol = 500)
 data_england_simpler <- st_as_sf(data_england_simpler)
 data_england_simpler <- cbind(data_england_simpler, data_england %>% mutate(geometry = NULL))
 data_england <- data_england_simpler
@@ -154,7 +154,7 @@ BYMecoCode <- nimbleCode({
     RR.beta[j] <- exp(beta[j])
   }
 
-  RR.beta1_1NO2 <- exp(beta[1]) # / sd.no2) # get per 1 unit increase in the airpollution (scale back)
+  RR.beta1_1NO2 <- exp(beta[1]) # / sd.no2) # get per 1 unit increase in the airpollution (scale back) ASK AKIS
 
   # likelihood
   for (i in 1:N) {
@@ -272,11 +272,11 @@ modelBYMeco.sim <- nimbleMCMC(
 )
 toc <- Sys.time()
 toc - tic
-# saveRDS(modelBYMeco.sim, file = "NIMBLE_BYM_A4")
+# saveRDS(modelBYMeco.sim, file = "NIMBLE_BYM_LINEAR")
 ```
 
 ```{r}
-modelBYMeco.sim <- readRDS("NIMBLE_BYM_A4")
+modelBYMeco.sim <- readRDS("NIMBLE_BYM_LINEAR")
 ```
 
 Retrieve WAIC and compare with previous model.
@@ -350,8 +350,8 @@ BYMecoPWCode <- nimbleCode({
     RR.beta[j] <- exp(beta[j])
   }
 
-  RR.beta1_1NO2_low <- exp(beta[1] / sd.no2) # get per 1 unit increase in the air pollution for low concentrations (scale back)
-  RR.beta1_1NO2_high <- exp(beta[2] / sd.no2) # get per 1 unit increase in the air pollution for high concentrations (scale back)
+  RR.beta1_1NO2_low <- exp(beta[1])#/ sd.no2) # get per 1 unit increase in the air pollution for low concentrations (scale back) ASK AKIS
+  RR.beta1_1NO2_high <- exp(beta[2])# / sd.no2) # get per 1 unit increase in the air pollution for high concentrations (scale back) ASK AKIS
 
   # likelihood
   for (i in 1:N) {
@@ -473,14 +473,78 @@ modelBYMPWeco.sim <- nimbleMCMC(
 )
 toc <- Sys.time()
 toc - tic
-# saveRDS(modelBYMeco.sim, file = "NIMBLE_BYM_A4")
+# saveRDS(modelBYMPWeco.sim, file = "NIMBLE_BYM_PWLINEAR")
 ```
 
-# 3.  Linear exposure-response regression
+```{r}
+modelBYMPWeco.sim <- readRDS("NIMBLE_BYM_PWLINEAR")
+```
+
+Retrieve WAIC and compare with previous model.
+Which model performs best?
+
+```{r warning=FALSE}
+modelBYMPWeco.sim$WAIC
+```
+
+Check the convergence of the intercept and covariates NO$_2$ and ICU beds.
+What do you observe?
+
+```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
+mcmc_trace(modelBYMPWeco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
+```
+
+Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
+
+```{r echo=TRUE, eval=TRUE}
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ]
+```
+
+We can get a nice credible intervals plot as well:
+
+```{r warning=FALSE}
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ] |>
+  as_tibble() |>
+  select(Median, `95%CI_low`, `95%CI_upp`) |>
+  mutate(
+    covariate = factor(c("NO2_LOW", "NO2_HIGH", "ICU", paste0("IMD", 2:5)), levels = c("NO2_LOW", "NO2_HIGH", "ICU", paste0("IMD", 2:5)))
+  ) -> cov.eff
+
+cov.eff |> head()
+
+cov.eff |>
+  ggplot(aes(x = covariate, y = Median)) +
+  geom_point() +
+  geom_errorbar(aes(x = covariate, ymin = `95%CI_low`, ymax = `95%CI_upp`), width = 0.2) +
+  ylim(c(0.5, 2.0)) +
+  geom_hline(yintercept = 1, lty = 2, col = "red")
+```
+
+The effect by unit increase in the low concentration long term exposure to NO$_2$ is `RR.beta1_1NO2_low`:
+
+```{r}
+# as relative risk per 1 unit increase in the long term NO2 exposure low NO2
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_low"), c("Median", "95%CI_low", "95%CI_upp")]
+
+# as percentage increase in mortality for 1 unit increase in the long term NO2 exposure low N02
+(modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_low"), c("Median", "95%CI_low", "95%CI_upp")] - 1) * 100
+```
+
+The effect by unit increase in the high concentration long term exposure to NO$_2$ is `RR.beta1_1NO2_high`:
+
+```{r}
+# as relative risk per 1 unit increase in the long term NO2 exposure high NO2
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_high"), c("Median", "95%CI_low", "95%CI_upp")]
+
+# as percentage increase in mortality for 1 unit increase in the long term NO2 exposure high N02
+(modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_high"), c("Median", "95%CI_low", "95%CI_upp")] - 1) * 100
+```
+
+# 3. Linear exposure-response regression by region
 
 TO DO
 
-# 4.  Non-linear exposure-response regression
+# 4. Non-linear exposure-response regression
 
 TO DO
 
