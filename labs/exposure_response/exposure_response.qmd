@@ -35,11 +35,12 @@ This goal of this lab is to use `NIMBLE` to carry out an exposure-response regre
 
 During this lab session, we will build:
 
-1. linear exposure-response regression for a single location;
-2. Non-linear exposure-response regression for a single location;
-3. Linear exposure-response regression for multiple locations;
-4. Non-linear exposure-response regression for multiple locations; and
-5. Linear exposure-response regression for multiple locations with location-specific associations
+<!-- 1. linear exposure-response regression for a single location; -->
+<!-- 2. Non-linear exposure-response regression for a single location; -->
+1. Linear exposure-response regression for multiple locations;
+2. Piecewise exposure-response regressions for multiple locations;
+3. Linear exposure-response regression for multiple locations with location-specific associations; and
+4. Non-linear exposure-response regression for multiple locations.
 
 ## Introduction
 
@@ -84,13 +85,13 @@ ggplot(data = data_england, fill = "NA") +
   theme_void()
 ```
 
-# 1.  Linear exposure-response regression for a single location
+<!-- # 1.  Linear exposure-response regression for a single location -->
 
-TO DO
+<!-- TO DO -->
 
-# 2.  Non-linear exposure-response regression for a single location
+<!-- # 2.  Non-linear exposure-response regression for a single location -->
 
-TO DO
+<!-- TO DO -->
 
 # 3.  Linear exposure-response regression for multiple locations
 
