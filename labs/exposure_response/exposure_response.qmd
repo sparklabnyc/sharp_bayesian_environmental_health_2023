@@ -562,7 +562,7 @@ BYMecoRW2Code <- nimbleCode({
 
   tau.phi ~ dgamma(0.5, 0.0005) # prior on precison of spatial area random effects
   sigma2.phi <- 1 / tau.phi # conditional variance of spatial area random effects
-  
+
   tau.b ~ dgamma(0.5, 0.0005) # prior on precison of random walk of order 2
   sigma2.b <- 1 / tau.b # conditional variance of random walk of order 2
 
@@ -585,7 +585,7 @@ BYMecoRW2Code <- nimbleCode({
 
   # BYM prior
   phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
-  
+
   # random walk prior
   b[1:Jb] ~ dcar_normal(adj = adjb[1:Lb], weights = weightsb[1:Lb], num = numb[1:Jb], tau = tau.b, c = 2, zero_mean = 1)
 })
@@ -651,7 +651,7 @@ covid_data <- list(
 
   # covariates
   X = Xmat
-  
+
 )
 
 # number of total covariates
@@ -667,10 +667,10 @@ covid_constants <- list(
   adj = nbWB_A$adj, # the elements of the neighbouring matrix
   num = nbWB_A$num,
   weights = nbWB_A$weights,
-  
+
   # NO2 categories for random walk
   Y = data_england$N02_id,
-  
+
   # random walk
   Jb = Jb,
   Lb = length(W_weights$weights),

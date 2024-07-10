@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -97,17 +97,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Robbie M. Parks, Garyfallos Konstantinoudis </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">August 22, 2024</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 </header>
 
@@ -151,19 +151,19 @@ $ geometry &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((447213.9 53..., MULTIPOLYGON
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data_england)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     LTLA               deaths          expectd           TtlICUB         
- Length:316         Min.   :   4.0   Min.   :  8.287   Min.   :0.000e+00  
- Class :character   1st Qu.:  77.0   1st Qu.: 99.339   1st Qu.:8.548e-05  
- Mode  :character   Median : 117.5   Median :129.067   Median :8.092e-03  
-                    Mean   : 155.6   Mean   :155.630   Mean   :1.399e-02  
-                    3rd Qu.: 191.2   3rd Qu.:177.896   3rd Qu.:1.460e-02  
-                    Max.   :1226.0   Max.   :903.219   Max.   :1.911e-01  
-      NO2             IMD                 geometry  
- Min.   : 4.48   Min.   :1.000   MULTIPOLYGON :316  
- 1st Qu.:11.09   1st Qu.:2.000   epsg:27700   :  0  
- Median :13.96   Median :3.000   +proj=tmer...:  0  
- Mean   :15.05   Mean   :2.997                      
- 3rd Qu.:17.26   3rd Qu.:4.000                      
+<pre><code>     LTLA               deaths          expectd           TtlICUB
+ Length:316         Min.   :   4.0   Min.   :  8.287   Min.   :0.000e+00
+ Class :character   1st Qu.:  77.0   1st Qu.: 99.339   1st Qu.:8.548e-05
+ Mode  :character   Median : 117.5   Median :129.067   Median :8.092e-03
+                    Mean   : 155.6   Mean   :155.630   Mean   :1.399e-02
+                    3rd Qu.: 191.2   3rd Qu.:177.896   3rd Qu.:1.460e-02
+                    Max.   :1226.0   Max.   :903.219   Max.   :1.911e-01
+      NO2             IMD                 geometry
+ Min.   : 4.48   Min.   :1.000   MULTIPOLYGON :316
+ 1st Qu.:11.09   1st Qu.:2.000   epsg:27700   :  0
+ Median :13.96   Median :3.000   +proj=tmer...:  0
+ Mean   :15.05   Mean   :2.997
+ 3rd Qu.:17.26   3rd Qu.:4.000
  Max.   :46.45   Max.   :5.000                      </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(data_england)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -200,10 +200,10 @@ $ geometry &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((447213.9 53..., MULTIPOLYGON
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>LTLA_nb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Neighbour list object:
-Number of regions: 316 
-Number of nonzero links: 1610 
-Percentage nonzero weights: 1.612322 
-Average number of links: 5.094937 
+Number of regions: 316
+Number of nonzero links: 1610
+Percentage nonzero weights: 1.612322
+Average number of links: 5.094937
 1 region with no links:
 44
 2 disjoint connected subgraphs</code></pre>
@@ -415,12 +415,12 @@ RR.beta[6] 0.8510159 0.8477792 0.05073939 0.7617601 0.9602698</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   Median `95%CI_low` `95%CI_upp` covariate
-   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;    
-1  1.18        1.11        1.26  NO2      
-2  0.961       0.931       0.996 ICU      
-3  0.921       0.834       1.02  IMD2     
-4  0.849       0.767       0.940 IMD3     
-5  0.888       0.803       0.990 IMD4     
+   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;
+1  1.18        1.11        1.26  NO2
+2  0.961       0.931       0.996 ICU
+3  0.921       0.834       1.02  IMD2
+4  0.849       0.767       0.940 IMD3
+5  0.888       0.803       0.990 IMD4
 6  0.848       0.762       0.960 IMD5     </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cov.eff <span class="sc">|&gt;</span></span>
@@ -442,13 +442,13 @@ RR.beta[6] 0.8510159 0.8477792 0.05073939 0.7617601 0.9602698</code></pre>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as relative risk per 1 unit increase in the long term NO2 exposure</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Median 95%CI_low 95%CI_upp 
+<pre><code>   Median 95%CI_low 95%CI_upp
  1.182309  1.110951  1.261713 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as percentage increase in mortality for 1 unit increase in the long term NO2 exposure</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>(modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)] <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Median 95%CI_low 95%CI_upp 
+<pre><code>   Median 95%CI_low 95%CI_upp
  18.23092  11.09515  26.17132 </code></pre>
 </div>
 </div>
@@ -641,12 +641,12 @@ RR.beta[7] 0.8899747 0.8889618 0.05609587 0.7801604 1.0003505</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   Median `95%CI_low` `95%CI_upp` covariate
-   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;    
-1  1.43        1.29        1.59  NO2_LOW  
-2  1.05        0.970       1.13  NO2_HIGH 
-3  0.972       0.945       1.00  ICU      
-4  0.955       0.864       1.06  IMD2     
-5  0.883       0.787       0.979 IMD3     
+   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;
+1  1.43        1.29        1.59  NO2_LOW
+2  1.05        0.970       1.13  NO2_HIGH
+3  0.972       0.945       1.00  ICU
+4  0.955       0.864       1.06  IMD2
+5  0.883       0.787       0.979 IMD3
 6  0.929       0.829       1.03  IMD4     </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>cov.eff <span class="sc">|&gt;</span></span>
@@ -668,13 +668,13 @@ RR.beta[7] 0.8899747 0.8889618 0.05609587 0.7801604 1.0003505</code></pre>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as relative risk per 1 unit increase in the long term NO2 exposure low NO2</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>modelBYMPWeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2_low"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Median 95%CI_low 95%CI_upp 
+<pre><code>   Median 95%CI_low 95%CI_upp
  1.425523  1.285790  1.590106 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as percentage increase in mortality for 1 unit increase in the long term NO2 exposure low N02</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>(modelBYMPWeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2_low"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)] <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Median 95%CI_low 95%CI_upp 
+<pre><code>   Median 95%CI_low 95%CI_upp
  42.55230  28.57904  59.01060 </code></pre>
 </div>
 </div>
@@ -683,13 +683,13 @@ RR.beta[7] 0.8899747 0.8889618 0.05609587 0.7801604 1.0003505</code></pre>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as relative risk per 1 unit increase in the long term NO2 exposure high NO2</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>modelBYMPWeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2_high"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Median 95%CI_low 95%CI_upp 
+<pre><code>   Median 95%CI_low 95%CI_upp
 1.0489014 0.9697085 1.1286244 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as percentage increase in mortality for 1 unit increase in the long term NO2 exposure high N02</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>(modelBYMPWeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2_high"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)] <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Median 95%CI_low 95%CI_upp 
+<pre><code>   Median 95%CI_low 95%CI_upp
  4.890137 -3.029153 12.862440 </code></pre>
 </div>
 </div>
@@ -931,11 +931,11 @@ RR.beta[5] 0.9176876 0.9168712 0.05267475 0.8184968  1.020837</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 4
   Median `95%CI_low` `95%CI_upp` covariate
-   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;    
-1  0.971       0.945        1.00 ICU      
-2  0.951       0.867        1.05 IMD2     
-3  0.908       0.824        1.00 IMD3     
-4  0.947       0.851        1.05 IMD4     
+   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;
+1  0.971       0.945        1.00 ICU
+2  0.951       0.867        1.05 IMD2
+3  0.908       0.824        1.00 IMD3
+4  0.947       0.851        1.05 IMD4
 5  0.917       0.818        1.02 IMD5     </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>cov.eff <span class="sc">|&gt;</span></span>
@@ -1026,7 +1026,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();  
+  toggleBodyColorPrimary();
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1036,7 +1036,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
+      if (clz.startsWith('code-annotation-')) {
         return true;
       }
     }
@@ -1067,11 +1067,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();    
+      tooltip.show();
     }
     setTimeout(function() {
       if (tooltip) {
@@ -1101,7 +1101,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config); 
+    window.tippy(el, config);
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -1146,7 +1146,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
+            // cook up a div (if necessary) and position it
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");
