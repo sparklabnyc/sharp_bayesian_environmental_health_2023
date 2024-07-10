@@ -19,6 +19,7 @@ library(bayesplot)
 library(spdep)
 library(lubridate)
 library(colorspace)
+library(coda)
 
 extrafont::loadfonts()
 theme_set(hrbrthemes::theme_ipsum())
@@ -546,7 +547,287 @@ TO DO
 
 # 4. Non-linear exposure-response regression
 
-TO DO
+Linearity of and exposure response relationship is an assumption. It is also worth exploring whether an exposure-response relationship might be non-linear. Here, we will demonstrate that with a random walk of order 2, which is equivalent to a natural spline with equally-spaced knots.
+
+Model description about piecewise linear. Now adjusted model to incorporate piecewise terms (TO DO)
+
+```{r eval=TRUE, echo = TRUE}
+BYMecoRW2Code <- nimbleCode({
+  # priors
+  alpha ~ dflat() # vague prior (Unif(-inf, +inf))
+  overallRR <- exp(alpha) # overall RR across study region
+
+  tau.theta ~ dgamma(0.5, 0.05) # prior for the precision hyperparameter
+  sigma2.theta <- 1 / tau.theta # variance of unstructured area random effects
+
+  tau.phi ~ dgamma(0.5, 0.0005) # prior on precison of spatial area random effects
+  sigma2.phi <- 1 / tau.phi # conditional variance of spatial area random effects
+  
+  tau.b ~ dgamma(0.5, 0.0005) # prior on precison of random walk of order 2
+  sigma2.b <- 1 / tau.b # conditional variance of random walk of order 2
+
+  for (j in 1:K) {
+    beta[j] ~ dnorm(0, tau = 1)
+    RR.beta[j] <- exp(beta[j])
+  }
+
+  # likelihood
+  for (i in 1:N) {
+    O[i] ~ dpois(mu[i]) # Poisson likelihood for observed counts
+    log(mu[i]) <- log(E[i]) + alpha + theta[i] + phi[i] + inprod(beta[], X[i, ]) + b[Y[i]]
+    # the inprod is equivalent to beta[1]*X1[i] + beta[2]*X2[i] + beta[3]*X32[i] + beta[4]*X33[i] + beta[5]*X34[i] + beta[6]*X35[i]
+
+    SMR[i] <- alpha + theta[i] + phi[i] + inprod(beta[], X[i, ]) + b[Y[i]]
+    theta[i] ~ dnorm(0, tau = tau.theta) # area-specific RE
+    resRR[i] <- exp(theta[i] + phi[i]) # area-specific residual RR
+    proba.resRR[i] <- step(resRR[i] - 1) # Posterior probability
+  }
+
+  # BYM prior
+  phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
+  
+  # random walk prior
+  b[1:Jb] ~ dcar_normal(adj = adjb[1:Lb], weights = weightsb[1:Lb], num = numb[1:Jb], tau = tau.b, c = 2, zero_mean = 1)
+})
+```
+
+Define the weights of a random walk of order 2:
+
+```{r}
+weightsRW <- function(Q) {
+  rest.comp <- list()
+  for (i in 3:(Q - 2)) {
+    rest.comp[[i]] <- c(i - 2, i - 1, i + 1, i + 2)
+  }
+
+  rest.comp <- unlist(rest.comp)
+
+  adj <- c(
+    2, 3, 1, 3, 4,
+    rest.comp,
+    c(Q - 3, Q - 2, Q, Q - 2, Q - 1)
+  )
+
+  num <- c(2, 3, rep(4, times = c(Q - 4)), 3, 2)
+
+  weights <- c(
+    c(2, -1, 2, 4, -1),
+    rep(c(-1, 4, 4, -1), times = c(Q - 4)),
+    c(-1, 4, 2, -1, 2)
+  )
+
+  return(list(adj = adj, num = num, weights = weights))
+}
+```
+
+Create data object as required for `NIMBLE`, this time processing the $NO_2$ data to be used in a non-linear model:
+
+```{r eval=TRUE}
+n.LTLA <- dim(data_england)[1]
+
+# create the dummy columns for deprivation
+data_england <- data_england |>
+  mutate(IMD = as_factor(IMD)) |>
+  mutate(as.data.frame(model.matrix(~ 0 + IMD, data = pick(everything())))) |>
+  mutate( # categories for the exposure
+    N02_id = as.numeric(cut(NO2, breaks = 100))
+  )
+
+Jb <- data_england$N02_id |> max()
+W_weights <- weightsRW(Q = Jb)
+
+# matrix of covariates
+Xmat <- cbind(
+  scale(data_england$TtlICUB)[, 1],
+  data_england$IMD2,
+  data_england$IMD3,
+  data_england$IMD4,
+  data_england$IMD5
+)
+
+# Format the data for NIMBLE in a list
+covid_data <- list(
+  O = data_england$deaths, # observed nb of deaths
+
+  # covariates
+  X = Xmat
+  
+)
+
+# number of total covariates
+K <- ncol(Xmat)
+
+covid_constants <- list(
+  N = n.LTLA, # nb of LTLAs
+  K = K, # number of covariates
+
+  # adjacency matrix
+  L = length(nbWB_A$weights), # the number of neighboring areas
+  E = data_england$expectd, # expected number of deaths
+  adj = nbWB_A$adj, # the elements of the neighbouring matrix
+  num = nbWB_A$num,
+  weights = nbWB_A$weights,
+  
+  # NO2 categories for random walk
+  Y = data_england$N02_id,
+  
+  # random walk
+  Jb = Jb,
+  Lb = length(W_weights$weights),
+  adjb = W_weights$adj,
+  weightsb = W_weights$weights,
+  numb = W_weights$num
+)
+```
+
+Create the initial values for ALL the unknown parameters:
+
+```{r}
+# initialise the unknown parameters, 2 chains
+inits <- list(
+  list(
+    alpha = 0.01,
+    beta = rep(0, K),
+    tau.theta = 10,
+    tau.phi = 1,
+    theta = rep(0.01, times = n.LTLA),
+    phi = c(rep(0.5, times = n.LTLA)),
+    b = rep(0, times = Jb),
+    sigma2.b = 0.1
+  ),
+  list(
+    alpha = 0.5,
+    beta = rep(-1, K),
+    tau.theta = 1,
+    tau.phi = 0.1,
+    theta = rep(0.05, times = n.LTLA),
+    phi = c(rep(-0.05, times = n.LTLA)),
+    b = rep(0.5, times = Jb),
+    sigma2.b = 1
+  )
+)
+```
+
+Which model parameters do you want to monitor?
+Set these before running `NIMBLE`.
+Call this object `parameters_to_monitor`.
+
+```{r}
+parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "b", "sigma2.b")
+```
+
+Run the MCMC simulations using the function `nimbleMCMC()`.
+If everything is specified reasonably, this needs approximately 5 minutes.
+
+```{r echo=TRUE, eval=FALSE}
+tic <- Sys.time()
+modelBYMRW2eco.sim <- nimbleMCMC(
+  code = BYMecoRW2Code,
+  data = covid_data,
+  constants = covid_constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 50000,
+  nburnin = 30000,
+  thin = 10,
+  nchains = 2,
+  setSeed = 9,
+  progressBar = TRUE,
+  samplesAsCodaMCMC = TRUE,
+  summary = TRUE,
+  WAIC = TRUE
+)
+toc <- Sys.time()
+toc - tic
+saveRDS(modelBYMRW2eco.sim, file = "NIMBLE_BYM_RW2")
+```
+
+```{r}
+modelBYMRW2eco.sim <- readRDS("NIMBLE_BYM_RW2")
+```
+
+Retrieve WAIC and compare with previous model.
+Which model performs best?
+
+```{r warning=FALSE}
+modelBYMRW2eco.sim$WAIC
+```
+
+Check the convergence of the intercept and covariates NO$_2$ and ICU beds.
+What do you observe?
+
+```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
+mcmc_trace(modelBYMRW2eco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
+```
+
+Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
+
+```{r echo=TRUE, eval=TRUE}
+modelBYMRW2eco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ]
+```
+
+We can get a nice credible intervals plot as well:
+
+```{r warning=FALSE}
+modelBYMRW2eco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ] |>
+  as_tibble() |>
+  select(Median, `95%CI_low`, `95%CI_upp`) |>
+  mutate(
+    covariate = factor(c("ICU", paste0("IMD", 2:5)), levels = c("ICU", paste0("IMD", 2:5)))
+  ) -> cov.eff
+
+cov.eff |> head()
+
+cov.eff |>
+  ggplot(aes(x = covariate, y = Median)) +
+  geom_point() +
+  geom_errorbar(aes(x = covariate, ymin = `95%CI_low`, ymax = `95%CI_upp`), width = 0.2) +
+  ylim(c(0.5, 2.0)) +
+  geom_hline(yintercept = 1, lty = 2, col = "red")
+```
+
+Plot the non-linear $NO_2$ association
+```{r}
+# logic to get the first value of the bin
+NO2_bins <- data_england |>
+  pull(NO2) |>
+  cut(100) |>
+  str_sub(2, -2) %>%
+  sub("\\,.*", "", .) |>
+  as.numeric() |>
+  unique() |>
+  sort()
+
+# helper function to convert nimble output to one favoured by posterior and bayesplot
+as_mcmc_obj <- \(x) as_draws_array(as.mcmc.list(lapply(x, as.mcmc)))
+
+exposure_posterior <- as_mcmc_obj(modelBYMRW2eco.sim$samples)
+
+summarise_draws(exposure_posterior, default_summary_measures()) |>
+  filter(startsWith(variable, "b[")) |>
+  mutate(X = c(1:100)) |>
+  ggplot() +
+  geom_line(aes(x = X, y = median)) +
+  geom_ribbon(aes(x = X, ymin = q5, ymax = q95), fill = "grey80", alpha = 0.5) +
+  labs(x = "Normalised NO2", y = "log mortality risk")
+```
+
+We can also show the effect on the relative scale, relative to the risk at 0 concentration (TO FINISH)
+
+```{r}
+# exposure_posterior[, , str_c("b[", 1:100, "]")] |>
+#   exp() %>%
+#   sweep(x = ., MARGIN = c(1, 2), FUN = "/", STATS = exp(extract_variable_matrix(exposure_posterior, "b[50]"))) %>%
+#   apply(X = ., MARGIN = 3, quantile, probs = c(0.5, 0.025, 0.975)) |>
+#   t() |>
+#   as_tibble() |>
+#   mutate(temperature_bins = temperature_bins) |>
+#   ggplot(aes(x = temperature_bins)) +
+#   geom_line(aes(y = `50%`)) +
+#   geom_ribbon(aes(ymin = `2.5%`, ymax = `97.5%`), fill = "grey80", alpha = 0.5) +
+#   labs(x = "Temperature", y = "Relative mortality risk") +
+#   lims(y = c(0.80, 1.4))
+```
 
 ## Closing remarks
 
