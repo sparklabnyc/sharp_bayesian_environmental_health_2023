@@ -37,13 +37,12 @@ This goal of this lab is to use `NIMBLE` to carry out an exposure-response regre
 During this lab session, we will build:
 
 1.  Linear exposure-response regression;
-2.  Piecewise linear exposure-response regression;
-3.  Linear exposure-response regression by region; and
-4.  Non-linear exposure-response regression.
+2.  Piecewise linear exposure-response regression; and
+3.  Non-linear exposure-response regression.
 
 ## Introduction
 
-We will build on and extend the previous lab the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas), as taken from the published paper:
+We will build on and extend the previous lab the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas), as taken from the published paper (to update):
 
 **Konstantinoudis G**, Padellini T, Bennett JE, Davies B, Ezzati M, Blangiardo M. *Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis*.
 medRxiv \[Preprint\].
@@ -155,7 +154,7 @@ BYMecoCode <- nimbleCode({
     RR.beta[j] <- exp(beta[j])
   }
 
-  RR.beta1_1NO2 <- exp(beta[1]) # / sd.no2) # get per 1 unit increase in the airpollution (scale back) ASK AKIS
+  RR.beta1_1NO2 <- exp(beta[1] / sd.no2) # get per 1 unit increase in the airpollution (scale back)
 
   # likelihood
   for (i in 1:N) {
@@ -208,6 +207,7 @@ K <- ncol(Xmat)
 covid_constants <- list(
   N = n.LTLA, # nb of LTLAs
   K = K, # number of covariates
+  sd.no2 = sd(data_england$NO2), # standard deviation of NO2
 
   # adjacency matrix
   L = length(nbWB_A$weights), # the number of neighboring areas
@@ -316,7 +316,7 @@ cov.eff |>
   ggplot(aes(x = covariate, y = Median)) +
   geom_point() +
   geom_errorbar(aes(x = covariate, ymin = `95%CI_low`, ymax = `95%CI_upp`), width = 0.2) +
-  ylim(c(0.5, 1.5)) +
+  ylim(c(0.5, 2.0)) +
   geom_hline(yintercept = 1, lty = 2, col = "red")
 ```
 
@@ -351,8 +351,8 @@ BYMecoPWCode <- nimbleCode({
     RR.beta[j] <- exp(beta[j])
   }
 
-  RR.beta1_1NO2_low <- exp(beta[1])#/ sd.no2) # get per 1 unit increase in the air pollution for low concentrations (scale back) ASK AKIS
-  RR.beta1_1NO2_high <- exp(beta[2])# / sd.no2) # get per 1 unit increase in the air pollution for high concentrations (scale back) ASK AKIS
+  RR.beta1_1NO2_low <- exp(beta[1] / sd.no2) # get per 1 unit increase in the air pollution for low concentrations (scale back)
+  RR.beta1_1NO2_high <- exp(beta[2] / sd.no2) # get per 1 unit increase in the air pollution for high concentrations (scale back)
 
   # likelihood
   for (i in 1:N) {
@@ -409,6 +409,7 @@ K <- ncol(Xmat)
 covid_constants <- list(
   N = n.LTLA, # nb of LTLAs
   K = K, # number of covariates
+  sd.no2 = sd(data_england$NO2), # standard deviation of NO2
 
   # adjacency matrix
   L = length(nbWB_A$weights), # the number of neighboring areas
@@ -540,10 +541,6 @@ modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_high"), c("Median", "
 # as percentage increase in mortality for 1 unit increase in the long term NO2 exposure high N02
 (modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_high"), c("Median", "95%CI_low", "95%CI_upp")] - 1) * 100
 ```
-
-# 3. Linear exposure-response regression by region
-
-TO DO
 
 # 4. Non-linear exposure-response regression
 
@@ -739,7 +736,7 @@ modelBYMRW2eco.sim <- nimbleMCMC(
 )
 toc <- Sys.time()
 toc - tic
-saveRDS(modelBYMRW2eco.sim, file = "NIMBLE_BYM_RW2")
+# saveRDS(modelBYMRW2eco.sim, file = "NIMBLE_BYM_RW2")
 ```
 
 ```{r}
@@ -812,7 +809,7 @@ summarise_draws(exposure_posterior, default_summary_measures()) |>
   labs(x = "Normalised NO2", y = "log mortality risk")
 ```
 
-We can also show the effect on the relative scale, relative to the risk at 0 concentration (TO FINISH)
+We can also show the effect on the relative scale, relative to the risk at 0 concentration (THEO TO FINISH)
 
 ```{r}
 # exposure_posterior[, , str_c("b[", 1:100, "]")] |>
@@ -835,3 +832,5 @@ Here, we examined the effect of long term exposure to NO$_2$ on COVID-19 mortali
 We fitted several models, some with either linear or non-linear models.
 We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA.
 We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.
+
+It should be noted that this model is not fully adjusted, and that the actual analysis from the paper was at a higher resolution and with full adjustment by potential confounders via covariates. The data from that paper is sensitive and cannot be shared publicly. Nevertheless, this lab shows the basic mechanics of how to create linear and non-linear exposure-response analyses in a Bayesian framework. 

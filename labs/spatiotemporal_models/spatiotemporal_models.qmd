@@ -518,6 +518,8 @@ We used real data on COVID-19 deaths in England during March-July 2020 and first
 
 For more information on the final model see Konstantinoudis et al 2021 (10.1016/j.envint.2020.106316).
 
+# Delete below (once confirmed with the team)
+
 ## Advanced: Ecological regression with the BYM model
 
 The section below is very relevant for environmental health, but if we run out of time in the lab, it is something you should go through in your own time.
