@@ -4,7 +4,7 @@ subtitle: "Good practice of Bayesian inference"
 author:
  - name: "Elizaveta Semenova"
    email: "elizaveta.p.semenova@gmail.com"
-institute: "Computer Science Department, University of Oxford"
+institute: "Department of Epidemiology and Biostatistics, Imperial College London"
 date: 2024-08-21
 date-format: medium
 title-slide-attributes:
