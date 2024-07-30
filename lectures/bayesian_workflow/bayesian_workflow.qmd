@@ -333,6 +333,8 @@ Traceplots
 <center>
 ![](assets/posterior1.png){width=45%}
 
+## Focus on priors
 
+- TODO: show pathological behaviors here
 
 # Questions?
