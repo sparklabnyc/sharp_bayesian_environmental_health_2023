@@ -272,7 +272,7 @@ Extensibility:
 Separate the __model__ from the __inference__.
 
 - PPL defines the __log posterior probability density__
-- Makes use of great tensor libraries (`jax`, `tensorflow`, `PyTorch`, `aesara`) to do the maths
+- Makes use of great tensor libraries (`jax`, `tensorflow`, `PyTorch`, `PyTensor`) to do the maths
 
 ## tensorflow probability
 
@@ -326,7 +326,7 @@ with pm.Model() as model:
 ::: {.column width="50%"}
 ::: {style="color: #58b364"}
 - Great open source community
-- `aesara` backend can compile to `jax`, `C`, `numba` (and more)
+- `PyTensor` backend can compile to `jax`, `C`, `numba` (and more)
 - Runs on GPU easily
 - Best documentation
 :::
@@ -498,7 +498,7 @@ In this case, variational approximation is a Gaussian (Laplace approximation)
 
 - Approximate Bayesian inference for latent Gaussian models^[has extensions for non-Gaussian]
 - Really good for spatial statistics
-- Really quick
+- Really quick^[if you don't have too many hyperparameters]
 - Most real world cases are latent Gaussian – it just works
 - Only used by 3 people, 2 of whom are here today
 
@@ -510,7 +510,7 @@ INLA computes accurate and fast approximations to the posterior marginals of the
 
 ![](assets/laplace_approximation.png)
 
-Basically, the Laplace Approximation (IN __LA__) means that we approximate a distribution with a Gaussian.
+Basically, the Laplace Approximation (IN __LA__) means that we approximate the latent field with a Gaussian.
 Most things in the real world are Gaussian, so this works well.
 
 ## Do I fit models like all the PPLs above?
