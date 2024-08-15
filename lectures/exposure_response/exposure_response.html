@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="sstmodels_files/libs/clipboard/clipboard.min.js"></script>
-<script src="sstmodels_files/libs/quarto-html/tabby.min.js"></script>
-<script src="sstmodels_files/libs/quarto-html/popper.min.js"></script>
-<script src="sstmodels_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="sstmodels_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="sstmodels_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="sstmodels_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="sstmodels_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="exposure_response_files/libs/clipboard/clipboard.min.js"></script>
+<script src="exposure_response_files/libs/quarto-html/tabby.min.js"></script>
+<script src="exposure_response_files/libs/quarto-html/popper.min.js"></script>
+<script src="exposure_response_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="exposure_response_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="exposure_response_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="exposure_response_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="exposure_response_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.3.450">
 
   <meta name="author" content="Garyfallos Konstantinoudis">
-  <title>Spatial and Spatio-temporal Modelling</title>
+  <title>Introduction to non-linear regression</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="sstmodels_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="sstmodels_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="exposure_response_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="exposure_response_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -29,14 +29,79 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="sstmodels_files/libs/revealjs/dist/theme/quarto.css">
-  <link href="sstmodels_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="sstmodels_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="sstmodels_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="sstmodels_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="sstmodels_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="sstmodels_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="exposure_response_files/libs/revealjs/dist/theme/quarto.css">
+  <link href="exposure_response_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="exposure_response_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="exposure_response_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="exposure_response_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="exposure_response_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="exposure_response_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
 
   .callout {
@@ -327,7 +392,7 @@
     <div class="slides">
 
 <section id="title-slide" data-background-color="#f3f4f4" data-background-image="../../assets/bmeh_normal.png" data-background-position="60% 120%" data-background-size="80%" subparagraph="yes" class="quarto-title-block center">
-  <h1 class="title">Spatial and Spatio-temporal Modelling</h1>
+  <h1 class="title">Introduction to non-linear regression</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -345,468 +410,340 @@ Garyfallos Konstantinoudis
 
   <p class="date">Aug 22, 2024</p>
 </section>
-<section>
-<section id="introduction" class="title-slide slide level1 center">
-<h1>Introduction</h1>
+<section id="a-clarification" class="slide level2" style="font-size: 90%;">
+<h2>A clarification</h2>
+<p>In the name normal (or Poisson, binomial, etc.) linear model, the word ‘linear’ refers to the response being modelled as a linear combination of covariates, i.e.</p>
+<p><span class="math display">\[Y_i \sim N(\beta_1 + \beta_2X_{i2} + \dots + \beta_pX_{ip}, \sigma^2)\]</span></p>
+<p>It does not refer to each covariate-response relationship being linear. Therefore the following is also within the class of normal linear models</p>
+<p><span class="math display">\[Y_i \sim N(\beta_1 + \beta_2X_{i} + \beta_3X_{i}^2, \sigma^2)\]</span></p>
+<p>Here, the relationship between Y and x is quadratic, but it is still a linear model.</p>
+</section>
+<section id="so-how-do-you-tell-if-the-relationship-is-linear" class="slide level2">
+<h2>So how do you tell if the relationship is linear?</h2>
+<ul>
+<li><p>Plot each covariate against the response and see what shape the relationship is.</p></li>
+<li><p>Make sure you plot it with the transformation used in the model.</p></li>
+<li><p>If linear, fit a linear model, if not start thinking of the shape of the relationship.</p></li>
+<li><p>Fit as simple a model as possible, do not overcomplicate it unnecessarily. (Occam’s razor)</p></li>
+</ul>
+</section>
+<section id="example" class="slide level2" style="font-size: 80%;">
+<h2>Example</h2>
+<p>Associations are not solely linear</p>
 
-</section>
-<section id="what-is-spatial-modelling" class="slide level2">
-<h2>What is spatial modelling?</h2>
-<center>
-<img data-src="figures/Fig_1.png" style="width:90.0%">
-</center>
-</section>
-<section id="it-is-also-geostatistics" class="slide level2">
-<h2>It is also geostatistics</h2>
-<center>
-<img data-src="figures/mapsno2.png" style="width:85.0%">
-</center>
-</section>
-<section id="type-of-data" class="slide level2">
-<h2>Type of data</h2>
-<center>
-<img data-src="figures/DataAvailability.png">
-</center>
-</section>
-<section id="why-do-we-need-more-complex-models" class="slide level2">
-<h2>Why do we need more complex models?</h2>
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-1-1.png" width="768" class="r-stretch quarto-figure-center"></section>
+<section id="ways-to-model-non-linearity" class="slide level2">
+<h2>Ways to model non-linearity</h2>
 <ul>
-<li>In disease mapping estimates of disease risk can be unstable, leading to non-meaningful maps</li>
-<li>Accounting for residual spatial autocorrelation is important to have the correct uncertainty</li>
-<li>Sometimes they pick up unknown spatial confounding, leading to unbiased estimators</li>
+<li><p>Transform the continuous exposure to categorical variable and model the categories.</p></li>
+<li><p>Basis functions (e.g., polynomial, Fourier)</p></li>
+<li><p>Natural splines</p></li>
+<li><p>Gaussian priors (e.g., random walks, kernels)</p></li>
 </ul>
 </section>
-<section id="structure-of-the-talk" class="slide level2">
-<h2>Structure of the talk</h2>
+<section id="categorical-transformation" class="slide level2">
+<h2>Categorical transformation</h2>
 <ul>
-<li>Disease mapping and smoothing</li>
-<li>Global smoothing</li>
-<li>Local smoothing</li>
-<li>Examples</li>
+<li><p>Let’s first consider quintiles</p></li>
+<li><p>What’s the problem with this fit?</p></li>
 </ul>
-</section></section>
-<section>
-<section id="disease-mapping-and-smoothing" class="title-slide slide level1 center">
-<h1>Disease mapping and smoothing</h1>
 
-</section>
-<section id="disease-mapping---background" class="slide level2">
-<h2>Disease mapping - background</h2>
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="categorical-transformation-1" class="slide level2">
+<h2>Categorical transformation</h2>
 <ul>
-<li>To summarise spatial and spatio-temporal variation in disease risk</li>
-<li>Rare disease and/or small areas: Poisson framework <span class="math display">\[O_i \sim \text{Poisson}(\lambda_i E_i)\]</span> where <span class="math inline">\(E_i\)</span> is the expected nb of cases and <span class="math inline">\(\lambda_i=\text{SMR}\)</span> in area <span class="math inline">\(i\)</span>.</li>
-<li>Non smoothed estimates of the SMR: <span class="math display">\[\text{SMR}_i = \frac{O_i}{E_i},\;\text{and} \;\text{Var(SMR)}_i = \frac{O_i}{E_i^2}\]</span></li>
+<li><p>More categories…</p></li>
+<li><p>What’s the problem with this fit?</p></li>
+</ul>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="basis-expansions" class="slide level2">
+<h2>Basis Expansions</h2>
+<p>We need to define a set of flexible functions that could capture relationships that are not linear. In general, we can write:</p>
+<p><span class="math display">\[Y _i = \sum_j^K\beta_j \phi_j(X_j) + \epsilon_i\]</span></p>
+<p>which we can write: <span class="math inline">\(f(X) = \beta^T\Phi(X)\)</span> and we say that <span class="math inline">\(\Phi(X)\)</span> is a basis system for <span class="math inline">\(f\)</span>.</p>
+</section>
+<section id="the-polynomial-basis-function" class="slide level2">
+<h2>The polynomial basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1) \text{ ,thus } Y _i = \beta_0 + \epsilon_i\]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="the-polynomial-basis-function-1" class="slide level2">
+<h2>The polynomial basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1 X) \text{ ,thus } Y _i = \beta_0 + \beta_1 X_1 + \epsilon_i\]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="the-polynomial-basis-function-2" class="slide level2">
+<h2>The polynomial basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1 \; X \; X^2) \text{ ,thus } Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \epsilon_i\]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="the-polynomial-basis-function-3" class="slide level2">
+<h2>The polynomial basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1 \; X \; X^2 \; X^3) \text{ ,thus } Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \epsilon_i\]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="the-polynomial-basis-function-4" class="slide level2">
+<h2>The polynomial basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1 \; X \; X^2 \; X^3 \; X^4) \text{ ,thus}\]</span></p>
+<p><span class="math display">\[Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \beta_4 X^4 + \epsilon_i\]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="the-polynomial-basis-function-5" class="slide level2">
+<h2>The polynomial basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1 \; X \; X^2 \; X^3 \; X^4 \; X^5) \text{ ,thus }\]</span></p>
+<p><span class="math display">\[Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \beta_4 X^4 +\beta_5 X^5 + \epsilon_i \]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="pros-and-cons" class="slide level2" style="font-size: 80%;">
+<h2>Pros and cons</h2>
+<p>Pros</p>
+<ul>
+<li><p>These curves are quite flexible—a quadratic can fit most biologically plausible curves</p></li>
+<li><p>The curves only use 1(quadratic) or 2(cubic) degrees of freedom more than linear, unlike dummy variable models</p></li>
+<li><p>The results are not sensitive to choice of boundaries (there aren’t any)</p></li>
+<li><p>Outliers mostly influence the extremes of the curve, not the center part</p></li>
+</ul>
+<p>Cons</p>
+<ul>
+<li><p>They use more degrees of freedom than linear, and therefore have less power</p></li>
+<li><p>There is still some sensitivity to influential observations</p></li>
 </ul>
 </section>
-<section id="issues-with-crude-rr-estimates" class="slide level2">
-<h2>Issues with crude RR estimates</h2>
-<p>Calculating crude (non-smoothed) estimates of the SMR can be problematic:</p>
+<section id="other-types-of-basis-function" class="slide level2">
+<h2>Other types of basis function</h2>
 <ul>
-<li>SMR is estimated independently: does not account for spatial correlation, ie makes no use of SMR estimates in other areas of the map, even though these are likely to be similar.</li>
-<li>They are very imprecise: areas with small <span class="math inline">\(E_i\)</span> have high associated variance.</li>
+<li><p><strong>Harmonics</strong> - The Fourier basis function</p>
+<p><span class="math display">\[1, sin(\omega X), cos(\omega X), sin(2\omega X), cos(2\omega X), \dots, \]</span></p>
+<p><span class="math display">\[sin(m \omega X), cos(m \omega X)\]</span></p></li>
+<li><p>constant <span class="math inline">\(\omega\)</span> defines the period of oscillation of the first sine/cosine pair. This is <span class="math inline">\(\omega = 2\pi/P\)</span> where <span class="math inline">\(P\)</span> is the period.</p></li>
 </ul>
 </section>
-<section id="example-with-childhood-cancers-in-switzerland" class="slide level2">
-<h2>Example with childhood cancers in Switzerland</h2>
+<section id="example-fourier-basis-function" class="slide level2">
+<h2>Example: Fourier basis function</h2>
+<p><span class="math display">\[\Phi(X) = (1 \; sin(\omega X) \; cos(\omega X) \; sin(2\omega X) \; cos(2\omega X)) \text{ ,thus }\]</span></p>
+<p><span class="math display">\[Y _i = \beta_0 + \beta_1 sin(\omega X) + \beta_2 cos(\omega X) + \beta_3 sin(2 \omega X) + \beta_4 cos(2\omega X) + \epsilon_i\]</span></p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="pros-and-cons-1" class="slide level2" style="font-size: 90%;">
+<h2>Pros and cons</h2>
+<p>Pros</p>
 <ul>
-<li>Rare cancers (6,000 cases in 31 years)</li>
-<li>Little known about causes, potential clusters
-<center>
-<img data-src="figures/CrudeSIR.png" style="width:75.0%">
-</center></li>
+<li><p>Excellent computational properties, especially if the observations are equally spaced.</p></li>
+<li><p>Natural for describing periodic data, such as the annual weather cycle</p></li>
+<li><p>The results are not sensitive to choice of boundaries (there aren’t any)</p></li>
+</ul>
+<p>Cons</p>
+<ul>
+<li>functions are periodic; this can be a problem if the data are, for example, growth curves.</li>
 </ul>
 </section>
-<section id="example-with-childhood-cancers-in-switzerland-1" class="slide level2">
-<h2>Example with childhood cancers in Switzerland</h2>
+<section id="parametric-non-linear-effects" class="slide level2">
+<h2>Parametric non-linear effects</h2>
 <ul>
-<li>Quartiles and 0s a separate category</li>
-<li>Is this map informative?
-<center>
-<img data-src="figures/CrudeSIRcat.jpg" style="width:75.0%">
-</center></li>
+<li><p>The following models captured the non-linear relationships using simple non-linear functions.</p></li>
+<li><p>These types of models are to be preferred if possible, because again they are simpler to make inference from, e.g.&nbsp;the relationship is quadratic.</p></li>
+<li><p>However, there may be times when the relationship being modelled does not look like a parametric function. Then what should you do?</p></li>
 </ul>
 </section>
-<section id="hierarchical-modelling-to-smooth-rates" class="slide level2">
-<h2>Hierarchical modelling to smooth rates</h2>
+<section id="parametric-non-linear-effects-1" class="slide level2">
+<h2>Parametric non-linear effects</h2>
+<p>Consider the following form</p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch"><p>It doesn’t look like any simple parametric form (e.g.&nbsp;polynomial, sinusoidal, etc), so what do you do?</p>
+</section>
+<section id="smooth-functions" class="slide level2">
+<h2>Smooth functions</h2>
 <ul>
-<li><strong>Globally</strong>: Smooth the rates towards the global mean.</li>
-<li><strong>Locally</strong>: Smooth the rates towards the local mean, using information about the adjacency structure.</li>
-<li><strong>Globally + Locally</strong>: Smooth the rates using information about the global mean and the adjacency structure</li>
+<li><p>There are many methods to estimate non-linear relationships such as that on the previous slide.</p></li>
+<li><p>They are generically called smooth functions, and include splines (lots of different types), kernel smoothers and local linear smoothers.</p></li>
+<li><p>We will focus on splines in this lab, because they are simple to understand graphically and are easy to fit to the data.</p></li>
 </ul>
 </section>
-<section id="global-smoothing" class="slide level2">
-<h2>Global smoothing</h2>
-<p><span class="math display">\[
-O_i \sim \text{Poisson}(\lambda_i E_i) \\
-\log \lambda_i = \alpha + \theta_i \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)
-\]</span> <span class="math inline">\(\theta_i\)</span>: area specific random effects to account for overdispersion</p>
+<section id="splines" class="slide level2">
+<h2>Splines</h2>
 <ul>
-<li>excess variation in the observed counts due to random noise</li>
-<li>latent variable which captures the effects of unknown or unmeasured area level covariates</li>
+<li><p>Splines were originally thin splints of wood used to trace complex, smooth curves in engineering and architectural.</p></li>
+<li><p>Splines were pinned to the drawing at points where the spline changed its curvature.</p></li>
 </ul>
-<p><span class="math inline">\(\exp(\theta_i)\)</span>: RR in area i, relative to the overall SMR/SIR</p>
-</section>
-<section id="example-with-childhood-cancers-in-switzerland-2" class="slide level2">
-<h2>Example with childhood cancers in Switzerland</h2>
+
+<img data-src="Figures/splinesExample.png" class="r-stretch quarto-figure-center"></section>
+<section id="piecewise-linear-splines" class="slide level2">
+<h2>Piecewise Linear Splines</h2>
 <ul>
-<li>Plot <span class="math inline">\(exp(\alpha + \theta_i)\)</span></li>
-</ul>
-<center>
-<img data-src="figures/CrudeSIRglsm.png" style="width:75.0%">
-</center>
-</section>
-<section id="issues-with-global-smoothing" class="slide level2">
-<h2>Issues with global smoothing</h2>
-<ul>
-<li>Poisson-logNormal model assumes identically distributed and independent data.</li>
-<li>Data that occur close together in space are likely to be correlated (Dependence assumption more realistic).</li>
-<li>Ignoring spatial dependence can lead to biased and inefficient inference.</li>
-<li>Interest in estimating the relationship between location and outcome.</li>
-</ul>
-<p><strong>Local smoothing</strong>: prior distribution for the random effects allowing for spatial correlation to help uncover spatial patterns</p>
-</section>
-<section id="specify-a-distribution-which-takes-into-account-information" class="slide level2">
-<h2>Specify a distribution which takes into account information</h2>
-<ul>
-<li>Specify a distribution which takes into account information on neighbouring areas (<strong>adjacency matrix</strong>).</li>
-<li>Rule for determining the neighbours of each area: most common based on common boundary.</li>
-<li>Estimate <strong>spatial random effect</strong> for each area as if we knew the values of the spatial random effects in neighbouring areas</li>
-<li>Use of conditional autoregressive distributions (we are conditioning on knowing the neighbours)</li>
+<li>We begin fitting splines by dividing the range of exposure into pieces.</li>
+<li>Instead of fitting a constant in each piece, we fit a separate linear term in each piece.</li>
+<li>This has more power since it allows variation within categories to predict variation in outcome.</li>
+<li>We can use fewer categories to capture the deviation from a strictly linear curve because we have slopes within category.</li>
 </ul>
 </section>
-<section id="example-queen-contiguity-in-switzerland-cantons" class="slide level2">
-<h2>Example: Queen contiguity in Switzerland (Cantons)</h2>
-<p>Let <span class="math inline">\(\partial_i=\)</span> set if area adjacent to <span class="math inline">\(i\)</span></p>
+<section id="linear-splines" class="slide level2" style="font-size: 80%;">
+<h2>Linear splines</h2>
+<p>Linear threshold model</p>
+<span class="math display">\[\begin{align}
+Y_i &amp;= \beta_0^{(1)} + \beta_1^{(1)}x + \epsilon_i \qquad x\leq-1\\
+Y_i &amp;= \beta_0^{(2)} + \beta_1^{(2)}x + \epsilon_i \qquad -1&lt;x\leq0.5\\
+Y_i &amp;= \beta_0^{(3)} + \beta_1^{(3)}x + \epsilon_i \qquad 0.5&lt;x\leq1.5\\
+Y_i &amp;= \beta_0^{(4)} + \beta_1^{(4)}x + \epsilon_i \qquad 1.5&lt;x\leq3\\
+Y_i &amp;= \beta_0^{(5)} + \beta_1^{(5)}x + \epsilon_i \qquad x\geq3\\
+\end{align}\]</span>
+<p>Linear spline model</p>
+<p><span class="math inline">\(Y_i = \beta_0 + \beta_1x + \beta_2(x+1)_+ + \beta_3(x-0.5)_+ + \beta_4 (x-1.5)_+ + \beta_5(x-3)_+ + \epsilon_i\)</span></p>
+<p><span class="math display">\[(x-k)_+=\begin{cases} 0, \quad x&lt;k \\ x-k, \quad x\geq k\\\end{cases}\]</span></p>
+</section>
+<section id="linear-splines-in-r" class="slide level2">
+<h2>Linear splines in R</h2>
+<ul>
+<li>You can use the <code>bs()</code> function in R to define the basis function: <code>bs(x, degree = 3, knots = c(-1, 0.5, 1.5, 3))</code> and plot the result:</li>
+</ul>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="cubic-splines" class="slide level2" style="font-size: 80%;">
+<h2>Cubic splines</h2>
+<p>Similarly we can define higher order polynomial splines, for instance:</p>
+<span class="math display">\[\begin{align}
+Y_i = \beta_0 &amp;+ \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \\
+&amp; \beta_4 (X+1)_+ + \beta_5 (X+1)_+^2 + \beta_6(X+1)_+^3 + \\
+&amp; \beta_7 (x-0.5)_+ + \beta_8 (x-0.5)_+^2 + \beta_9 (x-0.5)_+^3 + \\
+&amp;\dots + \epsilon_i \\
+(x-k)_+ &amp; =
+\begin{cases}
+0, \quad x&lt;k \\ x-k, \quad x\geq k
+\end{cases}
+\end{align}\]</span>
+<p>which reduces to the following to ensure smooth curvature on the knots (it can be seen after deriving the first and second derivative):</p>
+<span class="math display">\[\begin{align}
+Y_i = \beta_0 &amp; + \beta_1 x +\beta_2 x^2 + \beta_3 x_3 + \\
+&amp;\beta_6 (x+1)_+^3 + \beta_9(x-0.5)_+^3 + \dots + \epsilon_i
+\end{align}\]</span>
+</section>
+<section id="cubic-splines-1" class="slide level2" style="font-size: 80%;">
+<h2>Cubic splines</h2>
+<ul>
+<li>Similar as before: <code>bs(x, degree = 3, knots = c(-1, 0.5, 1.5, 3))</code>:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>fit_c <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">bs</span>(x, <span class="at">degree =</span> <span class="dv">3</span>, <span class="at">knots =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="dv">3</span>)), <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>without the splines package:</p>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="splines-1" class="slide level2" style="font-size: 80%;">
+<h2>Splines</h2>
+<p>A spline of order n is a piecewise polynomial function of degree <span class="math inline">\(n-1\)</span> in a variable <span class="math inline">\(x\)</span>.</p>
+<p>(Basis) Splines can be:</p>
+<ul>
+<li><p>Piecewise constant.</p></li>
+<li><p>Linear.</p></li>
+<li><p>Quadratic.</p></li>
+<li><p>Cubic.</p></li>
+<li><p>higher order polynomials.</p></li>
+<li><p>etc.</p></li>
+</ul>
+<p>Why are the borders so wiggly?</p>
+</section>
+<section id="natural-cubic-splines" class="slide level2">
+<h2>Natural cubic splines</h2>
+<ul>
+<li><p>Splines can have high variance in the boundaries.</p></li>
+<li><p>This problem aggravates if knots too few.</p></li>
+<li><p>The natural spline constraints the fit to be linear before and after the first and last knots.</p></li>
+<li><p>This stabilises the fitting and makes a more reasonable assumption.</p></li>
+</ul>
+</section>
+<section id="natural-cubic-splines-in-r" class="slide level2" style="font-size: 90%;">
+<h2>Natural cubic splines in R</h2>
+<ul>
+<li>To define natural cubic splines in R: <code>ns(x, knots = c(-1, 0.5, 1.5, 3)):</code></li>
+</ul>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="well-better-fit-be-achieved-with-more-knots" class="slide level2" style="font-size: 90%;">
+<h2>Well, better fit be achieved with more knots</h2>
+<ul>
+<li><code>ns(x, df = 10)</code></li>
+</ul>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="and-more" class="slide level2" style="font-size: 90%;">
+<h2>… and more</h2>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="and-more-1" class="slide level2" style="font-size: 90%;">
+<h2>… and more</h2>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="and-more-2" class="slide level2" style="font-size: 90%;">
+<h2>… and more</h2>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch quarto-figure-center"><p>is this a useful model?</p>
+</section>
+<section id="gaussian-priors" class="slide level2">
+<h2>Gaussian priors</h2>
+<ul>
+<li>We will focus on random walks of order 2, which is the Bayesian analogue of (penalized) splines. Recall:</li>
+</ul>
+<p><span class="math display">\[\Delta^2x_i = x_i - 2x_{i+1} + x_{i+2} \sim N(0, \tau^{-1})\]</span></p>
+<ul>
+<li><p>This is very similar with the categorical transformation example, but written in a more concise manner (this model is not overparametrised).</p></li>
+<li><p>The penalty is given through the prior of the precision parameter. The prior controls smoothness: the strongest it is the smoother the result. (given the data)</p></li>
+</ul>
+</section>
+<section id="random-walk-of-order-2-strong-prior" class="slide level2">
+<h2>Random walk of order 2 (strong prior)</h2>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="random-walk-of-order-2-vague-prior" class="slide level2">
+<h2>Random walk of order 2 (vague prior)</h2>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<section id="example-mortality-and-temperature-in-italy" class="slide level2">
+<h2>Example: Mortality and temperature in Italy</h2>
 <div class="columns">
-<div class="column" style="width:30%;">
-<p><span class="math display">\[
-w = \begin{cases} 1, \; \text{if} \; j\in \partial_i \\\\0 \; \text{otherwise} \end{cases}
-\]</span></p>
-</div><div class="column" style="width:70%;">
-<center>
-<img data-src="figures/CantonDAG.png" style="width:80.0%">
-</center>
-</div>
-</div>
-</section>
-<section id="intrinsic-icar-model-besag-et-al.-1991" class="slide level2">
-<h2>Intrinsic ICAR model (Besag et al.&nbsp;1991)</h2>
-<p><span class="math display">\[
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi}) \Leftrightarrow \phi_i | \phi_{j\; j\ne i} \sim \text{Normal}(\phi_i, \sigma_{\phi}^2)
-\]</span></p>
-<div class="columns">
-<div class="column" style="width:30%;">
-<p><span class="math display">\[
-E(\phi_i|\phi_j) = \sum_{j \in \partial_i \phi_j} \phi_j/n_i \\
-Var(\phi_i|\phi_j) = \sigma_{\phi}^2/n_i
-\]</span></p>
-</div><div class="column" style="width:70%;">
-<center>
-<img data-src="figures/Fig_3_CARGeneva.jpg" style="width:60.0%">
-</center>
-</div>
-</div>
-</section>
-<section id="example-with-childhood-cancers-in-switzerland-cont" class="slide level2">
-<h2>Example with childhood cancers in Switzerland (cont)</h2>
+<div class="column" style="width:50%;">
 <ul>
-<li>Plot <span class="math inline">\(exp(\alpha + \phi_i)\)</span></li>
+<li><p>1,946,755 summer deaths during 2011-2018 in Italy</p></li>
+<li><p>Data is available at 107 administrative units</p></li>
+<li><p>Temperature is available from ERA-5 at 9km resolution</p></li>
 </ul>
-<center>
-<img data-src="figures/CrudeSIRicar.png" style="width:75.0%">
-</center>
-</section>
-<section id="the-besag-york-mollie-model" class="slide level2">
-<h2>The Besag-York-Mollie model</h2>
-<p>Local+Global smoothing: <span class="math display">\[
-O_i \sim \text{Poisson}(\lambda_i E_i) \\
-\log \lambda_i = \alpha + \theta_i + \phi_i \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi})
-\]</span> priors for <span class="math inline">\(\alpha, \sigma_{\theta}^2 \; \text{and} \; \sigma^2_{\phi}\)</span></p>
-</section>
-<section id="example-with-childhood-cancers-in-switzerland-cont-1" class="slide level2">
-<h2>Example with childhood cancers in Switzerland (cont)</h2>
-<ul>
-<li>Plot <span class="math inline">\(exp(\alpha + \theta_i + \phi_i)\)</span></li>
-</ul>
-<center>
-<img data-src="figures/CrudeSIRlm.png" style="width:75.0%">
-</center>
-</section>
-<section id="use-bym-with-care" class="slide level2">
-<h2>Use BYM with care</h2>
-<ul>
-<li>ICAR model defined above is improper: the overall mean of the <span class="math inline">\(\phi_i\)</span> is not defined: <strong>sum-to-zero contraints</strong></li>
-<li>Inference may be sensitive to choice of hyperprior for the random effects variance or precision parameters</li>
-<li>Other known issues we have not discussed about: different interpretation of the variances (marginal conditional), scalling the covariance matrix, etc.</li>
-</ul>
-</section>
-<section id="other-car-models" class="slide level2">
-<h2>Other CAR models</h2>
-<p>Let <span class="math inline">\(\log \lambda_i = \alpha + b_i\)</span>:</p>
-<ul>
-<li>The proper CAR <span class="math display">\[
-b_i|b_j \sim \text{Normal}(\rho \sum_{j \in \partial_i}b_j/n_i, \sigma_b^2/n_i)
-\]</span></li>
-<li>Leroux CAR prior <span class="math display">\[
-b_i|b_j \sim \text{Normal}\Bigg(\frac{\rho \sum_{j \in \partial_i}b_j}{\rho n_i + (1 - \rho)}, \frac{\sigma_b^2}{{\rho n_i + (1 - \rho)}}\Bigg)
-\]</span></li>
-</ul>
-</section>
-<section id="other-car-models-1" class="slide level2">
-<h2>Other CAR models</h2>
-<ul>
-<li><p>BYM2 <span class="math display">\[
-b = \sigma_b*(\sqrt{1 - \rho}\theta + \sqrt{\rho}\phi) \\
-\theta \sim \text{Normal}(\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W^*, \sigma_{\phi}^2)
-\]</span></p></li>
-<li><p>Adaptive CARs</p></li>
-</ul>
-</section>
-<section id="posterior-probability" class="slide level2">
-<h2>Posterior Probability</h2>
-<ul>
-<li>Mapping the posterior mean RR does (or residual RR) not make full use of the output of the Bayesian analysis that provides, for each area, samples from the whole posterior distribution of the relative risk.</li>
-<li>Mapping the probability that a RR is greater than a specified threshold of interest has been proposed by several authors (e.g.&nbsp;Clayton and Bernardinelli (1992)).</li>
-<li>Very effective method to identify areas characterised by elevated risk</li>
-</ul>
-</section>
-<section id="how-to-classify-areas-as-having-elevated-risk" class="slide level2">
-<h2>How to classify areas as having elevated risk</h2>
-<ul>
-<li>We define the decision rule <span class="math inline">\(D(c, \text{RR}_0)\)</span>, which depends:
-<ul>
-<li>on a cutoff probability <span class="math inline">\(c\)</span></li>
-<li>a reference threshold <span class="math inline">\(\text{RR}_0\)</span></li>
-</ul></li>
-<li>Area <span class="math inline">\(i\)</span> is classified as having an elevated risk according to <span class="math inline">\(D(c, \text{RR}_0) : Prob(\text{RR}_i &gt; \text{RR}_0) &gt; c\)</span></li>
-<li>Recommended values <span class="math inline">\(c = 0.8\)</span> and <span class="math inline">\(\text{RR}_0 = 1\)</span> (Richardson et al.&nbsp;2004)</li>
-<li>Posterior probability of interest: <span class="math inline">\(\text{Prob}(\exp(\theta_i+ \phi_i) &gt; 1)\)</span></li>
-</ul>
-</section>
-<section id="example-with-childhood-cancers-in-switzerland-3" class="slide level2">
-<h2>Example with childhood cancers in Switzerland</h2>
-<center>
-<img data-src="figures/Exbym.png" style="width:75.0%">
-</center>
-</section>
-<section id="example-with-childhood-cancers-in-switzerland-4" class="slide level2">
-<h2>Example with childhood cancers in Switzerland</h2>
-<center>
-<img data-src="figures/Exbym_categories.png" style="width:75.0%">
-</center>
-</section></section>
-<section>
-<section id="ecological-regression" class="title-slide slide level1 center">
-<h1>Ecological regression</h1>
-
-</section>
-<section id="extending-to-ecological-regression" class="slide level2">
-<h2>Extending to ecological regression</h2>
-<p>Straightforward extension of the BYM (read any CAR) model:</p>
-<p><span class="math display">\[
-O_i \sim \text{Poisson}(\lambda_i E_i) \\
-\log \lambda_i = \alpha + \color{red}{\beta X_i} + \theta_i + \phi_i \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi})
-\]</span></p>
-<ul>
-<li><span class="math inline">\(\color{red}{X}\)</span> area-level covariate of interest</li>
-<li><span class="math inline">\(\color{red}{\beta}\)</span>: parameter associated with the covariate (assigned a prior)</li>
-</ul>
-</section>
-<section id="interpretation-of-the-parameters" class="slide level2">
-<h2>Interpretation of the parameters</h2>
-<ul>
-<li><span class="math inline">\(\exp(\beta)\)</span> is the relative risk of disease associated with a unit increase in exposure <span class="math inline">\(X\)</span> (when X continuous)</li>
-<li><span class="math inline">\(\exp(\theta_i + \phi_i)\)</span> is the residual or adjusted relative risk of disease in area <span class="math inline">\(i\)</span> after accounting for the effect of <span class="math inline">\(X\)</span>.</li>
-</ul>
-</section>
-<section id="extension-to-several-variables" class="slide level2">
-<h2>Extension to several variables</h2>
-<p><span class="math display">\[
-O_i \sim \text{Poisson}(\lambda_i E_i) \\
-\log \lambda_i = \alpha + \color{red}{\beta_1 X_{1i} + \dots + \beta_k X_{ki}} + \theta_i + \phi_i \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi})
-\]</span></p>
-<ul>
-<li><span class="math inline">\(\exp(\beta_1)\)</span> is the relative risk of disease associated with a unit increase in exposure <span class="math inline">\(X\)</span>, after adjustment for <span class="math inline">\(X_2, \dots ,X_k\)</span></li>
-<li>Same for <span class="math inline">\(\exp(\beta_k)\)</span>, after adjustment for <span class="math inline">\(X_1, \dots ,X_{k-1}\)</span></li>
-<li><span class="math inline">\(\exp(\theta_i + \phi_i)\)</span> is the adjusted relative risk of disease in area <span class="math inline">\(i\)</span> after accounting for the effects of measured covariates</li>
-</ul>
-</section>
-<section id="example-hpv-vaccination-in-switzerland" class="slide level2">
-<h2>Example: HPV vaccination in Switzerland</h2>
-<p><span class="math display">\[
-Y_{kit} \sim \text{Binomial}(p_{kit}) \\
-\text{logit}(p_{kit}) = \alpha + \beta_1 X_{1it} + \dots + \beta_k X_{kit} + \theta_i + \phi_i \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi})
-\]</span></p>
-<ul>
-<li>Covariates related with age, sex, period of survey, deprivation, religion, language region, etc.</li>
-</ul>
-</section>
-<section id="hpv-vaccination-uptake" class="slide level2">
-<h2>HPV vaccination uptake</h2>
-<ul>
-<li>Model without any covariates just the BYM prior</li>
-<li>Plot <span class="math inline">\(\theta_s + \phi_s\)</span> (on the log-odds)</li>
-</ul>
-<center>
-<img data-src="figures/HPVRR.png" style="width:75.0%">
-</center>
-</section>
-<section id="effect-of-covariates" class="slide level2">
-<h2>Effect of covariates</h2>
-<center>
-<img data-src="figures/CovHPVvaccination.png" style="width:100.0%">
-</center>
-</section>
-<section id="residual-spatial-autocorrelation" class="slide level2">
-<h2>Residual spatial autocorrelation</h2>
-<center>
-<img data-src="figures/HPVres.png" style="width:75.0%">
-</center>
-</section></section>
-<section>
-<section id="building-complex-spatiotemporal-models" class="title-slide slide level1 center">
-<h1>Building complex spatiotemporal models</h1>
-
-</section>
-<section id="cervical-cancers-among-hiv-positive-women" class="slide level2">
-<h2>Cervical cancers among HIV positive women</h2>
-<ul>
-<li>Global cohort composed of 1,700,000 persons living with HIV/AIDS</li>
-<li>SAM study, evaluating HIV related cancers in South Africa</li>
-<li>17% of adult women in South Africa over the age of 25 years are living with HIV</li>
-<li>High burden of cervical cancer: 43.1 cases per 100,000</li>
-<li>5 times more likely to develop cervical cancer</li>
-</ul>
-</section>
-<section id="exploratory-analysis-of-the-crude-rates" class="slide level2">
-<h2>Exploratory analysis of the crude rates</h2>
-<center>
-<img data-src="figures/CrudeSIR_hpv.png" style="width:100.0%">
-</center>
-</section>
-<section id="exploratory-analysis-of-the-crude-rates-cont" class="slide level2">
-<h2>Exploratory analysis of the crude rates (cont)</h2>
-<center>
-<img data-src="figures/CrudeSIRbyRegion.png" style="width:75.0%">
-</center>
-</section>
-<section id="a-spatiotemporal-model" class="slide level2">
-<h2>A spatiotemporal model</h2>
-<p><span class="math display">\[
-O_{it} \sim \text{Poisson}(\lambda_{it} E_{it}) \\
-\log \lambda_{it} = \alpha + \theta_i + \phi_i + \color{red}{\gamma_t + \xi_t} \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi})\\
-\gamma_t \sim \text{Normal}(0,\sigma_{\gamma}^2)\\
-\xi_t \sim \text{RW1}(\sigma^2_{\xi})
-\]</span> Similar with the BYM model in space <span class="math inline">\(\gamma_t\)</span> is the temporal unstructured and <span class="math inline">\(\xi_t\)</span> the temporal structured random effect, capturing the temporal autocorrelation.</p>
-</section>
-<section id="space-and-time-seperately" class="slide level2">
-<h2>Space and time seperately</h2>
-<center>
-<img data-src="figures/RandomEffectInt1.png" style="width:100.0%">
-</center>
-</section>
-<section id="spacetime-spaghetti-plot" class="slide level2">
-<h2>Spacetime (Spaghetti plot)</h2>
-<center>
-<img data-src="figures/SpagSIRbyRegion.png" style="width:75.0%">
-</center>
-</section>
-<section id="spacetime-space-by-year" class="slide level2">
-<h2>Spacetime (Space by year)</h2>
-<center>
-<img data-src="figures/MapsSIRbyRegion.png" style="width:90.0%">
-</center>
-</section>
-<section id="spacetime-interactions" class="slide level2">
-<h2>Spacetime interactions</h2>
-<div style="font-size:78%">
-<p><span class="math display">\[
-O_{it} \sim \text{Poisson}(\lambda_{it} E_{it}) \\
-\log \lambda_{it} = \alpha + \theta_i + \phi_i + \gamma_t + \xi_t + \color{red}{\nu_{it}} \\
-\theta_i \sim \text{Normal}(0,\sigma_{\theta}^2)\\
-\phi \sim \text{ICAR}(W, \sigma^2_{\phi})\\
-\gamma_t \sim \text{Normal}(0,\sigma_{\gamma}^2)\\
-\xi_t \sim \text{RW1}(\sigma^2_{\xi})
-\]</span></p>
+</div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;">Interaction</th>
-<th style="text-align: center;">Parameters</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">type 1</td>
-<td style="text-align: center;"><span class="math inline">\(\nu_{it} = \theta_i \otimes \gamma_t\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">type 2</td>
-<td style="text-align: center;"><span class="math inline">\(\nu_{it} = \theta_i \otimes \xi_t\)</span></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">type 3</td>
-<td style="text-align: center;"><span class="math inline">\(\nu_{it} = \phi_i \otimes \gamma_t\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">type 4</td>
-<td style="text-align: center;"><span class="math inline">\(\nu_{it} = \phi_i \otimes \xi_t\)</span></td>
-</tr>
-</tbody>
-</table>
+<p><img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-24-1.png" width="672"></p>
 </div>
 </div>
 </div>
+</div>
+</section>
+<section id="example-1" class="slide level2">
+<h2>Example</h2>
+<ul>
+<li>Fit a linear, a categorical and a random walk model for capturing the effect of temperature.</li>
+</ul>
+
+<img data-src="exposure_response_files/figure-revealjs/unnamed-chunk-25-1.png" width="1152" class="r-stretch quarto-figure-center"></section>
+<section id="extensions" class="slide level2">
+<h2>Extensions</h2>
+<ul>
+<li><p>It is straight forward to include confounders in the linear predictor.</p></li>
+<li><p>Confounders can be included as linear or more flexible terms.</p></li>
+<li><p>We can account for spatiotemporal correlations.</p></li>
+<li><p>We can incorporate the delayed effect of temperature on health (lags)</p>
+<ul>
+<li><p>joint lag models</p></li>
+<li><p>distributed non-linear lag models</p></li>
+</ul></li>
+</ul>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <ul>
-<li>Introduction to disease mapping and CAR priors</li>
-<li>Extension to ecological regression and relevant interpretations</li>
-<li>Separable spatiotemporal models</li>
-<li>Higher spatiotemporal interactions</li>
-<li>Examples using childhood cancers, HPV vaccination and cervical cancers in South Africa</li>
+<li><p>Introduction to non-linear exposure models</p></li>
+<li><p>Theory and application of linear splines</p></li>
+<li><p>Understand more flexible non-parametric functions (focus on splines)</p></li>
+<li><p>Random walk of order 2 to model non-linearity</p></li>
 </ul>
-<div style="color: #58b364">
-<p>Next : Coding these models in NIMBLE.</p>
-</div>
-</section></section>
-<section>
-<section id="getting-ready-for-the-lab" class="title-slide slide level1 center">
-<h1>Getting ready for the lab</h1>
-
-</section>
-<section id="the-lab-for-this-session" class="slide level2 smaller">
-<h2>The lab for this session</h2>
-<div>
-<ul>
-<li class="fragment"><p>This goal of this lab is to use <code>NIMBLE</code> to carry out a disease mapping study.</p></li>
-<li class="fragment"><p>During this lab session, we will:</p></li>
-</ul>
-<ol type="1">
-<li class="fragment">Explore ways of visualizing spatial data;</li>
-<li class="fragment">Define the neighborhood matrix in <code>R</code>;</li>
-<li class="fragment">Fit and interpret the BYM model in <code>NIMBLE</code>; and</li>
-<li class="fragment">Perform spatial ecological regression</li>
-</ol>
-</div>
-</section></section>
-<section id="questions" class="title-slide slide level1 center">
-<h1>Questions?</h1>
+<p>Questions?</p>
 
 <img src="../../assets/bmeh_normal.png" class="slide-logo r-stretch"><div class="footer footer-default">
 
@@ -816,20 +753,20 @@ O_{it} \sim \text{Poisson}(\lambda_{it} E_{it}) \\
   </div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="sstmodels_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="exposure_response_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="sstmodels_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="sstmodels_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="sstmodels_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="exposure_response_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
