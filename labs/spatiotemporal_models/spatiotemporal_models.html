@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.3.354">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Garyfallos Konstantinoudis">
-<meta name="dcterms.date" content="2024-08-22">
+<meta name="dcterms.date" content="2023-08-15">
 
 <title>Spatial and Spatio-temporal Modelling</title>
 <style>
@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -98,17 +98,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
              <p>Garyfallos Konstantinoudis </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 22, 2024</p>
+      <p class="date">August 15, 2023</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 </header>
 
@@ -129,7 +129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>We will use the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas), as taken from the published paper:</p>
-<p><strong>Konstantinoudis G</strong>, Padellini T, Bennett JE, Davies B, Ezzati M, Blangiardo M. <em>Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis</em>. Environ Int. 2021. https://doi.org/10.1016/j.envint.2020.106316</p>
+<p><strong>Konstantinoudis G</strong>, Padellini T, Bennett JE, Davies B, Ezzati M, Blangiardo M. <em>Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis</em>. medRxiv [Preprint]. 2020 Aug 11:2020.08.10.20171421. doi: 10.1101/2020.08.10.20171421. Update in: Environ Int. 2021 Jan;146:106316. PMID: 32817974; PMCID: PMC7430619.</p>
 <p>For that analysis, we included 38,573 COVID-19 deaths up to June 30, 2020 at the Lower Layer Super Output Area level in England (<span class="math inline">\(n = 32844\)</span> small areas). We retrieved averaged NO<span class="math inline">\(_2\)</span> concentration during 2014-2018 from the Pollution Climate Mapping. We used Bayesian hierarchical models to quantify the effect of air pollution while adjusting for a series of confounding and spatial autocorrelation.</p>
 <p>We will build simple Bayesian models to try to understand what is happening in the data. Once again we will use <code>NIMBLE</code> as the basis for our Bayesian model writing.</p>
 </section>
@@ -152,19 +152,19 @@ $ geometry &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((447213.9 53..., MULTIPOLYGON
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data_england)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     LTLA               deaths          expectd           TtlICUB         
- Length:316         Min.   :   4.0   Min.   :  8.287   Min.   :0.000e+00  
- Class :character   1st Qu.:  77.0   1st Qu.: 99.339   1st Qu.:8.548e-05  
- Mode  :character   Median : 117.5   Median :129.067   Median :8.092e-03  
-                    Mean   : 155.6   Mean   :155.630   Mean   :1.399e-02  
-                    3rd Qu.: 191.2   3rd Qu.:177.896   3rd Qu.:1.460e-02  
-                    Max.   :1226.0   Max.   :903.219   Max.   :1.911e-01  
-      NO2             IMD                 geometry  
- Min.   : 4.48   Min.   :1.000   MULTIPOLYGON :316  
- 1st Qu.:11.09   1st Qu.:2.000   epsg:27700   :  0  
- Median :13.96   Median :3.000   +proj=tmer...:  0  
- Mean   :15.05   Mean   :2.997                      
- 3rd Qu.:17.26   3rd Qu.:4.000                      
+<pre><code>     LTLA               deaths          expectd           TtlICUB
+ Length:316         Min.   :   4.0   Min.   :  8.287   Min.   :0.000e+00
+ Class :character   1st Qu.:  77.0   1st Qu.: 99.339   1st Qu.:8.548e-05
+ Mode  :character   Median : 117.5   Median :129.067   Median :8.092e-03
+                    Mean   : 155.6   Mean   :155.630   Mean   :1.399e-02
+                    3rd Qu.: 191.2   3rd Qu.:177.896   3rd Qu.:1.460e-02
+                    Max.   :1226.0   Max.   :903.219   Max.   :1.911e-01
+      NO2             IMD                 geometry
+ Min.   : 4.48   Min.   :1.000   MULTIPOLYGON :316
+ 1st Qu.:11.09   1st Qu.:2.000   epsg:27700   :  0
+ Median :13.96   Median :3.000   +proj=tmer...:  0
+ Mean   :15.05   Mean   :2.997
+ 3rd Qu.:17.26   3rd Qu.:4.000
  Max.   :46.45   Max.   :5.000                      </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(data_england)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -173,13 +173,13 @@ $ geometry &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((447213.9 53..., MULTIPOLYGON
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_england_simpler <span class="ot">&lt;-</span> rgeos<span class="sc">::</span><span class="fu">gSimplify</span>(<span class="fu">as</span>(data_england, <span class="st">"Spatial"</span>), <span class="at">tol =</span> <span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>rgeos version: 0.6-3, (SVN revision 696)
- GEOS runtime version: 3.11.2-CAPI-1.17.2 
+<pre><code>rgeos version: 0.6-4, (SVN revision 699)
+ GEOS runtime version: 3.11.0-CAPI-1.17.0
  Please note that rgeos will be retired during October 2023,
 plan transition to sf or terra functions using GEOS at your earliest convenience.
 See https://r-spatial.org/r/2023/05/15/evolution4.html for details.
  GEOS using OverlayNG
- Linking to sp version: 1.6-0 
+ Linking to sp version: 2.0-0
  Polygon checking: TRUE </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data_england_simpler <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(data_england_simpler)</span>
@@ -577,10 +577,10 @@ w_{ij} =
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>LTLA_nb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Neighbour list object:
-Number of regions: 316 
-Number of nonzero links: 1332 
-Percentage nonzero weights: 1.333921 
-Average number of links: 4.21519 
+Number of regions: 316
+Number of nonzero links: 1332
+Percentage nonzero weights: 1.333921
+Average number of links: 4.21519
 3 regions with no links:
 44 95 284</code></pre>
 </div>
@@ -735,6 +735,275 @@ Field "pWAIC":
 <p>We used real data on COVID-19 deaths in England during March-July 2020 and first performed disease mapping to understand the spatial trends of COVID-19 mortality in the first stages of the pandemic. As part of this analysis, we visualised spatial data, fitted a model with an unstructured spatial random effect, demonstrated how to build a neihgborhood matrix in R and fitted the BYM model.</p>
 <p>For more information on the final model see Konstantinoudis et al 2021 (10.1016/j.envint.2020.106316).</p>
 </section>
+<section id="advanced-ecological-regression-with-the-bym-model" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-ecological-regression-with-the-bym-model">Advanced: Ecological regression with the BYM model</h2>
+<p>The section below is very relevant for environmental health, but if we run out of time in the lab, it is something you should go through in your own time.</p>
+<p>Let <span class="math inline">\(\mathcal{D}\)</span> be the observation window of England and <span class="math inline">\(A_1, A_2, \dots, A_N\)</span> a partition denoting the LTLAs in England with <span class="math inline">\(\cup_{i=1}^NA_i = \mathcal{D}\)</span> and <span class="math inline">\(A_i\cap A_j\)</span> for every <span class="math inline">\(i\neq j\)</span>. Let <span class="math inline">\(O_1, O_2, \dots, O_N\)</span> be the observed number of COVID-19 deaths occurred during March-July 2020 in England, <span class="math inline">\(E_1, E_2, \dots, E_N\)</span> is the expected number of COVID-19 deaths and <span class="math inline">\(\lambda_1, \lambda_2, \dots, \lambda_N\)</span> the standardized mortality ratio (recall <span class="math inline">\(\lambda_i = \frac{O_i}{E_i}\)</span>). A standardized mortality ratio of <span class="math inline">\(1.5\)</span> implies that the COVID-19 deaths we observed in the <span class="math inline">\(i\)</span>-th area are <span class="math inline">\(1.5\)</span> times higher to what we expected. Under the Poisson assumption we have: <span class="math display">\[
+\begin{equation}
+\begin{aligned}
+\hbox{O}_i &amp; \sim \hbox{Poisson}(E_i \lambda_i); \;\;\; i=1,...,N\\
+\log \lambda_i &amp; = \alpha +  \beta_1 X_{1i} + \beta_2 X_{2i} + \theta_i + \phi_i\\
+\theta_i &amp;\sim \hbox{Normal}(0, \sigma^2_{\theta_i})\\
+{\bf \phi} &amp; \sim \hbox{ICAR}({\bf W}, \sigma_{\phi}^2) \,\, ,  \sum_i \phi_i  = 0 \\
+\alpha &amp; \sim \text{Uniform}(-\infty, +\infty) \\
+\beta_1, \beta_2 &amp; \sim \mathcal{N}(0, 10) \\
+1/\sigma_{\theta}^2 &amp; \sim \hbox{Gamma}(0.5, 0.05) \\
+1/\sigma_{\phi}^2 &amp; \sim \hbox{Gamma}(0.5, 0.0005) \\
+\end{aligned}
+\end{equation}
+\]</span> the terms <span class="math inline">\(\beta_1 X_{1i} + \beta_2 X_{2i} + \sum_{j=2}^5\beta_{3j} X_{3i}\)</span>, where <span class="math inline">\(X_{1i}, X_{2i}, X_{3i}\)</span> are the ICU beds, NO<span class="math inline">\(_2\)</span> and IMD in the <span class="math inline">\(i\)</span>-th LTLA, <span class="math inline">\(\beta_1, \beta_2, \sum_{j=2}^5\beta_{3j}\)</span> the corresponding effects and <span class="math inline">\(exp(\beta_1), exp(\beta_2)\)</span> the relative risk of ICU beds or NO<span class="math inline">\(_2\)</span> for every unit increase and of the ICU beds or NO<span class="math inline">\(_2\)</span>. For instance <span class="math inline">\(exp(\beta_2) = 1.8\)</span> means that for every unit increase of long term exposure to <span class="math inline">\(NO_2\)</span>, the risk (read standardized mortality ratio) of COVID-19 deaths cancer increases by <span class="math inline">\(80\%\)</span>. <span class="math inline">\(exp(\beta_{32}), \beta_{33}, \beta_{34}, \beta_{35}\)</span> are the relative risks compared to the baseline IMD category, ie the most deprived areas. An <span class="math inline">\(exp(\beta_{35}) = 0.5\)</span> means that the risk of COVID-19 deaths in most affluent areas decreases by <span class="math inline">\(50%\)</span> compared to the most deprived areas.<span class="math inline">\(\tau_{\theta}\)</span> is a precision (reciprocal of the variance) term that controls the magnitude of <span class="math inline">\(\theta_{i}\)</span>. We will first write the model in <code>NIMBLE</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>BYMecoCode <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># priors</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  alpha <span class="sc">~</span> <span class="fu">dflat</span>() <span class="co"># vague prior (Unif(-inf, +inf))</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  overallRR <span class="ot">&lt;-</span> <span class="fu">exp</span>(alpha) <span class="co"># overall RR across study region</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  tau.theta <span class="sc">~</span> <span class="fu">dgamma</span>(<span class="fl">0.5</span>, <span class="fl">0.05</span>) <span class="co"># prior for the precision hyperparameter</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  sigma2.theta <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> tau.theta <span class="co"># variance of unstructured area random effects</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  tau.phi <span class="sc">~</span> <span class="fu">dgamma</span>(<span class="fl">0.5</span>, <span class="fl">0.0005</span>) <span class="co"># prior on precison of spatial area random effects</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  sigma2.phi <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> tau.phi <span class="co"># conditional variance of spatial area random effects</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>K) {</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>    beta[j] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">tau =</span> <span class="dv">1</span>)</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>    RR.beta[j] <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta[j])</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  RR.beta1_1NO2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(beta[<span class="dv">1</span>] <span class="sc">/</span> sd.no2) <span class="co"># get per 1 unit increase in the airpollution (scale back)</span></span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># likelihood</span></span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N) {</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>    O[i] <span class="sc">~</span> <span class="fu">dpois</span>(mu[i]) <span class="co"># Poisson likelihood for observed counts</span></span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">log</span>(mu[i]) <span class="ot">&lt;-</span> <span class="fu">log</span>(E[i]) <span class="sc">+</span> alpha <span class="sc">+</span> theta[i] <span class="sc">+</span> phi[i] <span class="sc">+</span> <span class="fu">inprod</span>(beta[], X[i, ])</span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the inprod is equivalent to beta[1]*X1[i] + beta[2]*X2[i] + beta[3]*X32[i] + beta[4]*X33[i] + beta[5]*X34[i] + beta[6]*X35[i]</span></span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>    SMR[i] <span class="ot">&lt;-</span> alpha <span class="sc">+</span> theta[i] <span class="sc">+</span> phi[i] <span class="sc">+</span> <span class="fu">inprod</span>(beta[], X[i, ])</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a>    theta[i] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">tau =</span> tau.theta) <span class="co"># area-specific RE</span></span>
+<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a>    resRR[i] <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta[i] <span class="sc">+</span> phi[i]) <span class="co"># area-specific residual RR</span></span>
+<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>    proba.resRR[i] <span class="ot">&lt;-</span> <span class="fu">step</span>(resRR[i] <span class="sc">-</span> <span class="dv">1</span>) <span class="co"># Posterior probability</span></span>
+<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb54-30"><a href="#cb54-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-31"><a href="#cb54-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># BYM prior</span></span>
+<span id="cb54-32"><a href="#cb54-32" aria-hidden="true" tabindex="-1"></a>  phi[<span class="dv">1</span><span class="sc">:</span>N] <span class="sc">~</span> <span class="fu">dcar_normal</span>(<span class="at">adj =</span> adj[<span class="dv">1</span><span class="sc">:</span>L], <span class="at">weights =</span> weights[<span class="dv">1</span><span class="sc">:</span>L], <span class="at">num =</span> num[<span class="dv">1</span><span class="sc">:</span>N], <span class="at">tau =</span> tau.phi, <span class="at">zero_mean =</span> <span class="dv">1</span>)</span>
+<span id="cb54-33"><a href="#cb54-33" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Create data object as required for <code>NIMBLE</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>n.LTLA <span class="ot">&lt;-</span> <span class="fu">dim</span>(data_england)[<span class="dv">1</span>]</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create the dummy columns for deprivation</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>data_england <span class="ot">&lt;-</span> data_england <span class="sc">|&gt;</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMD =</span> <span class="fu">as_factor</span>(IMD)) <span class="sc">|&gt;</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">as.data.frame</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> IMD, <span class="at">data =</span> <span class="fu">pick</span>(<span class="fu">everything</span>()))))</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="co"># matrix of covariates</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>Xmat <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>(data_england<span class="sc">$</span>NO2)[, <span class="dv">1</span>],</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>(data_england<span class="sc">$</span>TtlICUB)[, <span class="dv">1</span>],</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  data_england<span class="sc">$</span>IMD2,</span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  data_england<span class="sc">$</span>IMD3,</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>  data_england<span class="sc">$</span>IMD4,</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  data_england<span class="sc">$</span>IMD5</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Format the data for NIMBLE in a list</span></span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">O =</span> data_england<span class="sc">$</span>deaths, <span class="co"># observed nb of deaths</span></span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># covariates</span></span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> Xmat</span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a><span class="co"># number of total covariates</span></span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">ncol</span>(Xmat)</span>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>covid_constants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> n.LTLA, <span class="co"># nb of LTLAs</span></span>
+<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">K =</span> K, <span class="co"># number of covariates</span></span>
+<span id="cb55-32"><a href="#cb55-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-33"><a href="#cb55-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adjacency matrix</span></span>
+<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">L =</span> <span class="fu">length</span>(nbWB_A<span class="sc">$</span>weights), <span class="co"># the number of neighboring areas</span></span>
+<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">E =</span> data_england<span class="sc">$</span>expectd, <span class="co"># expected number of deaths</span></span>
+<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">adj =</span> nbWB_A<span class="sc">$</span>adj, <span class="co"># the elements of the neighbouring matrix</span></span>
+<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">num =</span> nbWB_A<span class="sc">$</span>num,</span>
+<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> nbWB_A<span class="sc">$</span>weights</span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Create the initial values for ALL the unknown parameters:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialise the unknown parameters, 2 chains</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.01</span>,</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta =</span> <span class="fu">rep</span>(<span class="dv">0</span>, K),</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau.theta =</span> <span class="dv">10</span>,</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau.phi =</span> <span class="dv">1</span>,</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">theta =</span> <span class="fu">rep</span>(<span class="fl">0.01</span>, <span class="at">times =</span> n.LTLA),</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">phi =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fl">0.5</span>, <span class="at">times =</span> n.LTLA))</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta =</span> <span class="fu">rep</span>(<span class="sc">-</span><span class="dv">1</span>, K),</span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau.theta =</span> <span class="dv">1</span>,</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau.phi =</span> <span class="fl">0.1</span>,</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">theta =</span> <span class="fu">rep</span>(<span class="fl">0.05</span>, <span class="at">times =</span> n.LTLA),</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">phi =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="sc">-</span><span class="fl">0.05</span>, <span class="at">times =</span> n.LTLA))</span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Which model parameters do you want to monitor? Set these before running <code>NIMBLE</code>. Call this object <code>parameters_to_monitor</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>parameters_to_monitor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sigma2.theta"</span>, <span class="st">"sigma2.phi"</span>, <span class="st">"overallRR"</span>, <span class="st">"theta"</span>, <span class="st">"beta"</span>, <span class="st">"RR.beta"</span>, <span class="st">"resRR"</span>, <span class="st">"proba.resRR"</span>, <span class="st">"alpha"</span>, <span class="st">"RR.beta1_1NO2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Run the MCMC simulations using the function <code>nimbleMCMC()</code>. If everything is specified reasonably, this needs approximately 5 minutes.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>tic <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">code =</span> BYMecoCode,</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> covid_data,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">constants =</span> covid_constants,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inits =</span> inits,</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">monitors =</span> parameters_to_monitor,</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">niter =</span> <span class="dv">50000</span>,</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nburnin =</span> <span class="dv">30000</span>,</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">thin =</span> <span class="dv">10</span>,</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">nchains =</span> <span class="dv">2</span>,</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">setSeed =</span> <span class="dv">9</span>,</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">progressBar =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">summary =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">WAIC =</span> <span class="cn">TRUE</span></span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>toc <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>toc <span class="sc">-</span> tic</span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="co"># saveRDS(modelBYMeco.sim, file = "NIMBLE_BYM_A4")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"NIMBLE_BYM_A4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Retrieve WAIC and compare with previous model. Which model performs best?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim<span class="sc">$</span>WAIC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nimbleList object of type waicNimbleList
+Field "WAIC":
+[1] 2630.603
+Field "lppd":
+[1] -1158.595
+Field "pWAIC":
+[1] 156.7069</code></pre>
+</div>
+</div>
+<p>Check the convergence of the intercept and covariates NO<span class="math inline">\(_2\)</span> and ICU beds. What do you observe?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(modelBYMeco.sim<span class="sc">$</span>samples, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"alpha"</span>, <span class="fu">paste0</span>(<span class="st">"beta["</span>, <span class="dv">1</span><span class="sc">:</span>K, <span class="st">"]"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta["</span>, <span class="dv">1</span><span class="sc">:</span>K, <span class="st">"]"</span>), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Mean    Median    St.Dev. 95%CI_low 95%CI_upp
+RR.beta[1] 1.2519365 1.2524190 0.04673867 1.1597589 1.3395889
+RR.beta[2] 0.9645565 0.9640884 0.01590041 0.9337215 0.9961903
+RR.beta[3] 0.9385009 0.9363240 0.05052736 0.8436705 1.0426100
+RR.beta[4] 0.9018306 0.9015376 0.04897722 0.8085916 1.0006981
+RR.beta[5] 0.9494108 0.9496892 0.05695198 0.8366907 1.0598967
+RR.beta[6] 0.9140398 0.9142683 0.05849248 0.7988786 1.0307437</code></pre>
+</div>
+</div>
+<p>We can get a nice credible intervals plot as well:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta["</span>, <span class="dv">1</span><span class="sc">:</span>K, <span class="st">"]"</span>), ] <span class="sc">|&gt;</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Median, <span class="st">`</span><span class="at">95%CI_low</span><span class="st">`</span>, <span class="st">`</span><span class="at">95%CI_upp</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariate =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"NO2"</span>, <span class="st">"ICU"</span>, <span class="fu">paste0</span>(<span class="st">"IMD"</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"NO2"</span>, <span class="st">"ICU"</span>, <span class="fu">paste0</span>(<span class="st">"IMD"</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)))</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> cov.eff</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>cov.eff <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  Median `95%CI_low` `95%CI_upp` covariate
+   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;
+1  1.25        1.16        1.34  NO2
+2  0.964       0.934       0.996 ICU
+3  0.936       0.844       1.04  IMD2
+4  0.902       0.809       1.00  IMD3
+5  0.950       0.837       1.06  IMD4
+6  0.914       0.799       1.03  IMD5     </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>cov.eff <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> covariate, <span class="at">y =</span> Median)) <span class="sc">+</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">x =</span> covariate, <span class="at">ymin =</span> <span class="st">`</span><span class="at">95%CI_low</span><span class="st">`</span>, <span class="at">ymax =</span> <span class="st">`</span><span class="at">95%CI_upp</span><span class="st">`</span>), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The effect by unit increase in the long term exposure to NO<span class="math inline">\(_2\)</span> is <code>RR.beta1_1NO2</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as relative risk per 1 unit increase in the long term NO2 exposure</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Median 95%CI_low 95%CI_upp
+ 1.038588  1.025246  1.050411 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># as percentage increase in mortality for 1 unit increase in the long term NO2 exposure</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>(modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"RR.beta1_1NO2"</span>), <span class="fu">c</span>(<span class="st">"Median"</span>, <span class="st">"95%CI_low"</span>, <span class="st">"95%CI_upp"</span>)] <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Median 95%CI_low 95%CI_upp
+ 3.858833  2.524564  5.041070 </code></pre>
+</div>
+</div>
+<p>Compare the BYM-related spatial field before and after adjusting for covariates:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>data_england <span class="sc">|&gt;</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RR_BYM =</span> RR_BYM<span class="sc">$</span>RR_BYM) <span class="sc">|&gt;</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> RR_BYM)) <span class="sc">+</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior median RR (unadj)"</span>) <span class="sc">+</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continuous_divergingx</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">mid =</span> <span class="dv">1</span>, <span class="at">rev =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>data_england <span class="sc">|&gt;</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RR_BYM_ECO =</span> modelBYMeco.sim<span class="sc">$</span>summary<span class="sc">$</span>all.chains[<span class="fu">paste0</span>(<span class="st">"resRR["</span>, <span class="dv">1</span><span class="sc">:</span>n.LTLA, <span class="st">"]"</span>), <span class="st">"Median"</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> RR_BYM_ECO)) <span class="sc">+</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">colour =</span> <span class="st">"white"</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Posterior median RR (adj)"</span>) <span class="sc">+</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continuous_divergingx</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">mid =</span> <span class="dv">1</span>, <span class="at">rev =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="spatiotemporal_models_files/figure-html/unnamed-chunk-49-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="further-closing-remarks-for-advanced-section" class="level2">
+<h2 class="anchored" data-anchor-id="further-closing-remarks-for-advanced-section">Further closing remarks for Advanced section</h2>
+<p>If you got through the advanced portion, we examined the effect of long term exposure to NO<span class="math inline">\(_2\)</span> on COVID-19 mortality. We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA. We reported evidence of an increased COVID-19 mortality for increasing levels of NO<span class="math inline">\(_2\)</span>.</p>
+</section>
 </section>
 
 </main>
@@ -758,7 +1027,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       toggleBodyColorMode(bsSheetEl);
     }
   }
-  toggleBodyColorPrimary();  
+  toggleBodyColorPrimary();
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -768,7 +1037,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
+      if (clz.startsWith('code-annotation-')) {
         return true;
       }
     }
@@ -799,11 +1068,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
       button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
+      tooltip = new bootstrap.Tooltip(button,
+        { trigger: "manual",
           customClass: "code-copy-button-tooltip",
           offset: [0, -8]});
-      tooltip.show();    
+      tooltip.show();
     }
     setTimeout(function() {
       if (tooltip) {
@@ -833,7 +1102,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       theme: 'quarto',
       placement: 'bottom-start'
     };
-    window.tippy(el, config); 
+    window.tippy(el, config);
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
@@ -878,7 +1147,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             height = bottom - top;
           }
           if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
+            // cook up a div (if necessary) and position it
             let div = window.document.getElementById("code-annotation-line-highlight");
             if (div === null) {
               div = window.document.createElement("div");
