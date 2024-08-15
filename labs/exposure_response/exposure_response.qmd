@@ -68,7 +68,7 @@ summary(data_england)
 class(data_england)
 
 # use the code below to simplify the geometry and speed up plotting and other oprtations
-data_england_simpler <- data_england #rgeos::gSimplify(as(data_england, "Spatial"), tol = 500)
+data_england_simpler <- data_england # rgeos::gSimplify(as(data_england, "Spatial"), tol = 500)
 data_england_simpler <- st_as_sf(data_england_simpler)
 data_england_simpler <- cbind(data_england_simpler, data_england %>% mutate(geometry = NULL))
 data_england <- data_england_simpler
@@ -380,8 +380,8 @@ data_england <- data_england |>
   mutate(IMD = as_factor(IMD)) |>
   mutate(as.data.frame(model.matrix(~ 0 + IMD, data = pick(everything()))))
 
-NO2_low = ifelse(scale(data_england$NO2)[, 1] > 0,0,scale(data_england$NO2)[, 1])
-NO2_high = ifelse(scale(data_england$NO2)[, 1] < 0,0,scale(data_england$NO2)[, 1])
+NO2_low <- ifelse(scale(data_england$NO2)[, 1] > 0, 0, scale(data_england$NO2)[, 1])
+NO2_high <- ifelse(scale(data_england$NO2)[, 1] < 0, 0, scale(data_england$NO2)[, 1])
 
 # matrix of covariates
 Xmat <- cbind(
@@ -446,7 +446,7 @@ Set these before running `NIMBLE`.
 Call this object `parameters_to_monitor`.
 
 ```{r}
-parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "RR.beta1_1NO2_low","RR.beta1_1NO2_high")
+parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "RR.beta1_1NO2_low", "RR.beta1_1NO2_high")
 ```
 
 Run the MCMC simulations using the function `nimbleMCMC()`.
@@ -830,7 +830,7 @@ exposure_posterior[, , str_c("b[", 1:100, "]")] |>
   ggplot() +
   geom_line(aes(x = x, y = `50%`)) +
   geom_ribbon(aes(x = x, ymin = `2.5%`, ymax = `97.5%`), fill = "grey80", alpha = 0.5) +
-  labs(x = "NO2", y = "Relative mortality risk") 
+  labs(x = "NO2", y = "Relative mortality risk")
 ```
 
 ## Closing remarks
@@ -840,4 +840,4 @@ We fitted several models, with either linear or non-linear models.
 We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA.
 We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.
 
-It should be noted that this model is not fully adjusted, and that the actual analysis from the paper was at a higher resolution and with full adjustment by potential confounders via covariates. The data from that paper is sensitive and cannot be shared publicly. Nevertheless, this lab shows the basic mechanics of how to create linear and non-linear exposure-response analyses in a Bayesian framework. 
+It should be noted that this model is not fully adjusted, and that the actual analysis from the paper was at a higher resolution and with full adjustment by potential confounders via covariates. The data from that paper is sensitive and cannot be shared publicly. Nevertheless, this lab shows the basic mechanics of how to create linear and non-linear exposure-response analyses in a Bayesian framework.

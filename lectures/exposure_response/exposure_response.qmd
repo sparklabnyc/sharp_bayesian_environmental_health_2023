@@ -100,29 +100,28 @@ ggplot(data = data.frame(x = x, y = y), aes(x = x, y = y)) +
 #| warning: false
 
 data.frame(
-  x=x, 
-  y=y, 
+  x = x,
+  y = y,
   x_cat = INLA::inla.group(x, n = 5) %>% factor()
 ) -> dat_cat
 
 
 lm(y ~ x_cat, data = dat_cat) -> mod
 coefs <- c(coef(mod)[1], coef(mod)[1] + coef(mod)[-1])
-LL <- c(confint(mod)[1,1], confint(mod)[1,1] + confint(mod)[-1,1]) 
-UL <- c(confint(mod)[1,2], confint(mod)[1,2] + confint(mod)[-1,2])
+LL <- c(confint(mod)[1, 1], confint(mod)[1, 1] + confint(mod)[-1, 1])
+UL <- c(confint(mod)[1, 2], confint(mod)[1, 2] + confint(mod)[-1, 2])
 
 data.frame(
-  mean = coefs, 
-  LL = LL, 
-  UL = UL, 
+  mean = coefs,
+  LL = LL,
+  UL = UL,
   X = levels(dat_cat$x_cat) %>% as.character() %>% as.numeric()
-) %>% 
-  ggplot() + 
-  geom_point(data = data.frame(x = x, y = y), aes(x = x, y = y), alpha = 0.5) + 
-  geom_point(aes(x=X, y = mean), col = "red", cex = 2) + 
-  geom_errorbar(aes(x=X, ymin=LL, ymax=UL), col = "red", linewidth = 1, width = 0.3) + 
+) %>%
+  ggplot() +
+  geom_point(data = data.frame(x = x, y = y), aes(x = x, y = y), alpha = 0.5) +
+  geom_point(aes(x = X, y = mean), col = "red", cex = 2) +
+  geom_errorbar(aes(x = X, ymin = LL, ymax = UL), col = "red", linewidth = 1, width = 0.3) +
   theme_bw()
-
 ```
 
 ## Categorical transformation
@@ -140,29 +139,28 @@ data.frame(
 #| warning: false
 
 data.frame(
-  x=x, 
-  y=y, 
+  x = x,
+  y = y,
   x_cat = INLA::inla.group(x, n = 20) %>% factor()
 ) -> dat_cat
 
 
 lm(y ~ x_cat, data = dat_cat) -> mod
 coefs <- c(coef(mod)[1], coef(mod)[1] + coef(mod)[-1])
-LL <- c(confint(mod)[1,1], confint(mod)[1,1] + confint(mod)[-1,1]) 
-UL <- c(confint(mod)[1,2], confint(mod)[1,2] + confint(mod)[-1,2])
+LL <- c(confint(mod)[1, 1], confint(mod)[1, 1] + confint(mod)[-1, 1])
+UL <- c(confint(mod)[1, 2], confint(mod)[1, 2] + confint(mod)[-1, 2])
 
 data.frame(
-  mean = coefs, 
-  LL = LL, 
-  UL = UL, 
+  mean = coefs,
+  LL = LL,
+  UL = UL,
   X = levels(dat_cat$x_cat) %>% as.character() %>% as.numeric()
-) %>% 
-  ggplot() + 
-  geom_point(data = data.frame(x = x, y = y), aes(x = x, y = y), alpha = 0.5) + 
-  geom_point(aes(x=X, y = mean), col = "red", cex = 2) + 
-  geom_errorbar(aes(x=X, ymin=LL, ymax=UL), col = "red", linewidth = 1, width = 0.3) + 
+) %>%
+  ggplot() +
+  geom_point(data = data.frame(x = x, y = y), aes(x = x, y = y), alpha = 0.5) +
+  geom_point(aes(x = X, y = mean), col = "red", cex = 2) +
+  geom_errorbar(aes(x = X, ymin = LL, ymax = UL), col = "red", linewidth = 1, width = 0.3) +
   theme_bw()
-
 ```
 
 ## Basis Expansions
@@ -817,25 +815,26 @@ $$\Delta^2x_i = x_i - 2x_{i+1} + x_{i+2} \sim N(0, \tau^{-1})$$
 
 library(INLA)
 
-dat$x_cat = INLA::inla.group(x, n = 50)
+dat$x_cat <- INLA::inla.group(x, n = 50)
 
-hyper.rw2 <- list(theta = list(prior="pc.prec", param=c(0.1, 0.01)))
-inla(formula = y ~ f(x_cat, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE), 
-     data = dat, 
-     family="gaussian") -> inla_mod
+hyper.rw2 <- list(theta = list(prior = "pc.prec", param = c(0.1, 0.01)))
+inla(
+  formula = y ~ f(x_cat, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE),
+  data = dat,
+  family = "gaussian"
+) -> inla_mod
 
 data.frame(
   x = inla_mod$summary.random$x_cat$ID,
-  med = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.5quant`, 
-  LL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.025quant`, 
+  med = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.5quant`,
+  LL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.025quant`,
   UL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.975quant`
-) %>% 
-  ggplot() + 
-  geom_point(data = dat, aes(x=x, y=y)) + 
-  geom_line(aes(x=x, y=med)) +
-  geom_ribbon(aes(x=x, ymin=LL, ymax=UL), alpha = 0.3, fill = "blue") + 
+) %>%
+  ggplot() +
+  geom_point(data = dat, aes(x = x, y = y)) +
+  geom_line(aes(x = x, y = med)) +
+  geom_ribbon(aes(x = x, ymin = LL, ymax = UL), alpha = 0.3, fill = "blue") +
   theme_bw()
-
 ```
 
 ## Random walk of order 2 (vague prior)
@@ -848,23 +847,25 @@ data.frame(
 
 library(INLA)
 
-dat$x_cat = INLA::inla.group(x, n = 50)
+dat$x_cat <- INLA::inla.group(x, n = 50)
 
-hyper.rw2 <- list(theta = list(prior="pc.prec", param=c(10, 0.8)))
-inla(formula = y ~ f(x_cat, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE), 
-     data = dat, 
-     family="gaussian") -> inla_mod
+hyper.rw2 <- list(theta = list(prior = "pc.prec", param = c(10, 0.8)))
+inla(
+  formula = y ~ f(x_cat, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE),
+  data = dat,
+  family = "gaussian"
+) -> inla_mod
 
 data.frame(
   x = inla_mod$summary.random$x_cat$ID,
-  med = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.5quant`, 
-  LL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.025quant`, 
+  med = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.5quant`,
+  LL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.025quant`,
   UL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.975quant`
-) %>% 
-  ggplot() + 
-  geom_point(data = dat, aes(x=x, y=y)) + 
-  geom_line(aes(x=x, y=med)) +
-  geom_ribbon(aes(x=x, ymin=LL, ymax=UL), alpha = 0.3, fill = "blue") + 
+) %>%
+  ggplot() +
+  geom_point(data = dat, aes(x = x, y = y)) +
+  geom_line(aes(x = x, y = med)) +
+  geom_ribbon(aes(x = x, ymin = LL, ymax = UL), alpha = 0.3, fill = "blue") +
   theme_bw()
 ```
 
@@ -889,13 +890,14 @@ library(sf)
 library(ggplot2)
 read_sf("C:/Users/gkonstan/OneDrive - Imperial College London/ICRF Imperial/Projects/bayesian-environmental-exposure/data/shp.shp") -> shp
 
-ggplot()+ geom_sf(data=shp) + theme_bw()
-
+ggplot() +
+  geom_sf(data = shp) +
+  theme_bw()
 ```
 :::
 :::
 
-## Example 
+## Example
 
 -   Fit a linear, a categorical and a random walk model for capturing the effect of temperature.
 
@@ -925,17 +927,20 @@ Y_LL <- inla.linear$summary.fixed["mean.temp", "0.025quant"] %*% t(X)
 Y_UL <- inla.linear$summary.fixed["mean.temp", "0.975quant"] %*% t(X)
 
 
-data.frame(X=X, 
-           Y_med = Y_med, 
-           Y_LL = Y_LL, 
-           Y_UL = Y_UL) %>% 
-  ggplot() + 
-  geom_point(aes(x=X, y=Y_med), size = 0.4) +
-  geom_ribbon(aes(x=X, ymin=Y_LL, ymax=Y_UL), alpha = 0.2, fill = "blue") + 
-  ylim(-0.1, 0.3) + xlim(c(-3, 33)) + 
-  theme_bw() + 
-  ylab("log-relative risk")  + 
-  xlab("") + 
+data.frame(
+  X = X,
+  Y_med = Y_med,
+  Y_LL = Y_LL,
+  Y_UL = Y_UL
+) %>%
+  ggplot() +
+  geom_point(aes(x = X, y = Y_med), size = 0.4) +
+  geom_ribbon(aes(x = X, ymin = Y_LL, ymax = Y_UL), alpha = 0.2, fill = "blue") +
+  ylim(-0.1, 0.3) +
+  xlim(c(-3, 33)) +
+  theme_bw() +
+  ylab("log-relative risk") +
+  xlab("") +
   ggtitle("Linear") -> p1
 
 
@@ -943,52 +948,60 @@ data.frame(X=X,
 ## Quintiles
 
 dat$id_temp_quin <- inla.group(dat$mean.temp, n = 5)
-hyper.iid <- list(theta = list(prior="pc.prec", 
-                               param=c(1, 0.01)))
+hyper.iid <- list(theta = list(
+  prior = "pc.prec",
+  param = c(1, 0.01)
+))
 
-form <- deaths ~ offset(log(expected)) + 
-  f(id_temp_quin, model = "iid", hyper = hyper.iid,  constr = TRUE)
+form <- deaths ~ offset(log(expected)) +
+  f(id_temp_quin, model = "iid", hyper = hyper.iid, constr = TRUE)
 
 inla.iid <- inla(form, data = dat, family = "poisson")
 
-data.frame(X=inla.iid$summary.random$id_temp$ID, 
-           Y_med = inla.iid$summary.random$id_temp$`0.5quant`, 
-           Y_LL = inla.iid$summary.random$id_temp$`0.025quant`, 
-           Y_UL = inla.iid$summary.random$id_temp$`0.975quant`) %>% 
-  ggplot() + 
-  geom_point(aes(x=X, y=Y_med), size = 1) +
-  geom_errorbar(aes(x=X, ymin=Y_LL, ymax=Y_UL)) +
-  ylim(-0.1, 0.3) + xlim(c(-3, 33)) +
-  theme_bw() + 
-  ylab("")  + 
-  xlab("Temperature") + 
+data.frame(
+  X = inla.iid$summary.random$id_temp$ID,
+  Y_med = inla.iid$summary.random$id_temp$`0.5quant`,
+  Y_LL = inla.iid$summary.random$id_temp$`0.025quant`,
+  Y_UL = inla.iid$summary.random$id_temp$`0.975quant`
+) %>%
+  ggplot() +
+  geom_point(aes(x = X, y = Y_med), size = 1) +
+  geom_errorbar(aes(x = X, ymin = Y_LL, ymax = Y_UL)) +
+  ylim(-0.1, 0.3) +
+  xlim(c(-3, 33)) +
+  theme_bw() +
+  ylab("") +
+  xlab("Temperature") +
   ggtitle("Quintiles") -> p2
 
 ##
 ## Random walk of order 2
 
 dat$id_temp <- inla.group(dat$mean.temp, n = 50)
-hyper.rw2 <- list(theta = list(prior="pc.prec", param=c(0.01, 0.01)))
+hyper.rw2 <- list(theta = list(prior = "pc.prec", param = c(0.01, 0.01)))
 form <- deaths ~ offset(log(expected)) + f(id_temp, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE)
 
 inla.rw2 <- inla(form, data = dat, family = "poisson")
 
 
-data.frame(X=inla.rw2$summary.random$id_temp$ID, 
-           Y_med = inla.rw2$summary.random$id_temp$`0.5quant`, 
-           Y_LL = inla.rw2$summary.random$id_temp$`0.025quant`, 
-           Y_UL = inla.rw2$summary.random$id_temp$`0.975quant`) %>% 
-  ggplot() + 
-  geom_point(aes(x=X, y=Y_med), size = 0.8) +
-  geom_ribbon(aes(x=X, ymin=Y_LL, ymax=Y_UL), alpha = 0.2, fill = "blue") + 
-  ylim(-0.1, 0.3) + xlim(c(-3, 33)) + 
-  theme_bw() + 
-  ylab("") + 
-  xlab("")  + 
-  ggtitle("Random walk 2")-> p3
+data.frame(
+  X = inla.rw2$summary.random$id_temp$ID,
+  Y_med = inla.rw2$summary.random$id_temp$`0.5quant`,
+  Y_LL = inla.rw2$summary.random$id_temp$`0.025quant`,
+  Y_UL = inla.rw2$summary.random$id_temp$`0.975quant`
+) %>%
+  ggplot() +
+  geom_point(aes(x = X, y = Y_med), size = 0.8) +
+  geom_ribbon(aes(x = X, ymin = Y_LL, ymax = Y_UL), alpha = 0.2, fill = "blue") +
+  ylim(-0.1, 0.3) +
+  xlim(c(-3, 33)) +
+  theme_bw() +
+  ylab("") +
+  xlab("") +
+  ggtitle("Random walk 2") -> p3
 
 
-p1|p2|p3
+p1 | p2 | p3
 ```
 
 ## Extensions
