@@ -1,21 +1,21 @@
 ---
-title: "Exposure Response Modelling"
-subtitle: "Key ideas and concepts"
+title: "Introduction to non-linear regression"
 author:
- - name: "Robbie M. Parks"
-   email: "robbie.parks@columbia.edu"
-institute: "Environmental Health Sciences, Columbia University"
-date: 2024-08-22
+ - name: "Garyfallos Konstantinoudis"
+   email: "g.konstantinoudis@imperial.ac.uk"
+institute: "Imperial College London"
+date: "08-22-2024"
 date-format: medium
 title-slide-attributes:
   data-background-color: "#f3f4f4"
   data-background-image: "../../assets/bmeh_normal.png"
   data-background-size: 80%
   data-background-position: 60% 120%
+  subparagraph: yes
 format:
   revealjs:
     slide-number: true
-    incremental: true
+    incremental: false
     chalkboard:
       buttons: false
       preview-links: auto
@@ -23,832 +23,996 @@ format:
     theme: [default, ../../assets/style.scss]
 ---
 
-```{r}
-library(here)
-library(tidyverse)
-library(nimble)
-library(bayesplot)
-library(posterior)
-library(hrbrthemes)
-```
+::: {style="font-size: 90%;"}
+## A clarification
 
-# Outline
+In the name normal (or Poisson, binomial, etc.) linear model, the word 'linear' refers to the response being modelled as a linear combination of covariates, i.e.
 
-- Introduction
-- Regression models
-- Using `NIMBLE` for Bayesian inference
+$$Y_i \sim N(\beta_1 + \beta_2X_{i2} + \dots + \beta_pX_{ip}, \sigma^2)$$
 
-# Overview
+It does not refer to each covariate-response relationship being linear. Therefore the following is also within the class of normal linear models
 
-## Finding associations from data
+$$Y_i \sim N(\beta_1 + \beta_2X_{i} + \beta_3X_{i}^2, \sigma^2)$$
 
-::: nonincremental
-- Generate some points:
+Here, the relationship between Y and x is quadratic, but it is still a linear model.
 :::
 
-``` R
-# Load packages
+## So how do you tell if the relationship is linear?
+
+-   Plot each covariate against the response and see what shape the relationship is.
+
+-   Make sure you plot it with the transformation used in the model.
+
+-   If linear, fit a linear model, if not start thinking of the shape of the relationship.
+
+-   Fit as simple a model as possible, do not overcomplicate it unnecessarily. (Occam's razor)
+
+::: {style="font-size: 80%;"}
+## Example
+
+Associations are not solely linear
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 8
+#| message: false
+#| warning: false
+
+library(dplyr)
 library(ggplot2)
 
-# Create a dataset
-set.seed(100)
-data = data.frame(x=rnorm(100),y=rnorm(100))
+set.seed(11)
+x <- rnorm(n = 1000)
+y <- 0.5 * x * x + rnorm(1000, sd = 0.3)
 
-# Plot and rough fit
-p <- ggplot(data, aes(x, y)) +
-  geom_point()
-
-plot(p)
+ggplot(data = data.frame(x = x, y = y), aes(x = x, y = y)) +
+  geom_point(cex = 1.2) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, linewidth = 1) +
+  theme(text = element_text(size = 15))
 ```
-
-## Finding associations from data
-
-::: nonincremental
-- Plot the generated points:
 :::
+
+## Ways to model non-linearity
+
+-   Transform the continuous exposure to categorical variable and model the categories.
+
+-   Basis functions (e.g., polynomial, Fourier)
+
+-   Natural splines
+
+-   Gaussian priors (e.g., random walks, kernels)
+
+## Categorical transformation
+
+-   Let's first consider quintiles
+
+-   What's the problem with this fit?
 
 ```{r}
 #| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 6
+#| message: false
+#| warning: false
+
+data.frame(
+  x=x, 
+  y=y, 
+  x_cat = INLA::inla.group(x, n = 5) %>% factor()
+) -> dat_cat
+
+
+lm(y ~ x_cat, data = dat_cat) -> mod
+coefs <- c(coef(mod)[1], coef(mod)[1] + coef(mod)[-1])
+LL <- c(confint(mod)[1,1], confint(mod)[1,1] + confint(mod)[-1,1]) 
+UL <- c(confint(mod)[1,2], confint(mod)[1,2] + confint(mod)[-1,2])
+
+data.frame(
+  mean = coefs, 
+  LL = LL, 
+  UL = UL, 
+  X = levels(dat_cat$x_cat) %>% as.character() %>% as.numeric()
+) %>% 
+  ggplot() + 
+  geom_point(data = data.frame(x = x, y = y), aes(x = x, y = y), alpha = 0.5) + 
+  geom_point(aes(x=X, y = mean), col = "red", cex = 2) + 
+  geom_errorbar(aes(x=X, ymin=LL, ymax=UL), col = "red", linewidth = 1, width = 0.3) + 
+  theme_bw()
+
+```
+
+## Categorical transformation
+
+-   More categories...
+
+-   What's the problem with this fit?
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 6
+#| message: false
+#| warning: false
+
+data.frame(
+  x=x, 
+  y=y, 
+  x_cat = INLA::inla.group(x, n = 20) %>% factor()
+) -> dat_cat
+
+
+lm(y ~ x_cat, data = dat_cat) -> mod
+coefs <- c(coef(mod)[1], coef(mod)[1] + coef(mod)[-1])
+LL <- c(confint(mod)[1,1], confint(mod)[1,1] + confint(mod)[-1,1]) 
+UL <- c(confint(mod)[1,2], confint(mod)[1,2] + confint(mod)[-1,2])
+
+data.frame(
+  mean = coefs, 
+  LL = LL, 
+  UL = UL, 
+  X = levels(dat_cat$x_cat) %>% as.character() %>% as.numeric()
+) %>% 
+  ggplot() + 
+  geom_point(data = data.frame(x = x, y = y), aes(x = x, y = y), alpha = 0.5) + 
+  geom_point(aes(x=X, y = mean), col = "red", cex = 2) + 
+  geom_errorbar(aes(x=X, ymin=LL, ymax=UL), col = "red", linewidth = 1, width = 0.3) + 
+  theme_bw()
+
+```
+
+## Basis Expansions
+
+We need to define a set of flexible functions that could capture relationships that are not linear. In general, we can write:
+
+$$Y _i = \sum_j^K\beta_j \phi_j(X_j) + \epsilon_i$$
+
+which we can write: $f(X) = \beta^T\Phi(X)$ and we say that $\Phi(X)$ is a basis system for $f$.
+
+## The polynomial basis function
+
+$$\Phi(X) = (1) \text{ ,thus } Y _i = \beta_0 + \epsilon_i$$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 4
+#| message: false
+#| warning: false
+
+library(dlnm)
+library(patchwork)
+library(orthopolynom)
+
+data(chicagoNMMAPS)
+leg4coef <- legendre.polynomials(n = 5)
+
+ggplot() +
+  geom_hline(yintercept = leg4coef[[1]], linewidth = 1) +
+  xlim(-1, 1) +
+  ylim(-1, 2) +
+  theme_bw() +
+  ylab("") +
+  xlab("") -> p1
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = 1.3) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ 1, se = FALSE, cex = .6, linewidth = 1) -> p2
+
+p1 | p2 + theme(text = element_text(size = 15))
+```
+
+## The polynomial basis function
+
+$$\Phi(X) = (1 X) \text{ ,thus } Y _i = \beta_0 + \beta_1 X_1 + \epsilon_i$$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 4
+#| message: false
+#| warning: false
+
+library(RColorBrewer)
+cols <- RColorBrewer::brewer.pal(n = 8, "Set1")
+
+data(chicagoNMMAPS)
+
+ggplot() +
+  geom_abline(slope = 1, intercept = 0, col = cols[1], cex = .6, linewidth = 1) +
+  geom_hline(yintercept = leg4coef[[1]], linewidth = 1) +
+  xlim(-1, 1) +
+  ylim(-1, 2) +
+  theme_bw() +
+  ylab("") +
+  xlab("") -> p1
+
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = 1.3) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, cex = .6, linewidth = 1) -> p2
+
+p1 | p2
+```
+
+## The polynomial basis function
+
+$$\Phi(X) = (1 \; X \; X^2) \text{ ,thus } Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \epsilon_i$$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 4
+
+ggplot() +
+  geom_abline(slope = 1, intercept = 0, col = cols[1], cex = .6, linewidth = 1) +
+  geom_hline(yintercept = leg4coef[[1]], cex = .6, linewidth = 1) +
+  xlim(-1, 1) +
+  ylim(-1, 2) +
+  geom_line(aes(
+    x = seq(from = -1, to = 1, length.out = 1000),
+    y = -0.5 + 1.5 * seq(from = -1, to = 1, length.out = 1000)^2
+  ), linewidth = 1, col = cols[2]) +
+  theme_bw() +
+  ylab("") +
+  xlab("") -> p1
+
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = 1.3) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2), se = FALSE, cex = .6, linewidth = 1) -> p2
+
+p1 | p2
+```
+
+## The polynomial basis function
+
+$$\Phi(X) = (1 \; X \; X^2 \; X^3) \text{ ,thus } Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \epsilon_i$$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 4
+x.plot <- seq(from = -1, to = 1, length.out = 1000)
+y <- -1.5 * x.plot + 2.5 * x.plot^3
+
+ggplot() +
+  geom_abline(slope = 1, intercept = 0, col = cols[1], cex = .6, linewidth = 1) +
+  geom_hline(yintercept = leg4coef[[1]], cex = .6, linewidth = 1) +
+  xlim(-1, 1) +
+  ylim(-1, 2) +
+  geom_line(aes(
+    x = seq(from = -1, to = 1, length.out = 1000),
+    y = -0.5 + 1.5 * seq(from = -1, to = 1, length.out = 1000)^2
+  ), col = cols[2], cex = .6, linewidth = 1) +
+  geom_line(aes(
+    x = x.plot,
+    y = y
+  ), col = cols[3], cex = .6, linewidth = 1) +
+  theme_bw() +
+  ylab("") +
+  xlab("") -> p1
+
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = 1.3) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2) + I(x^3), se = FALSE, cex = .6, linewidth = 1) -> p2
+
+p1 | p2
+```
+
+## The polynomial basis function
+
+$$\Phi(X) = (1 \; X \; X^2 \; X^3 \; X^4) \text{ ,thus}$$
+
+$$Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \beta_4 X^4 + \epsilon_i$$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 4
+
+x.plot.1 <- seq(from = -1, to = 1, length.out = 1000)
+y.1 <- 0.375 - 3.75 * x.plot.1^2 + 4.375 * x.plot.1^4
+
+ggplot() +
+  geom_abline(slope = 1, intercept = 0, col = cols[1], cex = .6, linewidth = 1) +
+  geom_hline(yintercept = leg4coef[[1]], cex = .6, linewidth = 1) +
+  xlim(-1, 1) +
+  ylim(-1, 2) +
+  geom_line(aes(
+    x = seq(from = -1, to = 1, length.out = 1000),
+    y = -0.5 + 1.5 * seq(from = -1, to = 1, length.out = 1000)^2
+  ), col = cols[2], cex = .6, linewidth = 1) +
+  geom_line(aes(
+    x = x.plot,
+    y = y
+  ), col = cols[3], cex = .6, linewidth = 1) +
+  geom_line(aes(
+    x = x.plot.1,
+    y = y.1
+  ), col = cols[4], cex = .6, linewidth = 1) +
+  theme_bw() +
+  ylab("") +
+  xlab("") -> p1
+
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = 1.3) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2) + I(x^3) + I(x^4), se = FALSE, cex = .6, linewidth = 1) -> p2
+
+p1 | p2
+```
+
+## The polynomial basis function
+
+$$\Phi(X) = (1 \; X \; X^2 \; X^3 \; X^4 \; X^5) \text{ ,thus }$$
+
+$$Y _i = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \beta_4 X^4 +\beta_5 X^5 + \epsilon_i $$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-height: 4
+
+x.plot.2 <- seq(from = -1, to = 1, length.out = 1000)
+y.2 <- 1.875 * x.plot.2 - 8.75 * x.plot.2^3 + 7.875 * x.plot.2^5
+
+ggplot() +
+  geom_abline(slope = 1, intercept = 0, col = cols[1], cex = .6, linewidth = 1) +
+  geom_hline(yintercept = leg4coef[[1]], cex = .6, linewidth = 1) +
+  xlim(-1, 1) +
+  ylim(-1, 2) +
+  geom_line(aes(
+    x = seq(from = -1, to = 1, length.out = 1000),
+    y = -0.5 + 1.5 * seq(from = -1, to = 1, length.out = 1000)^2
+  ), col = cols[2], cex = .6, linewidth = 1) +
+  geom_line(aes(
+    x = x.plot,
+    y = y
+  ), col = cols[3], cex = .6, linewidth = 1) +
+  geom_line(aes(
+    x = x.plot.1,
+    y = y.1
+  ), col = cols[4], cex = .6, linewidth = 1) +
+  geom_line(aes(
+    x = x.plot.2,
+    y = y.2
+  ), col = cols[5], cex = .6, linewidth = 1) +
+  theme_bw() +
+  ylab("") +
+  xlab("") -> p1
+
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = 1.3) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5), se = FALSE, cex = .6, linewidth = 1) -> p2
+
+p1 | p2
+```
+
+::: {style="font-size: 80%;"}
+## Pros and cons
+
+Pros
+
+-   These curves are quite flexible---a quadratic can fit most biologically plausible curves
+
+-   The curves only use 1(quadratic) or 2(cubic) degrees of freedom more than linear, unlike dummy variable models
+
+-   The results are not sensitive to choice of boundaries (there aren't any)
+
+-   Outliers mostly influence the extremes of the curve, not the center part
+
+Cons
+
+-   They use more degrees of freedom than linear, and therefore have less power
+
+-   There is still some sensitivity to influential observations
+:::
+
+## Other types of basis function
+
+-   **Harmonics** - The Fourier basis function
+
+    $$1, sin(\omega X), cos(\omega X), sin(2\omega X), cos(2\omega X), \dots, $$
+
+    $$sin(m \omega X), cos(m \omega X)$$
+
+-   constant $\omega$ defines the period of oscillation of the first sine/cosine pair. This is $\omega = 2\pi/P$ where $P$ is the period.
+
+## Example: Fourier basis function
+
+$$\Phi(X) = (1 \; sin(\omega X) \; cos(\omega X) \; sin(2\omega X) \; cos(2\omega X)) \text{ ,thus }$$
+
+$$Y _i = \beta_0 + \beta_1 sin(\omega X) + \beta_2 cos(\omega X) + \beta_3 sin(2 \omega X) + \beta_4 cos(2\omega X) + \epsilon_i$$
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+
+P <- 360
+omega <- 2 * pi / P
+x <- seq(from = 0, to = 360, length.out = 1000)
+y <- sin(2 * omega * x)
+
+ggplot() +
+  geom_line(aes(x = x, y = sin(2 * omega * x)), cex = .6, col = cols[1]) +
+  geom_line(aes(x = x, y = cos(2 * omega * x)), cex = .6, col = cols[2]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") -> p1
+
+chicagoNMMAPS %>%
+  filter(year == 1987) %>%
+  ggplot(aes(x = time, y = temp)) +
+  geom_point(cex = .8) +
+  theme_bw() +
+  geom_smooth(method = "lm", formula = y ~ I(sin(omega * x)) + I(cos(omega * x)) + I(sin(2 * omega * x)) + I(2 * cos(omega * x)), se = FALSE, cex = .6) -> p2
+
+p1 | p2
+```
+
+::: {style="font-size: 90%;"}
+## Pros and cons
+
+Pros
+
+-   Excellent computational properties, especially if the observations are equally spaced.
+
+-   Natural for describing periodic data, such as the annual weather cycle
+
+-   The results are not sensitive to choice of boundaries (there aren't any)
+
+Cons
+
+-   functions are periodic; this can be a problem if the data are, for example, growth curves.
+:::
+
+## Parametric non-linear effects
+
+-   The following models captured the non-linear relationships using simple non-linear functions.
+
+-   These types of models are to be preferred if possible, because again they are simpler to make inference from, e.g. the relationship is quadratic.
+
+-   However, there may be times when the relationship being modelled does not look like a parametric function. Then what should you do?
+
+## Parametric non-linear effects
+
+Consider the following form
+
+```{r}
+set.seed(11)
+x <- rnorm(n = 1000)
+y <- numeric(1000)
+y[x < 0] <- 1 + 0.5 * x[x < 0] + 0.2 * x[x < 0]^2 + rnorm(n = length(x[x < 0]), sd = 0.2)
+y[x >= 0] <- 0.5 + sin(2 * pi / 2 * x[x >= 0]) + rnorm(n = length(x[x > 0]), sd = 0.3)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  theme(text = element_text(size = 15))
+```
+
+It doesn't look like any simple parametric form (e.g. polynomial, sinusoidal, etc), so what do you do?
+
+## Smooth functions
+
+-   There are many methods to estimate non-linear relationships such as that on the previous slide.
+
+-   They are generically called smooth functions, and include splines (lots of different types), kernel smoothers and local linear smoothers.
+
+-   We will focus on splines in this lab, because they are simple to understand graphically and are easy to fit to the data.
+
+## Splines
+
+-   Splines were originally thin splints of wood used to trace complex, smooth curves in engineering and architectural.
+
+-   Splines were pinned to the drawing at points where the spline changed its curvature.
+
+![](Figures/splinesExample.png){fig-align="center"}
+
+## Piecewise Linear Splines
+
+-   We begin fitting splines by dividing the range of exposure into pieces.
+-   Instead of fitting a constant in each piece, we fit a separate linear term in each piece.
+-   This has more power since it allows variation within categories to predict variation in outcome.
+-   We can use fewer categories to capture the deviation from a strictly linear curve because we have slopes within category.
+
+```{r}
+#| echo: false
+#| eval: true
+
+dat <- data.frame(x = x, y = y)
+```
+
+::: {style="font-size: 80%;"}
+## Linear splines
+
+Linear threshold model
+
+```{=tex}
+\begin{align}
+Y_i &= \beta_0^{(1)} + \beta_1^{(1)}x + \epsilon_i \qquad x\leq-1\\
+Y_i &= \beta_0^{(2)} + \beta_1^{(2)}x + \epsilon_i \qquad -1<x\leq0.5\\
+Y_i &= \beta_0^{(3)} + \beta_1^{(3)}x + \epsilon_i \qquad 0.5<x\leq1.5\\
+Y_i &= \beta_0^{(4)} + \beta_1^{(4)}x + \epsilon_i \qquad 1.5<x\leq3\\
+Y_i &= \beta_0^{(5)} + \beta_1^{(5)}x + \epsilon_i \qquad x\geq3\\
+\end{align}
+```
+Linear spline model
+
+$Y_i = \beta_0 + \beta_1x + \beta_2(x+1)_+ + \beta_3(x-0.5)_+ + \beta_4 (x-1.5)_+ + \beta_5(x-3)_+ + \epsilon_i$
+
+$$(x-k)_+=\begin{cases} 0, \quad x<k \\ x-k, \quad x\geq k\\\end{cases}$$
+:::
+
+## Linear splines in R
+
+-   You can use the `bs()` function in R to define the basis function: `bs(x, degree = 3, knots = c(-1, 0.5, 1.5, 3))` and plot the result:
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+#| message: false
+#| warning: false
+
+library(splines)
+fit <- lm(y ~ bs(x, degree = 1, knots = c(-1, 0.5, 1.5, 3)), data = dat)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), col = cols[1], cex = 1) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit$fitted.values), lwd = 1) +
+  theme(text = element_text(size = 15))
+```
+
+::: {style="font-size: 80%;"}
+## Cubic splines
+
+Similarly we can define higher order polynomial splines, for instance:
+
+```{=tex}
+\begin{align}
+Y_i = \beta_0 &+ \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \\
+& \beta_4 (X+1)_+ + \beta_5 (X+1)_+^2 + \beta_6(X+1)_+^3 + \\
+& \beta_7 (x-0.5)_+ + \beta_8 (x-0.5)_+^2 + \beta_9 (x-0.5)_+^3 + \\
+&\dots + \epsilon_i \\
+(x-k)_+ & =
+\begin{cases}
+0, \quad x<k \\ x-k, \quad x\geq k
+\end{cases}
+\end{align}
+```
+which reduces to the following to ensure smooth curvature on the knots (it can be seen after deriving the first and second derivative):
+
+```{=tex}
+\begin{align}
+Y_i = \beta_0 & + \beta_1 x +\beta_2 x^2 + \beta_3 x_3 + \\
+&\beta_6 (x+1)_+^3 + \beta_9(x-0.5)_+^3 + \dots + \epsilon_i
+\end{align}
+```
+:::
+
+::: {style="font-size: 80%;"}
+## Cubic splines
+
+-   Similar as before: `bs(x, degree = 3, knots = c(-1, 0.5, 1.5, 3))`:
+
+```{r}
+#| echo: true
+#| eval: true
+fit_c <- lm(y ~ bs(x, degree = 3, knots = c(-1, 0.5, 1.5, 3)), data = dat)
+```
+
+without the splines package:
+
+```{r}
+#| echo: false
+#| eval: true
+fit_nopack <- lm(
+  y ~ x + I(x^2) + I(x^3) + I((x + 1)^3 * (x >= -1)) +
+    I((x - 0.5)^3 * (x >= 0.5)) + I((x - 1.5)^3 * (x >= 1.5)) + I((x - 3)^3 * (x >= 3)),
+  data = dat
+)
+```
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit_nopack$fitted.values), lwd = 1) +
+  theme(text = element_text(size = 15))
+```
+:::
+
+::: {style="font-size: 80%;"}
+## Splines
+
+A spline of order n is a piecewise polynomial function of degree $n-1$ in a variable $x$.
+
+(Basis) Splines can be:
+
+-   Piecewise constant.
+
+-   Linear.
+
+-   Quadratic.
+
+-   Cubic.
+
+-   higher order polynomials.
+
+-   etc.
+
+Why are the borders so wiggly?
+:::
+
+## Natural cubic splines
+
+-   Splines can have high variance in the boundaries.
+
+-   This problem aggravates if knots too few.
+
+-   The natural spline constraints the fit to be linear before and after the first and last knots.
+
+-   This stabilises the fitting and makes a more reasonable assumption.
+
+::: {style="font-size: 90%;"}
+## Natural cubic splines in R
+
+-   To define natural cubic splines in R: `ns(x, knots = c(-1, 0.5, 1.5, 3)):`
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+
+fit_ns <- lm(y ~ ns(x, knots = c(-1, 0.5, 1.5, 3)), data = dat)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit_ns$fitted.values), lwd = 1) +
+  theme(text = element_text(size = 15))
+```
+:::
+
+::: {style="font-size: 90%;"}
+## Well, better fit be achieved with more knots
+
+-   `ns(x, df = 10)`
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+fit_ns2 <- lm(y ~ ns(x, df = 10), data = dat)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit_ns2$fitted.values), lwd = 1)
+```
+:::
+
+::: {style="font-size: 90%;"}
+## ... and more
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+fit_ns2 <- lm(y ~ ns(x, df = 50), data = dat)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit_ns2$fitted.values), lwd = 1)
+```
+:::
+
+::: {style="font-size: 90%;"}
+## ... and more
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+fit_ns3 <- lm(y ~ ns(x, df = 100), data = dat)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit_ns3$fitted.values), lwd = 1)
+```
+:::
+
+::: {style="font-size: 90%;"}
+## ... and more
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+fit_ns4 <- lm(y ~ ns(x, df = 1000), data = dat)
+
+ggplot() +
+  geom_point(aes(x = x, y = y), cex = 1.3, col = cols[1]) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  geom_line(aes(x = dat$x, y = fit_ns4$fitted.values), lwd = 1)
+```
+
+is this a useful model?
+:::
+
+## Gaussian priors
+
+-   We will focus on random walks of order 2, which is the Bayesian analogue of (penalized) splines. Recall:
+
+$$\Delta^2x_i = x_i - 2x_{i+1} + x_{i+2} \sim N(0, \tau^{-1})$$
+
+-   This is very similar with the categorical transformation example, but written in a more concise manner (this model is not overparametrised).
+
+-   The penalty is given through the prior of the precision parameter. The prior controls smoothness: the strongest it is the smoother the result. (given the data)
+
+## Random walk of order 2 (strong prior)
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+
+library(INLA)
+
+dat$x_cat = INLA::inla.group(x, n = 50)
+
+hyper.rw2 <- list(theta = list(prior="pc.prec", param=c(0.1, 0.01)))
+inla(formula = y ~ f(x_cat, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE), 
+     data = dat, 
+     family="gaussian") -> inla_mod
+
+data.frame(
+  x = inla_mod$summary.random$x_cat$ID,
+  med = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.5quant`, 
+  LL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.025quant`, 
+  UL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.975quant`
+) %>% 
+  ggplot() + 
+  geom_point(data = dat, aes(x=x, y=y)) + 
+  geom_line(aes(x=x, y=med)) +
+  geom_ribbon(aes(x=x, ymin=LL, ymax=UL), alpha = 0.3, fill = "blue") + 
+  theme_bw()
+
+```
+
+## Random walk of order 2 (vague prior)
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 10
+
+library(INLA)
+
+dat$x_cat = INLA::inla.group(x, n = 50)
+
+hyper.rw2 <- list(theta = list(prior="pc.prec", param=c(10, 0.8)))
+inla(formula = y ~ f(x_cat, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE), 
+     data = dat, 
+     family="gaussian") -> inla_mod
+
+data.frame(
+  x = inla_mod$summary.random$x_cat$ID,
+  med = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.5quant`, 
+  LL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.025quant`, 
+  UL = inla_mod$summary.fixed$`0.5quant` + inla_mod$summary.random$x_cat$`0.975quant`
+) %>% 
+  ggplot() + 
+  geom_point(data = dat, aes(x=x, y=y)) + 
+  geom_line(aes(x=x, y=med)) +
+  geom_ribbon(aes(x=x, ymin=LL, ymax=UL), alpha = 0.3, fill = "blue") + 
+  theme_bw()
+```
+
+## Example: Mortality and temperature in Italy
+
+::: columns
+::: {.column width="50%"}
+-   1,946,755 summer deaths during 2011-2018 in Italy
+
+-   Data is available at 107 administrative units
+
+-   Temperature is available from ERA-5 at 9km resolution
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| eval: true
+#| fig.width: 7
+
+library(sf)
 library(ggplot2)
-set.seed(100)
-data <- data.frame(x = rnorm(100), y = rnorm(100))
+read_sf("C:/Users/gkonstan/OneDrive - Imperial College London/ICRF Imperial/Projects/bayesian-environmental-exposure/data/shp.shp") -> shp
 
-p <- ggplot(data, aes(x, y)) +
-  geom_point()
+ggplot()+ geom_sf(data=shp) + theme_bw()
 
-plot(p)
 ```
-
-## Finding associations from data
-
-::: nonincremental
-- Establish some kind of association:
 :::
+:::
+
+## Example 
+
+-   Fit a linear, a categorical and a random walk model for capturing the effect of temperature.
 
 ```{r}
 #| echo: false
-library(ggplot2)
-set.seed(100)
-data <- data.frame(x = rnorm(100), y = rnorm(100))
+#| eval: true
+#| fig-align: "center"
+#| fig-width: 12
 
-p <- ggplot(data, aes(x, y)) +
-  geom_point() +
-  geom_smooth(method = "loess")
+library(INLA)
+library(dplyr)
+library(patchwork)
 
-plot(p)
+dat <- readRDS("data/dataItaly_2")
+
+##
+## Linear IID
+
+form <- deaths ~ offset(log(expected)) + mean.temp
+
+inla.linear <- inla(form, data = dat, family = "poisson")
+# summary(inla.linear)
+
+X <- seq(from = -3, to = 33)
+Y_med <- inla.linear$summary.fixed["mean.temp", "0.5quant"] %*% t(X)
+Y_LL <- inla.linear$summary.fixed["mean.temp", "0.025quant"] %*% t(X)
+Y_UL <- inla.linear$summary.fixed["mean.temp", "0.975quant"] %*% t(X)
+
+
+data.frame(X=X, 
+           Y_med = Y_med, 
+           Y_LL = Y_LL, 
+           Y_UL = Y_UL) %>% 
+  ggplot() + 
+  geom_point(aes(x=X, y=Y_med), size = 0.4) +
+  geom_ribbon(aes(x=X, ymin=Y_LL, ymax=Y_UL), alpha = 0.2, fill = "blue") + 
+  ylim(-0.1, 0.3) + xlim(c(-3, 33)) + 
+  theme_bw() + 
+  ylab("log-relative risk")  + 
+  xlab("") + 
+  ggtitle("Linear") -> p1
+
+
+##
+## Quintiles
+
+dat$id_temp_quin <- inla.group(dat$mean.temp, n = 5)
+hyper.iid <- list(theta = list(prior="pc.prec", 
+                               param=c(1, 0.01)))
+
+form <- deaths ~ offset(log(expected)) + 
+  f(id_temp_quin, model = "iid", hyper = hyper.iid,  constr = TRUE)
+
+inla.iid <- inla(form, data = dat, family = "poisson")
+
+data.frame(X=inla.iid$summary.random$id_temp$ID, 
+           Y_med = inla.iid$summary.random$id_temp$`0.5quant`, 
+           Y_LL = inla.iid$summary.random$id_temp$`0.025quant`, 
+           Y_UL = inla.iid$summary.random$id_temp$`0.975quant`) %>% 
+  ggplot() + 
+  geom_point(aes(x=X, y=Y_med), size = 1) +
+  geom_errorbar(aes(x=X, ymin=Y_LL, ymax=Y_UL)) +
+  ylim(-0.1, 0.3) + xlim(c(-3, 33)) +
+  theme_bw() + 
+  ylab("")  + 
+  xlab("Temperature") + 
+  ggtitle("Quintiles") -> p2
+
+##
+## Random walk of order 2
+
+dat$id_temp <- inla.group(dat$mean.temp, n = 50)
+hyper.rw2 <- list(theta = list(prior="pc.prec", param=c(0.01, 0.01)))
+form <- deaths ~ offset(log(expected)) + f(id_temp, model = "rw2", hyper = hyper.rw2, scale.model = TRUE, constr = TRUE)
+
+inla.rw2 <- inla(form, data = dat, family = "poisson")
+
+
+data.frame(X=inla.rw2$summary.random$id_temp$ID, 
+           Y_med = inla.rw2$summary.random$id_temp$`0.5quant`, 
+           Y_LL = inla.rw2$summary.random$id_temp$`0.025quant`, 
+           Y_UL = inla.rw2$summary.random$id_temp$`0.975quant`) %>% 
+  ggplot() + 
+  geom_point(aes(x=X, y=Y_med), size = 0.8) +
+  geom_ribbon(aes(x=X, ymin=Y_LL, ymax=Y_UL), alpha = 0.2, fill = "blue") + 
+  ylim(-0.1, 0.3) + xlim(c(-3, 33)) + 
+  theme_bw() + 
+  ylab("") + 
+  xlab("")  + 
+  ggtitle("Random walk 2")-> p3
+
+
+p1|p2|p3
 ```
 
-## Finding associations from data
+## Extensions
 
-::: nonincremental
-- Better still, use some real data.
+-   It is straight forward to include confounders in the linear predictor.
 
-:::
+-   Confounders can be included as linear or more flexible terms.
 
-``` R
-data <- read_csv(here("data", "Spain", "data_spain.csv"))
-head(data)
+-   We can account for spatiotemporal correlations.
 
-data_national <- data |>
-  group_by(week, week_of_year) |>
-  summarise(
-    deaths = sum(deaths),
-    population = sum(population),
-    t2m = mean(t2m),
-    weekly_t2m_anomaly = mean(weekly_t2m_anomaly)
-  ) |>
-  mutate(week = dmy(week)) |>
-  arrange(week) |>
-  filter(year(week) < 2020) # avoiding COVID for now
+-   We can incorporate the delayed effect of temperature on health (lags)
 
-ggplot(data = data_national) +
-  geom_point(aes(x = week, y = deaths))
-```
+    -   joint lag models
 
-## Finding associations from data
+    -   distributed non-linear lag models
 
-::: nonincremental
-- Better still, use some real data.
-:::
+## Summary
 
-```{r}
-data <- read_csv(here("data", "Spain", "data_spain.csv"))
-head(data)
+-   Introduction to non-linear exposure models
 
-data_national <- data |>
-  group_by(week, week_of_year) |>
-  summarise(
-    deaths = sum(deaths),
-    population = sum(population),
-    t2m = mean(t2m),
-    weekly_t2m_anomaly = mean(weekly_t2m_anomaly)
-  ) |>
-  mutate(week = dmy(week)) |>
-  arrange(week) |>
-  filter(year(week) < 2020) # avoiding COVID for now
-```
+-   Theory and application of linear splines
 
-## Finding associations from data
+-   Understand more flexible non-parametric functions (focus on splines)
 
-::: nonincremental
-- Better still, use some real data.
-:::
+-   Random walk of order 2 to model non-linearity
 
-```{r}
-#| echo: false
-ggplot(data = data_national) +
-  geom_point(aes(x = week, y = deaths))
-```
-
-## Finding associations from data
-
-::: nonincremental
-- Find some kind of association.
-:::
-
-```{r}
-#| echo: false
-data_national <- data_national |>
-  mutate(rate = 100000 * deaths / population)
-
-code_linear <- nimbleCode({
-  # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
-  beta_week ~ dnorm(0, sd = 10) # prior for beta_week
-
-  # likelihood
-  for (t in 1:Nw) {
-    deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- log(population[t]) + alpha + beta_week * t
-  }
-
-  # what's the estimated annual rate of change?
-  beta_year <- exp(52 * beta_week)
-})
-
-constants <- list(Nw = nrow(data_national))
-data <- list(deaths = data_national$deaths, population = data_national$population)
-
-inits <- list(alpha = 0, beta_week = 0)
-parameters_to_monitor <- c("alpha", "beta_week", "beta_year")
-
-nimbleMCMC_samples_linear <- nimbleMCMC(
-  code = code_linear,
-  data = data,
-  constants = constants,
-  inits = inits,
-  monitors = parameters_to_monitor,
-  niter = 10000,
-  nburnin = 5000,
-  setSeed = 1,
-  progressBar = FALSE,
-  samplesAsCodaMCMC = TRUE
-)
-
-linear_fit <- data_national |>
-  ungroup() |>
-  mutate(
-    .death_rate_fit = 100000 * exp(
-      # add alpha and beta_week * week_number by sample
-      sweep(
-        nimbleMCMC_samples_linear[, "beta_week"] %*% t(1:nrow(data_national)),
-        1,
-        nimbleMCMC_samples_linear[, "alpha"],
-        FUN = "+"
-      )
-    ) |>
-      # then take the mean of the samples
-      apply(
-        FUN = mean,
-        MARGIN = 2
-      )
-  ) |>
-  mutate(residuals = rate - .death_rate_fit)
-
-linear_fit |>
-  ggplot() +
-  geom_point(aes(x = week, y = rate), size = 0.6) +
-  geom_line(aes(x = week, y = .death_rate_fit), size = 0.8, colour = "red")
-```
-
-## But do the residuals look right?
-
-```{r}
-linear_fit |>
-  ggplot(aes(x = residuals)) +
-  geom_histogram()
-```
-
-## Regression models
-
-- Most commonly used to assess presence of a relationship between a dependent variable and one or more independent variables.
-- Bayesian regression originally used in econometrics.
-- Now wide range of fields use regression, including environmental epidemiology.
-- Partly why we find ourselves here today!
-
-## Regression models
-
-- Basic steps for regression models:
-1. Establish suitable model for observations.
-2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions etc.
-4. Run the model somehow (e.g., `R` with `NIMBLE`).
-5. See how well the model has fit.
-
-# Suitable models for observations
-
-## Generalized linear models
-
-- Extension of linear regression to when distribution not necessarily normally distributed.
-- Distributions which are part of the exponential family can describe all sort of non-normally distributed variables.
-- Many examples commonly encountered in environmental health.
-- We'll go through a few now...
-
-## Exponential family of models
-
-- Sometimes dependent variable is not normally distributed.
-- Exponential family is family of models described in a certain way (won't get into it in this workshop).
-- All of the models we'll look at are exponential family models.
-
-## Some types of models to know about
-
-- Normal (we've seen last lecture)
-- Logistic regression (yes/no)
-- Binomial (set number of trials)
-- Poisson (counts)
-
-## Normal distribution
-
-::: nonincremental
-- As seen in first lecture.
-:::
-
-$$
-\begin{split}
-y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
-\mu_i &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
-\end{split}
-$$
-
-## Logistic regression
-
-::: nonincremental
-- Used when we want to classify observations into two groups (zero or one).
-- If dependent variable represents sets of trails of yes/no:
-:::
-
-$$
-\begin{split}
-y_i &\sim \text{Bernoulli}(p_i) \quad i = 1,..., N \\
-\text{logit}(p_i) &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
-\end{split}
-$$
-
-## Binomial regression
-
-::: nonincremental
-- Used when we want to know how many successes from a set number of trials
-- Distributed with Binomial distribution (zero to $n$ successes).
-:::
-
-$$
-\begin{split}
-y_i &\sim \text{Bin}(n,p_i) \quad i = 1,..., N \\
-\text{logit}(p_i) &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
-\end{split}
-$$
-
-## Poisson regression
-
-::: nonincremental
-- Used typically with count data (number of events happening within a discrete space and time).
-:::
-
-$$
-\begin{split}
-y_t &\sim \text{Pois}(\mu_t) \quad i = 1,..., T \\
-\log(\mu_t) &= \log(P_t) + \alpha + \beta_w t
-\end{split}
-$$
-
-## Link function
-
-- When modelling, we must make a decision about how the predictors are related to the key parameters in our chosen relationship
-- You will see several of the remaining time in the workshop.
-- For example, link function on Poisson regression is usually a log-link function to prevent counts from going negative.
-
-$$
-\begin{split}
-\log(\mu_t) &= \log(P_t) + \alpha + \beta_w t
-\end{split}
-$$
-
-## Reminder of regression model steps
-
-::: nonincremental
-- Basic steps for regression models:
-1. Establish suitable model for observations.
-2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions etc.
-4. Run the model somehow (e.g., `R` with `NIMBLE`).
-5. See how well the model has fit.
-:::
-
-# Relationship between predictor(s) and outcome
-
-## Linear regression
-
-- Simplest regression model.
-- Assuming a linear relationship between predictors and the outcome.
-- Used in countless different applications.
-
-## Linear regression
-
-$$
-\begin{split}
-y_i &\sim \text{Normal}(\mu_i, \sigma) \quad i = 1,..., N \\
-\mu_i &= \alpha + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3
-\end{split}
-$$
-
-## Linear regression
-
-::: nonincremental
-- As a reminder of last lab, in `NIMBLE`, we can write (including priors):
-:::
-
-``` R
-code <- nimbleCode({
-  # priors for parameters
-  alpha ~ dnorm(0, sd = 100) # prior for alpha
-  beta1 ~ dnorm(0, sd = 100) # prior for beta1
-  beta2 ~ dnorm(0, sd = 100) # prior for beta2
-  beta3 ~ dnorm(0, sd = 100) # prior for beta3
-  sigma ~ dunif(0, 100) # prior for variance components
-
-  # regression formula
-  for (i in 1:n) { # n is the number of observations we have in the data
-    mu[i] <- alpha + beta1 * x1[i] + beta2 * x2[i] + beta3 * x3[i] # manual entry of linear predictors
-    y[i] ~ dnorm(mu[i], sd = sigma)
-  }
-})
-```
-
-
-## Non-linear regression
-
-- Seasonality can exist in data, for example, that requires accounting for.
-- Also, there can be autocorrelation between neighbouring time points.
-
-## Non-linear regression
-
-```{r}
-#| echo: false
-ggplot(data = data_national) +
-  geom_point(aes(x = week, y = deaths))
-```
-
-## Non-linear regression
-
-- Random walk.
-- Can be over time or over other units.
-- Extension is autoregressive structure for longer-term memory.
-
-## Non-linear regression
-
-$$
-\begin{split}
-y_t &\sim \text{Pois}(\mu_t) \quad i = t,..., T \\
-\log(\mu_t) &= \log(P_t) + \alpha + \gamma_t \\
-\gamma_t &\sim N(\gamma_{t-1}, \sigma_{rw})
-\end{split}
-$$
-
-## Non-linear regression
-
-``` R
-code_weekly_random_walk <- nimbleCode({
-  # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
-  sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
-
-  # likelihood
-  for (t in 1:Nw) {
-    deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- log(population[t]) + lograte[t]
-    lograte[t] <- alpha + rw[t]
-  }
-
-  # random walk over time
-  rw[1] <- 0
-  for (t in 2:Nw) {
-    rw[t] ~ dnorm(rw[t - 1], sigma_rw)
-  }
-})
-```
-
-## Non-linear regression
-
-```{r}
-#| echo: false
-code_weekly_random_walk <- nimbleCode({
-  # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
-  sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
-
-  # likelihood
-  for (t in 1:Nw) {
-    deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- log(population[t]) + lograte[t]
-    lograte[t] <- alpha + rw[t]
-  }
-
-  # random walk over time
-  rw[1] <- 0
-  for (t in 2:Nw) {
-    rw[t] ~ dnorm(rw[t - 1], sigma_rw)
-  }
-})
-
-constants <- list(Nw = nrow(data_national))
-data <- list(deaths = data_national$deaths, population = data_national$population)
-
-inits <- list(alpha = -8.0, rw = rep(0, times = nrow(data_national)), sigma_rw = 1)
-parameters_to_monitor <- c("alpha", "rw", "lograte")
-
-nimbleMCMC_samples_week_random_walk <- nimbleMCMC(
-  code = code_weekly_random_walk,
-  data = data,
-  constants = constants,
-  inits = inits,
-  monitors = parameters_to_monitor,
-  niter = 10000, # 80000,
-  nburnin = 5000, # 40000,
-  setSeed = 1,
-  progressBar = FALSE,
-  samplesAsCodaMCMC = TRUE
-)
-
-pred_death_rate <- 100000 * exp(
-  nimbleMCMC_samples_week_random_walk[, str_c("lograte[", seq(nrow(data_national)), "]")]
-) |>
-  apply(
-    FUN = quantile,
-    MARGIN = 2,
-    p = c(0.025, 0.5, 0.975)
-  )
-
-rw_fit <- data_national |>
-  ungroup() |>
-  mutate(
-    .death_rate_median = pred_death_rate[2, ],
-    .death_rate_lower = pred_death_rate[1, ],
-    .death_rate_upper = pred_death_rate[3, ],
-  ) |>
-  mutate(residuals = rate - .death_rate_median)
-
-rw_fit |>
-  ggplot(aes(x = week)) +
-  geom_point(aes(y = rate), size = 2) +
-  geom_ribbon(aes(ymin = .death_rate_lower, ymax = .death_rate_upper), fill = "red", alpha = 0.1) +
-  geom_line(aes(y = .death_rate_median), size = 0.4, colour = "red")
-```
-
-## Reminder of regression model steps
-
-::: nonincremental
-- Basic steps for regression models:
-1. Establish suitable model for observations.
-2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions etc.
-4. Run the model somehow (e.g., `R` with `NIMBLE`).
-5. See how well the model has fit.
-:::
-
-# Prior distributions
-
-## Setting priors
-
-- Need to do this on:
-- The regression parameters (e.g., the $\beta$ parameters).
-- Variance of outcome (e.g., $\sigma^2$).
-- In absence of information, set priors as vague:
-
-``` R
-alpha ~ dnorm(0, sd = 10) # prior for alpha
-beta_temperature ~ dnorm(0, sd = 10) # prior for beta_temperature
-sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
-```
-
-## Priors focus in `NIMBLE` model
-
-```{r}
-#| echo: false
-code_weekly_random_walk <- nimbleCode({
-  # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
-  sigma_rw ~ T(dnorm(0, 1), 0, Inf) # half-normal prior for variance of weekly effects
-
-  # likelihood
-  for (t in 1:Nw) {
-    deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- log(population[t]) + lograte[t]
-    lograte[t] <- alpha + rw[t]
-  }
-
-  # random walk over time
-  rw[1] <- 0
-  for (t in 2:Nw) {
-    rw[t] ~ dnorm(rw[t - 1], sigma_rw)
-  }
-})
-```
-
-## Priors focus in `NIMBLE` model
-
-::: nonincremental
-- How does $\alpha$ prior look?
-:::
-
-$$Normal(0,10)$$
-
-```{r}
-#| echo: false
-p <- seq(-10, 10, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 10), type = "l")
-```
-
-## Priors focus in `NIMBLE` model
-
-::: nonincremental
-- Alternative $\alpha$ priors:
-:::
-
-$$Normal(0,1)$$
-
-```{r}
-#| echo: false
-p <- seq(-10, 10, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 0, 1), type = "l")
-```
-
-## Priors focus in `NIMBLE` model
-
-::: nonincremental
-- Alternative $\alpha$ priors:
-:::
-
-$$Normal(1,1)$$
-
-```{r}
-#| echo: false
-p <- seq(-10, 10, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 1, 1), type = "l")
-```
-
-## Priors focus in `NIMBLE` model
-
-::: nonincremental
-- Alternative $\alpha$ priors:
-:::
-
-$$Normal(1,5)$$
-
-```{r}
-#| echo: false
-p <- seq(-10, 10, length = 10000)
-
-# create plot of Beta distribution with shape parameters 2 and 10
-plot(p, dnorm(p, 1, 5), type = "l")
-```
-
-## Reminder of regression model steps
-
-::: nonincremental
-- Basic steps for regression models:
-1. Establish suitable model for observations.
-2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions etc.
-4. Run the model somehow (e.g., `R` with `NIMBLE`).
-5. See how well the model has fit.
-:::
-
-# Running models
-
-- Use `NIMBLE` with `R`!
-
-## Linear regression: Real world example
-
-::: nonincremental
-- Let's load in the data we'll use for lab (Spain mortality).
-:::
-
-``` R
-data <- read_csv(here("data", "Spain", "data_spain.csv"))
-```
-
-```{r}
-data <- read_csv(here("data", "Spain", "data_spain.csv"))
-```
-
-## Linear regression: Real world example
-
-::: nonincremental
-- What does it look like?
-
-:::
-
-``` R
-data <- read_csv(here("data", "Spain", "data_spain.csv"))
-head(data)
-
-data_national <- data |>
-  group_by(week, week_of_year) |>
-  summarise(
-    deaths = sum(deaths),
-    population = sum(population),
-    t2m = mean(t2m),
-    weekly_t2m_anomaly = mean(weekly_t2m_anomaly)
-  ) |>
-  mutate(week = dmy(week)) |>
-  arrange(week) |>
-  filter(year(week) < 2020) # avoiding COVID for now
-
-ggplot(data = data_national) +
-  geom_point(aes(x = week, y = deaths))
-```
-
-## Linear regression: Real world example
-
-::: nonincremental
-- Find some kind of association.
-:::
-
-``` R
-code_linear <- nimbleCode({
-  # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
-  beta_week ~ dnorm(0, sd = 10) # prior for beta_week
-
-  # likelihood
-  for (t in 1:Nw) {
-    deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- log(population[t]) + alpha + beta_week * t
-  }
-
-  # what's the estimated annual rate of change?
-  beta_year <- exp(52 * beta_week)
-})
-```
-
-## Linear regression: Real world example
-
-::: nonincremental
-- Find some kind of association.
-:::
-
-```{r}
-#| echo: false
-data_national <- data_national |>
-  mutate(rate = 100000 * deaths / population)
-
-code_linear <- nimbleCode({
-  # priors
-  alpha ~ dnorm(0, sd = 10) # prior for alpha
-  beta_week ~ dnorm(0, sd = 10) # prior for beta_week
-
-  # likelihood
-  for (t in 1:Nw) {
-    deaths[t] ~ dpois(mu[t])
-    log(mu[t]) <- log(population[t]) + alpha + beta_week * t
-  }
-
-  # what's the estimated annual rate of change?
-  beta_year <- exp(52 * beta_week)
-})
-
-constants <- list(Nw = nrow(data_national))
-data <- list(deaths = data_national$deaths, population = data_national$population)
-
-inits <- list(alpha = 0, beta_week = 0)
-parameters_to_monitor <- c("alpha", "beta_week", "beta_year")
-
-nimbleMCMC_samples_linear <- nimbleMCMC(
-  code = code_linear,
-  data = data,
-  constants = constants,
-  inits = inits,
-  monitors = parameters_to_monitor,
-  niter = 10000,
-  nburnin = 5000,
-  setSeed = 1,
-  progressBar = FALSE,
-  samplesAsCodaMCMC = TRUE
-)
-
-pred_death_rate <- 100000 * exp(
-  # add alpha and beta_week * week_number by sample
-  sweep(
-    nimbleMCMC_samples_linear[, "beta_week"] %*% t(1:nrow(data_national)),
-    1,
-    nimbleMCMC_samples_linear[, "alpha"],
-    FUN = "+"
-  )
-) |>
-  # take the median and 2.5, 97.5 quantiles
-  apply(
-    FUN = quantile,
-    MARGIN = 2,
-    p = c(0.025, 0.5, 0.975)
-  )
-
-linear_fit <- data_national |>
-  ungroup() |>
-  mutate(
-    .death_rate_median = pred_death_rate[2, ],
-    .death_rate_lower = pred_death_rate[1, ],
-    .death_rate_upper = pred_death_rate[3, ],
-  ) |>
-  mutate(residuals = rate - .death_rate_median)
-
-linear_fit |>
-  ggplot(aes(x = week)) +
-  geom_point(aes(y = rate), size = 0.6) +
-  geom_ribbon(aes(ymin = .death_rate_lower, ymax = .death_rate_upper), fill = "red", alpha = 0.1) +
-  geom_line(aes(y = .death_rate_median), size = 0.4, colour = "red")
-```
-## Reminder of regression model steps
-
-::: nonincremental
-- Basic steps for regression models:
-1. Establish suitable model for observations.
-2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions etc.
-4. Run the model somehow (e.g., `R` with `NIMBLE`).
-5. See how well the model has fit.
-:::
-
-
-# Evaluating model fit
-
-## Evaluating model fit
-
-- Sometimes a seemingly reasonable approach can result in unexpected results.
-- When this happens (and in general), good idea to have some way to evaluate model fit of candidate models.
-- Ideally residuals after model fit are essentially normally distributed centered around zero.
-
-## Linear model residuals
-
-```{r}
-linear_fit |>
-  ggplot(aes(x = residuals)) +
-  geom_histogram()
-```
-
-## Random walk residuals
-
-```{r}
-rw_fit |>
-  ggplot(aes(x = residuals)) +
-  geom_histogram()
-```
-
-## Other ways of evaluating model fit
-
-- Sometimes not just how well model fits data.
-- Also model parameterisation important.
-- Predictability is very important and overfitted models are not going to predict well.
-- Others will go into Bayesian versions of this.
-
-## Reminder of regression model steps
-
-::: nonincremental
-- Basic steps for regression models:
-1. Establish suitable model for observations.
-2. Identify type of relationship between predictor(s) and outcome.
-3. For Bayesian approach, specify prior distributions etc.
-4. Run the model somehow (e.g., `R` with `NIMBLE`).
-5. See how well the model has fit.
-:::
-
-# Getting ready for the lab
-
-## The lab for this session {.smaller}
-
-- This goal of this lab is to explore some key temporal modelling concepts, including linear slopes, random walks and inclusion of linear exposure terms.
-
-- During this lab session, we will:
-1. Explore some real time series mortality data;
-2. Apply a basic linear model;
-3. Apply a non-linear model;
-4. Incorporate basic temperature term into model;
-5. Modify temperature term to be month-specific; and
-6. Explore how well model convergence and fit performs.
-
-# Questions?
+Questions?
