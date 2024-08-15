@@ -555,10 +555,10 @@ BYMecoRW2Code <- nimbleCode({
   tau.theta ~ dgamma(0.5, 0.05) # prior for the precision hyperparameter
   sigma2.theta <- 1 / tau.theta # variance of unstructured area random effects
 
-  tau.phi ~ dgamma(0.5, 0.0005) # prior on precison of spatial area random effects
+  tau.phi ~ dgamma(0.5, 0.0005) # prior on precision of spatial area random effects
   sigma2.phi <- 1 / tau.phi # conditional variance of spatial area random effects
 
-  tau.b ~ dgamma(0.5, 0.0005) # prior on precison of random walk of order 2
+  tau.b ~ dgamma(0.5, 0.0005) # prior on precision of random walk of order 2
   sigma2.b <- 1 / tau.b # conditional variance of random walk of order 2
 
   # ICAR prior
@@ -779,7 +779,7 @@ cov.eff |>
 ```
 
 Plot the non-linear $NO_2$ association
-```{r}
+```{r warning=FALSE}
 # logic to get the first value of the bin
 NO2_bins <- data_england |>
   pull(NO2) |>
@@ -795,30 +795,42 @@ as_mcmc_obj <- \(x) as_draws_array(as.mcmc.list(lapply(x, as.mcmc)))
 
 exposure_posterior <- as_mcmc_obj(modelBYMRW2eco.sim$samples)
 
+##
+## Define the x-axis of NO2
+X_axis <- cut(data_england$NO2, breaks = 100)
+X_axis <- X_axis %>% levels()
+X_axis
+get_midpoint <- function(cut_label) {
+  mean(as.numeric(unlist(strsplit(gsub("\\(|\\)|\\[|\\]", "", as.character(cut_label)), ","))))
+}
+get_midpoint(X_axis)
+sapply(X_axis, get_midpoint) %>% as.numeric() -> X_axis
+
+##
+## and plot
 summarise_draws(exposure_posterior, default_summary_measures()) |>
   filter(startsWith(variable, "b[")) |>
-  mutate(X = 1:100) |>
+  mutate(X = X_axis) |>
   ggplot() +
   geom_line(aes(x = X, y = median)) +
   geom_ribbon(aes(x = X, ymin = q5, ymax = q95), fill = "grey80", alpha = 0.5) +
-  labs(x = "Normalised NO2", y = "log mortality risk")
+  labs(x = "NO2", y = "log mortality risk")
 ```
 
-We can also show the effect on the relative scale, relative to the risk at 0 concentration.
-AKIS TO CHECK – NOT SURE WHAT THIS IS MEANT TO SHOW
+We can also show the effect on the relative scale, relative to the risk at 0 concentration:
 
-```{r}
+```{r warning=FALSE}
 exposure_posterior[, , str_c("b[", 1:100, "]")] |>
   exp() %>%
   sweep(x = ., MARGIN = c(1, 2), FUN = "/", STATS = exp(extract_variable_matrix(exposure_posterior, "b[50]"))) %>%
   apply(X = ., MARGIN = 3, quantile, probs = c(0.5, 0.025, 0.975)) |>
   t() |>
   as_tibble() |>
-  ggplot(aes(x = 1:100)) +
-  geom_line(aes(y = `50%`)) +
-  geom_ribbon(aes(ymin = `2.5%`, ymax = `97.5%`), fill = "grey80", alpha = 0.5) +
-  labs(x = "Temperature", y = "Relative mortality risk") +
-  lims(y = c(0.80, 1.4))
+  mutate(x = X_axis) |>
+  ggplot() +
+  geom_line(aes(x = x, y = `50%`)) +
+  geom_ribbon(aes(x = x, ymin = `2.5%`, ymax = `97.5%`), fill = "grey80", alpha = 0.5) +
+  labs(x = "NO2", y = "Relative mortality risk") 
 ```
 
 ## Closing remarks
