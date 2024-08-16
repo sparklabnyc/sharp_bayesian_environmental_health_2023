@@ -62,16 +62,10 @@ Once again we will use `NIMBLE` as the basis for our Bayesian model writing.
 Let's load in the data
 
 ```{r}
-data_england <- read_sf(here("data", "England", "COVIDecoregression.shp"))
+data_england <- read_sf(here("data", "England", "COVIDecoregression_simpler.shp"))
 glimpse(data_england)
 summary(data_england)
 class(data_england)
-
-# use the code below to simplify the geometry and speed up plotting and other oprtations
-data_england_simpler <- data_england #rgeos::gSimplify(as(data_england, "Spatial"), tol = 500)
-data_england_simpler <- st_as_sf(data_england_simpler)
-data_england_simpler <- cbind(data_england_simpler, data_england %>% mutate(geometry = NULL))
-data_england <- data_england_simpler
 ```
 
 The following code subsets the data to London so the models are quicker to run.
