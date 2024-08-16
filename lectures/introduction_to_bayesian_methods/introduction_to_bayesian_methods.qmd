@@ -104,7 +104,7 @@ plot(p)
 - `RStudio` is an integrated development environment (IDE) for `R`.
 - `RStudio` provides a convenient graphical interface to `R`, making it more user-friendly, and providing many useful features.
 - Such features include direct code execution, tools for plotting, history, debugging and workspace management.
-- A more detailed background on to `RStudio` can be found at [https://www.rstudio.com/about/](https://www.rstudio.com/about/).
+- A more detailed background on to `RStudio` can be found at [https://posit.co/about/](https://posit.co/about/).
 
 ## `RStudio` by `Posit`
 
@@ -115,9 +115,9 @@ plot(p)
 - We will assume you have done the preliminary homework, which includes learning the basics of `RStudio` `Cloud`.
 - `RStudio` `Cloud` is a cloud-based `RStudio` which runs projects and code in the cloud.
 - `RStudio` `Cloud` allows convenient scaling and sharing of code, including for training programs such as SHARP.
-- Registration for free is available via [https://rstudio.cloud/](https://rstudio.cloud/).
+- Registration for free is available via [https://posit.cloud/](https://posit.cloud/).
 - We will go through how to navigate `RStudio` `Cloud` together
-- More details are available via [https://rstudio.cloud/learn/guide](https://rstudio.cloud/learn/guide).
+- More details are available via [https://docs.posit.co/cloud/](https://docs.posit.co/cloud/).
 
 ## `GitHub`
 
@@ -569,7 +569,7 @@ set.seed(1)
 p <- 3 # number of explanatory variables
 n <- 10000 # number of observations
 X <- matrix(round(rnorm(p * n), 2), nrow = n, ncol = p) # explanatory variables
-true_betas <- c(c(0.2, 0.5, 0.3)) # coefficients for beta1, beta2, beta3
+true_betas <- c(0.2, 0.5, 0.3) # coefficients for beta1, beta2, beta3
 sigma <- 0.5 # variance of variability around perfect agreement
 y <- rnorm(n, X %*% true_betas, sigma)
 ```
