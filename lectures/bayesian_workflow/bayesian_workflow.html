@@ -8,7 +8,7 @@
 <link href="bayesian_workflow_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="bayesian_workflow_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="bayesian_workflow_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.553">
+  <meta name="generator" content="quarto-1.5.54">
 
   <meta name="author" content="Elizaveta Semenova">
   <title>Bayesian workflow</title>
@@ -42,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -70,7 +70,7 @@
     code span.at { color: #657422; } /* Attribute */
     code span.bn { color: #ad0000; } /* BaseN */
     code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
     code span.ch { color: #20794d; } /* Char */
     code span.cn { color: #8f5902; } /* Constant */
     code span.co { color: #5e5e5e; } /* Comment */
@@ -84,7 +84,7 @@
     code span.fu { color: #4758ab; } /* Function */
     code span.im { color: #00769e; } /* Import */
     code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; } /* Keyword */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
     code span.op { color: #5e5e5e; } /* Operator */
     code span.ot { color: #003b4f; } /* Other */
     code span.pp { color: #ad0000; } /* Preprocessor */
@@ -467,8 +467,8 @@ Elizaveta Semenova
 <ul>
 <li class="fragment">Example:
 <ul>
-<li class="fragment">consider <ins>data</ins> <span class="math inline">\(y = \{ y_1, ..., y_n\}\)</span></li>
-<li class="fragment">specify an <ins>observation model</ins>, e.g.&nbsp;<span class="math display">\[p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)\]</span> <!-- - here $\theta$ is a parameter which we want to infer--></li>
+<li class="fragment">consider <strong>data</strong> <span class="math inline">\(y = \{ y_1, ..., y_n\}\)</span></li>
+<li class="fragment">specify an <strong>observation model</strong>, e.g.&nbsp;<span class="math display">\[p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)\]</span> <!-- - here $\theta$ is a parameter which we want to infer--></li>
 <li class="fragment">complete the model with a prior distribution, e.g.&nbsp;<span class="math display">\[p(\theta)=N(0,1)\]</span></li>
 </ul></li>
 </ul>
@@ -490,14 +490,14 @@ Elizaveta Semenova
 <h2>Probabilistic programming languages</h2>
 <p>Probabilistic programming languages (PPLs) from a user’s perspective:</p>
 <ul>
-<li class="fragment">PPLs are designed to let the user <ins>focus on modelling</ins> while inference happens automatically.</li>
+<li class="fragment">PPLs are designed to let the user <strong>focus on modelling</strong> while inference happens automatically.</li>
 <li class="fragment">Users need to specify
 <ul>
 <li class="fragment">prior,</li>
 <li class="fragment">likelihood.</li>
 </ul></li>
-<li class="fragment">Inference is performed via powerful algorithms such as, for example, Markov Chain Monte Carlo (<ins>MCMC</ins>).</li>
-<li class="fragment">Availability of <ins>diagnostic tools</ins>.</li>
+<li class="fragment">Inference is performed via powerful algorithms such as, for example, Markov Chain Monte Carlo (<strong>MCMC</strong>).</li>
+<li class="fragment">Availability of <strong>diagnostic tools</strong>.</li>
 </ul>
 </section>
 <section id="remark-on-inference-methods" class="slide level2">
@@ -518,17 +518,12 @@ Elizaveta Semenova
 <section id="diagnosing-mcmc-outputs-1" class="slide level2">
 <h2>Diagnosing MCMC outputs</h2>
 <ul>
-<li class="fragment"><ins>
-Convergence diagnostics
-</ins>
+<li class="fragment">Convergence diagnostics
 <ul>
 <li class="fragment"><span class="math inline">\(\hat{R}\)</span> statistic,</li>
 <li class="fragment">traceplots.</li>
 </ul></li>
-<li class="fragment"><ins>
-Effective sample size (ESS)
-</ins>
-:
+<li class="fragment">Effective sample size (ESS):
 <ul>
 <li class="fragment">samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities,</li>
 <li class="fragment">ESS – number of <em>independent</em> samples required to obtain the same level of uncertainty as from the available dependent samples.</li>
@@ -549,6 +544,7 @@ Effective sample size (ESS)
 <div class="fragment">
 <center>
 <p><img data-src="assets/trace_theta_bad.png" style="width:50.0%"></p>
+<p>…</p>
 </center></div>
 </section>
 <section id="diagnosing-mcmc-outputs-4" class="slide level2">
@@ -584,39 +580,34 @@ Effective sample size (ESS)
 </center></section>
 <section id="prior-predictive-checks" class="slide level2">
 <h2>Prior predictive checks</h2>
-<ins>
-Prior predictive checking
-</ins>
-<p>consists in simulating data from the priors:</p>
+<p><strong>Prior predictive checking</strong> consists in simulating data from the priors:</p>
 <ul>
-<li class="fragment"><p>visualize priors (especially after transformation),</p></li>
-<li class="fragment"><p>this shows the range of data compatible with the model,</p></li>
-<li class="fragment"><p>it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values.</p></li>
+<li class="fragment">visualize priors (especially after transformation),</li>
+<li class="fragment">this shows the range of data compatible with the model,</li>
+<li class="fragment">it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values.</li>
 </ul>
 </section>
 <section id="iterative-model-building" class="slide level2">
 <h2>Iterative model building</h2>
-<p>A possible realisation of the Bayeisan workflow loop:</p>
+<p>A possible realisation of the Bayesian workflow loop:</p>
 <ul>
-<li class="fragment"><p>Understand the <ins>domain</ins> and problem,</p></li>
-<li class="fragment"><p>Formulate the model <ins>mathematically</ins>,</p></li>
-<li class="fragment"><p>Implement model, test, <ins>debug</ins>,</p></li>
-<li class="fragment"><ins>
-<p>debug, debug, debug</p>
-</ins></li>
+<li class="fragment">Understand the <strong>domain</strong> and problem,</li>
+<li class="fragment">Formulate the model <strong>mathematically</strong>,</li>
+<li class="fragment">Implement model, test, <strong>debug</strong>,</li>
+<li class="fragment"><strong>debug, debug, debug</strong></li>
 </ul>
 </section>
 <section id="iterative-model-building-1" class="slide level2">
 <h2>Iterative model building</h2>
 <ul>
-<li class="fragment"><p>Understand the <ins>domain</ins> and problem,</p></li>
-<li class="fragment"><p>Formulate the model <ins>mathematically</ins>,</p></li>
-<li class="fragment"><p>Implement model, test, <ins>debug</ins>,</p></li>
-<li class="fragment"><p>Perform <ins>prior predictive</ins> check,</p></li>
-<li class="fragment"><p>Fit the model,</p></li>
-<li class="fragment"><p>Assess <ins>convergence diagnostics</ins>,</p></li>
-<li class="fragment"><p>Perform <ins>posterior predictive</ins> check,</p></li>
-<li class="fragment"><p>Improve the model <ins>iteratively</ins>: from baseline to complex and computationally efficient models.</p></li>
+<li class="fragment">Understand the <strong>domain</strong> and problem,</li>
+<li class="fragment">Formulate the model <strong>mathematically</strong>,</li>
+<li class="fragment">Implement model, test, <strong>debug</strong>,</li>
+<li class="fragment">Perform <strong>prior predictive</strong> check,</li>
+<li class="fragment">Fit the model,</li>
+<li class="fragment">Assess <strong>convergence diagnostics</strong>,</li>
+<li class="fragment">Perform <strong>posterior predictive</strong> check,</li>
+<li class="fragment">Improve the model <strong>iteratively</strong>: from baseline to complex and computationally efficient models.</li>
 </ul>
 </section></section>
 <section>
@@ -632,26 +623,16 @@ Prior predictive checking
 </center></section>
 <section id="model" class="slide level2">
 <h2>Model</h2>
-<p>We implemented the model in our favorite PPL:</p>
-<div class="fragment">
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource breezedark number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href=""></a>data {</span>
-<span id="cb1-2"><a href=""></a>  int&lt;lower=0&gt; N;</span>
-<span id="cb1-3"><a href=""></a>  vector[N] y;</span>
-<span id="cb1-4"><a href=""></a>  vector[N] x;</span>
-<span id="cb1-5"><a href=""></a>  real&lt;lower=0&gt; sigma;</span>
-<span id="cb1-6"><a href=""></a>}</span>
-<span id="cb1-7"><a href=""></a>parameters {</span>
-<span id="cb1-8"><a href=""></a>  real a;</span>
-<span id="cb1-9"><a href=""></a>  real b;</span>
-<span id="cb1-10"><a href=""></a>}</span>
-<span id="cb1-11"><a href=""></a>model {</span>
-<span id="cb1-12"><a href=""></a>  y ~ normal(a, sigma);</span>
-<span id="cb1-13"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>We implemented the model in our favourite PPL:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb1-2"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb1-3"><a href=""></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(a, <span class="at">sd =</span> sigma)</span>
+<span id="cb1-4"><a href=""></a>  }</span>
+<span id="cb1-5"><a href=""></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="prior-predictive-check" class="slide level2">
 <h2>Prior predictive check</h2>
-<p>Let us draw samples <ins>from the priors</ins>, i.e.&nbsp;we are <ins>not using any data at this stage yet</ins>, only trying to see what kind of data (<span class="math inline">\(y\)</span>) this model is able to generate.</p>
+<p>Let us draw samples <strong>from the priors</strong>, i.e.&nbsp;we are <strong>not using any data at this stage yet</strong>, only trying to see what kind of data (<span class="math inline">\(y\)</span>) this model is able to generate.</p>
 <div class="fragment">
 <center>
 <p><img data-src="assets/data2.png" style="width:45.0%"></p>
@@ -668,19 +649,15 @@ Prior predictive checking
 <section id="debug" class="slide level2">
 <h2>Debug</h2>
 <p>There was a bug in the model. Let’s correct it:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource breezedark number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href=""></a>data {</span>
-<span id="cb2-2"><a href=""></a>  int&lt;lower=0&gt; N;</span>
-<span id="cb2-3"><a href=""></a>  vector[N] y;</span>
-<span id="cb2-4"><a href=""></a>  vector[N] x;</span>
-<span id="cb2-5"><a href=""></a>  real&lt;lower=0&gt; sigma;</span>
-<span id="cb2-6"><a href=""></a>}</span>
-<span id="cb2-7"><a href=""></a>parameters {</span>
-<span id="cb2-8"><a href=""></a>  real a ~ normal(0,1);</span>
-<span id="cb2-9"><a href=""></a>  real b ~ normal(0,1);</span>
-<span id="cb2-10"><a href=""></a>}</span>
-<span id="cb2-11"><a href=""></a>model {</span>
-<span id="cb2-12"><a href=""></a>  y ~ normal(a + b*x, sigma);</span>
-<span id="cb2-13"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb2-2"><a href=""></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>)</span>
+<span id="cb2-3"><a href=""></a>  b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">100</span>)</span>
+<span id="cb2-4"><a href=""></a>  sigma <span class="sc">~</span> <span class="fu">T</span>(<span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">10</span>))</span>
+<span id="cb2-5"><a href=""></a></span>
+<span id="cb2-6"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb2-7"><a href=""></a>    y[i] <span class="sc">~</span> <span class="fu">dnorm</span>(a <span class="sc">+</span> b <span class="sc">*</span> x, <span class="at">sd =</span> sigma)</span>
+<span id="cb2-8"><a href=""></a>  }</span>
+<span id="cb2-9"><a href=""></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="prior-redictive-check-again" class="slide level2">
 <h2>Prior redictive check again</h2>
@@ -968,18 +945,7 @@ Print summary:
         }
         return false;
       }
-      const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-        }
-      });
-      clipboard.on('success', function(e) {
+      const onCopySuccess = function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -1011,7 +977,29 @@ Print summary:
         }, 1000);
         // clear code selection
         e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
       });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
         var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
         var mailtoRegex = new RegExp(/^mailto:/);
           var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1019,7 +1007,7 @@ Print summary:
             return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
         // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
         for (var i=0; i<links.length; i++) {
           const link = links[i];
           if (!isInternal(link.href)) {

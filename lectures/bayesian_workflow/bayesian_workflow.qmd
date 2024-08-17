@@ -74,8 +74,8 @@ A lot can go wrong!
 ## General principle of Bayesian inference:
 
 - Example:
-  - consider <ins>data</ins> $y = \{ y_1, ..., y_n\}$
-  - specify an <ins>observation model</ins>, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)$$
+  - consider **data** $y = \{ y_1, ..., y_n\}$
+  - specify an **observation model**, e.g. $$p(y|\theta) = \prod_i N(y_i | \theta, \sigma^2)$$
    <!-- - here $\theta$ is a parameter which we want to infer-->
   - complete the model with a prior distribution, e.g. $$p(\theta)=N(0,1)$$
 
@@ -97,18 +97,17 @@ But rarely.
 
 Probabilistic programming languages (PPLs) from a user's perspective:
 
-- PPLs are designed to let the user <ins>focus on modelling</ins> while inference happens automatically.
+- PPLs are designed to let the user **focus on modelling** while inference happens automatically.
 - Users need to specify
   - prior,
   - likelihood.
-- Inference is performed via powerful algorithms such as, for example, Markov Chain Monte Carlo (<ins>MCMC</ins>).
-- Availability of <ins>diagnostic tools</ins>.
+- Inference is performed via powerful algorithms such as, for example, Markov Chain Monte Carlo (**MCMC**).
+- Availability of **diagnostic tools**.
 
 ## Remark on inference methods
 
 - Alongside "exact"methods such as MCMC, there also exist approximate methods, such as Variation Inference (VI).
 - We are opting to use MCMC whenever possible since it has theoretical guarantees.
-
 
 ## Diagnosing MCMC outputs
 
@@ -119,14 +118,12 @@ We use multiple chains of MCMC to estimate the posterior:
 <center>
 ![](assets/trace_theta.png){width=50%}
 
-
-
 ## Diagnosing MCMC outputs
 
-- <ins>Convergence diagnostics</ins>
+- Convergence diagnostics
   - $\hat{R}$ statistic,
   - traceplots.
-- <ins>Effective sample size (ESS)</ins>:
+- Effective sample size (ESS):
   - samples will be typically autocorrelated within a chain, which increases the uncertainty of the estimation of posterior quantities,
   - ESS -- number of *independent* samples required to obtain the same level of uncertainty as from the available dependent samples.
 
@@ -139,8 +136,6 @@ We use multiple chains of MCMC to inspect convergence after warm-up:
 <center>
 ![](assets/trace_theta.png){width=50%}
 
-
-
 ## Diagnosing MCMC outputs
 
 We use multiple chains and inspect convergence after warm-up:
@@ -150,7 +145,7 @@ We use multiple chains and inspect convergence after warm-up:
 <center>
 ![](assets/trace_theta_bad.png){width=50%}
 
-
+...
 
 ## Diagnosing MCMC outputs
 
@@ -187,45 +182,33 @@ A systematic review of the steps within the modern Bayesian workflow, described 
 
 ## Prior predictive checks
 
-<ins>Prior predictive checking</ins> consists in simulating data from the priors:
+**Prior predictive checking** consists in simulating data from the priors:
 
 - visualize priors (especially after transformation),
-
 - this shows the range of data compatible with the model,
-
 - it helps understand the adequacy of the chosen priors, as it is often easier to elicit expert knowledge on measureable quantities of interest rather than abstract parameter values.
 
 
 ## Iterative model building
 
-A possible realisation of the Bayeisan workflow loop:
+A possible realisation of the Bayesian workflow loop:
 
-- Understand the <ins>domain</ins> and problem,
-
-- Formulate the model <ins>mathematically</ins>,
-
-- Implement model, test, <ins>debug</ins>,
-
-- <ins>debug, debug, debug</ins>
+- Understand the **domain** and problem,
+- Formulate the model **mathematically**,
+- Implement model, test, **debug**,
+- **debug, debug, debug**
 
 
 ## Iterative model building
 
-- Understand the <ins>domain</ins> and problem,
-
-- Formulate the model <ins>mathematically</ins>,
-
-- Implement model, test, <ins>debug</ins>,
-
-- Perform <ins>prior predictive</ins> check,
-
+- Understand the **domain** and problem,
+- Formulate the model **mathematically**,
+- Implement model, test, **debug**,
+- Perform **prior predictive** check,
 - Fit the model,
-
-- Assess <ins>convergence diagnostics</ins>,
-
-- Perform <ins>posterior predictive</ins> check,
-
-- Improve the model <ins>iteratively</ins>: from baseline to complex and computationally efficient models.
+- Assess **convergence diagnostics**,
+- Perform **posterior predictive** check,
+- Improve the model **iteratively**: from baseline to complex and computationally efficient models.
 
 # Examples
 
@@ -236,32 +219,19 @@ $$y_i = a + b x_i + \epsilon_i, \quad \epsilon_i \sim N(0, \sigma^2).$$
 <center>
 ![](assets/data1.png){width=45%}
 
-
-
 ## Model
-We implemented the model in our favorite PPL:
+We implemented the model in our favourite PPL:
 
-. . .
-
-```breezedark
-data {
-  int<lower=0> N;
-  vector[N] y;
-  vector[N] x;
-  real<lower=0> sigma;
-}
-parameters {
-  real a;
-  real b;
-}
-model {
-  y ~ normal(a, sigma);
-}
+```R
+code <- nimbleCode({
+  for (i in 1:n) {
+    y[i] ~ dnorm(a, sd = sigma)
+  }
+})
 ```
 
-
 ## Prior predictive check
-Let us draw samples <ins>from the priors</ins>, i.e. we are <ins>not using any data at this stage yet</ins>, only trying to see what kind of data ($y$) this model is able to generate.
+Let us draw samples **from the priors**, i.e. we are **not using any data at this stage yet**, only trying to see what kind of data ($y$) this model is able to generate.
 
 . . .
 
@@ -281,20 +251,16 @@ Something doesn't look right...
 ## Debug
 There was a bug in the model. Let's correct it:
 
-```breezedark
-data {
-  int<lower=0> N;
-  vector[N] y;
-  vector[N] x;
-  real<lower=0> sigma;
-}
-parameters {
-  real a ~ normal(0,1);
-  real b ~ normal(0,1);
-}
-model {
-  y ~ normal(a + b*x, sigma);
-}
+```R
+code <- nimbleCode({
+  a ~ dnorm(0, sd = 100)
+  b ~ dnorm(0, sd = 100)
+  sigma ~ T(dnorm(0, sd = 10))
+
+  for (i in 1:n) {
+    y[i] ~ dnorm(a + b * x, sd = sigma)
+  }
+})
 ```
 
 ## Prior redictive check again
@@ -316,7 +282,6 @@ Print summary:
 
 ## Convergence diagnostics
 
-
 <center>
 ![](assets/fit1_conv.png){width=60%}
 
@@ -332,9 +297,5 @@ Traceplots
 
 <center>
 ![](assets/posterior1.png){width=45%}
-
-## Focus on priors
-
-- TODO: show pathological behaviors here
 
 # Questions?
