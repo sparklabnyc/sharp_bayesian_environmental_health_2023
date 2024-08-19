@@ -27,8 +27,8 @@ format:
 
 - Assumptions of linear models
 - Why are linear models not enough?
-- Two extremes of hierarchy: <ins>complete pooling</ins> and <ins>no pooling</ins>
-- The golden middle: <ins>partial pooling</ins>
+- Two extremes of hierarchy: __complete pooling__ and __no pooling__
+- The golden middle: __partial pooling__
 - Random effects
 - Types of nestedness
 
@@ -72,8 +72,8 @@ format:
 
 Exist on the continuum of two extreme cases:
 
-- <ins>complete pooling</ins>
-- <ins>no pooling</ins>
+- __complete pooling__
+- __no pooling__
 
 
 ## Complete pooling
@@ -205,11 +205,11 @@ $$ \mu \sim N(\mu_0, v_0), \\
 
 ## Model comparison
 - Frequentist way:
-  - optimise different models on the <ins>training set</ins>,
-  - and compare them on the <ins>test set</ins>.
+  - optimise different models on the __training set__,
+  - and compare them on the __test set__.
 - Bayesian way:
-  - use <ins>model evidence</ins> $$p(Data | Model_i)$$.
-  - It tends to choose models which are just complex enough to model the data, but not overly complex (by which it avoids <ins>overfitting</ins>).
+  - use __model evidence__ $p(Data | Model_i)$
+  - It tends to choose models which are just complex enough to model the data, but not overly complex (by which it avoids __overfitting__).
 
 ## Information criteria
 *Information criteria* are popular tools for model selection that provide a quantitative measure of the trade-off between model fit and complexity. The *lower* the value of IC, the better.
