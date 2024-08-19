@@ -176,7 +176,7 @@ The following code extracts the adjacency matrix from the shapefile.
 data <- data |> arrange(SIGLA)
 shp_italy <- shp_italy |> arrange(SIGLA)
 
-italy_nb <- poly2nb(shp_italy, row.names = data$SIGLA)
+italy_nb <- poly2nb(shp_italy, row.names = unique(data$SIGLA))
 italy_adj <- nb2INLA(file = here("data", "italy", "italy.graph"), nb = italy_nb)
 ```
 
