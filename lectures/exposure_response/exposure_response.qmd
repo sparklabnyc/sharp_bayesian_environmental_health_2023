@@ -887,7 +887,7 @@ data.frame(
 
 library(sf)
 library(ggplot2)
-read_sf("C:/Users/gkonstan/OneDrive - Imperial College London/ICRF Imperial/Projects/bayesian-environmental-exposure/data/shp.shp") -> shp
+read_sf("data/shp.shp") -> shp
 
 ggplot()+ geom_sf(data=shp) + theme_bw()
 
