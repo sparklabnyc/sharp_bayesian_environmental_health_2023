@@ -2,7 +2,7 @@
 title: "Introduction to Bayesian Methods"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Robbie M. Parks, Theo Rashid"
-date: "August 14 2023"
+date: "August 21 2024"
 format: html
 ---
 
@@ -130,7 +130,7 @@ model <- nimbleModel(code, constants = constants, data = data, inits = inits)
 mcmcConf <- configureMCMC(model)
 ```
 
-Run the MCMC simulations. There are lots of arguments in the main function, nimbleMCMC(). Take a second to look through each of them and make sure you understand where they're coming from and what they mean as each one is very important.
+Run the MCMC simulations. There are lots of arguments in the main function, `nimbleMCMC()`. Take a second to look through each of them and make sure you understand where they're coming from and what they mean as each one is very important.
 ```{r}
 tic <- Sys.time()
 nimbleMCMC_samples_initial <- nimbleMCMC(

@@ -4,8 +4,8 @@ subtitle: "Good practice of Bayesian inference"
 author:
  - name: "Elizaveta Semenova"
    email: "elizaveta.p.semenova@gmail.com"
-institute: "Computer Science Department, University of Oxford"
-date: 2023-08-14
+institute: "Department of Epidemiology and Biostatistics, Imperial College London"
+date: 2024-08-21
 date-format: medium
 title-slide-attributes:
   data-background-color: "#f3f4f4"
@@ -333,6 +333,8 @@ Traceplots
 <center>
 ![](assets/posterior1.png){width=45%}
 
+## Focus on priors
 
+- TODO: show pathological behaviors here
 
 # Questions?

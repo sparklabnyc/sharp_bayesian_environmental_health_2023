@@ -11,6 +11,8 @@
 
 # Mac OS X files
 .DS_Store
+.venv
+.python-version
 
 # python files
 /.python-version

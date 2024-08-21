@@ -1,0 +1,837 @@
+---
+title: "Exposure Response Modelling"
+subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
+author: "Robbie M. Parks, Garyfallos Konstantinoudis"
+date: "August 22 2024"
+format: html
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(here)
+library(tidyverse)
+library(nimble)
+library(sf)
+library(posterior)
+library(bayesplot)
+library(spdep)
+library(lubridate)
+library(colorspace)
+library(coda)
+
+extrafont::loadfonts()
+theme_set(hrbrthemes::theme_ipsum())
+knitr::opts_chunk$set(fig.align = "center")
+
+set.seed(2)
+```
+
+### Goal of this computing lab session
+
+This goal of this lab is to use `NIMBLE` to carry out an exposure-response regression in a variety of ways.
+
+### What's going to happen in this lab session?
+
+During this lab session, we will build:
+
+1.  Linear exposure-response regression;
+2.  Piecewise linear exposure-response regression; and
+3.  Non-linear exposure-response regression.
+
+## Introduction
+
+We will build on and extend the previous lab the COVID-19 deaths during March-July 2020, in England, at the LTLA geographical level (317 areas), as taken from the published paper:
+
+**Konstantinoudis G**, Padellini T, Bennett JE, Davies B, Ezzati M, Blangiardo M. *Long-term exposure to air-pollution and COVID-19 mortality in England: a hierarchical spatial analysis*.
+Environ Int.
+2021 Jan:146:106316.
+doi: 10.1016/j.envint.2020.106316.
+PMID: 33395952 PMCID: PMC7786642
+
+For that analysis, we included 38,573 COVID-19 deaths up to June 30, 2020 at the Lower Layer Super Output Area level in England ($n = 32844$ small areas).
+We retrieved averaged NO$_2$ concentration during 2014-2018 from the Pollution Climate Mapping.
+We used Bayesian hierarchical models to quantify the effect of air pollution while adjusting for a series of confounding and spatial autocorrelation.
+
+We will build simple Bayesian models to try to understand what is happening in the data.
+Once again we will use `NIMBLE` as the basis for our Bayesian model writing.
+
+### Load in data
+
+Let's load in the data
+
+```{r}
+data_england <- read_sf(here("data", "England", "COVIDecoregression_simpler.shp"))
+glimpse(data_england)
+summary(data_england)
+class(data_england)
+```
+
+The following code subsets the data to London so the models are quicker to run.
+We're going to run the models for London, then load in the samples for England (and pretend we ran for England!).
+
+```{r eval = FALSE}
+data_england <- data_england[startsWith(data_england$LTLA, "E09"), ]
+ggplot(data = data_england, fill = "NA") +
+  geom_sf() +
+  theme_void()
+```
+
+How many spatial units are in the map?
+
+```{r}
+# Obtain the number of LTLAs
+n.LTLA <- nrow(data_england)
+n.LTLA
+```
+
+### Adjacency matrix in R
+
+Convert the polygons to a list of neighbors using the function `poly2nb()`
+
+```{r}
+LTLA_nb <- poly2nb(pl = data_england)
+LTLA_nb
+```
+
+Convert the list you defined previously to `NIMBLE` format (i.e. a list of 3 components adj, num and weights) using the function `nb2WB()` and print a summary of the object.
+
+```{r}
+nbWB_A <- nb2WB(nb = LTLA_nb)
+names(nbWB_A)
+```
+
+## 1. Linear exposure-response regression
+
+Let $\mathcal{D}$ be the observation window of England and $A_1, A_2, \dots, A_N$ a partition denoting the LTLAs in England with $\cup_{i=1}^NA_i = \mathcal{D}$ and $A_i\cap A_j$ for every $i\neq j$.
+Let $O_1, O_2, \dots, O_N$ be the observed number of COVID-19 deaths occurred during March-July 2020 in England, $E_1, E_2, \dots, E_N$ is the expected number of COVID-19 deaths and $\lambda_1, \lambda_2, \dots, \lambda_N$ the standardized mortality ratio (recall $\lambda_i = \frac{O_i}{E_i}$).
+A standardized mortality ratio of $1.5$ implies that the COVID-19 deaths we observed in the $i$-th area are $1.5$ times higher to what we expected.
+Under the Poisson assumption we have:
+
+$$
+\begin{equation}
+\begin{aligned}
+\hbox{O}_i & \sim \hbox{Poisson}(E_i \lambda_i); \;\;\; i=1,...,N\\
+\log \lambda_i & = \alpha +  \beta_1 X_{1i} + \beta_2 X_{2i} + \sum_{j=2}^5\beta_{3j} + \theta_i + \phi_i\\
+\theta_i &\sim \hbox{Normal}(0, \sigma^2_{\theta_i})\\
+{\bf \phi} & \sim \hbox{ICAR}({\bf W}, \sigma_{\phi}^2) \,\, ,  \sum_i \phi_i  = 0 \\
+\alpha & \sim \text{Uniform}(-\infty, +\infty) \\
+\beta_1, \beta_2 & \sim \mathcal{N}(0, 10) \\
+1/\sigma_{\theta}^2 & \sim \hbox{Gamma}(0.5, 0.05) \\
+1/\sigma_{\phi}^2 & \sim \hbox{Gamma}(0.5, 0.0005) \\
+\end{aligned}
+\end{equation}
+$$
+
+the terms $\beta_1 X_{1i} + \beta_2 X_{2i} + \sum_{j=2}^5\beta_{3j} X_{3i}$, where $X_{1i}, X_{2i}, X_{3i}$ are the ICU beds, NO$_2$ and IMD in the $i$-th LTLA, $\beta_1, \beta_2, \sum_{j=2}^5\beta_{3j}$ the corresponding effects and $\exp(\beta_1), \exp(\beta_2)$ the relative risk of ICU beds or NO$_2$ for every unit increase and of the ICU beds or NO$_2$.
+For instance $\exp(\beta_2) = 1.8$ means that for every unit increase of long term exposure to $NO_2$, the risk (read standardized mortality ratio) of COVID-19 deaths cancer increases by $80\%$.
+$exp(\beta_{32}), \beta_{33}, \beta_{34}, \beta_{35}$ are the relative risks compared to the baseline IMD category, ie the most deprived areas.
+An $exp(\beta_{35}) = 0.5$ means that the risk of COVID-19 deaths in most affluent areas decreases by $50%$ compared to the most deprived areas.
+We will first write the model in `NIMBLE`.
+
+```{r eval=TRUE, echo = TRUE}
+BYMecoCode <- nimbleCode({
+  # priors
+  alpha ~ dflat() # vague prior (Unif(-inf, +inf))
+  overallRR <- exp(alpha) # overall RR across study region
+
+  tau.theta ~ dgamma(0.5, 0.05) # prior for the precision hyperparameter
+  sigma2.theta <- 1 / tau.theta # variance of unstructured area random effects
+
+  tau.phi ~ dgamma(0.5, 0.0005) # prior on precison of spatial area random effects
+  sigma2.phi <- 1 / tau.phi # conditional variance of spatial area random effects
+
+  for (j in 1:K) {
+    beta[j] ~ dnorm(0, tau = 1)
+    RR.beta[j] <- exp(beta[j])
+  }
+
+  RR.beta1_1NO2 <- exp(beta[1] / sd.no2) # get per 1 unit increase in the airpollution (scale back)
+
+  # ICAR prior
+  # theta + phi is BYM
+  phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
+
+  # likelihood
+  for (i in 1:N) {
+    O[i] ~ dpois(mu[i]) # Poisson likelihood for observed counts
+    log(mu[i]) <- log(E[i]) + alpha + theta[i] + phi[i] + inprod(beta[], X[i, ])
+    # the inprod is equivalent to beta[1]*X1[i] + beta[2]*X2[i] + beta[3]*X32[i] + beta[4]*X33[i] + beta[5]*X34[i] + beta[6]*X35[i]
+
+    SMR[i] <- alpha + theta[i] + phi[i] + inprod(beta[], X[i, ])
+    theta[i] ~ dnorm(0, tau = tau.theta) # area-specific RE
+    resRR[i] <- exp(theta[i] + phi[i]) # area-specific residual RR
+    proba.resRR[i] <- step(resRR[i] - 1) # Posterior probability
+  }
+})
+```
+
+Create data object as required for `NIMBLE`.
+
+```{r eval=TRUE}
+n.LTLA <- dim(data_england)[1]
+
+# create the dummy columns for deprivation
+data_england <- data_england |>
+  mutate(IMD = as_factor(IMD)) |>
+  mutate(as.data.frame(model.matrix(~ 0 + IMD, data = pick(everything()))))
+
+# matrix of covariates
+Xmat <- cbind(
+  scale(data_england$NO2)[, 1],
+  scale(data_england$TtlICUB)[, 1],
+  data_england$IMD2,
+  data_england$IMD3,
+  data_england$IMD4,
+  data_england$IMD5
+)
+
+# Format the data for NIMBLE in a list
+covid_data <- list(
+  O = data_england$deaths, # observed nb of deaths
+  X = Xmat # covariates
+)
+
+# number of total covariates
+K <- ncol(Xmat)
+
+covid_constants <- list(
+  N = n.LTLA, # nb of LTLAs
+  K = K, # number of covariates
+  sd.no2 = sd(data_england$NO2), # standard deviation of NO2
+
+  # adjacency matrix
+  L = length(nbWB_A$weights), # the number of neighboring areas
+  E = data_england$expectd, # expected number of deaths
+  adj = nbWB_A$adj, # the elements of the neighbouring matrix
+  num = nbWB_A$num,
+  weights = nbWB_A$weights
+)
+```
+
+Create the initial values for ALL the unknown parameters:
+
+```{r}
+# initialise the unknown parameters, 2 chains
+inits <- list(
+  list(
+    alpha = 0.01,
+    beta = rep(0, K),
+    tau.theta = 10,
+    tau.phi = 1,
+    theta = rep(0.01, times = n.LTLA),
+    phi = c(rep(0.5, times = n.LTLA))
+  ),
+  list(
+    alpha = 0.5,
+    beta = rep(-1, K),
+    tau.theta = 1,
+    tau.phi = 0.1,
+    theta = rep(0.05, times = n.LTLA),
+    phi = c(rep(-0.05, times = n.LTLA))
+  )
+)
+```
+
+Which model parameters do you want to monitor?
+Set these before running `NIMBLE`.
+Call this object `parameters_to_monitor`.
+
+```{r}
+parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "RR.beta1_1NO2")
+```
+
+Run the MCMC simulations using the function `nimbleMCMC()`.
+If everything is specified reasonably, this runs quickly.
+
+```{r echo=TRUE, eval=FALSE}
+tic <- Sys.time()
+modelBYMeco.sim <- nimbleMCMC(
+  code = BYMecoCode,
+  data = covid_data,
+  constants = covid_constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 50000,
+  nburnin = 30000,
+  thin = 10,
+  nchains = 2,
+  setSeed = 9,
+  progressBar = TRUE,
+  samplesAsCodaMCMC = TRUE,
+  summary = TRUE,
+  WAIC = TRUE
+)
+toc <- Sys.time()
+toc - tic
+# saveRDS(modelBYMeco.sim, file = "NIMBLE_BYM_LINEAR")
+```
+
+```{r}
+modelBYMeco.sim <- read_rds(here("labs", "exposure_response", "NIMBLE_BYM_LINEAR"))
+```
+
+Retrieve WAIC.
+
+```{r warning=FALSE}
+modelBYMeco.sim$WAIC
+```
+
+Check the convergence of the intercept and covariates NO$_2$ and ICU beds.
+What do you observe?
+
+```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
+mcmc_trace(modelBYMeco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
+```
+
+Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
+
+```{r echo=TRUE, eval=TRUE}
+modelBYMeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ]
+```
+
+We can get a nice credible intervals plot as well:
+
+```{r warning=FALSE}
+modelBYMeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ] |>
+  as_tibble() |>
+  select(Median, `95%CI_low`, `95%CI_upp`) |>
+  mutate(
+    covariate = factor(c("NO2", "ICU", paste0("IMD", 2:5)), levels = c("NO2", "ICU", paste0("IMD", 2:5)))
+  ) -> cov.eff
+
+cov.eff |> head()
+
+cov.eff |>
+  ggplot(aes(x = covariate, y = Median)) +
+  geom_point() +
+  geom_errorbar(aes(x = covariate, ymin = `95%CI_low`, ymax = `95%CI_upp`), width = 0.2) +
+  ylim(c(0.5, 2.0)) +
+  geom_hline(yintercept = 1, lty = 2, col = "red")
+```
+
+The effect by unit increase in the long term exposure to NO$_2$ is `RR.beta1_1NO2`:
+
+```{r}
+# as relative risk per 1 unit increase in the long term NO2 exposure
+modelBYMeco.sim$summary$all.chains[paste0("RR.beta1_1NO2"), c("Median", "95%CI_low", "95%CI_upp")]
+
+# as percentage increase in mortality for 1 unit increase in the long term NO2 exposure
+(modelBYMeco.sim$summary$all.chains[paste0("RR.beta1_1NO2"), c("Median", "95%CI_low", "95%CI_upp")] - 1) * 100
+```
+
+## 2. Piecewise linear exposure-response regression
+
+We now include a piecewise linear effect for the exposure.
+We do this through the covariate effects $\beta X_{i}$.
+Specifically, the first two covariates, governed by $\beta_1$ and $\beta_2$, now represent the increase in mortality for low and high concentrations of NO$_2$.
+We do this through the design of the covariate matrix $X$: we create an indicator variable $X_{1i}$ which is 1 below average NO$_2$ values and 0 above, and an indicator variable $X_{2i}$ which is 0 below average NO$_2$ values and 1 above.
+
+```{r eval=TRUE, echo = TRUE}
+BYMecoPWCode <- nimbleCode({
+  # priors
+  alpha ~ dflat() # vague prior (Unif(-inf, +inf))
+  overallRR <- exp(alpha) # overall RR across study region
+
+  tau.theta ~ dgamma(0.5, 0.05) # prior for the precision hyperparameter
+  sigma2.theta <- 1 / tau.theta # variance of unstructured area random effects
+
+  tau.phi ~ dgamma(0.5, 0.0005) # prior on precison of spatial area random effects
+  sigma2.phi <- 1 / tau.phi # conditional variance of spatial area random effects
+
+  for (j in 1:K) {
+    beta[j] ~ dnorm(0, tau = 1)
+    RR.beta[j] <- exp(beta[j])
+  }
+
+  # ICAR prior
+  phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
+
+  RR.beta1_1NO2_low <- exp(beta[1] / sd.no2) # get per 1 unit increase in the air pollution for low concentrations (scale back)
+  RR.beta1_1NO2_high <- exp(beta[2] / sd.no2) # get per 1 unit increase in the air pollution for high concentrations (scale back)
+
+  # likelihood
+  for (i in 1:N) {
+    O[i] ~ dpois(mu[i]) # Poisson likelihood for observed counts
+    log(mu[i]) <- log(E[i]) + alpha + theta[i] + phi[i] + inprod(beta[], X[i, ])
+
+    SMR[i] <- alpha + theta[i] + phi[i] + inprod(beta[], X[i, ])
+    theta[i] ~ dnorm(0, tau = tau.theta) # area-specific RE
+    resRR[i] <- exp(theta[i] + phi[i]) # area-specific residual RR
+    proba.resRR[i] <- step(resRR[i] - 1) # Posterior probability
+  }
+})
+```
+
+Create data object as required for `NIMBLE`, this time incorporating a piecewise structure for $NO_2$ using indicator variables.
+
+```{r eval=TRUE}
+n.LTLA <- dim(data_england)[1]
+
+# create the dummy columns for deprivation
+data_england <- data_england |>
+  mutate(IMD = as_factor(IMD)) |>
+  mutate(as.data.frame(model.matrix(~ 0 + IMD, data = pick(everything()))))
+
+NO2_low = ifelse(scale(data_england$NO2)[, 1] > 0,0,scale(data_england$NO2)[, 1])
+NO2_high = ifelse(scale(data_england$NO2)[, 1] < 0,0,scale(data_england$NO2)[, 1])
+
+# matrix of covariates
+Xmat <- cbind(
+  NO2_low,
+  NO2_high,
+  scale(data_england$TtlICUB)[, 1],
+  data_england$IMD2,
+  data_england$IMD3,
+  data_england$IMD4,
+  data_england$IMD5
+)
+
+# Format the data for NIMBLE in a list
+covid_data <- list(
+  O = data_england$deaths, # observed nb of deaths
+  X = Xmat # covariates
+)
+
+# number of total covariates
+K <- ncol(Xmat)
+
+covid_constants <- list(
+  N = n.LTLA, # nb of LTLAs
+  K = K, # number of covariates
+  sd.no2 = sd(data_england$NO2), # standard deviation of NO2
+
+  # adjacency matrix
+  L = length(nbWB_A$weights), # the number of neighboring areas
+  E = data_england$expectd, # expected number of deaths
+  adj = nbWB_A$adj, # the elements of the neighbouring matrix
+  num = nbWB_A$num,
+  weights = nbWB_A$weights
+)
+```
+
+Create the initial values for ALL the unknown parameters:
+
+```{r}
+# initialise the unknown parameters, 2 chains
+inits <- list(
+  list(
+    alpha = 0.01,
+    beta = rep(0, K),
+    tau.theta = 10,
+    tau.phi = 1,
+    theta = rep(0.01, times = n.LTLA),
+    phi = c(rep(0.5, times = n.LTLA))
+  ),
+  list(
+    alpha = 0.5,
+    beta = rep(-1, K),
+    tau.theta = 1,
+    tau.phi = 0.1,
+    theta = rep(0.05, times = n.LTLA),
+    phi = c(rep(-0.05, times = n.LTLA))
+  )
+)
+```
+
+Which model parameters do you want to monitor?
+Set these before running `NIMBLE`.
+Call this object `parameters_to_monitor`.
+
+```{r}
+parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "RR.beta1_1NO2_low","RR.beta1_1NO2_high")
+```
+
+Run the MCMC simulations using the function `nimbleMCMC()`.
+If everything is specified reasonably, this needs approximately 5 minutes.
+
+```{r echo=TRUE, eval=FALSE}
+tic <- Sys.time()
+modelBYMPWeco.sim <- nimbleMCMC(
+  code = BYMecoPWCode,
+  data = covid_data,
+  constants = covid_constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 50000,
+  nburnin = 30000,
+  thin = 10,
+  nchains = 2,
+  setSeed = 9,
+  progressBar = TRUE,
+  samplesAsCodaMCMC = TRUE,
+  summary = TRUE,
+  WAIC = TRUE
+)
+toc <- Sys.time()
+toc - tic
+# saveRDS(modelBYMPWeco.sim, file = "NIMBLE_BYM_PWLINEAR")
+```
+
+```{r}
+modelBYMPWeco.sim <- read_rds(here("labs", "exposure_response", "NIMBLE_BYM_PWLINEAR"))
+```
+
+Retrieve WAIC and compare with previous model.
+Which model performs best?
+
+```{r warning=FALSE}
+modelBYMPWeco.sim$WAIC
+```
+
+Check the convergence of the intercept and covariates NO$_2$ and ICU beds.
+What do you observe?
+
+```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
+mcmc_trace(modelBYMPWeco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
+```
+
+Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
+
+```{r echo=TRUE, eval=TRUE}
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ]
+```
+
+We can get a nice credible intervals plot as well:
+
+```{r warning=FALSE}
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ] |>
+  as_tibble() |>
+  select(Median, `95%CI_low`, `95%CI_upp`) |>
+  mutate(
+    covariate = factor(c("NO2_LOW", "NO2_HIGH", "ICU", paste0("IMD", 2:5)), levels = c("NO2_LOW", "NO2_HIGH", "ICU", paste0("IMD", 2:5)))
+  ) -> cov.eff
+
+cov.eff |> head()
+
+cov.eff |>
+  ggplot(aes(x = covariate, y = Median)) +
+  geom_point() +
+  geom_errorbar(aes(x = covariate, ymin = `95%CI_low`, ymax = `95%CI_upp`), width = 0.2) +
+  ylim(c(0.5, 2.0)) +
+  geom_hline(yintercept = 1, lty = 2, col = "red")
+```
+
+The effect by unit increase in the low concentration long term exposure to NO$_2$ is `RR.beta1_1NO2_low`:
+
+```{r}
+# as relative risk per 1 unit increase in the long term NO2 exposure low NO2
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_low"), c("Median", "95%CI_low", "95%CI_upp")]
+
+# as percentage increase in mortality for 1 unit increase in the long term NO2 exposure low N02
+(modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_low"), c("Median", "95%CI_low", "95%CI_upp")] - 1) * 100
+```
+
+The effect by unit increase in the high concentration long term exposure to NO$_2$ is `RR.beta1_1NO2_high`:
+
+```{r}
+# as relative risk per 1 unit increase in the long term NO2 exposure high NO2
+modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_high"), c("Median", "95%CI_low", "95%CI_upp")]
+
+# as percentage increase in mortality for 1 unit increase in the long term NO2 exposure high N02
+(modelBYMPWeco.sim$summary$all.chains[paste0("RR.beta1_1NO2_high"), c("Median", "95%CI_low", "95%CI_upp")] - 1) * 100
+```
+
+## 3. Non-linear exposure-response regression
+
+Linearity of an exposure response relationship is an assumption. It is also worth exploring whether an exposure-response relationship might be non-linear. Here, we will demonstrate that with a random walk of order 2, which is equivalent to a natural spline with equally-spaced knots.
+
+We create the random walk effect using a ICAR prior with pre-specified weights, which are equivalent models.
+We do this in the `weightsRW` function below.
+
+```{r eval=TRUE, echo = TRUE}
+BYMecoRW2Code <- nimbleCode({
+  # priors
+  alpha ~ dflat() # vague prior (Unif(-inf, +inf))
+  overallRR <- exp(alpha) # overall RR across study region
+
+  tau.theta ~ dgamma(0.5, 0.05) # prior for the precision hyperparameter
+  sigma2.theta <- 1 / tau.theta # variance of unstructured area random effects
+
+  tau.phi ~ dgamma(0.5, 0.0005) # prior on precision of spatial area random effects
+  sigma2.phi <- 1 / tau.phi # conditional variance of spatial area random effects
+
+  tau.b ~ dgamma(0.5, 0.0005) # prior on precision of random walk of order 2
+  sigma2.b <- 1 / tau.b # conditional variance of random walk of order 2
+
+  # ICAR prior
+  phi[1:N] ~ dcar_normal(adj = adj[1:L], weights = weights[1:L], num = num[1:N], tau = tau.phi, zero_mean = 1)
+
+  # random walk prior
+  b[1:Jb] ~ dcar_normal(adj = adjb[1:Lb], weights = weightsb[1:Lb], num = numb[1:Jb], tau = tau.b, c = 2, zero_mean = 1)
+
+  for (j in 1:K) {
+    beta[j] ~ dnorm(0, tau = 1)
+    RR.beta[j] <- exp(beta[j])
+  }
+
+  # likelihood
+  for (i in 1:N) {
+    O[i] ~ dpois(mu[i]) # Poisson likelihood for observed counts
+    log(mu[i]) <- log(E[i]) + alpha + theta[i] + phi[i] + inprod(beta[], X[i, ]) + b[Y[i]]
+    # the inprod is equivalent to beta[1]*X1[i] + beta[2]*X2[i] + beta[3]*X32[i] + beta[4]*X33[i] + beta[5]*X34[i] + beta[6]*X35[i]
+
+    SMR[i] <- alpha + theta[i] + phi[i] + inprod(beta[], X[i, ]) + b[Y[i]]
+    theta[i] ~ dnorm(0, tau = tau.theta) # area-specific RE
+    resRR[i] <- exp(theta[i] + phi[i]) # area-specific residual RR
+    proba.resRR[i] <- step(resRR[i] - 1) # Posterior probability
+  }
+})
+```
+
+Define the weights of a random walk of order 2:
+
+```{r}
+weightsRW <- function(Q) {
+  rest.comp <- list()
+  for (i in 3:(Q - 2)) {
+    rest.comp[[i]] <- c(i - 2, i - 1, i + 1, i + 2)
+  }
+
+  rest.comp <- unlist(rest.comp)
+
+  adj <- c(
+    2, 3, 1, 3, 4,
+    rest.comp,
+    c(Q - 3, Q - 2, Q, Q - 2, Q - 1)
+  )
+
+  num <- c(2, 3, rep(4, times = c(Q - 4)), 3, 2)
+
+  weights <- c(
+    c(2, -1, 2, 4, -1),
+    rep(c(-1, 4, 4, -1), times = c(Q - 4)),
+    c(-1, 4, 2, -1, 2)
+  )
+
+  return(list(adj = adj, num = num, weights = weights))
+}
+```
+
+Create data object as required for `NIMBLE`, this time processing the $NO_2$ data to be used in a non-linear model:
+
+```{r eval=TRUE}
+n.LTLA <- dim(data_england)[1]
+
+# create the dummy columns for deprivation
+data_england <- data_england |>
+  mutate(IMD = as_factor(IMD)) |>
+  mutate(as.data.frame(model.matrix(~ 0 + IMD, data = pick(everything())))) |>
+  mutate( # categories for the exposure
+    N02_id = as.numeric(cut(NO2, breaks = 100))
+  )
+
+Jb <- data_england$N02_id |> max()
+W_weights <- weightsRW(Q = Jb)
+
+# matrix of covariates
+Xmat <- cbind(
+  scale(data_england$TtlICUB)[, 1],
+  data_england$IMD2,
+  data_england$IMD3,
+  data_england$IMD4,
+  data_england$IMD5
+)
+
+# Format the data for NIMBLE in a list
+covid_data <- list(
+  O = data_england$deaths, # observed nb of deaths
+  X = Xmat # covariates
+)
+
+# number of total covariates
+K <- ncol(Xmat)
+
+covid_constants <- list(
+  N = n.LTLA, # nb of LTLAs
+  K = K, # number of covariates
+
+  # adjacency matrix
+  L = length(nbWB_A$weights), # the number of neighboring areas
+  E = data_england$expectd, # expected number of deaths
+  adj = nbWB_A$adj, # the elements of the neighbouring matrix
+  num = nbWB_A$num,
+  weights = nbWB_A$weights,
+
+  # NO2 categories for random walk
+  Y = data_england$N02_id,
+
+  # random walk
+  Jb = Jb,
+  Lb = length(W_weights$weights),
+  adjb = W_weights$adj,
+  weightsb = W_weights$weights,
+  numb = W_weights$num
+)
+```
+
+Create the initial values for ALL the unknown parameters:
+
+```{r}
+# initialise the unknown parameters, 2 chains
+inits <- list(
+  list(
+    alpha = 0.01,
+    beta = rep(0, K),
+    tau.theta = 10,
+    tau.phi = 1,
+    theta = rep(0.01, times = n.LTLA),
+    phi = c(rep(0.5, times = n.LTLA)),
+    b = rep(0, times = Jb),
+    sigma2.b = 0.1
+  ),
+  list(
+    alpha = 0.5,
+    beta = rep(-1, K),
+    tau.theta = 1,
+    tau.phi = 0.1,
+    theta = rep(0.05, times = n.LTLA),
+    phi = c(rep(-0.05, times = n.LTLA)),
+    b = rep(0.5, times = Jb),
+    sigma2.b = 1
+  )
+)
+```
+
+Which model parameters do you want to monitor?
+Set these before running `NIMBLE`.
+Call this object `parameters_to_monitor`.
+
+```{r}
+parameters_to_monitor <- c("sigma2.theta", "sigma2.phi", "overallRR", "theta", "beta", "RR.beta", "resRR", "proba.resRR", "alpha", "b", "sigma2.b")
+```
+
+Run the MCMC simulations using the function `nimbleMCMC()`.
+If everything is specified reasonably, this needs approximately 5 minutes.
+
+```{r echo=TRUE, eval=FALSE}
+tic <- Sys.time()
+modelBYMRW2eco.sim <- nimbleMCMC(
+  code = BYMecoRW2Code,
+  data = covid_data,
+  constants = covid_constants,
+  inits = inits,
+  monitors = parameters_to_monitor,
+  niter = 50000,
+  nburnin = 30000,
+  thin = 10,
+  nchains = 2,
+  setSeed = 9,
+  progressBar = TRUE,
+  samplesAsCodaMCMC = TRUE,
+  summary = TRUE,
+  WAIC = TRUE
+)
+toc <- Sys.time()
+toc - tic
+# saveRDS(modelBYMRW2eco.sim, file = "NIMBLE_BYM_RW2")
+```
+
+```{r}
+modelBYMRW2eco.sim <- read_rds(here("labs", "exposure_response", "NIMBLE_BYM_RW2"))
+```
+
+Retrieve WAIC and compare with previous model.
+Which model performs best?
+
+```{r warning=FALSE}
+modelBYMRW2eco.sim$WAIC
+```
+
+Check the convergence of the intercept and covariates NO$_2$ and ICU beds.
+What do you observe?
+
+```{r echo=TRUE, eval=TRUE, warning = FALSE, fig.height=7, fig.width=10}
+mcmc_trace(modelBYMRW2eco.sim$samples, pars = c("alpha", paste0("beta[", 1:K, "]")))
+```
+
+Retrieve summary statistics for the two covariates and interpret (it is easier to interpret on the relative scale):
+
+```{r echo=TRUE, eval=TRUE}
+modelBYMRW2eco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ]
+```
+
+We can get a nice credible intervals plot as well:
+
+```{r warning=FALSE}
+modelBYMRW2eco.sim$summary$all.chains[paste0("RR.beta[", 1:K, "]"), ] |>
+  as_tibble() |>
+  select(Median, `95%CI_low`, `95%CI_upp`) |>
+  mutate(
+    covariate = factor(c("ICU", paste0("IMD", 2:5)), levels = c("ICU", paste0("IMD", 2:5)))
+  ) -> cov.eff
+
+cov.eff |> head()
+
+cov.eff |>
+  ggplot(aes(x = covariate, y = Median)) +
+  geom_point() +
+  geom_errorbar(aes(x = covariate, ymin = `95%CI_low`, ymax = `95%CI_upp`), width = 0.2) +
+  ylim(c(0.5, 2.0)) +
+  geom_hline(yintercept = 1, lty = 2, col = "red")
+```
+
+Plot the non-linear $NO_2$ association
+```{r warning=FALSE}
+# logic to get the first value of the bin
+NO2_bins <- data_england |>
+  pull(NO2) |>
+  cut(100) |>
+  str_sub(2, -2) %>%
+  sub("\\,.*", "", .) |>
+  as.numeric() |>
+  unique() |>
+  sort()
+
+# helper function to convert nimble output to one favoured by posterior and bayesplot
+as_mcmc_obj <- \(x) as_draws_array(as.mcmc.list(lapply(x, as.mcmc)))
+
+exposure_posterior <- as_mcmc_obj(modelBYMRW2eco.sim$samples)
+
+##
+## Define the x-axis of NO2
+X_axis <- cut(data_england$NO2, breaks = 100)
+X_axis <- X_axis %>% levels()
+X_axis
+get_midpoint <- function(cut_label) {
+  mean(as.numeric(unlist(strsplit(gsub("\\(|\\)|\\[|\\]", "", as.character(cut_label)), ","))))
+}
+get_midpoint(X_axis)
+sapply(X_axis, get_midpoint) %>% as.numeric() -> X_axis
+
+##
+## and plot
+summarise_draws(exposure_posterior, default_summary_measures()) |>
+  filter(startsWith(variable, "b[")) |>
+  mutate(X = X_axis) |>
+  ggplot() +
+  geom_line(aes(x = X, y = median)) +
+  geom_ribbon(aes(x = X, ymin = q5, ymax = q95), fill = "grey80", alpha = 0.5) +
+  labs(x = "NO2", y = "log mortality risk")
+```
+
+We can also show the effect on the relative scale, relative to the risk at 0 concentration:
+
+```{r warning=FALSE}
+exposure_posterior[, , str_c("b[", 1:100, "]")] |>
+  exp() %>%
+  sweep(x = ., MARGIN = c(1, 2), FUN = "/", STATS = exp(extract_variable_matrix(exposure_posterior, "b[50]"))) %>%
+  apply(X = ., MARGIN = 3, quantile, probs = c(0.5, 0.025, 0.975)) |>
+  t() |>
+  as_tibble() |>
+  mutate(x = X_axis) |>
+  ggplot() +
+  geom_line(aes(x = x, y = `50%`)) +
+  geom_ribbon(aes(x = x, ymin = `2.5%`, ymax = `97.5%`), fill = "grey80", alpha = 0.5) +
+  labs(x = "NO2", y = "Relative mortality risk") 
+```
+
+## Closing remarks
+
+Here, we examined the effect of long term exposure to NO$_2$ on COVID-19 mortality.
+We fitted several models, with either linear or non-linear models.
+We fitted a BYM model to account for unknown spatial confounding but in addition we accounted for total number of ICU beds and deprivation per LTLA.
+We reported evidence of an increased COVID-19 mortality for increasing levels of NO$_2$.
+
+It should be noted that this model is not fully adjusted, and that the actual analysis from the paper was at a higher resolution and with full adjustment by potential confounders via covariates. The data from that paper is sensitive and cannot be shared publicly. Nevertheless, this lab shows the basic mechanics of how to create linear and non-linear exposure-response analyses in a Bayesian framework. 

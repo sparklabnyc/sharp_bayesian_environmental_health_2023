@@ -4,7 +4,7 @@
 
 ## Introduction
 
-GitHub repo through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 14th-15th 2023.
+GitHub repo through which we're developing and sharing materials for the SHARP Bayesian Modeling for Environmental Health Workshop, taking place in person during August 21st-22nd 2024.
 
 ## Notes for attendees
 
@@ -16,7 +16,7 @@ This workshop is largely written in [`NIMBLE`](https://r-nimble.org/).
 
 Below is the set of labs to follow throughout the two days:
 
-### Day 1
+### Day 1 (August 21st 2024)
 
 | Time         | Activity                 |
 | ------------ | ------------------------ |
@@ -37,7 +37,7 @@ Below is the set of labs to follow throughout the two days:
 | 4:00  - 4:45 | [Hierarchical Modelling](/labs/hierarchical_modelling/hierarchical_modelling.qmd) (Hands-on Lab) |
 | 4:45  - 5:00 | Questions and Wrap-up |
 
-### Day 2
+### Day 2 (August 22nd 2024)
 
 | Time         | Activity                 |
 | ------------ | ------------------------ |
@@ -46,13 +46,13 @@ Below is the set of labs to follow throughout the two days:
 | 10:00 - 10:15 | Break / One-on-one questions |
 | 10:15 - 11:00 | [Spatial and Spatio-temporal Modelling](/labs/spatiotemporal_models/spatiotemporal_models.qmd) (Hands-on Lab) |
 | 11:00 - 11:15 | Break / One-on-one questions |
-| 11:15 - 12:00 | [Software Options](lectures/software_options/software_options.qmd) (Lecture) |
+| 11:15 - 12:00 | [Exposure-response modelling](lectures/exposure_response/exposure_response.qmd) (Lecture) |
 | 12:00 - 1:00 | Networking Lunch |
-| 1:00 - 2:00 | [Software Options](/labs/software_options/software_options.qmd) (Hands-on Lab) |
+| 1:00 - 2:00 | [Exposure-response modelling](/labs/exposure_response/exposure_response.qmd) (Hands-on Lab) |
 | 2:00 - 2:15 | Break / One-on-one questions |
-| 2:15 - 3:00 | [Bayesian Non-Parametric Ensemble](/lectures/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.pdf) (Lecture) |
+| 2:15 - 3:00 | [Software Options](lectures/software_options/software_options.qmd) (Lecture) |
 | 3:00 - 3:15 | Break / One-on-one questions |
-| 3:15 - 4:15 | [Bayesian Non-Parametric Ensemble](/labs/bayesian_nonparametric_ensemble/bayesian_nonparametric_ensemble.qmd) (Hands-on Lab) |
+| 3:15 - 4:15 | [Software Options](/labs/software_options/software_options.qmd) (Hands-on Lab) |
 | 4:15 - 5:00 | Workshop Summary, Interactive Panel Discussion & Course Wrap-up |
 | 5:00 - 5:15 | Questions and Wrap-up |
 

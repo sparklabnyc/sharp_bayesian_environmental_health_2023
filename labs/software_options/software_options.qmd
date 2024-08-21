@@ -2,7 +2,7 @@
 title: "Software Options"
 subtitle: "SHARP Bayesian Modeling for Environmental Health Workshop"
 author: "Theo Rashid"
-date: "August 15 2023"
+date: "August 22 2024"
 format: html
 ---
 
